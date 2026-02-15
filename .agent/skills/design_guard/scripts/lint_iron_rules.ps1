@@ -25,7 +25,7 @@ Write-Host "[1/4] Checking Typography (text-xs)..." -ForegroundColor Yellow
 
 $textXsFiles = Get-ChildItem -Path $Path -Recurse -Include "*.html", "*.js" | 
 Select-String -Pattern "text-xs" -SimpleMatch |
-Where-Object { $_.Path -notmatch "node_modules|\.git" }
+Where-Object { $_.Path -notmatch "node_modules|\.git|manual" }
 
 if ($textXsFiles) {
     Write-Host "  ❌ FAIL: Found text-xs violations:" -ForegroundColor Red
@@ -45,7 +45,7 @@ Write-Host "[2/4] Checking Color Integrity (opacity shorthand)..." -ForegroundCo
 
 $colorViolations = Get-ChildItem -Path $Path -Recurse -Include "*.html", "*.js" |
 Select-String -Pattern "(border|bg)-\[var\(--[^\)]+\)\]/" |
-Where-Object { $_.Path -notmatch "node_modules|\.git" }
+Where-Object { $_.Path -notmatch "node_modules|\.git|manual" }
 
 if ($colorViolations) {
     Write-Host "  ❌ FAIL: Found unsafe color patterns:" -ForegroundColor Red

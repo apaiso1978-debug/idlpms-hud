@@ -2095,7 +2095,7 @@ window.ManagementEngine = {
                 </div>
                 
                 <div class="flex flex-col items-end">
-                    <div class="text-xs text-[var(--vs-text-muted)] uppercase mb-1 font-mono">Mastery Status</div>
+                    <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-1 font-mono">Mastery Status</div>
                     <div class="text-2xl font-black text-[var(--vs-accent)] uppercase">
                         MODULE ${(this.currentLessonIndex + 1).toString().padStart(2, '0')}
                         <span class="text-sm opacity-30 text-[var(--vs-text-title)]">/${allLessons.length.toString().padStart(2, '0')}</span>
@@ -2865,11 +2865,11 @@ window.ManagementEngine = {
                     <!-- Progress Statistics -->
                     <div class="grid grid-cols-2 gap-8 py-8 border-y border-[rgba(255,255,255,0.05)]">
                         <div class="text-right border-r border-[rgba(255,255,255,0.05)] pr-8">
-                            <div class="text-xs text-[var(--vs-text-muted)] uppercase mb-2">Achieved Score</div>
+                            <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-2">Achieved Score</div>
                             <div class="text-6xl font-black text-[rgba(239,68,68,0.9)]">${data.score}%</div>
                         </div>
                         <div class="text-left pl-8">
-                            <div class="text-xs text-[var(--vs-text-muted)] uppercase mb-2">Threshold Goal</div>
+                            <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-2">Threshold Goal</div>
                             <div class="text-6xl font-black text-white opacity-40">${data.required}%</div>
                         </div>
                     </div>
@@ -2882,7 +2882,7 @@ window.ManagementEngine = {
                         </p>
                         
                         <div class="flex flex-col items-center">
-                            <div class="text-xs text-[var(--vs-text-muted)] uppercase mb-2 opacity-50">Rewind Cooldown Active</div>
+                            <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-2 opacity-50">Rewind Cooldown Active</div>
                             <div class="flex items-baseline gap-2">
                                 <span id="rewind-timer-display" class="text-7xl font-mono font-black text-white digital-timer-glow">${this.rewindCountdown.toString().padStart(2, '0')}</span>
                                 <span class="text-xl font-extralight text-[var(--vs-text-muted)] uppercase">sec</span>

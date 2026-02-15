@@ -109,7 +109,7 @@
         <header class="flex items-center justify-between mb-8">
             <div class="flex items-center space-x-4">
                 <div
-                    class="w-12 h-12 rounded-[var(--vs-radius)] bg-[var(--vs-accent)]/10 flex items-center justify-center">
+                    class="w-12 h-12 rounded-[var(--vs-radius)] bg-[rgba(var(--vs-accent-rgb),0.1)] flex items-center justify-center">
                     <i class="icon i-user-plus w-6 h-6 text-[var(--vs-accent)]"></i>
                 </div>
                 <div>
@@ -130,7 +130,7 @@
         <div
             class="bg-[var(--vs-bg-card)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] overflow-hidden shadow-2xl">
             <div
-                class="p-4 border-b border-[var(--vs-border)] bg-[var(--vs-bg-deep)]/30 flex items-center justify-between">
+                class="p-4 border-b border-[var(--vs-border)] bg-[rgba(var(--vs-bg-deep-rgb),0.3)] flex items-center justify-between">
                 <div class="flex items-center space-x-2">
                     <div class="w-2 h-2 rounded-[3px] bg-[var(--vs-accent)] animate-pulse"></div>
                     <span class="text-sm uppercase text-[var(--vs-text-muted)] font-extralight Thai-Rule">New
@@ -183,13 +183,14 @@
             </div>
 
             <!-- Footer Actions -->
-            <div class="p-6 border-t border-[var(--vs-border)] bg-[var(--vs-bg-deep)]/30 flex justify-end space-x-3">
+            <div
+                class="p-6 border-t border-[var(--vs-border)] bg-[rgba(var(--vs-bg-deep-rgb),0.3)] flex justify-end space-x-3">
                 <button onclick="goBack()"
                     class="px-6 py-2.5 bg-[var(--vs-bg-panel)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-white/70 hover:bg-[var(--vs-bg-card)] hover:text-white transition-all Thai-Rule">
                     ยกเลิก
                 </button>
                 <button onclick="saveNewTeacher()" id="save-btn"
-                    class="flex items-center space-x-2 px-6 py-2.5 bg-[var(--vs-accent)]/10 border border-[var(--vs-accent)]/30 rounded-[var(--vs-radius)] text-[var(--vs-accent)] hover:bg-[var(--vs-accent)]/20 transition-all group">
+                    class="flex items-center space-x-2 px-6 py-2.5 bg-[rgba(var(--vs-accent-rgb),0.1)] border border-[rgba(var(--vs-accent-rgb),0.3)] rounded-[var(--vs-radius)] text-[var(--vs-accent)] hover:bg-[rgba(var(--vs-accent-rgb),0.2)] transition-all group">
                     <i class="icon i-save w-4 h-4 group-hover:scale-110 transition-transform"></i>
                     <span class="Thai-Rule">บันทึกข้อมูลบุคลากร</span>
                 </button>

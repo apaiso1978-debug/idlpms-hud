@@ -106,7 +106,7 @@
                     return `<option value="${p}" ${a.period === p ? 'selected' : ''}>${label}</option>`;
                 }).join('')}
                     </select>
-                    <button onclick="removeD4Activity(${idx})" class="text-[var(--vs-danger)] hover:bg-[var(--vs-danger)]/10 rounded-[var(--vs-radius)] p-1 text-sm">✕</button>
+                    <button onclick="removeD4Activity(${idx})" class="text-[var(--vs-danger)] hover:bg-[rgba(var(--vs-danger-rgb),0.1)] rounded-[var(--vs-radius)] p-1 text-sm">✕</button>
                 </div>`;
             });
             container.innerHTML = html;

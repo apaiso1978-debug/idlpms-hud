@@ -191,7 +191,7 @@ class TeacherScheduleGrid {
                 </div>
             </div>` : `
             <div class="schedule-palette" style="padding: 8px 12px; opacity: 0.5;">
-                <span class="text-xs font-extralight uppercase text-[var(--vs-text-muted)]"><i class="icon i-lock w-3 h-3 inline-block mr-1"></i>Principal-Assigned Schedule (Read-Only)</span>
+                <span class="text-sm font-extralight uppercase text-[var(--vs-text-muted)]"><i class="icon i-lock w-3 h-3 inline-block mr-1"></i>Principal-Assigned Schedule (Read-Only)</span>
             </div>`}
                 
                 <!-- Schedule Grid -->

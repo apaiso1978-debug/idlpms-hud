@@ -103,7 +103,7 @@
                     </select>
                     <input type="number" value="${a.hoursPerWeek || 1}" min="0.5" max="3" step="0.5" onchange="updateD2Activity(${idx}, 'hoursPerWeek', parseFloat(this.value))"
                         class="bg-[var(--vs-bg-deep)] text-sm text-[var(--vs-text-body)] border border-[rgba(var(--vs-border-rgb),0.3)] rounded-[var(--vs-radius)] px-3 py-2 outline-none text-center w-full [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" />
-                    <button onclick="removeD2Activity(${idx})" class="text-[var(--vs-danger)] hover:bg-[var(--vs-danger)]/10 rounded-[var(--vs-radius)] p-1 text-sm">✕</button>
+                    <button onclick="removeD2Activity(${idx})" class="text-[var(--vs-danger)] hover:bg-[rgba(var(--vs-danger-rgb),0.1)] rounded-[var(--vs-radius)] p-1 text-sm">✕</button>
                 </div>`;
             });
             container.innerHTML = html;

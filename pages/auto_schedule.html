@@ -33,47 +33,52 @@
             </div>
             <div class="flex items-center space-x-3">
                 <button id="run-btn" onclick="runEngine()"
-                    class="vs-pulse-cyan flex items-center space-x-2 px-6 py-2 bg-[var(--vs-accent)]/10 border border-[var(--vs-accent)]/30 rounded-[var(--vs-radius)] text-[var(--vs-accent)] hover:bg-[var(--vs-accent)]/20 transition-all group">
+                    class="vs-pulse-cyan flex items-center space-x-2 px-6 py-2 bg-[rgba(var(--vs-accent-rgb),0.1)] border border-[rgba(var(--vs-accent-rgb),0.3)] rounded-[var(--vs-radius)] text-[var(--vs-accent)] hover:bg-[rgba(var(--vs-accent-rgb),0.2)] transition-all group">
                     <i class="icon i-lightning w-3 h-3 group-hover:scale-110 transition-transform"></i>
                     <span class="Thai-Rule font-extralight">เริ่มจำลองการจัดตาราง</span>
                 </button>
                 <button id="publish-btn" onclick="broadcastSchedules()"
-                    class="hidden flex items-center space-x-2 px-6 py-2 bg-[var(--vs-success)]/10 border border-[var(--vs-success)]/30 rounded-[var(--vs-radius)] text-[var(--vs-success)] hover:bg-[var(--vs-success)]/20 transition-all group">
+                    class="hidden flex items-center space-x-2 px-6 py-2 bg-[rgba(var(--vs-success-rgb),0.1)] border border-[rgba(var(--vs-success-rgb),0.3)] rounded-[var(--vs-radius)] text-[var(--vs-success)] hover:bg-[rgba(var(--vs-success-rgb),0.2)] transition-all group">
                     <i class="icon i-share w-3 h-3 group-hover:scale-110 transition-transform"></i>
                     <span class="Thai-Rule font-extralight">เผยแพร่ตารางสอน</span>
                 </button>
-                <div id="engine-status-badge" class="hud-badge-micro border-[var(--vs-accent)]/20">System Ready</div>
+                <div id="engine-status-badge" class="hud-badge-micro border-[rgba(var(--vs-accent-rgb),0.2)]">System
+                    Ready</div>
             </div>
         </div>
 
         <!-- System Governance Cards -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div
-                class="dna-zone p-4 border-[var(--vs-accent)]/20 bg-[var(--vs-accent)]/[0.02] shadow-[0_0_20px_rgba(var(--vs-accent-rgb),0.03)] selection:bg-[var(--vs-accent)]/20">
-                <div class="hud-badge-micro text-[var(--vs-accent)] mb-2 font-extralight border-[var(--vs-accent)]/20">
+                class="dna-zone p-4 border-[rgba(var(--vs-accent-rgb),0.2)] bg-[rgba(var(--vs-accent-rgb),0.02)] shadow-[0_0_20px_rgba(var(--vs-accent-rgb),0.03)] selection:bg-[rgba(var(--vs-accent-rgb),0.2)]">
+                <div
+                    class="hud-badge-micro text-[var(--vs-accent)] mb-2 font-extralight border-[rgba(var(--vs-accent-rgb),0.2)]">
                     Governance
                     01</div>
                 <div class="text-[14px] text-[var(--vs-text-title)] uppercase font-extralight">100% Fill
                     Rate (35 Periods)</div>
             </div>
             <div
-                class="dna-zone p-4 border-[var(--vs-accent)]/20 bg-[var(--vs-accent)]/[0.02] shadow-[0_0_20px_rgba(var(--vs-accent-rgb),0.03)] space-y-2">
-                <div class="hud-badge-micro text-[var(--vs-accent)] mb-2 font-extralight border-[var(--vs-accent)]/20">
+                class="dna-zone p-4 border-[rgba(var(--vs-accent-rgb),0.2)] bg-[rgba(var(--vs-accent-rgb),0.02)] shadow-[0_0_20px_rgba(var(--vs-accent-rgb),0.03)] space-y-2">
+                <div
+                    class="hud-badge-micro text-[var(--vs-accent)] mb-2 font-extralight border-[rgba(var(--vs-accent-rgb),0.2)]">
                     Governance 02</div>
                 <div class="text-[14px] text-[var(--vs-text-title)] uppercase font-extralight flex items-center gap-2">
                     Core Subject Auto-Fill <i class="icon i-book w-3.5 h-3.5 text-[var(--vs-accent)]/80"></i>
                 </div>
             </div>
             <div
-                class="dna-zone p-4 border-[var(--vs-accent)]/20 bg-[var(--vs-accent)]/[0.02] shadow-[0_0_20px_rgba(var(--vs-accent-rgb),0.03)]">
-                <div class="hud-badge-micro text-[var(--vs-accent)] mb-2 font-extralight border-[var(--vs-accent)]/20">
+                class="dna-zone p-4 border-[rgba(var(--vs-accent-rgb),0.2)] bg-[rgba(var(--vs-accent-rgb),0.02)] shadow-[0_0_20px_rgba(var(--vs-accent-rgb),0.03)]">
+                <div
+                    class="hud-badge-micro text-[var(--vs-accent)] mb-2 font-extralight border-[rgba(var(--vs-accent-rgb),0.2)]">
                     Governance 03</div>
                 <div class="text-[14px] text-[var(--vs-text-title)] uppercase font-extralight">Zero Teacher
                     Overlap</div>
             </div>
             <div
-                class="dna-zone p-4 border-[var(--vs-accent)]/20 bg-[var(--vs-accent)]/[0.02] shadow-[0_0_20px_rgba(var(--vs-accent-rgb),0.03)]">
-                <div class="hud-badge-micro text-[var(--vs-accent)] mb-2 font-extralight border-[var(--vs-accent)]/20">
+                class="dna-zone p-4 border-[rgba(var(--vs-accent-rgb),0.2)] bg-[rgba(var(--vs-accent-rgb),0.02)] shadow-[0_0_20px_rgba(var(--vs-accent-rgb),0.03)]">
+                <div
+                    class="hud-badge-micro text-[var(--vs-accent)] mb-2 font-extralight border-[rgba(var(--vs-accent-rgb),0.2)]">
                     Governance 04</div>
                 <div class="text-[14px] text-[var(--vs-text-title)] uppercase font-extralight">
                     Priority-Based Logic</div>
@@ -105,12 +110,13 @@
             class="dna-zone p-6 border-[var(--vs-border)] bg-[rgba(var(--vs-bg-deep-rgb),0.2)] hidden">
             <div class="flex items-center justify-between mb-6">
                 <div class="flex items-center gap-3">
-                    <span class="hud-badge-micro border-[var(--vs-accent)]/30 text-[var(--vs-accent)]">Management</span>
+                    <span
+                        class="hud-badge-micro border-[rgba(var(--vs-accent-rgb),0.3)] text-[var(--vs-accent)]">Management</span>
                     <h2 class="text-lg font-extralight text-[var(--vs-text-title)] uppercase">Teacher
                         Configuration</h2>
                 </div>
                 <button onclick="saveTeacherConfig()"
-                    class="px-6 py-2.5 bg-[var(--vs-accent)]/10 text-[var(--vs-accent)] text-sm font-extralight uppercase rounded-[var(--vs-radius)] border border-[var(--vs-accent)]/20 hover:bg-[var(--vs-accent)]/20 transition-all">
+                    class="px-6 py-2.5 bg-[rgba(var(--vs-accent-rgb),0.1)] text-[var(--vs-accent)] text-sm font-extralight uppercase rounded-[var(--vs-radius)] border border-[rgba(var(--vs-accent-rgb),0.2)] hover:bg-[rgba(var(--vs-accent-rgb),0.2)] transition-all">
                     Save Assignments
                 </button>
             </div>
@@ -128,7 +134,7 @@
         <div id="welcome-state"
             class="dna-zone p-8 flex flex-col items-center justify-center text-center space-y-4 min-h-[360px]">
             <div
-                class="w-24 h-24 rounded-[3px] border border-[var(--vs-accent)]/20 flex items-center justify-center animate-pulse">
+                class="w-24 h-24 rounded-[3px] border border-[rgba(var(--vs-accent-rgb),0.2)] flex items-center justify-center animate-pulse">
                 <i class="icon i-academic w-12 h-12 text-[var(--vs-accent)]/50"></i>
             </div>
             <div class="space-y-2">
@@ -148,7 +154,7 @@
                     <span class="hud-badge-micro font-extralight border-[var(--vs-border)] uppercase mr-1">Data
                         View</span>
                     <select id="view-mode" onchange="updateView()"
-                        class="bg-[var(--vs-bg-deep)] text-sm text-[var(--vs-text-body)] border border-[var(--vs-border)] p-2 rounded-[var(--vs-radius)] outline-none focus:border-[var(--vs-accent)]/50">
+                        class="bg-[var(--vs-bg-deep)] text-sm text-[var(--vs-text-body)] border border-[var(--vs-border)] p-2 rounded-[var(--vs-radius)] outline-none focus:border-[rgba(var(--vs-accent-rgb),0.5)]">
                         <option value="class">Student Schedule (By Grade)</option>
                         <option value="teacher">Faculty Workload (By Name)</option>
                     </select>
@@ -157,7 +163,7 @@
                     <span class="hud-badge-micro font-extralight border-[var(--vs-border)] uppercase mr-1">Select
                         Node</span>
                     <select id="target-selector" onchange="renderGrid()"
-                        class="bg-[var(--vs-bg-deep)] text-sm text-[var(--vs-text-body)] border border-[var(--vs-border)] p-2 rounded-[var(--vs-radius)] min-w-[280px] outline-none focus:border-[var(--vs-accent)]/50">
+                        class="bg-[var(--vs-bg-deep)] text-sm text-[var(--vs-text-body)] border border-[var(--vs-border)] p-2 rounded-[var(--vs-radius)] min-w-[280px] outline-none focus:border-[rgba(var(--vs-accent-rgb),0.5)]">
                         <!-- Options injected here -->
                     </select>
                 </div>
@@ -174,7 +180,8 @@
             <!-- Workload Summary Bar (กคศ. 4-Domain Compliance) -->
             <div id="workload-bar" class="dna-zone p-4 hidden">
                 <div class="flex items-center gap-3 mb-3">
-                    <span class="hud-badge-micro border-[var(--vs-accent)]/30 text-[var(--vs-accent)]">Workload</span>
+                    <span
+                        class="hud-badge-micro border-[rgba(var(--vs-accent-rgb),0.3)] text-[var(--vs-accent)]">Workload</span>
                     <h3 class="text-sm font-extralight text-[var(--vs-text-title)] uppercase">Teacher Workload Summary —
                         กคศ. ว9/2564</h3>
                 </div>
@@ -236,7 +243,7 @@
             } catch (error) {
                 const status = document.getElementById('engine-status-badge');
                 status.innerText = 'Initialization Error';
-                status.className = 'hud-badge-micro bg-[var(--vs-danger)]/10 text-[var(--vs-danger)]';
+                status.className = 'hud-badge-micro bg-[rgba(var(--vs-danger-rgb),0.1)] text-[var(--vs-danger)]';
             }
         }
 
@@ -381,7 +388,7 @@
             if (errors.length > 0) {
                 const status = document.getElementById('engine-status-badge');
                 status.innerText = 'Configuration Error';
-                status.className = 'hud-badge-micro bg-[var(--vs-danger)]/10 text-[var(--vs-danger)] border-[var(--vs-danger)]/20';
+                status.className = 'hud-badge-micro bg-[rgba(var(--vs-danger-rgb),0.1)] text-[var(--vs-danger)] border-[rgba(var(--vs-danger-rgb),0.2)]';
 
                 // Show errors in standard HUD notification
                 if (window.HUD_NOTIFY) {
@@ -402,7 +409,7 @@
 
             btn.innerHTML = '<i class="icon i-refresh w-3 h-3 animate-spin"></i> Processing...';
             status.innerText = 'Calculating DNA...';
-            status.className = 'hud-badge-micro bg-[var(--vs-accent)]/10 text-[var(--vs-accent)]';
+            status.className = 'hud-badge-micro bg-[rgba(var(--vs-accent-rgb),0.1)] text-[var(--vs-accent)]';
 
             setTimeout(() => {
                 // ── Override preAssignedSlots with Director's Domain 2+4 inputs ──
@@ -424,7 +431,7 @@
 
                 btn.innerHTML = '<i class="icon i-lightning w-3 h-3"></i> Sync Successful';
                 status.innerText = currentResult.success ? '100% Stability Reached' : 'Partial Sync';
-                status.className = `hud-badge-micro ${currentResult.success ? 'bg-[var(--vs-success)]/10 text-[var(--vs-success)]' : 'bg-yellow-500/10 text-yellow-400'}`;
+                status.className = `hud-badge-micro ${currentResult.success ? 'bg-[rgba(var(--vs-success-rgb),0.1)] text-[var(--vs-success)]' : 'bg-[rgba(234,179,8,0.1)] text-yellow-400'}`;
 
                 // Show publish button after successful generation
                 if (currentResult.success) {
@@ -468,7 +475,7 @@
                 const status = document.getElementById('engine-status-badge');
                 btn.innerHTML = '<i class="icon i-lightning w-3 h-3"></i> Last Result Restored';
                 status.innerText = currentResult.success ? '100% Stability Reached' : 'Partial Sync';
-                status.className = `hud-badge-micro ${currentResult.success ? 'bg-[var(--vs-success)]/10 text-[var(--vs-success)]' : 'bg-yellow-500/10 text-yellow-400'}`;
+                status.className = `hud-badge-micro ${currentResult.success ? 'bg-[rgba(var(--vs-success-rgb),0.1)] text-[var(--vs-success)]' : 'bg-[rgba(234,179,8,0.1)] text-yellow-400'}`;
 
                 // Show publish button if not already published
                 if (currentResult.success) {
@@ -579,12 +586,12 @@
 
             // Update UI
             publishBtn.innerHTML = '<i class="icon i-share w-3 h-3"></i> เผยแพร่แล้ว';
-            publishBtn.classList.remove('bg-[var(--vs-success)]/10', 'border-[var(--vs-success)]/30', 'text-[var(--vs-success)]');
-            publishBtn.classList.add('bg-[var(--vs-accent)]/10', 'border-[var(--vs-accent)]/30', 'text-[var(--vs-accent)]');
+            publishBtn.classList.remove('bg-[rgba(var(--vs-success-rgb),0.1)]', 'border-[rgba(var(--vs-success-rgb),0.3)]', 'text-[var(--vs-success)]');
+            publishBtn.classList.add('bg-[rgba(var(--vs-accent-rgb),0.1)]', 'border-[rgba(var(--vs-accent-rgb),0.3)]', 'text-[var(--vs-accent)]');
             publishBtn.disabled = true;
 
             status.innerText = `Published to ${teacherCount} Teachers`;
-            status.className = 'hud-badge-micro bg-[var(--vs-success)]/10 text-[var(--vs-success)] border-[var(--vs-success)]/20';
+            status.className = 'hud-badge-micro bg-[rgba(var(--vs-success-rgb),0.1)] text-[var(--vs-success)] border-[rgba(var(--vs-success-rgb),0.2)]';
 
             // Toast notification
             if (window.HUD_NOTIFY) {
@@ -608,7 +615,7 @@
             ];
 
             grid.innerHTML = cards.map(c => `
-                <div class="dna-zone p-4 border-white/5 bg-[var(--vs-bg-deep)]/20 shadow-lg">
+                <div class="dna-zone p-4 border-white/5 bg-[rgba(var(--vs-bg-deep-rgb),0.2)] shadow-lg">
                     <div class="hud-badge-micro border-white/10 mb-2 font-extralight">${c.label}</div>
                     <div class="text-[20px] font-extralight ${c.color}">${c.value}</div>
                 </div>

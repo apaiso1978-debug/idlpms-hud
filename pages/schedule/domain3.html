@@ -100,7 +100,7 @@
                         <option value="2" ${p.semester === 2 ? 'selected' : ''}>ภาคเรียนที่ 2</option>
                         <option value="0" ${p.semester === 0 ? 'selected' : ''}>ตลอดปี</option>
                     </select>
-                    <button onclick="removeD3Project(${idx})" class="text-[var(--vs-danger)] hover:bg-[var(--vs-danger)]/10 rounded-[var(--vs-radius)] p-1 text-sm">✕</button>
+                    <button onclick="removeD3Project(${idx})" class="text-[var(--vs-danger)] hover:bg-[rgba(var(--vs-danger-rgb),0.1)] rounded-[var(--vs-radius)] p-1 text-sm">✕</button>
                 </div>`;
             });
             container.innerHTML = html;

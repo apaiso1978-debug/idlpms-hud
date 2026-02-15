@@ -131,7 +131,7 @@
     <!-- Features -->
     <section class="py-24 px-6 border-t border-white/5 bg-zinc-950/30">
         <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="p-8 vs-glass rounded-2xl hover:border-[var(--lp-accent)]/30 transition-colors group">
+            <div class="p-8 vs-glass rounded-2xl hover:border-[rgba(var(--id-moe-rgb),0.3)] transition-colors group">
                 <div
                     class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                     <i class="icon i-database h-6 w-6 text-[var(--lp-accent)]"></i>
@@ -140,7 +140,7 @@
                 <p class="text-sm text-zinc-400 font-light leading-relaxed">ข้อมูลถูกจัดเก็บและประมวลผลบน InsForge Cloud
                     มั่นใจได้ในความปลอดภัยและการเข้าถึงได้จากทุกที่ทุกเวลา</p>
             </div>
-            <div class="p-8 vs-glass rounded-2xl hover:border-[var(--lp-accent)]/30 transition-colors group">
+            <div class="p-8 vs-glass rounded-2xl hover:border-[rgba(var(--id-moe-rgb),0.3)] transition-colors group">
                 <div
                     class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                     <i class="icon i-squares h-6 w-6 text-[var(--lp-accent)]"></i>
@@ -149,7 +149,7 @@
                 <p class="text-sm text-zinc-400 font-light leading-relaxed">
                     หน้าจอควบคุมที่ปรับเปลี่ยนตามบทบาทของผู้ใช้งาน ตั้งแต่ครูผู้ช่วย จนถึงระดับรัฐมนตรี (MOE)</p>
             </div>
-            <div class="p-8 vs-glass rounded-2xl hover:border-[var(--lp-accent)]/30 transition-colors group">
+            <div class="p-8 vs-glass rounded-2xl hover:border-[rgba(var(--id-moe-rgb),0.3)] transition-colors group">
                 <div
                     class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                     <i class="icon i-lightning h-6 w-6 text-[var(--lp-accent)]"></i>
@@ -170,17 +170,14 @@
 
     <!-- Lucide Icons or Similar (using CSS classes from theme) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-    <script>
-        // Check for active session to suggest jumping to HUD
-        document.addEventListener('DOMContentLoaded', () => {
-            const userId = localStorage.getItem('idlpms_active_user_id');
-            if (userId) {
-                console.log('Session detected, redirecting to HUD...');
-                // Optionally show a "Resume Dashboard" toast or just redirect
-                window.location.href = 'hud.html';
-            }
-        });
-    </script>
+    // Optional: Session check for landing page
+    document.addEventListener('DOMContentLoaded', () => {
+    const userId = localStorage.getItem('idlpms_active_user_id');
+    if (userId) {
+    console.log('Active session detected. Use the button to enter HUD.');
+    // We keep them on the landing page for now so the user can see it!
+    }
+    });
 </body>
 
 </html>
