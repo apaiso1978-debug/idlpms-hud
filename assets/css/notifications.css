@@ -1,0 +1,112 @@
+/* --- Smart Notification System (HUD Native) --- */
+
+/* Activity Bar Badge */
+.vs-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 8px;
+    height: 8px;
+    background-color: var(--vs-danger);
+    border-radius: var(--vs-radius);
+    border: 2px solid var(--vs-bg-deep);
+    z-index: 10;
+    pointer-events: none;
+    /* box-shadow removed for Sharpness compliance */
+    display: none;
+}
+
+.vs-badge.active {
+    display: block;
+}
+
+/* HUD Toast Notification */
+#vs-toast-container {
+    position: fixed;
+    top: calc(var(--vs-header-height) + 16px);
+    right: 16px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.vs-toast {
+    min-width: 280px;
+    max-width: 350px;
+    padding: 12px 16px;
+    background: var(--vs-bg-panel);
+    border: 1px solid var(--vs-border);
+    border-left: 3px solid var(--vs-accent);
+    border-radius: var(--vs-radius);
+    color: var(--vs-text-title);
+    /* backdrop-filter and box-shadow removed for Sharpness compliance */
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    animation: toast-slide-in 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.vs-toast:hover {
+    border-color: var(--vs-accent);
+    background: var(--vs-bg-card);
+}
+
+.vs-toast-title {
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 200;
+    /* Standardized to Weight 200 */
+    color: var(--vs-accent);
+}
+
+.vs-toast-text {
+    font-size: 13px;
+    font-weight: 200;
+    /* Standardized to Weight 200 */
+    color: var(--vs-text-body);
+    line-height: 1.4;
+}
+
+.vs-toast.danger {
+    border-left-color: var(--vs-danger);
+}
+
+.vs-toast.danger .vs-toast-title {
+    color: var(--vs-danger);
+}
+
+.vs-toast.success {
+    border-left-color: var(--vs-success);
+}
+
+.vs-toast.success .vs-toast-title {
+    color: var(--vs-success);
+}
+
+@keyframes toast-slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.vs-toast.toast-out {
+    animation: toast-slide-out 0.3s ease-in forwards;
+}
+
+@keyframes toast-slide-out {
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}

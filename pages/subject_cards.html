@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Subject Card Builder | IDLPMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+
+    <!-- Core Services & Engines -->
+    <script src="../src/services/DataService.js"></script>
+    <script src="../src/services/AuthService.js"></script>
+    <script src="../src/lib/AIAuditor.js"></script>
+    <script src="../src/engines/DNAHarvester.js"></script>
+    <script src="../src/engines/QuizEngine.js"></script>
+    <script src="../src/engines/SecurityEngine.js"></script>
+
+    <script src="../assets/js/components/tooltip.js"></script>
+    <style>
+        /* Custom Dropdown Styles */
+        .vs-dropdown {
+            position: relative;
+        }
+
+        .vs-dropdown-trigger {
+            width: 100%;
+            background: var(--vs-bg-deep);
+            border: none;
+            border-radius: var(--vs-radius);
+            padding: 0.75rem;
+            font-size: 0.875rem;
+            color: var(--vs-text-body);
+            outline: none;
+            transition: border-color 0.2s;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .vs-dropdown-trigger:focus {
+            border-color: transparent;
+        }
+
+        .vs-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            margin-top: 4px;
+            background: var(--vs-bg-deep);
+            border: none;
+            border-radius: var(--vs-radius);
+            max-height: 240px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .vs-dropdown.open .vs-dropdown-menu {
+            display: block;
+        }
+
+        .vs-dropdown-item {
+            padding: 0.625rem 0.75rem;
+            font-size: 0.875rem;
+            color: var(--vs-text-body);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .vs-dropdown-item:hover {
+            background: rgba(var(--vs-bg-card-rgb), 0.5);
+        }
+
+        .vs-dropdown-item.selected {
+            background: rgba(var(--vs-bg-card-rgb), 0.8);
+            color: var(--vs-text-title);
+        }
+
+        .vs-dropdown-arrow {
+            width: 12px;
+            height: 12px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+
+<body class="bg-transparent p-6 overflow-y-auto overflow-x-hidden font-['Sarabun'] antialiased vs-scrollbar">
+    <div id="subject-cards-app"
+        class="max-w-[1200px] mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+
+        <!-- Main Layout Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+
+            <!-- Left Column: Creator Panel (Sticky) -->
+            <div class="lg:col-span-4 sticky top-6 space-y-6">
+                <div class="dna-zone p-6">
+                    <div class="dna-zone-header mb-4">
+                        <h2 class="dna-zone-title">แผงควบคุมการสร้างการ์ด</h2>
+                        <span class="hud-badge-micro">ระเบียบการจัดวิชา</span>
+                    </div>
+
+                    <!-- Mode Toggle (3-Way) -->
+                    <div
+                        class="flex p-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] mb-6">
+                        <button onclick="setMode('POLICY')" id="btn-mode-policy"
+                            class="flex-1 py-1.5 text-sm uppercase rounded-[3px] transition-all bg-[var(--vs-accent)] text-zinc-900 font-extralight">Policy</button>
+                        <button onclick="setMode('AUTO')" id="btn-mode-auto"
+                            class="flex-1 py-1.5 text-sm uppercase rounded-[3px] transition-all text-[var(--vs-text-muted)] hover:text-[var(--vs-text-title)]">Auto</button>
+                        <button onclick="setMode('MANUAL')" id="btn-mode-manual"
+                            class="flex-1 py-1.5 text-sm uppercase rounded-[3px] transition-all text-[var(--vs-text-muted)] hover:text-[var(--vs-text-title)]">Manual</button>
+                    </div>
+
+                    <!-- Policy Panel (Assignments from Director) -->
+                    <div id="policy-panel" class="hidden space-y-4">
+                        <div
+                            class="px-6 py-8 bg-[var(--vs-bg-deep)] border-b border-[var(--vs-border)] flex flex-col items-center text-center w-full">
+                            <div
+                                class="w-12 h-12 bg-[rgba(var(--vs-accent-rgb),0.1)] rounded-[3px] flex items-center justify-center mb-4">
+                                <i class="icon i-shield-check w-6 h-6 text-[var(--vs-accent)]"></i>
+                            </div>
+                            <p class="text-[10px] text-[var(--vs-accent)] uppercase mb-2 font-extralight">
+                                Assigned by Director</p>
+                            <p class="text-sm text-[var(--vs-text-muted)] Thai-Rule max-w-xs">
+                                ตารางสอนถูกกำหนดโดยฝ่ายบริหารโรงเรียน
+                                คุณไม่สามารถแก้ไขหรือสร้างรายวิชาเองได้ในหมวดหมู่นี้</p>
+                        </div>
+
+                        <div id="policy-list" class="hidden space-y-3">
+                            <!-- Assigned subjects will appear here -->
+                        </div>
+                    </div>
+
+                    <form id="card-form" onsubmit="handleSave(event)" class="space-y-4">
+                        <div class="space-y-1">
+                            <label class="text-sm text-[var(--vs-text-muted)] font-extralight Thai-Rule">ชื่อวิชา
+                                (ภาษาไทย)</label>
+
+                            <!-- Auto Mode Custom Dropdown -->
+                            <div id="dropdown-nameTH" class="vs-dropdown Thai-Rule">
+                                <input type="hidden" id="input-nameTH-auto" value="คณิตศาสตร์" required>
+                                <button type="button" class="vs-dropdown-trigger"
+                                    onclick="toggleDropdown('dropdown-nameTH')">
+                                    <span id="dropdown-nameTH-text">คณิตศาสตร์ (Mathematics)</span>
+                                    <svg class="vs-dropdown-arrow" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                    </svg>
+                                </button>
+                                <div class="vs-dropdown-menu vs-scrollbar">
+                                    <div class="vs-dropdown-item selected" data-value="คณิตศาสตร์"
+                                        data-text="คณิตศาสตร์ (Mathematics)" onclick="selectDropdownItem(this)">
+                                        คณิตศาสตร์ (Mathematics)</div>
+                                    <div class="vs-dropdown-item" data-value="วิทยาศาสตร์"
+                                        data-text="วิทยาศาสตร์ (Science)" onclick="selectDropdownItem(this)">วิทยาศาสตร์
+                                        (Science)</div>
+                                    <div class="vs-dropdown-item" data-value="ภาษาไทย" data-text="ภาษาไทย (Thai)"
+                                        onclick="selectDropdownItem(this)">ภาษาไทย (Thai)</div>
+                                    <div class="vs-dropdown-item" data-value="ภาษาอังกฤษ"
+                                        data-text="ภาษาอังกฤษ (English)" onclick="selectDropdownItem(this)">ภาษาอังกฤษ
+                                        (English)</div>
+                                    <div class="vs-dropdown-item" data-value="สังคมศึกษา"
+                                        data-text="สังคมศึกษา (Social Studies)" onclick="selectDropdownItem(this)">
+                                        สังคมศึกษา (Social Studies)</div>
+                                    <div class="vs-dropdown-item" data-value="ประวัติศาสตร์"
+                                        data-text="ประวัติศาสตร์ (History)" onclick="selectDropdownItem(this)">
+                                        ประวัติศาสตร์ (History)</div>
+                                    <div class="vs-dropdown-item" data-value="ศิลปะ" data-text="ศิลปะ (Art)"
+                                        onclick="selectDropdownItem(this)">ศิลปะ (Art)</div>
+                                    <div class="vs-dropdown-item" data-value="สุขศึกษา" data-text="สุขศึกษา (PE)"
+                                        onclick="selectDropdownItem(this)">สุขศึกษา (PE)</div>
+                                    <div class="vs-dropdown-item" data-value="การงานอาชีพ"
+                                        data-text="การงานอาชีพ (Work/Tech)" onclick="selectDropdownItem(this)">
+                                        การงานอาชีพ (Work/Tech)</div>
+                                </div>
+                            </div>
+
+                            <!-- Manual Mode Input (Hidden by Default) -->
+                            <input type="text" id="input-nameTH-manual" name="nameTH" placeholder="เช่น คณิตศาสตร์"
+                                class="hidden w-full bg-[var(--vs-bg-deep)] border-none rounded-[var(--vs-radius)] p-3 text-sm text-[var(--vs-text-body)] focus:border-none outline-none transition-colors Thai-Rule">
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="text-sm text-[var(--vs-text-muted)] uppercase font-extralight">Subject Name
+                                (English)</label>
+                            <input type="text" id="input-nameEN" name="nameEN" required placeholder="e.g. Mathematics"
+                                class="w-full bg-[var(--vs-bg-deep)] border-none rounded-[var(--vs-radius)] p-3 text-sm text-[var(--vs-text-body)] focus:border-none outline-none transition-colors">
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="space-y-1">
+                                <label
+                                    class="text-sm text-[var(--vs-text-muted)] font-extralight Thai-Rule">ระดับชั้น</label>
+                                <div id="dropdown-grade" class="vs-dropdown">
+                                    <input type="hidden" id="input-grade" name="grade" value="ป.6" required>
+                                    <button type="button" class="vs-dropdown-trigger"
+                                        onclick="toggleDropdown('dropdown-grade')">
+                                        <span id="dropdown-grade-text">ป.6</span>
+                                        <svg class="vs-dropdown-arrow" fill="currentColor" viewBox="0 0 20 20">
+                                            <path
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                        </svg>
+                                    </button>
+                                    <div class="vs-dropdown-menu vs-scrollbar">
+                                        <div class="vs-dropdown-item" data-value="ป.1" data-text="ป.1"
+                                            onclick="selectGradeItem(this)">ป.1</div>
+                                        <div class="vs-dropdown-item" data-value="ป.2" data-text="ป.2"
+                                            onclick="selectGradeItem(this)">ป.2</div>
+                                        <div class="vs-dropdown-item" data-value="ป.3" data-text="ป.3"
+                                            onclick="selectGradeItem(this)">ป.3</div>
+                                        <div class="vs-dropdown-item" data-value="ป.4" data-text="ป.4"
+                                            onclick="selectGradeItem(this)">ป.4</div>
+                                        <div class="vs-dropdown-item" data-value="ป.5" data-text="ป.5"
+                                            onclick="selectGradeItem(this)">ป.5</div>
+                                        <div class="vs-dropdown-item selected" data-value="ป.6" data-text="ป.6"
+                                            onclick="selectGradeItem(this)">ป.6</div>
+                                        <div class="vs-dropdown-item" data-value="ม.1" data-text="ม.1"
+                                            onclick="selectGradeItem(this)">ม.1</div>
+                                        <div class="vs-dropdown-item" data-value="ม.2" data-text="ม.2"
+                                            onclick="selectGradeItem(this)">ม.2</div>
+                                        <div class="vs-dropdown-item" data-value="ม.3" data-text="ม.3"
+                                            onclick="selectGradeItem(this)">ม.3</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-y-1">
+                                <label
+                                    class="text-sm text-[var(--vs-text-muted)] font-extralight Thai-Rule">ห้อง</label>
+                                <div id="dropdown-room" class="vs-dropdown">
+                                    <input type="hidden" name="room" value="1" required>
+                                    <button type="button" class="vs-dropdown-trigger"
+                                        onclick="toggleDropdown('dropdown-room')">
+                                        <span id="dropdown-room-text">/1</span>
+                                        <svg class="vs-dropdown-arrow" fill="currentColor" viewBox="0 0 20 20">
+                                            <path
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                        </svg>
+                                    </button>
+                                    <div class="vs-dropdown-menu vs-scrollbar">
+                                        <div class="vs-dropdown-item selected" data-value="1" data-text="/1"
+                                            onclick="selectRoomItem(this)">/1</div>
+                                        <div class="vs-dropdown-item" data-value="2" data-text="/2"
+                                            onclick="selectRoomItem(this)">/2</div>
+                                        <div class="vs-dropdown-item" data-value="3" data-text="/3"
+                                            onclick="selectRoomItem(this)">/3</div>
+                                        <div class="vs-dropdown-item" data-value="4" data-text="/4"
+                                            onclick="selectRoomItem(this)">/4</div>
+                                        <div class="vs-dropdown-item" data-value="5" data-text="/5"
+                                            onclick="selectRoomItem(this)">/5</div>
+                                        <div class="vs-dropdown-item" data-value="6" data-text="/6"
+                                            onclick="selectRoomItem(this)">/6</div>
+                                        <div class="vs-dropdown-item" data-value="7" data-text="/7"
+                                            onclick="selectRoomItem(this)">/7</div>
+                                        <div class="vs-dropdown-item" data-value="8" data-text="/8"
+                                            onclick="selectRoomItem(this)">/8</div>
+                                        <div class="vs-dropdown-item" data-value="9" data-text="/9"
+                                            onclick="selectRoomItem(this)">/9</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-y-1">
+                                <label
+                                    class="text-sm text-[var(--vs-text-muted)] font-extralight Thai-Rule">รหัสวิชา</label>
+                                <input type="text" id="input-code" name="code" required placeholder="ค16101"
+                                    class="w-full bg-[var(--vs-bg-deep)] border-none rounded-[var(--vs-radius)] p-3 text-sm text-[var(--vs-text-body)] focus:border-none outline-none transition-colors uppercase">
+                            </div>
+                        </div>
+
+                        <div class="space-y-1">
+                            <label
+                                class="text-sm text-[var(--vs-text-muted)] font-extralight Thai-Rule">หมวดหมู่วิชา</label>
+                            <div id="dropdown-type" class="vs-dropdown Thai-Rule">
+                                <input type="hidden" id="input-type" name="subjectType" value="MATH" required>
+                                <button type="button" class="vs-dropdown-trigger"
+                                    onclick="toggleDropdown('dropdown-type')">
+                                    <span id="dropdown-type-text">คณิตศาสตร์ (Mathematics)</span>
+                                    <svg class="vs-dropdown-arrow" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                    </svg>
+                                </button>
+                                <div class="vs-dropdown-menu vs-scrollbar">
+                                    <div class="vs-dropdown-item selected" data-value="MATH"
+                                        data-text="คณิตศาสตร์ (Mathematics)" onclick="selectTypeItem(this)">คณิตศาสตร์
+                                        (Mathematics)</div>
+                                    <div class="vs-dropdown-item" data-value="SCI" data-text="วิทยาศาสตร์ (Science)"
+                                        onclick="selectTypeItem(this)">วิทยาศาสตร์ (Science)</div>
+                                    <div class="vs-dropdown-item" data-value="THAI" data-text="ภาษาไทย (Thai)"
+                                        onclick="selectTypeItem(this)">ภาษาไทย (Thai)</div>
+                                    <div class="vs-dropdown-item" data-value="ENG" data-text="ภาษาอังกฤษ (English)"
+                                        onclick="selectTypeItem(this)">ภาษาอังกฤษ (English)</div>
+                                    <div class="vs-dropdown-item" data-value="SOC"
+                                        data-text="สังคมศึกษา (Social Studies)" onclick="selectTypeItem(this)">
+                                        สังคมศึกษา (Social Studies)</div>
+                                    <div class="vs-dropdown-item" data-value="ART" data-text="ศิลปะ (Art)"
+                                        onclick="selectTypeItem(this)">ศิลปะ (Art)</div>
+                                    <div class="vs-dropdown-item" data-value="PE" data-text="สุขศึกษา (PE)"
+                                        onclick="selectTypeItem(this)">สุขศึกษา (PE)</div>
+                                    <div class="vs-dropdown-item" data-value="WORK" data-text="การงานอาชีพ (Work/Tech)"
+                                        onclick="selectTypeItem(this)">การงานอาชีพ (Work/Tech)</div>
+                                    <div class="vs-dropdown-item" data-value="HIST" data-text="ประวัติศาสตร์ (History)"
+                                        onclick="selectTypeItem(this)">ประวัติศาสตร์ (History)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4">
+                            <button type="submit"
+                                class="w-full px-4 py-3 bg-[var(--vs-accent)] text-[#000] rounded-[var(--vs-radius)] hover:brightness-110 transition-colors text-sm uppercase font-extralight flex items-center justify-center gap-2">
+                                <i class="icon i-plus w-4 h-4"></i>
+                                <span class="text-sm font-extralight Thai-Rule">บันทึกการ์ดวิชา</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right Column: Subject Bank -->
+            <div class="lg:col-span-8">
+                <div class="dna-zone p-6 h-full min-h-[600px]">
+                    <div class="dna-zone-header mb-6">
+                        <h2 class="dna-zone-title">คลังการ์ดวิชาสอน</h2>
+                        <span id="bank-count" class="hud-badge-micro">ไม่มีการ์ดในคลัง</span>
+                    </div>
+
+                    <div id="cards-grid" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                        <!-- Cards injected here -->
+                    </div>
+
+                    <!-- Policy Info State -->
+                    <div id="policy-info-state"
+                        class="hidden flex-col items-center justify-center py-20 text-center animate-in fade-in duration-500 w-full h-full">
+                        <div
+                            class="w-16 h-16 bg-[rgba(var(--vs-accent-rgb),0.1)] rounded-[3px] flex items-center justify-center mb-6 mx-auto">
+                            <i class="icon i-shield-check w-8 h-8 text-[var(--vs-accent)]"></i>
+                        </div>
+                        <h3 class="text-lg font-extralight text-[var(--vs-text-title)] Thai-Rule mb-2">
+                            ตารางสอนโดยผู้อำนวยการ
+                        </h3>
+                        <p class="text-sm text-[var(--vs-text-muted)] max-w-md mx-auto uppercase leading-relaxed">
+                            Your teaching schedule is managed and assigned by the school director.
+                            Please review your schedule grid for details.
+                        </p>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="empty-state"
+                        class="hidden flex-col items-center justify-center py-20 opacity-30 text-center">
+                        <i class="icon i-document-plus w-12 h-12 mb-4"></i>
+                        <p class="text-sm uppercase font-extralight">ยังไม่มีการ์ดวิชาในคลัง</p>
+                        <p class="text-[10px] mt-2 text-[var(--vs-text-muted)] Thai-Rule">
+                            ใช้แผงควบคุมด้านซ้ายเพื่อสร้างการ์ดวิชาสอนของคุณ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'idlpms_subject_bank';
+        let subjectBank = [];
+
+        // Subject meta for colors/abbreviations
+        const SUBJECT_META = {
+            MATH: { color: 'var(--sj-math)', rgb: '251, 191, 36', abbr: 'MA' },
+            SCI: { color: 'var(--sj-sci)', rgb: '34, 211, 238', abbr: 'SC' },
+            THAI: { color: 'var(--sj-thai)', rgb: '251, 113, 133', abbr: 'TH' },
+            ENG: { color: 'var(--sj-eng)', rgb: '129, 140, 248', abbr: 'EN' },
+            SOC: { color: 'var(--sj-soc)', rgb: '251, 146, 60', abbr: 'SO' },
+            ART: { color: 'var(--sj-art)', rgb: '217, 70, 239', abbr: 'AR' },
+            PE: { color: 'var(--sj-pe)', rgb: '244, 63, 94', abbr: 'PE' },
+            WORK: { color: 'var(--sj-work)', rgb: '52, 211, 153', abbr: 'WK' },
+            HIST: { color: 'var(--sj-hist)', rgb: '161, 161, 170', abbr: 'HI' }
+        };
+
+        const SUBJECT_DATA = {
+            'คณิตศาสตร์': { en: 'Mathematics', type: 'MATH', code: 'ค' },
+            'วิทยาศาสตร์': { en: 'Science', type: 'SCI', code: 'ว' },
+            'ภาษาไทย': { en: 'Thai', type: 'THAI', code: 'ท' },
+            'ภาษาอังกฤษ': { en: 'English', type: 'ENG', code: 'อ' },
+            'สังคมศึกษา': { en: 'Social Studies', type: 'SOC', code: 'ส' },
+            'ประวัติศาสตร์': { en: 'History', type: 'HIST', code: 'ส' },
+            'ศิลปะ': { en: 'Art', type: 'ART', code: 'ศ' },
+            'สุขศึกษา': { en: 'Health and PE', type: 'PE', code: 'พ' },
+            'การงานอาชีพ': { en: 'Work and Technology', type: 'WORK', code: 'ง' }
+        };
+
+        let currentMode = 'POLICY';
+
+        // Custom Dropdown Functions
+        function toggleDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            const isOpen = dropdown.classList.contains('open');
+            // Close all dropdowns first
+            document.querySelectorAll('.vs-dropdown.open').forEach(d => d.classList.remove('open'));
+            if (!isOpen) dropdown.classList.add('open');
+        }
+
+        function selectDropdownItem(item) {
+            const dropdown = item.closest('.vs-dropdown');
+            const hiddenInput = dropdown.querySelector('input[type="hidden"]');
+            const textSpan = dropdown.querySelector('.vs-dropdown-trigger span');
+
+            // Update selection
+            dropdown.querySelectorAll('.vs-dropdown-item').forEach(i => i.classList.remove('selected'));
+            item.classList.add('selected');
+
+            hiddenInput.value = item.dataset.value;
+            textSpan.textContent = item.dataset.text;
+            dropdown.classList.remove('open');
+
+            // Trigger autoFill if this is the subject dropdown
+            if (hiddenInput.id === 'input-nameTH-auto') autoFill();
+        }
+
+        function selectGradeItem(item) {
+            selectDropdownItem(item);
+            autoFill();
+        }
+
+        function selectRoomItem(item) {
+            selectDropdownItem(item);
+        }
+
+        function selectTypeItem(item) {
+            selectDropdownItem(item);
+        }
+
+
+        // Close dropdowns on outside click
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.vs-dropdown')) {
+                document.querySelectorAll('.vs-dropdown.open').forEach(d => d.classList.remove('open'));
+            }
+        });
+
+        function getCurrentUserRole() {
+            try {
+                const userData = localStorage.getItem('CURRENT_USER');
+                if (userData) {
+                    const user = JSON.parse(userData);
+                    return user.role || 'TEACHER';
+                }
+            } catch (e) {
+                console.warn('Could not get user role, defaulting to TEACHER');
+            }
+            return 'TEACHER';
+        }
+
+        function isDirector() {
+            const role = getCurrentUserRole();
+            return role === 'SCHOOL_DIR' || role === 'ESA_DIR';
+        }
+
+        function init() {
+            loadBank();
+            renderBank();
+
+            // Role-based UI: Hide Policy for Directors
+            const userIsDirector = isDirector();
+            const policyBtn = document.getElementById('btn-mode-policy');
+            const policyPanel = document.getElementById('policy-panel');
+            const policyInfoState = document.getElementById('policy-info-state');
+
+            if (userIsDirector) {
+                // Hide Policy button and related elements for Directors
+                if (policyBtn) policyBtn.classList.add('hidden');
+                if (policyPanel) policyPanel.classList.add('hidden');
+                if (policyInfoState) policyInfoState.classList.add('hidden');
+                setMode('AUTO'); // Default to Auto for Directors
+            } else {
+                setMode('POLICY'); // Default to Policy for Teachers
+            }
+
+            autoFill(); // Pre-fill Auto values
+        }
+
+        function loadBank() {
+            try {
+                const data = localStorage.getItem(STORAGE_KEY);
+                subjectBank = data ? JSON.parse(data) : [];
+            } catch (e) {
+                console.error("Load error", e);
+                subjectBank = [];
+            }
+        }
+
+        function saveBank() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(subjectBank));
+            const countEl = document.getElementById('bank-count');
+            if (countEl) countEl.innerText = `${subjectBank.length} วิชาในคลัง`;
+        }
+
+        function renderBank() {
+            const grid = document.getElementById('cards-grid');
+            const empty = document.getElementById('empty-state');
+
+            if (subjectBank.length === 0) {
+                grid.classList.add('hidden');
+                empty.classList.remove('hidden');
+            } else {
+                grid.classList.remove('hidden');
+                empty.classList.add('hidden');
+
+                grid.innerHTML = subjectBank.map(card => {
+                    const meta = SUBJECT_META[card.type] || { color: 'var(--vs-accent)', rgb: '251, 191, 36' };
+
+                    return `
+                    <div class="vs-neon" 
+                         style="--vs-neon-rgb: ${meta.rgb}; width: 100% !important; padding: 12px; cursor: default; display: block;">
+                        
+                        <div class="flex justify-between items-start mb-1">
+                            <span class="schedule-card-title Thai-Rule text-[15px] font-extralight" style="color: rgb(${meta.rgb})">${card.nameTH}</span>
+                            <button onclick="deleteCard('${card.id}')" class="p-1 text-[var(--vs-text-muted)] hover:text-[var(--vs-danger)] transition-colors">
+                                <i class="icon i-trash w-4 h-4"></i>
+                            </button>
+                        </div>
+
+                        <div class="schedule-card-subtitle uppercase text-[10px] mb-2 opacity-80" style="color: rgb(${meta.rgb})">${card.nameEN}</div>
+                        
+                        <div class="flex justify-between items-center gap-2 mt-2 pt-2 border-t border-white/5">
+                            <span class="font-extralight text-[13px]" style="color: rgb(${meta.rgb})">${card.grade}/${card.room}</span>
+                            <span class="schedule-card-code text-[12px] opacity-90">${card.code}</span>
+                        </div>
+                    </div>
+                `}).join('');
+            }
+            const countEl = document.getElementById('bank-count');
+            if (countEl) countEl.innerText = `${subjectBank.length} cards stored`;
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            const isPolicy = mode === 'POLICY';
+            const isAuto = mode === 'AUTO';
+            const isManual = mode === 'MANUAL';
+
+            // UI Buttons (3-Way Toggle)
+            const btnPolicy = document.getElementById('btn-mode-policy');
+            const btnAuto = document.getElementById('btn-mode-auto');
+            const btnManual = document.getElementById('btn-mode-manual');
+
+            const activeClass = 'flex-1 py-1.5 text-sm uppercase rounded-[3px] transition-all bg-[var(--vs-accent)] text-[var(--vs-bg-deep)] font-extralight';
+            const inactiveClass = 'flex-1 py-1.5 text-sm uppercase rounded-[3px] transition-all text-[var(--vs-text-muted)] hover:text-[var(--vs-text-title)]';
+
+            if (btnPolicy) btnPolicy.className = isPolicy ? activeClass : inactiveClass;
+            if (btnAuto) btnAuto.className = isAuto ? activeClass : inactiveClass;
+            if (btnManual) btnManual.className = isManual ? activeClass : inactiveClass;
+
+            // Panels Visibility
+            const policyPanel = document.getElementById('policy-panel');
+            const policyList = document.getElementById('policy-list');
+            const cardForm = document.getElementById('card-form');
+            const cardsGrid = document.getElementById('cards-grid');
+            const emptyState = document.getElementById('empty-state');
+            const policyState = document.getElementById('policy-info-state');
+
+            if (isPolicy) {
+                policyPanel.classList.remove('hidden');
+                policyList.classList.add('hidden'); // Fully hide the mock cards
+                cardForm.classList.add('hidden');
+                cardsGrid.classList.add('hidden');
+                emptyState.classList.add('hidden');
+                policyState.classList.remove('hidden');
+            } else {
+                policyPanel.classList.add('hidden');
+                policyList.classList.remove('hidden');
+                cardForm.classList.remove('hidden');
+                policyState.classList.add('hidden');
+                renderBank(); // Refresh bank view
+
+                // Form Fields Logic (Switching between Auto and Manual)
+                const selectAuto = document.getElementById('input-nameTH-auto');
+                const inputManual = document.getElementById('input-nameTH-manual');
+                const inputEN = document.getElementById('input-nameEN');
+                const inputType = document.getElementById('input-type');
+                const inputCode = document.getElementById('input-code');
+
+                if (isAuto) {
+                    selectAuto.classList.remove('hidden');
+                    selectAuto.required = true;
+                    inputManual.classList.add('hidden');
+                    inputManual.required = false;
+
+                    inputEN.readOnly = true;
+                    inputType.disabled = true;
+                    inputCode.readOnly = true;
+                    inputEN.classList.add('opacity-50');
+                    inputType.classList.add('opacity-50');
+                    inputCode.classList.add('opacity-50');
+                    autoFill();
+                } else {
+                    selectAuto.classList.add('hidden');
+                    selectAuto.required = false;
+                    inputManual.classList.remove('hidden');
+                    inputManual.required = true;
+
+                    inputEN.readOnly = false;
+                    inputType.disabled = false;
+                    inputCode.readOnly = false;
+                    inputEN.classList.remove('opacity-50');
+                    inputType.classList.remove('opacity-50');
+                    inputCode.classList.remove('opacity-50');
+                }
+            }
+        }
+
+        function importPolicy(en, th, grade, room, code, type) {
+            const newCard = {
+                id: 'CARD_POL_' + Date.now(),
+                nameTH: th,
+                nameEN: en,
+                grade: grade,
+                room: room,
+                code: code,
+                type: type,
+                createdAt: new Date().toISOString()
+            };
+
+            subjectBank.unshift(newCard);
+            saveBank();
+            renderBank();
+
+            alert(`นำเข้าวิชา ${th} สำเร็จ!`);
+
+            setTimeout(() => {
+                window.dispatchEvent(new Event('storage'));
+            }, 100);
+        }
+
+        function autoFill() {
+            if (currentMode !== 'AUTO') return;
+
+            const nameTH = document.getElementById('input-nameTH-auto').value;
+            const grade = document.getElementById('input-grade').value;
+            const data = SUBJECT_DATA[nameTH];
+
+            if (data) {
+                document.getElementById('input-nameEN').value = data.en;
+                document.getElementById('input-type').value = data.type;
+
+                const gradeNum = grade.replace(/[^0-9]/g, '');
+                const levelCode = grade.startsWith('ม') ? '2' : '1';
+                document.getElementById('input-code').value = `${data.code}${levelCode}${gradeNum}101`;
+            } else {
+                document.getElementById('input-nameEN').value = '';
+                document.getElementById('input-code').value = '';
+            }
+        }
+
+        function handleSave(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const nameTH = currentMode === 'AUTO'
+                ? document.getElementById('input-nameTH-auto').value
+                : document.getElementById('input-nameTH-manual').value;
+
+            if (!nameTH) {
+                alert('กรุณากรอกชื่อวิชา');
+                return;
+            }
+
+            const type = currentMode === 'AUTO'
+                ? document.getElementById('input-type').value
+                : formData.get('subjectType');
+
+            const nameEN = currentMode === 'AUTO'
+                ? document.getElementById('input-nameEN').value
+                : formData.get('nameEN');
+
+            const code = currentMode === 'AUTO'
+                ? document.getElementById('input-code').value
+                : formData.get('code');
+
+            const newCard = {
+                id: 'CARD_' + Date.now(),
+                nameTH: nameTH,
+                nameEN: nameEN,
+                grade: formData.get('grade'),
+                room: formData.get('room'),
+                code: code,
+                type: type,
+                createdAt: new Date().toISOString()
+            };
+
+            subjectBank.unshift(newCard);
+            saveBank();
+            renderBank();
+            event.target.reset();
+            if (currentMode === 'AUTO') {
+                document.getElementById('input-nameTH-auto').value = '';
+                autoFill();
+            }
+
+            setTimeout(() => {
+                window.dispatchEvent(new Event('storage'));
+            }, 100);
+        }
+
+        function deleteCard(id) {
+            if (confirm('ยืนยันการลบการ์ดวิชานี้? (ข้อมูลในตารางสอนที่มีอยู่แล้วจะไม่หายไป)')) {
+                subjectBank = subjectBank.filter(c => c.id !== id);
+                saveBank();
+                renderBank();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

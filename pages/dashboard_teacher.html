@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teacher Dashboard | IDLPMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <script src="../assets/js/data.js"></script>
+    <script src="../assets/js/components/dna_spider.js"></script>
+    <script src="../assets/js/components/dna_heatmap.js"></script>
+    <script src="../assets/js/components/schedule_grid.js?v=2.0"></script>
+</head>
+
+<body class="bg-transparent p-6 overflow-y-auto overflow-x-hidden font-['Sarabun'] antialiased vs-scrollbar"
+    style="height: auto; min-height: 100vh;">
+    <div id="dashboard-content" class="max-w-[1600px] space-y-6 animate-in fade-in zoom-in-95 duration-500">
+        <!-- Dynamic Content injected by JS -->
+    </div>
+
+    <script>
+        // State
+        let currentTab = 'dna'; // 'dna' | 'schedule'
+        let currentView = 'class'; // 'class' = Heatmap, 'individual' = Spider
+        let selectedStudent = null;
+        let classroomStudents = [];
+        let scheduleGrid = null;
+
+        function init() {
+            let user = { role: 'TEACHER', gradeLevel: 6, schoolId: 'SCH_001', fullName: 'ครูตัวอย่าง' };
+            try {
+                if (parent && parent.window && typeof parent.window.getCurrentUser === 'function') {
+                    user = parent.window.getCurrentUser();
+                }
+            } catch (e) { console.log('Standalone mode'); }
+
+            // Load mock classroom data
+            loadClassroomData(user);
+
+            // Render dashboard
+            renderDashboard(user);
+        }
+
+        function loadClassroomData(user) {
+            classroomStudents = [
+                { id: 'STU_001', name: 'สมชาย ใจดี', dna: { k: 75, p: 65, a: 80, e: 70, d: 55 } },
+                { id: 'STU_002', name: 'สมหญิง รักเรียน', dna: { k: 85, p: 78, a: 70, e: 82, d: 72 } },
+                { id: 'STU_003', name: 'วิชัย เก่งกาจ', dna: { k: 60, p: 55, a: 65, e: 58, d: 62 } },
+                { id: 'STU_004', name: 'พิมพ์ใจ สดใส', dna: { k: 72, p: 80, a: 88, e: 75, d: 78 } },
+                { id: 'STU_005', name: 'ธนกร มุ่งมั่น', dna: { k: 68, p: 72, a: 75, e: 65, d: 60 } },
+                { id: 'STU_006', name: 'รัตนา ขยัน', dna: { k: 55, p: 62, a: 58, e: 52, d: 45 } },
+                { id: 'STU_007', name: 'ปรเมศ อดทน', dna: { k: 78, p: 85, a: 82, e: 88, d: 80 } },
+                { id: 'STU_008', name: 'กานดา สว่าง', dna: { k: 62, p: 58, a: 72, e: 68, d: 52 } },
+            ];
+
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            renderDashboard({ fullName: 'ครูตัวอย่าง' });
+        }
+
+        function renderDashboard(user) {
+            const container = document.getElementById('dashboard-content');
+            container.innerHTML = `
+                <!-- Header Section -->
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <span class="role-badge role-badge-teacher">Teacher</span>
+                        <h1 class="text-xl font-extralight text-[var(--vs-text-title)] uppercase">Mission Control</h1>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm text-[var(--vs-text-muted)] font-extralight">${user.fullName || 'ครูตัวอย่าง'}</span>
+                    </div>
+                </div>
+                
+                <!-- Tab Toggle -->
+                <div class="flex gap-2">
+                    <button class="view-toggle-btn ${currentTab === 'dna' ? 'active' : ''}" onclick="switchTab('dna')">
+                        <i class="icon i-chart-bar w-4 h-4"></i>
+                        DNA Overview
+                    </button>
+                    <button class="view-toggle-btn ${currentTab === 'schedule' ? 'active' : ''}" onclick="switchTab('schedule')">
+                        <i class="icon i-calendar w-4 h-4"></i>
+                        Teaching Schedule
+                    </button>
+                </div>
+                
+                <!-- Tab Content -->
+                <div id="tab-content">
+                    ${currentTab === 'dna' ? renderDNATab(user) : renderScheduleTab()}
+                </div>
+            `;
+
+            // Initialize components based on tab
+            if (currentTab === 'dna') {
+                renderVisualization();
+            } else {
+                // Initialize Schedule Grid — let loadFromStorage() determine mode/editable
+                // If principal-assigned, mode will be 'principal' and editable=false automatically
+                scheduleGrid = new TeacherScheduleGrid('schedule-container');
+            }
+        }
+
+        function renderDNATab(user) {
+            return `
+                <!-- Main Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left: Student List -->
+                    <div class="lg:col-span-1">
+                        <div class="dna-zone p-4">
+                            <div class="dna-zone-header">
+                                <h2 class="dna-zone-title">Students</h2>
+                                <span class="text-sm text-[var(--vs-text-muted)]">${classroomStudents.length} คน</span>
+                            </div>
+                            <div class="dna-zone-content flex-col items-stretch gap-2 mt-4 max-h-[400px] overflow-y-auto vs-scrollbar">
+                                ${classroomStudents.map((s, i) => `
+                                    <div class="flex items-center justify-between p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] hover:bg-[var(--vs-bg-card)] cursor-pointer transition-colors group ${selectedStudent?.id === s.id ? 'border border-[var(--vs-accent)]' : 'border border-transparent'}"
+                                         onclick="selectStudent('${s.id}')">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-[3px] bg-[var(--vs-bg-panel)] flex items-center justify-center text-sm font-extralight text-[var(--vs-text-muted)]">
+                                                ${i + 1}
+                                            </div>
+                                            <span class="text-sm text-[var(--vs-text-body)] font-extralight Thai-Rule">${s.name}</span>
+                                        </div>
+                                        <i class="icon i-chevron-right w-4 h-4 opacity-0 group-hover:opacity-100 text-[var(--vs-accent)] transition-opacity"></i>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: DNA Visualization -->
+                    <div class="lg:col-span-2">
+                        <div class="dna-zone p-6">
+                            <div class="dna-zone-header">
+                                <div class="flex items-center gap-2">
+                                    <h2 class="dna-zone-title">Intelligence DNA Analysis</h2>
+                                </div>
+                                <div class="view-toggle">
+                                    <button class="view-toggle-btn ${currentView === 'class' ? 'active' : ''}" onclick="switchView('class')">Class</button>
+                                    <button class="view-toggle-btn ${currentView === 'individual' ? 'active' : ''}" onclick="switchView('individual')">Individual</button>
+                                </div>
+                            </div>
+                            
+                            <div class="dna-zone-content flex-col gap-4 mt-4">
+                                <!-- Visualization Container -->
+                                <div id="visualization-container" class="w-full min-h-[400px] p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                                    <!-- Injected by JS -->
+                                </div>
+
+                                <!-- Selected Student Info (Individual View) -->
+                                <div id="student-info" class="hidden w-full p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm text-[var(--vs-text-muted)] font-extralight uppercase">Selected Student</span>
+                                        <span id="selected-student-name" class="text-sm text-[var(--vs-text-title)] font-extralight Thai-Rule">-</span>
+                                    </div>
+                                </div>
+
+                                <!-- Class Summary (Class View) -->
+                                <div id="class-summary" class="w-full grid grid-cols-6 gap-2">
+                                    <!-- Injected by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderScheduleTab() {
+            return `
+                <div class="dna-zone p-6">
+                    <div class="dna-zone-header mb-4">
+                        <div class="flex items-center gap-2">
+                            <h2 class="dna-zone-title">Teaching Schedule</h2>
+                        </div>
+                        <span class="text-sm text-[var(--vs-text-muted)]">Academic Year 2568</span>
+                    </div>
+                    
+                    <!-- Schedule Grid Container -->
+                    <div id="schedule-container" class="w-full">
+                        <!-- TeacherScheduleGrid will be initialized here -->
+                    </div>
+                </div>
+            `;
+        }
+
+        function switchView(view) {
+            currentView = view;
+            renderDashboard({ fullName: 'ครูตัวอย่าง' });
+        }
+
+        function selectStudent(studentId) {
+            selectedStudent = classroomStudents.find(s => s.id === studentId);
+            if (selectedStudent && currentView === 'class') {
+                currentView = 'individual';
+            }
+            renderDashboard({ fullName: 'ครูตัวอย่าง' });
+        }
+
+        function renderVisualization() {
+            const container = document.getElementById('visualization-container');
+            const studentInfo = document.getElementById('student-info');
+            const classSummary = document.getElementById('class-summary');
+
+            if (currentView === 'class') {
+                studentInfo?.classList.add('hidden');
+                classSummary?.classList.remove('hidden');
+
+                const heatmap = new DNAHeatmap(container, {
+                    cellSize: 48,
+                    dimensions: ['K', 'P', 'A', 'E', 'D']
+                });
+
+                heatmap.setData(classroomStudents);
+                heatmap.onSelect((student, dim) => {
+                    selectedStudent = student;
+                    currentView = 'individual';
+                    renderDashboard({ fullName: 'ครูตัวอย่าง' });
+                });
+
+                const averages = heatmap.getClassAverages();
+                const colors = ['var(--dna-k)', 'var(--dna-p)', 'var(--dna-a)', 'var(--dna-e)', 'var(--dna-d)'];
+                classSummary.innerHTML = ['K', 'P', 'A', 'E', 'D'].map((dim, i) => `
+                    <div class="p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] text-center">
+                        <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-1">${dim}</div>
+                        <div class="text-lg font-extralight" style="color: ${colors[i]}">${averages[dim.toLowerCase()] || 0}%</div>
+                    </div>
+                `).join('');
+
+            } else {
+                studentInfo?.classList.remove('hidden');
+                classSummary?.classList.add('hidden');
+
+                document.getElementById('selected-student-name').textContent = selectedStudent?.name || 'กรุณาเลือกนักเรียน';
+
+                if (selectedStudent) {
+                    const spider = new DNASpider('visualization-container', {
+                        width: 360,
+                        height: 360,
+                        labels: ['K', 'P', 'A', 'E', 'D']
+                    });
+
+                    spider.setData(selectedStudent.dna);
+                } else {
+                    container.innerHTML = `
+                        <div class="flex items-center justify-center h-full">
+                            <p class="text-sm text-[var(--vs-text-muted)] opacity-50 Thai-Rule">กรุณาเลือกนักเรียนจากรายการด้านซ้าย</p>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // Initialize on load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+
+</html>

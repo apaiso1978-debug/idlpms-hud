@@ -1,0 +1,101 @@
+{
+    "name": "idlpms-hud",
+    "version": "2.0.0",
+    "description": "IDLPMS - Integrated Digital Learning Platform Management System (HUD Interface)",
+    "author": "IDLPMS Development Team",
+    "license": "MIT",
+    "private": true,
+    "type": "module",
+    "main": "index.html",
+    "scripts": {
+        "start": "powershell -ExecutionPolicy Bypass -File server.ps1",
+        "server": "powershell -ExecutionPolicy Bypass -File server.ps1",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "test:coverage": "vitest run --coverage",
+        "audit": "powershell -ExecutionPolicy Bypass -File scripts/audit/master-audit.ps1 -Mode all",
+        "audit:thai": "powershell -ExecutionPolicy Bypass -File scripts/audit/master-audit.ps1 -Mode thai",
+        "audit:design": "powershell -ExecutionPolicy Bypass -File scripts/audit/master-audit.ps1 -Mode design",
+        "audit:fix": "powershell -ExecutionPolicy Bypass -File scripts/audit/master-audit.ps1 -Mode fix",
+        "audit:report": "powershell -ExecutionPolicy Bypass -File scripts/audit/master-audit.ps1 -Mode report",
+        "lint": "eslint src/**/*.js assets/js/**/*.js",
+        "lint:fix": "eslint src/**/*.js assets/js/**/*.js --fix",
+        "format": "prettier --write \"**/*.{js,html,css,json,md}\"",
+        "format:check": "prettier --check \"**/*.{js,html,css,json,md}\"",
+        "clean": "rimraf dist coverage",
+        "build": "echo 'No build step required for static files'",
+        "deploy": "powershell -ExecutionPolicy Bypass -File deploy.ps1",
+        "prepare": "echo 'IDLPMS HUD ready'"
+    },
+    "devDependencies": {
+        "@vitest/coverage-v8": "^1.6.0",
+        "eslint": "^8.57.0",
+        "fake-indexeddb": "^5.0.2",
+        "pdf-parse": "^2.4.5",
+        "pdfjs-dist": "^3.11.174",
+        "prettier": "^3.2.5",
+        "rimraf": "^5.0.5",
+        "vitest": "^1.6.0"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "keywords": [
+        "education",
+        "learning-management",
+        "thailand",
+        "pwa",
+        "offline-first",
+        "hud-interface"
+    ],
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "bugs": {
+        "url": ""
+    },
+    "homepage": "",
+    "browserslist": [
+        ">0.5%",
+        "last 2 versions",
+        "not dead",
+        "not ie <= 11"
+    ],
+    "prettier": {
+        "semi": true,
+        "singleQuote": true,
+        "tabWidth": 4,
+        "trailingComma": "es5",
+        "printWidth": 100
+    },
+    "eslintConfig": {
+        "env": {
+            "browser": true,
+            "es2022": true
+        },
+        "extends": "eslint:recommended",
+        "parserOptions": {
+            "ecmaVersion": "latest",
+            "sourceType": "module"
+        },
+        "globals": {
+            "IDLPMS_DATA": "readonly",
+            "DataServiceFactory": "readonly",
+            "LocalDataService": "readonly",
+            "AppsScriptDataService": "readonly",
+            "CacheService": "readonly",
+            "SyncEngine": "readonly",
+            "AuthService": "readonly",
+            "getCurrentUser": "readonly",
+            "getDataService": "readonly",
+            "getCacheService": "readonly",
+            "getSyncEngine": "readonly",
+            "getAuthService": "readonly"
+        },
+        "rules": {
+            "no-unused-vars": "warn",
+            "no-console": "off"
+        }
+    }
+}

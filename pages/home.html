@@ -1,0 +1,249 @@
+﻿<!doctype html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | IDLPMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <link rel="stylesheet" href="../assets/css/curriculum.css" />
+
+    <!-- Core Services & Engines -->
+    <script src="../src/services/DataService.js"></script>
+    <script src="../src/services/AuthService.js"></script>
+    <script src="../src/lib/AIAuditor.js"></script>
+    <script src="../src/engines/DNAHarvester.js"></script>
+    <script src="../src/engines/QuizEngine.js"></script>
+    <script src="../src/engines/SecurityEngine.js"></script>
+
+    <script src="../assets/js/data.js"></script>
+    <script src="../assets/js/management.js" defer></script>
+</head>
+
+<body class="bg-[var(--vs-bg-main)] text-[var(--vs-text-body)] font-['Sarabun'] antialiased p-6">
+    <div class="max-w-[1600px] space-y-6">
+        <!-- Welcome Header -->
+        <header class="flex justify-between items-center h-12">
+            <div>
+                <h1 id="welcomeTitle" class="text-2xl font-extralight text-[var(--vs-text-title)] Thai-Rule">
+                    ยินดีต้อนรับกลับมา, Admin
+                </h1>
+                <p id="welcomeSub" class="text-sm text-[var(--vs-text-muted)] font-extralight uppercase">
+                    ภาพรวมระบบ • ข้อมูลเรียลไทม์
+                </p>
+            </div>
+            <div class="text-right">
+                <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-1 font-extralight">
+                    สิทธิ์การใช้งานเข้าถึง
+                </div>
+                <div id="roleBadge"
+                    class="px-3 py-1 bg-[rgba(var(--vs-bg-card-rgb),0.5)] border border-[var(--vs-border)] text-[var(--vs-text-title)] text-sm font-extralight rounded-[var(--vs-radius)]">
+                    MOE Administrator
+                </div>
+            </div>
+        </header>
+
+        <!-- Global Statistics (Hidden for Students) -->
+        <div id="global-stats-row" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
+                <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-2 font-extralight Thai-Rule">
+                    จำนวนนักเรียนทั้งหมด
+                </div>
+                <div id="statStudents" class="text-3xl font-extralight text-[var(--vs-text-title)]">
+                    0
+                </div>
+                <div class="mt-4 flex items-center space-x-2 text-sm text-[var(--vs-success)] font-extralight">
+                    <i class="icon i-lightning h-4 w-4"></i>
+                    <span>+2.4% จากเดือนที่แล้ว</span>
+                </div>
+            </div>
+            <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
+                <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-2 font-extralight Thai-Rule">
+                    สถานศึกษาในเครือข่าย
+                </div>
+                <div id="statSchools" class="text-3xl font-extralight text-[var(--vs-text-title)]">
+                    0
+                </div>
+                <div class="mt-4 flex items-center space-x-2 text-sm text-[var(--vs-accent)] font-extralight">
+                    <i class="icon i-globe h-4 w-4"></i>
+                    <span>เชื่อมต่อข้อมูลเรียลไทม์</span>
+                </div>
+            </div>
+            <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
+                <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-2 font-extralight Thai-Rule">
+                    ภาระงานระบบ
+                </div>
+                <div id="statLoad" class="text-3xl font-extralight text-[var(--vs-text-title)]">
+                    0
+                </div>
+                <div class="mt-4 h-1 w-full bg-[var(--vs-border)] rounded-[var(--vs-radius)] overflow-hidden">
+                    <div class="h-full bg-[var(--vs-accent)]" style="width: 42%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Grid / Mastery Hub -->
+        <div id="main-mastery-grid" class="hidden">
+            <!-- Populated by ManagementEngine -->
+        </div>
+
+        <!-- Admin Stats Section -->
+        <div id="admin-stats" class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <!-- Recent Activities -->
+            <div class="lg:col-span-2 space-y-4">
+                <h3 class="text-sm font-extralight text-[var(--vs-text-muted)] uppercase Thai-Rule">
+                    การแจ้งเตือนสำคัญ
+                </h3>
+                <div class="space-y-3">
+                    <div
+                        class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] flex items-center justify-between hover:bg-[var(--vs-bg-panel)] transition-colors cursor-pointer group">
+                        <div class="flex items-center space-x-4">
+                            <div
+                                class="w-10 h-10 rounded-[var(--vs-radius)] hud-border-rose hud-bg-rose flex items-center justify-center">
+                                <i class="icon i-shield h-5 w-5 text-[var(--vs-danger)]"></i>
+                            </div>
+                            <div>
+                                <div
+                                    class="text-sm font-extralight text-[var(--vs-text-title)] group-hover:text-white Thai-Rule">
+                                    การแจ้งเตือนความปลอดภัยระบบ
+                                </div>
+                                <div class="text-sm text-[var(--vs-text-muted)] font-extralight">
+                                    กำหนดการเวลา 02:00 น. (UTC)
+                                </div>
+                            </div>
+                        </div>
+                        <i class="icon i-chevron-right h-4 w-4 text-[var(--vs-text-muted)]"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Role Quick Stats -->
+            <div class="space-y-4">
+                <h3 class="text-sm font-extralight text-[var(--vs-text-muted)] uppercase Thai-Rule">
+                    แผงข้อมูลส่วนตัว
+                </h3>
+                <div
+                    class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] space-y-4">
+                    <div class="flex items-center space-x-4">
+                        <div id="userAvatar"
+                            class="w-12 h-12 rounded-[var(--vs-radius)] border border-[var(--vs-border)] flex items-center justify-center text-lg font-extralight text-[var(--vs-accent)]"
+                            style="background-color: rgba(var(--vs-accent-rgb), 0.2)">
+                            A
+                        </div>
+                        <div>
+                            <div id="userName" class="text-sm text-[var(--vs-text-title)] font-extralight Thai-Rule">
+                                Admin
+                            </div>
+                            <div id="userOrg" class="text-sm text-[var(--vs-text-muted)] uppercase">
+                                สังกัด / หน่วยงาน
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-[var(--vs-text-muted)] uppercase">สถานะ</span>
+                        <span class="text-[var(--vs-success)] font-extralight uppercase">ออนไลน์</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-[var(--vs-text-muted)] uppercase">ระดับการเข้าถึง</span>
+                        <span id="userPerm" class="text-[var(--vs-text-body)]">ระดับบริหาร</span>
+                    </div>
+                </div>
+
+                <button
+                    class="w-full py-2 bg-[var(--vs-bg-card)] hover:bg-[var(--vs-bg-panel)] text-[var(--vs-text-body)] text-sm font-extralight rounded-[var(--vs-radius)] border border-[var(--vs-border)] transition-colors Thai-Rule">
+                    ดูข้อมูลโปรไฟล์ฉบับเต็ม
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function syncDashboard() {
+            let userFunc = null;
+            if (typeof getCurrentUser === 'function') {
+                userFunc = getCurrentUser;
+            } else if (window.parent && typeof window.parent.getCurrentUser === 'function') {
+                userFunc = window.parent.getCurrentUser;
+            }
+
+            if (!userFunc || typeof IDLPMS_DATA === 'undefined')
+                return;
+
+            const user = userFunc();
+            const data = IDLPMS_DATA;
+
+            if (user) {
+                // UI Sync
+                document.getElementById('welcomeTitle').innerText =
+                    `ยินดีต้อนรับกลับมา, ${user.fullName.split(' ')[0]}`;
+                document.getElementById('roleBadge').innerText = user.name;
+
+                const avatarEl = document.getElementById('userAvatar');
+                avatarEl.innerText = user.avatar;
+                avatarEl.className = `w-12 h-12 rounded-[var(--vs-radius)] flex items-center justify-center text-lg font-medium`;
+                avatarEl.style.borderColor = `rgba(var(--vs-accent-rgb), 0.5)`;
+                avatarEl.style.backgroundColor = `rgba(var(--vs-accent-rgb), 0.2)`;
+                avatarEl.style.color = `var(--vs-accent)`;
+
+                document.getElementById('userName').innerText = user.fullName;
+
+                // Smart Org Resolution
+                let orgName = user.org || 'UNDEFINED';
+                if (!user.org && user.schoolId && data.structure.schools[user.schoolId]) {
+                    orgName = data.structure.schools[user.schoolId].name;
+                } else if (!user.org && user.districtId && data.structure.districts[user.districtId]) {
+                    orgName = data.structure.districts[user.districtId].name;
+                }
+                document.getElementById('userOrg').innerText = orgName;
+                document.getElementById('userPerm').innerText = user.level || user.name;
+
+                // Dynamic Stats (Context Aware)
+                const isSchool = user.level === 'School' || user.role === 'STUDENT';
+                const isMaBlud = user.schoolId === 'SCH_MABLUD';
+
+                document.getElementById('statStudents').innerText = isSchool
+                    ? (isMaBlud ? '250' : '2,450')
+                    : data.stats.global.totalStudents;
+                document.getElementById('statSchools').innerText = isSchool
+                    ? '1'
+                    : data.stats.global.totalSchools;
+                document.getElementById('statLoad').innerText = isSchool
+                    ? (isMaBlud ? '17 ครู' : '85%')
+                    : data.stats.global.activeUsers;
+
+                // Update label for "System Load" if it's a specific school view
+                if (isSchool && isMaBlud) {
+                    const loadLabel = document.querySelector('#statLoad').previousElementSibling;
+                    if (loadLabel) loadLabel.innerText = 'จำนวนครูทั้งหมด';
+                }
+
+                // Mastery Grid vs Admin Stats Rendering
+                const masteryGrid = document.getElementById('main-mastery-grid');
+                const adminStats = document.getElementById('admin-stats');
+                const globalStats = document.getElementById('global-stats-row');
+
+                if (user.role === 'STUDENT') {
+                    masteryGrid.classList.remove('hidden');
+                    adminStats.classList.add('hidden');
+                    globalStats.classList.add('hidden');
+
+                    setTimeout(() => {
+                        if (window.ManagementEngine) {
+                            window.ManagementEngine.renderMainDashboard('main-mastery-grid');
+                        }
+                    }, 100);
+                } else {
+                    masteryGrid.classList.add('hidden');
+                    adminStats.classList.remove('hidden');
+                    globalStats.classList.remove('hidden');
+                }
+            }
+        }
+        window.addEventListener('load', syncDashboard);
+    </script>
+</body>
+
+</html>

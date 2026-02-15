@@ -1,0 +1,151 @@
+# ============================================================================
+# IDLPMS .gitignore
+# ============================================================================
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+dist/
+build/
+out/
+.output/
+*.min.js
+*.min.css
+
+# Test coverage
+coverage/
+.nyc_output/
+*.lcov
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# IDE / Editor
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.backup
+*.cache
+
+# PowerShell
+*.ps1.bak
+
+# Audit reports (auto-generated)
+audit_report_*.md
+AUDIT_REPORT_*.md
+
+# Service Worker cache (development)
+sw-precache-config.js
+workbox-config.js
+
+# Local development
+.local/
+*.local
+
+# Database/Cache files (IndexedDB exports)
+*.idb
+*.leveldb/
+
+# Certificates (if any)
+*.pem
+*.key
+*.crt
+*.cer
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Agent system (keep structure but ignore runtime data)
+.agent/cache/
+.agent/logs/
+.agent/*.tmp
+
+# Google Apps Script deployment
+.clasp.json
+appsscript.json.bak
+
+# Screenshots and assets (optional large files)
+# Uncomment if needed:
+# assets/screenshots/
+# assets/icons/icon-512x512.png
+
+# Compiled assets (if using build tools later)
+*.map
+*.chunk.js
+*.bundle.js
+
+# Vim
+*.swp
+*.swo
+Session.vim
+.netrwhist
+
+# JetBrains
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Python (if using any scripts)
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.pyo
+
+# Misc
+*.orig
+*.rej
+.cache/
+.parcel-cache/
+.turbo/
+
+# Local Netlify folder
+.netlify

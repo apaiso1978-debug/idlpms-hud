@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6. สถาปัตยกรรม | IDLPMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../../assets/css/theme.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+</head>
+
+<body class="bg-transparent px-8 pt-8 pb-24 overflow-y-auto font-['Sarabun'] antialiased">
+    <div class="max-w-[1600px] space-y-8">
+        <!-- Header -->
+        <header
+            class="h-12 px-6 flex items-center justify-between rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
+            <h1 class="text-sm font-extralight text-[var(--vs-text-title)] uppercase">6. สถาปัตยกรรม</h1>
+        </header>
+
+        <!-- Infra Diagram Mockup -->
+        <div
+            class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-dashed border-[var(--vs-border)] flex flex-col items-center justify-center space-y-4">
+            <i class="icon i-cube h-12 w-12 text-[var(--vs-text-muted)] opacity-50"></i>
+            <span class="text-[var(--vs-text-muted)] text-sm uppercase">IDLPMS Cloud Ecosystem</span>
+        </div>
+
+        <!-- Layers -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div
+                class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] space-y-4">
+                <h3 class="text-[var(--vs-text-title)] font-extralight flex items-center space-x-2">
+                    <div class="w-1 h-4 bg-[var(--vs-accent)]"></div>
+                    <span>HUD Dashboard (Level 1)</span>
+                </h3>
+                <p class="text-[var(--vs-text-muted)] text-sm leading-relaxed">
+                    หน้าแดชบอร์ดหลักใช้ระบบ Canvas ในการแสดงผล โดยมีสีพื้นหลังหลักเป็น Zinc-850 Baseline
+                    (var(--vs-bg-deep))
+                    เพื่อสร้างมิติและความลึกให้กับอินเทอร์เฟซ
+                </p>
+            </div>
+            <div
+                class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] space-y-4">
+                <h3 class="text-[var(--vs-text-title)] font-extralight flex items-center space-x-2">
+                    <div class="w-1 h-4 bg-emerald-500"></div>
+                    <span>Module Surface (Level 3)</span>
+                </h3>
+                <p class="text-[var(--vs-text-muted)] text-sm leading-relaxed">
+                    ส่วนของ Card และโมดูลต่างๆ จะใช้สี Zinc-800 Panel (var(--vs-bg-panel))
+                    เพื่อสร้างความแตกต่างทางสายตาและแสดงถึง "การยกระดับ" ของข้อมูล
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

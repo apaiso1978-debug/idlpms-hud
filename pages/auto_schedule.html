@@ -1,0 +1,1024 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Scheduling Hub | IDLPMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/styles.css?v=1.2" />
+    <link rel="stylesheet" href="../assets/css/notifications.css" />
+    <!-- Core Data & Services -->
+    <script src="../assets/js/data.js"></script>
+    <script src="../src/services/DataService.js"></script>
+    <script src="../src/services/AuthService.js"></script>
+    <script src="../src/services/SchoolConfigService.js"></script>
+    <script src="../src/services/WorkloadConfigService.js"></script>
+    <!-- Engine -->
+    <script src="../assets/js/engines/auto_schedule_engine.js"></script>
+    <script src="../assets/js/notifications.js"></script>
+</head>
+
+<body class="bg-transparent p-6 overflow-y-auto overflow-x-hidden font-['Sarabun'] antialiased vs-scrollbar">
+    <div id="auto-schedule-app"
+        class="max-w-[1600px] mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+
+        <!-- Header Section -->
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <span class="role-badge role-badge-director vs-pulse-cyan">AI Planning Hub</span>
+                <h1 class="text-xl font-extralight text-[var(--vs-text-title)] uppercase">
+                    ระบบจัดตารางเรียนอัตโนมัติ (Automatic Timetable System)</h1>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button id="run-btn" onclick="runEngine()"
+                    class="vs-pulse-cyan flex items-center space-x-2 px-6 py-2 bg-[var(--vs-accent)]/10 border border-[var(--vs-accent)]/30 rounded-[var(--vs-radius)] text-[var(--vs-accent)] hover:bg-[var(--vs-accent)]/20 transition-all group">
+                    <i class="icon i-lightning w-3 h-3 group-hover:scale-110 transition-transform"></i>
+                    <span class="Thai-Rule font-extralight">เริ่มจำลองการจัดตาราง</span>
+                </button>
+                <button id="publish-btn" onclick="broadcastSchedules()"
+                    class="hidden flex items-center space-x-2 px-6 py-2 bg-[var(--vs-success)]/10 border border-[var(--vs-success)]/30 rounded-[var(--vs-radius)] text-[var(--vs-success)] hover:bg-[var(--vs-success)]/20 transition-all group">
+                    <i class="icon i-share w-3 h-3 group-hover:scale-110 transition-transform"></i>
+                    <span class="Thai-Rule font-extralight">เผยแพร่ตารางสอน</span>
+                </button>
+                <div id="engine-status-badge" class="hud-badge-micro border-[var(--vs-accent)]/20">System Ready</div>
+            </div>
+        </div>
+
+        <!-- System Governance Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div
+                class="dna-zone p-4 border-[var(--vs-accent)]/20 bg-[var(--vs-accent)]/[0.02] shadow-[0_0_20px_rgba(var(--vs-accent-rgb),0.03)] selection:bg-[var(--vs-accent)]/20">
+                <div class="hud-badge-micro text-[var(--vs-accent)] mb-2 font-extralight border-[var(--vs-accent)]/20">
+                    Governance
+                    01</div>
+                <div class="text-[14px] text-[var(--vs-text-title)] uppercase font-extralight">100% Fill
+                    Rate (35 Periods)</div>
+            </div>
+            <div
+                class="dna-zone p-4 border-[var(--vs-accent)]/20 bg-[var(--vs-accent)]/[0.02] shadow-[0_0_20px_rgba(var(--vs-accent-rgb),0.03)] space-y-2">
+                <div class="hud-badge-micro text-[var(--vs-accent)] mb-2 font-extralight border-[var(--vs-accent)]/20">
+                    Governance 02</div>
+                <div class="text-[14px] text-[var(--vs-text-title)] uppercase font-extralight flex items-center gap-2">
+                    Core Subject Auto-Fill <i class="icon i-book w-3.5 h-3.5 text-[var(--vs-accent)]/80"></i>
+                </div>
+            </div>
+            <div
+                class="dna-zone p-4 border-[var(--vs-accent)]/20 bg-[var(--vs-accent)]/[0.02] shadow-[0_0_20px_rgba(var(--vs-accent-rgb),0.03)]">
+                <div class="hud-badge-micro text-[var(--vs-accent)] mb-2 font-extralight border-[var(--vs-accent)]/20">
+                    Governance 03</div>
+                <div class="text-[14px] text-[var(--vs-text-title)] uppercase font-extralight">Zero Teacher
+                    Overlap</div>
+            </div>
+            <div
+                class="dna-zone p-4 border-[var(--vs-accent)]/20 bg-[var(--vs-accent)]/[0.02] shadow-[0_0_20px_rgba(var(--vs-accent-rgb),0.03)]">
+                <div class="hud-badge-micro text-[var(--vs-accent)] mb-2 font-extralight border-[var(--vs-accent)]/20">
+                    Governance 04</div>
+                <div class="text-[14px] text-[var(--vs-text-title)] uppercase font-extralight">
+                    Priority-Based Logic</div>
+            </div>
+        </div>
+
+
+
+
+
+
+        <!-- Domain Input Panels are now in separate pages: pages/schedule/domain1-4.html -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <!-- Teacher Configuration Section -->
+        <div id="teacher-config-section"
+            class="dna-zone p-6 border-[var(--vs-border)] bg-[rgba(var(--vs-bg-deep-rgb),0.2)] hidden">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <span class="hud-badge-micro border-[var(--vs-accent)]/30 text-[var(--vs-accent)]">Management</span>
+                    <h2 class="text-lg font-extralight text-[var(--vs-text-title)] uppercase">Teacher
+                        Configuration</h2>
+                </div>
+                <button onclick="saveTeacherConfig()"
+                    class="px-6 py-2.5 bg-[var(--vs-accent)]/10 text-[var(--vs-accent)] text-sm font-extralight uppercase rounded-[var(--vs-radius)] border border-[var(--vs-accent)]/20 hover:bg-[var(--vs-accent)]/20 transition-all">
+                    Save Assignments
+                </button>
+            </div>
+            <div id="teacher-matrix" class="overflow-x-auto">
+                <!-- Teacher table will be injected here -->
+            </div>
+        </div>
+
+        <!-- Live Statistics -->
+        <div id="stats-grid" class="grid grid-cols-1 md:grid-cols-4 gap-4 hidden">
+            <!-- Stats will be injected here -->
+        </div>
+
+        <!-- Welcome Placeholder -->
+        <div id="welcome-state"
+            class="dna-zone p-8 flex flex-col items-center justify-center text-center space-y-4 min-h-[360px]">
+            <div
+                class="w-24 h-24 rounded-[3px] border border-[var(--vs-accent)]/20 flex items-center justify-center animate-pulse">
+                <i class="icon i-academic w-12 h-12 text-[var(--vs-accent)]/50"></i>
+            </div>
+            <div class="space-y-2">
+                <h2 class="text-2xl font-[100] text-[var(--vs-text-title)] uppercase">Synchronization
+                    Required</h2>
+                <p class="text-[var(--vs-text-muted)] font-[200] max-w-lg">Initiate the AI calculation engine to map
+                    teaching hours across 10 class rooms and 17 dedicated faculty members.</p>
+            </div>
+        </div>
+
+        <!-- Result Console -->
+        <div id="result-view" class="space-y-6 hidden">
+            <!-- Dynamic Controls -->
+            <div
+                class="flex items-center gap-4 p-4 dna-zone border-[var(--vs-border)] bg-[rgba(var(--vs-bg-deep-rgb),0.3)]">
+                <div class="flex items-center gap-2">
+                    <span class="hud-badge-micro font-extralight border-[var(--vs-border)] uppercase mr-1">Data
+                        View</span>
+                    <select id="view-mode" onchange="updateView()"
+                        class="bg-[var(--vs-bg-deep)] text-sm text-[var(--vs-text-body)] border border-[var(--vs-border)] p-2 rounded-[var(--vs-radius)] outline-none focus:border-[var(--vs-accent)]/50">
+                        <option value="class">Student Schedule (By Grade)</option>
+                        <option value="teacher">Faculty Workload (By Name)</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="hud-badge-micro font-extralight border-[var(--vs-border)] uppercase mr-1">Select
+                        Node</span>
+                    <select id="target-selector" onchange="renderGrid()"
+                        class="bg-[var(--vs-bg-deep)] text-sm text-[var(--vs-text-body)] border border-[var(--vs-border)] p-2 rounded-[var(--vs-radius)] min-w-[280px] outline-none focus:border-[var(--vs-accent)]/50">
+                        <!-- Options injected here -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Global Schedule Grid (Unity: uses same CSS Grid as Teacher Schedule) -->
+            <div class="dna-zone p-4 overflow-x-auto relative">
+                <div id="auto-schedule-grid" class="schedule-grid"
+                    style="grid-template-columns: 80px repeat(9, minmax(90px, 1fr)); min-width: 1100px;">
+                    <!-- Headers + Body injected by renderGrid() -->
+                </div>
+            </div>
+
+            <!-- Workload Summary Bar (กคศ. 4-Domain Compliance) -->
+            <div id="workload-bar" class="dna-zone p-4 hidden">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="hud-badge-micro border-[var(--vs-accent)]/30 text-[var(--vs-accent)]">Workload</span>
+                    <h3 class="text-sm font-extralight text-[var(--vs-text-title)] uppercase">Teacher Workload Summary —
+                        กคศ. ว9/2564</h3>
+                </div>
+                <div id="workload-bar-content">
+                    <!-- Injected by renderWorkloadBar() -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let schoolData = null;
+        let currentResult = null;
+        let dataService = null;
+        let authService = null;
+        let currentSchoolId = null;
+
+        // Initialize Services and Load Data
+        async function initApp() {
+            try {
+                // Initialize Core Services
+                authService = new AuthService();
+                await authService.initialize();
+
+                dataService = new LocalDataService();
+                await dataService.initialize();
+
+                // Get Current School
+                const user = authService.getCurrentUser();
+                currentSchoolId = user?.schoolId || 'SCH_MABLUD'; // Default to Wat Map Chalud if not logged in
+
+                // Update UI with School Name
+                const school = await dataService.getSchool(currentSchoolId);
+                if (school) {
+                    document.querySelector('h1').innerText = `ระบบจัดตารางเรียนอัตโนมัติ | ${school.name}`;
+                }
+
+                // Load Dynamic School Data
+                schoolData = await SchoolConfigService.getSchoolData(currentSchoolId);
+                console.log('✅ School Data Loaded:', schoolData);
+
+                // Initial update to clear welcome state or show "Ready"
+                document.getElementById('engine-status-badge').innerText = 'System Ready';
+
+                // Dynamic welcome text based on actual school data
+                const welcomeP = document.querySelector('#welcome-state p');
+                if (welcomeP && schoolData) {
+                    const classCount = schoolData.classes?.length || 0;
+                    const teacherCount = schoolData.teachers?.length || 0;
+                    welcomeP.innerText = `Initiate the AI calculation engine to map teaching hours across ${classCount} class rooms and ${teacherCount} dedicated faculty members.`;
+                }
+
+                // ── Restore last engine results from LocalStorage ──
+                restoreLastEngineResult();
+
+
+
+
+            } catch (error) {
+                const status = document.getElementById('engine-status-badge');
+                status.innerText = 'Initialization Error';
+                status.className = 'hud-badge-micro bg-[var(--vs-danger)]/10 text-[var(--vs-danger)]';
+            }
+        }
+
+        // Initialize on Load
+        window.addEventListener('DOMContentLoaded', initApp);
+
+        // ═══════════════════════════════════════════════════════════════
+        //  4-DOMAIN DIRECTOR INPUT PANELS — JavaScript
+        // ═══════════════════════════════════════════════════════════════
+
+        const DOMAIN_STORAGE_KEY = 'IDLPMS_DomainInputs_';
+        const DAY_LABELS = ['', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์'];
+        const GRADE_LEVELS = ['ป.1', 'ป.2', 'ป.3', 'ป.4', 'ป.5', 'ป.6'];
+
+        // ── Default Domain 2 Activities (teacher-only, Reserve period 8) ──
+        function getDefaultDomain2() {
+            return [
+                { id: 'PLC', name: 'PLC ชุมชนแห่งการเรียนรู้', day: 2, period: 8, hoursPerWeek: 1 },
+                { id: 'PLC_2', name: 'PLC ชุมชนแห่งการเรียนรู้', day: 4, period: 8, hoursPerWeek: 1 },
+            ];
+        }
+
+        // ── Default Domain 4 Activities (all see, period 7 = คาบ 6) ──
+        function getDefaultDomain4() {
+            return [
+                { id: 'PRAY', name: 'สวดมนต์', day: 5, period: 7 },
+                { id: 'SCOUT', name: 'ลูกเสือ/เนตรนารี', day: 3, period: 7 },
+            ];
+        }
+
+        // ── Default Domain 3 Projects (yearly, placeholder) ──
+        function getDefaultDomain3() {
+            return [
+                { id: 'proj_1', name: 'เปิดบ้านวิชาการ', hoursPerYear: 20, semester: 2 },
+                { id: 'proj_2', name: 'ค่ายคุณธรรม', hoursPerYear: 12, semester: 1 },
+            ];
+        }
+
+        // ── Persistence ──
+        function loadDomainInputs(domain) {
+            const sid = currentSchoolId || 'SCH_MABLUD';
+            try {
+                const saved = JSON.parse(localStorage.getItem(`${DOMAIN_STORAGE_KEY}${sid}_d${domain}`) || 'null');
+                return saved;
+            } catch { return null; }
+        }
+
+        function saveDomainInputs(domain, data) {
+            const sid = currentSchoolId || 'SCH_MABLUD';
+            localStorage.setItem(`${DOMAIN_STORAGE_KEY}${sid}_d${domain}`, JSON.stringify(data));
+        }
+
+
+        // Domain render/CRUD functions moved to separate pages: pages/schedule/domain1-4.html
+
+
+
+
+
+
+
+
+
+        // ── Build preAssignedSlots from Domain 2 + 4 inputs ──
+
+        function buildPreAssignedSlotsFromDomains() {
+            const d2 = loadDomainInputs(2) || getDefaultDomain2();
+            const d4 = loadDomainInputs(4) || getDefaultDomain4();
+            const slots = [];
+
+            // Domain 2: teacher-only (PLC etc.)
+            d2.forEach(a => {
+                slots.push({
+                    subjectId: a.id.replace(/_\d+$/, ''), // PLC_2 → PLC
+                    day: a.day,
+                    period: a.period,
+                    domain: 2,
+                    visibility: 'teacher-only'
+                });
+            });
+
+            // Domain 4: all see (Prayer etc.)
+            d4.forEach(a => {
+                slots.push({
+                    subjectId: a.id,
+                    day: a.day,
+                    period: a.period,
+                    domain: 4,
+                    visibility: 'all'
+                });
+            });
+
+            return slots;
+        }
+
+
+        async function runEngine() {
+            if (!schoolData) {
+                console.warn('Waiting for data to load...');
+                return;
+            }
+
+            // --- Phase 2.4: Validation ---
+            const subjects = schoolData.subjects;
+            const teachers = schoolData.teachers;
+            const classes = schoolData.classes;
+            const errors = [];
+
+            // 0. Basic Data Check
+            if (!teachers || teachers.length === 0) {
+                errors.push('ไม่พบข้อมูลครูในโรงเรียนนี้ กรุณาเพิ่มครูก่อนจัดตาราง');
+            }
+            if (!subjects || subjects.length === 0) {
+                errors.push('ไม่พบข้อมูลวิชาในระบบ กรุณาเพิ่มวิชาก่อนจัดตาราง');
+            }
+            if (!classes || classes.length === 0) {
+                errors.push('ไม่พบข้อมูลห้องเรียน กรุณาเพิ่มห้องเรียนก่อนจัดตาราง');
+            }
+
+            // Only run detailed checks if basic data is present
+            if (errors.length === 0) {
+                // 1. Coverage Check: Every subject must have at least one teacher
+                subjects.forEach(subject => {
+                    const subjectId = subject.id;
+                    const teacherCount = teachers.filter(t => t.canTeachSubjects.includes(subjectId)).length;
+                    if (teacherCount === 0) {
+                        errors.push(`วิชา ${subject.name} ไม่มีครูผู้สอน`);
+                    }
+                });
+
+                // 2. Capacity Check: Total max periods vs Required periods
+                const struct = schoolData.scheduleStructure;
+                const periodsPerWeek = struct.daysPerWeek * (struct.periodsPerDay - 1); // Subtract lunch
+                const totalRequired = classes.length * periodsPerWeek;
+                const totalCapacity = teachers.reduce((sum, t) => sum + (t.maxPeriodsPerWeek || 0), 0);
+
+                if (totalCapacity < totalRequired) {
+                    errors.push(`ภาระงานรวมไม่เพียงพอ: ต้องการ ${totalRequired} คาบ/สัปดาห์ แต่ครูรองรับได้เพียง ${totalCapacity} คาบ`);
+                }
+            } // end basic data guard
+
+            if (errors.length > 0) {
+                const status = document.getElementById('engine-status-badge');
+                status.innerText = 'Configuration Error';
+                status.className = 'hud-badge-micro bg-[var(--vs-danger)]/10 text-[var(--vs-danger)] border-[var(--vs-danger)]/20';
+
+                // Show errors in standard HUD notification
+                if (window.HUD_NOTIFY) {
+                    window.HUD_NOTIFY.toast('ความผิดพลาดการกำหนดค่า', errors[0], 'danger', 10000);
+                    if (errors.length > 1) {
+                        setTimeout(() => {
+                            window.HUD_NOTIFY.toast('ข้อผิดพลาดเพิ่มเติม', `และอีก ${errors.length - 1} รายการโปรดตรวจสอบข้อมูลครู`, 'danger');
+                        }, 500);
+                    }
+                } else {
+                    alert("กรุณาแก้ไขข้อผิดพลาดก่อนจัดตารางนิ้ว:\n\n" + errors.join("\n"));
+                }
+                return;
+            }
+
+            const btn = document.getElementById('run-btn');
+            const status = document.getElementById('engine-status-badge');
+
+            btn.innerHTML = '<i class="icon i-refresh w-3 h-3 animate-spin"></i> Processing...';
+            status.innerText = 'Calculating DNA...';
+            status.className = 'hud-badge-micro bg-[var(--vs-accent)]/10 text-[var(--vs-accent)]';
+
+            setTimeout(() => {
+                // ── Override preAssignedSlots with Director's Domain 2+4 inputs ──
+                schoolData.preAssignedSlots = buildPreAssignedSlotsFromDomains();
+                console.log('📋 preAssignedSlots from Director inputs:', schoolData.preAssignedSlots);
+
+                const scheduler = new TimetableScheduler(schoolData);
+                currentResult = scheduler.generateSchedule();
+
+                // ── Persist engine results to LocalStorage ──
+                saveEngineResult(currentResult);
+
+                displayStats(currentResult.statistics);
+                updateView();
+
+                document.getElementById('welcome-state').classList.add('hidden');
+                document.getElementById('stats-grid').classList.remove('hidden');
+                document.getElementById('result-view').classList.remove('hidden');
+
+                btn.innerHTML = '<i class="icon i-lightning w-3 h-3"></i> Sync Successful';
+                status.innerText = currentResult.success ? '100% Stability Reached' : 'Partial Sync';
+                status.className = `hud-badge-micro ${currentResult.success ? 'bg-[var(--vs-success)]/10 text-[var(--vs-success)]' : 'bg-yellow-500/10 text-yellow-400'}`;
+
+                // Show publish button after successful generation
+                if (currentResult.success) {
+                    document.getElementById('publish-btn').classList.remove('hidden');
+                }
+            }, 1200);
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        //  ENGINE RESULT PERSISTENCE
+        //  Save/restore the full engine output so the Director can
+        //  review schedules after logout/login without re-running
+        // ═══════════════════════════════════════════════════════════
+        function saveEngineResult(result) {
+            try {
+                const key = `idlpms_engine_result_${currentSchoolId}`;
+                localStorage.setItem(key, JSON.stringify(result));
+                console.log(`💾 [ENGINE] Saved result to ${key}`);
+            } catch (e) {
+                console.warn('[ENGINE] Could not save result:', e);
+            }
+        }
+
+        function restoreLastEngineResult() {
+            try {
+                const key = `idlpms_engine_result_${currentSchoolId}`;
+                const raw = localStorage.getItem(key);
+                if (!raw) return;
+
+                currentResult = JSON.parse(raw);
+                console.log(`♻️ [ENGINE] Restored previous result from ${key}`);
+
+                displayStats(currentResult.statistics);
+                updateView();
+
+                document.getElementById('welcome-state').classList.add('hidden');
+                document.getElementById('stats-grid').classList.remove('hidden');
+                document.getElementById('result-view').classList.remove('hidden');
+
+                const btn = document.getElementById('run-btn');
+                const status = document.getElementById('engine-status-badge');
+                btn.innerHTML = '<i class="icon i-lightning w-3 h-3"></i> Last Result Restored';
+                status.innerText = currentResult.success ? '100% Stability Reached' : 'Partial Sync';
+                status.className = `hud-badge-micro ${currentResult.success ? 'bg-[var(--vs-success)]/10 text-[var(--vs-success)]' : 'bg-yellow-500/10 text-yellow-400'}`;
+
+                // Show publish button if not already published
+                if (currentResult.success) {
+                    document.getElementById('publish-btn').classList.remove('hidden');
+                }
+            } catch (e) {
+                console.warn('[ENGINE] Could not restore result:', e);
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        //  BROADCAST — Write per-teacher schedules to LocalStorage
+        //  so teachers see their assigned timetable via schedule_grid
+        // ═══════════════════════════════════════════════════════════
+        function broadcastSchedules() {
+            if (!currentResult || !currentResult.teacherSchedules) {
+                alert('กรุณาสร้างตารางก่อนเผยแพร่');
+                return;
+            }
+
+            const publishBtn = document.getElementById('publish-btn');
+            const status = document.getElementById('engine-status-badge');
+            publishBtn.innerHTML = '<i class="icon i-refresh w-3 h-3 animate-spin"></i> กำลังเผยแพร่...';
+
+            // Day mapping: engine uses 1-5, schedule_grid uses MON-FRI
+            const DAY_MAP = { 1: 'MON', 2: 'TUE', 3: 'WED', 4: 'THU', 5: 'FRI' };
+            const lunchPeriod = schoolData.scheduleStructure.lunchPeriod;
+
+            // Subject type mapping from engine subject ids
+            const SUBJECT_TYPE_MAP = {
+                'THAI': 'THAI', 'THAI_PLUS': 'THAI',
+                'MATH': 'MATH', 'MATH_PLUS': 'MATH',
+                'SCI': 'SCI', 'SCI_PLUS': 'SCI',
+                'ENG': 'ENG', 'ENG_PLUS': 'ENG',
+                'SOC': 'SOC', 'SOCIAL': 'SOC',
+                'PE': 'PE', 'ART': 'ART', 'WORK': 'WORK',
+                'ICT': 'WORK', 'HIST': 'HIST',
+                'GUIDE': 'GUIDE', 'PLC': 'PLC',
+                'CLUB': 'CLUB', 'SCOUT': 'SCOUT', 'PRAY': 'PRAY',
+                'RILS': 'WORK'
+            };
+
+            let teacherCount = 0;
+
+            for (const [teacherId, engineSchedule] of Object.entries(currentResult.teacherSchedules)) {
+                const gridSchedule = {};  // { MON: { 3: 'cardId' }, ... }
+                const bankMap = {};       // unique card ID → card object
+
+                for (let day = 1; day <= 5; day++) {
+                    const dayKey = DAY_MAP[day];
+                    gridSchedule[dayKey] = {};
+
+                    for (let period = 1; period <= 8; period++) {
+                        if (period === lunchPeriod) continue;
+
+                        const cell = engineSchedule[day]?.[period];
+                        if (!cell || !cell.subject) continue;
+
+                        // Generate unique card ID: sb-{subjectId}-{grade}-{section}
+                        const subjectId = cell.subject.id.toLowerCase();
+                        const grade = cell.class?.grade || '0';
+                        const section = cell.class?.section || '0';
+                        const cardId = `sb-${subjectId}-${grade}-${section}`;
+
+                        // Map period to schedule_grid slot index
+                        // Engine structure: periods 1-8, lunch at period 5 (lunchPeriod)
+                        //   Teaching: 1, 2, 3, 4, [lunch=5], 6, 7, 8
+                        // Grid structure: slots 0-8, lunch at slot 4
+                        //   Slots: 0=homeroom, 1=P1, 2=P2, 3=P3, [lunch=4], 5=P4, 6=P5, 7=P6, 8=P7
+                        // Mapping: engine periods before lunch need to skip grid's lunch slot
+                        let gridSlot;
+                        if (period < lunchPeriod && period <= 3) {
+                            gridSlot = period; // 1→1, 2→2, 3→3
+                        } else if (period < lunchPeriod) {
+                            gridSlot = period + 1; // 4→5 (skip grid lunch at slot 4)
+                        } else {
+                            gridSlot = period; // 6→6, 7→7, 8→8
+                        }
+
+                        gridSchedule[dayKey][gridSlot] = cardId;
+
+                        // Build bank entry if not already added
+                        if (!bankMap[cardId]) {
+                            const type = SUBJECT_TYPE_MAP[cell.subject.id] || 'WORK';
+                            bankMap[cardId] = {
+                                id: cardId,
+                                nameTH: cell.subject.name,
+                                nameEN: cell.subject.nameEn || cell.subject.id,
+                                code: cell.subject.code || '-',
+                                grade: String(grade),
+                                room: String(section),
+                                type: type,
+                                domain: cell.domain || 1,
+                                visibility: cell.visibility || 'all'
+                            };
+                        }
+                    }
+                }
+
+                // Write to LocalStorage
+                const scheduleData = { mode: 'principal', schedule: gridSchedule };
+                const bankData = Object.values(bankMap);
+
+                localStorage.setItem(`idlpms_schedule_${teacherId}`, JSON.stringify(scheduleData));
+                localStorage.setItem(`idlpms_bank_${teacherId}`, JSON.stringify(bankData));
+                teacherCount++;
+            }
+
+            // Update UI
+            publishBtn.innerHTML = '<i class="icon i-share w-3 h-3"></i> เผยแพร่แล้ว';
+            publishBtn.classList.remove('bg-[var(--vs-success)]/10', 'border-[var(--vs-success)]/30', 'text-[var(--vs-success)]');
+            publishBtn.classList.add('bg-[var(--vs-accent)]/10', 'border-[var(--vs-accent)]/30', 'text-[var(--vs-accent)]');
+            publishBtn.disabled = true;
+
+            status.innerText = `Published to ${teacherCount} Teachers`;
+            status.className = 'hud-badge-micro bg-[var(--vs-success)]/10 text-[var(--vs-success)] border-[var(--vs-success)]/20';
+
+            // Toast notification
+            if (window.HUD_NOTIFY) {
+                window.HUD_NOTIFY.toast(
+                    'เผยแพร่ตารางสอนสำเร็จ',
+                    `ถ่ายทอดตารางสอนไปยังครู ${teacherCount} คน เรียบร้อยแล้ว`,
+                    'success', 5000
+                );
+            }
+
+            console.log(`✅ [BROADCAST] Published schedules to ${teacherCount} teachers`);
+        }
+
+        function displayStats(stats) {
+            const grid = document.getElementById('stats-grid');
+            const cards = [
+                { label: 'Schedule Stability', value: stats.completionRate, color: 'text-[var(--vs-accent)]' },
+                { label: 'Filled Slots', value: `${stats.filledSlots} / ${stats.totalSlots}`, color: 'text-[var(--vs-accent)]' },
+                { label: 'DNA Constraint', value: '100% Sync', color: 'text-[var(--vs-accent)]' },
+                { label: 'Overlap Guard', value: 'Active', color: 'text-[var(--vs-success)]' }
+            ];
+
+            grid.innerHTML = cards.map(c => `
+                <div class="dna-zone p-4 border-white/5 bg-[var(--vs-bg-deep)]/20 shadow-lg">
+                    <div class="hud-badge-micro border-white/10 mb-2 font-extralight">${c.label}</div>
+                    <div class="text-[20px] font-extralight ${c.color}">${c.value}</div>
+                </div>
+            `).join('');
+        }
+
+        function updateView() {
+            if (!currentResult) return;
+            const mode = document.getElementById('view-mode').value;
+            const selector = document.getElementById('target-selector');
+            selector.innerHTML = '';
+
+            if (mode === 'class') {
+                Object.keys(currentResult.classSchedules).sort().forEach(key => {
+                    const opt = document.createElement('option');
+                    opt.value = key;
+                    opt.textContent = `ห้องเรียน Grade ${key}`;
+                    selector.appendChild(opt);
+                });
+            } else {
+                Object.keys(currentResult.teacherSchedules).sort((a, b) => {
+                    const tA = schoolData.teachers.find(t => t.id === a);
+                    const tB = schoolData.teachers.find(t => t.id === b);
+                    return tA.name.localeCompare(tB.name);
+                }).forEach(id => {
+                    const teacher = schoolData.teachers.find(t => t.id === id);
+                    const opt = document.createElement('option');
+                    opt.value = id;
+                    opt.textContent = teacher.name;
+                    selector.appendChild(opt);
+                });
+            }
+            renderGrid();
+        }
+
+        // Subject color mapping (Unity: same tokens as schedule_grid.js)
+        const subjectMeta = {
+            MATH: { rgb: 'var(--sj-math-rgb)' },
+            MATH_PLUS: { rgb: 'var(--sj-math-rgb)' },
+            SCI: { rgb: 'var(--sj-sci-rgb)' },
+            SCI_PLUS: { rgb: 'var(--sj-sci-rgb)' },
+            THAI: { rgb: 'var(--sj-thai-rgb)' },
+            THAI_PLUS: { rgb: 'var(--sj-thai-rgb)' },
+            ENG: { rgb: 'var(--sj-eng-rgb)' },
+            ENG_PLUS: { rgb: 'var(--sj-eng-rgb)' },
+            SOC: { rgb: 'var(--sj-soc-rgb)' },
+            ART: { rgb: 'var(--sj-art-rgb)' },
+            PE: { rgb: 'var(--sj-pe-rgb)' },
+            WORK: { rgb: 'var(--sj-work-rgb)' },
+            HIST: { rgb: 'var(--sj-hist-rgb)' },
+            GUIDE: { rgb: 'var(--sj-guide-rgb)' },
+            COMP: { rgb: 'var(--sj-work-rgb)' },
+            CLUB: { rgb: 'var(--sj-club-rgb)' },
+            SCOUT: { rgb: 'var(--sj-scout-rgb)' },
+            PRAY: { rgb: 'var(--sj-pray-rgb)' },
+            PLC: { rgb: '192, 132, 252' },
+            RILS: { rgb: 'var(--sj-guide-rgb)' }
+        };
+
+        // Day configuration (Unity: same as schedule_grid.js)
+        const dayConfig = [
+            { nameTH: 'จันทร์', nameEN: 'MON', color: 'var(--day-mon)' },
+            { nameTH: 'อังคาร', nameEN: 'TUE', color: 'var(--day-tue)' },
+            { nameTH: 'พุธ', nameEN: 'WED', color: 'var(--day-wed)' },
+            { nameTH: 'พฤหัสบดี', nameEN: 'THU', color: 'var(--day-thu)' },
+            { nameTH: 'ศุกร์', nameEN: 'FRI', color: 'var(--day-fri)' }
+        ];
+
+        // Time slots for header — CLONED from schedule_grid.js (Gold Standard)
+        const gridTimeSlots = [
+            { id: 0, start: '08:00', end: '08:30', label: 'Homeroom', isActivity: true },
+            { id: 1, start: '08:30', end: '09:30', label: 'Period 1' },
+            { id: 2, start: '09:30', end: '10:30', label: 'Period 2' },
+            { id: 3, start: '10:30', end: '11:30', label: 'Period 3' },
+            { id: 4, start: '11:30', end: '12:30', label: 'Lunch', isLunch: true },
+            { id: 5, start: '12:30', end: '13:30', label: 'Period 4' },
+            { id: 6, start: '13:30', end: '14:30', label: 'Period 5' },
+            { id: 7, start: '14:30', end: '15:30', label: 'Period 6' },
+            { id: 8, start: '15:30', end: '16:30', label: 'Period 7' },
+        ];
+
+        // Engine period → Grid slot mapping
+        // Engine: periods 1-8 with lunch at lunchPeriod (5)
+        // Grid:   slots 0-8 with lunch at slot 4
+        function enginePeriodToGridSlot(period, lunchPeriod) {
+            if (period < lunchPeriod && period <= 3) return period;       // 1→1, 2→2, 3→3
+            if (period < lunchPeriod) return period + 1;  // 4→5
+            return period;                                                 // 6→6, 7→7, 8→8
+        }
+
+        function renderGrid() {
+            if (!currentResult) return;
+            const mode = document.getElementById('view-mode').value;
+            const target = document.getElementById('target-selector').value;
+            const grid = document.getElementById('auto-schedule-grid');
+
+            const schedule = mode === 'class'
+                ? currentResult.classSchedules[target]
+                : currentResult.teacherSchedules[target];
+
+            if (!schedule) { grid.innerHTML = '<p style="padding:20px;opacity:.5">No data for selection</p>'; return; }
+
+            const lunchPeriod = schoolData.scheduleStructure.lunchPeriod; // engine lunch (5)
+
+            // Reverse map: grid slot → engine period
+            // Grid: 0=homeroom, 1=P1, 2=P2, 3=P3, 4=lunch, 5=P4, 6=P5, 7=P6, 8=P7
+            // Engine: 1=P1, 2=P2, 3=P3, 4=P4, 5=lunch, 6=P5, 7=P6, 8=P7
+            function gridSlotToEnginePeriod(slotId) {
+                if (slotId <= 3) return slotId;  // 1→1, 2→2, 3→3
+                if (slotId === 5) return 4;       // 5→4 (grid's P4 = engine's period 4)
+                return slotId;                    // 6→6, 7→7, 8→8
+            }
+
+            // Total grid columns = 1 (day label) + gridTimeSlots.length
+            const totalCols = gridTimeSlots.length + 1;
+            grid.style.gridTemplateColumns = `80px repeat(${gridTimeSlots.length}, 1fr)`;
+
+            let html = '';
+
+            // ── Header Row ──
+            html += `<div class="schedule-corner">DAY / TIME</div>`;
+            gridTimeSlots.forEach(slot => {
+                if (slot.isLunch) {
+                    html += `<div class="schedule-header-cell schedule-lunch-header">
+                        <div class="schedule-time">${slot.start} - ${slot.end}</div>
+                        <div class="schedule-period uppercase">${slot.label}</div>
+                    </div>`;
+                } else if (slot.isActivity) {
+                    html += `<div class="schedule-header-cell" style="opacity:0.6">
+                        <div class="schedule-time">${slot.start} - ${slot.end}</div>
+                        <div class="schedule-period uppercase">${slot.label}</div>
+                    </div>`;
+                } else {
+                    html += `<div class="schedule-header-cell">
+                        <div class="schedule-time">${slot.start} - ${slot.end}</div>
+                        <div class="schedule-period uppercase">${slot.label}</div>
+                    </div>`;
+                }
+            });
+
+            // ── Body (5 days × 9 slots) ──
+            for (let dayIdx = 0; dayIdx < 5; dayIdx++) {
+                const day = dayIdx + 1;
+                const dc = dayConfig[dayIdx];
+
+                // Day label cell
+                html += `<div class="schedule-day-cell" style="--day-accent: ${dc.color}">
+                    <span class="schedule-day-name">${dc.nameTH}</span>
+                    <span class="schedule-day-abbr">${dc.nameEN}</span>
+                </div>`;
+
+                gridTimeSlots.forEach((slot, slotIdx) => {
+                    const colIndex = slotIdx + 2; // +2 because grid-column is 1-indexed and col 1 is day label
+
+                    // Lunch column — vertical span
+                    if (slot.isLunch) {
+                        if (dayIdx === 0) {
+                            html += `<div class="schedule-cell schedule-lunch-cell" style="grid-row: span 5; grid-column: ${colIndex}; writing-mode: vertical-lr; transform: rotate(180deg); display: flex; align-items: center; justify-content: center; border: 1px solid var(--vs-border);">LUNCH พักรับประทานอาหาร</div>`;
+                        }
+                        return;
+                    }
+
+                    // Homeroom column — empty for auto schedule
+                    if (slot.isActivity) {
+                        html += `<div class="schedule-cell schedule-cell-empty" style="grid-column: ${colIndex}; opacity: 0.3;">
+                            <span style="font-size:9px;text-transform:uppercase">HR</span>
+                        </div>`;
+                        return;
+                    }
+
+                    // Teaching slots — map grid slot to engine period
+                    const enginePeriod = gridSlotToEnginePeriod(slot.id);
+                    const cell = schedule[day]?.[enginePeriod];
+
+                    if (cell) {
+                        // In student/class view, hide teacher-only items (Domain 2: PLC etc.)
+                        const isTeacherOnly = cell.visibility === 'teacher-only';
+                        if (mode === 'class' && isTeacherOnly) {
+                            html += `<div class="schedule-cell schedule-cell-empty" style="grid-column: ${colIndex};">
+                                <span style="font-size:9px;opacity:0.3;text-transform:uppercase">Reserve</span>
+                            </div>`;
+                        } else {
+                            const meta = subjectMeta[cell.subject.id] || { rgb: 'var(--vs-accent-rgb)' };
+                            const subLabel = mode === 'class'
+                                ? cell.teacher.name
+                                : `ป.${cell.class.grade}/${cell.class.section}`;
+                            const domainBadge = isTeacherOnly ? `<span style="font-size:8px;opacity:0.5;color:rgb(${meta.rgb})" class="uppercase">D${cell.domain || ''}</span>` : '';
+
+                            html += `
+                            <div class="schedule-cell schedule-cell-filled" style="grid-column: ${colIndex};">
+                                <div class="vs-neon schedule-event-card" style="--vs-neon-rgb: ${meta.rgb}; border-color: rgba(${meta.rgb}, 0.3);">
+                                    <div class="flex justify-between items-start mb-0 pointer-events-none">
+                                        <span class="schedule-card-title Thai-Rule" style="color: rgb(${meta.rgb})">${cell.subject.name}</span>
+                                        ${cell.isFiller ? '<span style="font-size:9px;opacity:0.4;color:rgb(' + meta.rgb + ')" class="uppercase">RILS</span>' : domainBadge}
+                                    </div>
+                                    <div class="schedule-card-subtitle pointer-events-none" style="color: rgb(${meta.rgb}); opacity: 0.6">${subLabel}</div>
+                                </div>
+                            </div>`;
+                        }
+                    } else {
+                        html += `<div class="schedule-cell schedule-cell-empty" style="grid-column: ${colIndex};">
+                            <span style="font-size:10px;color:var(--vs-danger);opacity:0.5">Conflict</span>
+                        </div>`;
+                    }
+                });
+            }
+
+            grid.innerHTML = html;
+            renderWorkloadBar();
+        }
+
+        // ═══════════════════════════════════════════════════════════
+        //  Workload Summary Bar — กคศ. 4-Domain Compliance
+        // ═══════════════════════════════════════════════════════════
+        function renderWorkloadBar() {
+            const bar = document.getElementById('workload-bar');
+            const content = document.getElementById('workload-bar-content');
+            const mode = document.getElementById('view-mode').value;
+
+            if (mode === 'class') {
+                // Student/Class view: show total learning hours
+                bar.classList.remove('hidden');
+                const target = document.getElementById('target-selector').value;
+                const schedule = currentResult.classSchedules[target];
+                let totalPeriods = 0;
+                for (let day = 1; day <= 5; day++) {
+                    for (let period = 1; period <= 8; period++) {
+                        if (schedule[day][period]) totalPeriods++;
+                    }
+                }
+                content.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <div class="flex-1 h-6 rounded-[var(--vs-radius)] overflow-hidden" style="background: rgba(var(--vs-accent-rgb), 0.1)">
+                            <div class="h-full rounded-[var(--vs-radius)] transition-all duration-500" style="width: ${Math.min(100, totalPeriods / 35 * 100)}%; background: rgba(var(--vs-accent-rgb), 0.4)"></div>
+                        </div>
+                        <span class="text-sm text-[var(--vs-accent)] font-extralight">${totalPeriods} periods/week</span>
+                    </div>`;
+                return;
+            }
+
+            // Teacher view: show 4-domain workload breakdown
+            bar.classList.remove('hidden');
+            const teacherId = document.getElementById('target-selector').value;
+
+            // Find teacher data
+            const teacher = schoolData.teachers.find(t => t.id === teacherId);
+            if (!teacher) { bar.classList.add('hidden'); return; }
+
+            // Count actual teaching hours from schedule
+            const schedule = currentResult.teacherSchedules[teacherId];
+            let teachingHours = 0;
+            for (let day = 1; day <= 5; day++) {
+                for (let period = 1; period <= 8; period++) {
+                    if (schedule[day][period]) teachingHours++;
+                }
+            }
+
+            // Calculate workload via WorkloadConfigService
+            const workload = WorkloadConfigService.calculateWorkload(
+                currentSchoolId, teacher, teachingHours
+            );
+
+            // Status colors
+            const statusColors = {
+                critical: { bg: 'rgba(244,63,94,0.15)', text: '#f43f5e', label: 'ต่ำกว่า กคศ.', icon: '●' },
+                warning: { bg: 'rgba(251,191,36,0.15)', text: '#fbbf24', label: 'ไม่ถึงเกณฑ์', icon: '●' },
+                compliant: { bg: 'rgba(52,211,153,0.15)', text: '#34d399', label: 'ผ่านเกณฑ์', icon: '●' }
+            };
+            const st = statusColors[workload.status];
+
+            // Domain bar widths (scaled to max 35 hours)
+            const maxW = 35;
+            const d1w = Math.min(100, workload.domain1 / maxW * 100);
+            const d2w = Math.min(100, workload.domain2 / maxW * 100);
+            const d3w = Math.min(100, workload.domain3 / maxW * 100);
+            const d4w = Math.min(100, workload.domain4 / maxW * 100);
+
+            // Role tags
+            const roleTags = (workload.roles || []).map(r => {
+                const def = WorkloadConfigService.WORKLOAD_ROLES[r];
+                return def ? `<span class="px-2 py-0.5 rounded text-[10px] font-extralight" style="background: rgba(var(--vs-accent-rgb), 0.1); color: var(--vs-accent)">${def.label}</span>` : '';
+            }).filter(Boolean).join(' ');
+
+            content.innerHTML = `
+                <div class="space-y-3">
+                    <!-- Status Badge -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2 flex-wrap">${roleTags}</div>
+                        <div class="flex items-center gap-2 px-3 py-1 rounded-[var(--vs-radius)]" style="background: ${st.bg}">
+                            <span style="color: ${st.text}; font-size: 8px">${st.icon}</span>
+                            <span class="text-[11px] font-extralight" style="color: ${st.text}">${st.label}</span>
+                            <span class="text-[11px] font-extralight" style="color: ${st.text}">${workload.total}/${workload.minTotal} ชม.</span>
+                        </div>
+                    </div>
+
+                    <!-- 4-Domain Bars -->
+                    <div class="grid grid-cols-[120px_1fr_60px] gap-y-2 items-center text-[11px]">
+                        <span class="text-cyan-400 font-extralight uppercase">ด้าน 1 สอน</span>
+                        <div class="h-4 rounded-[2px] overflow-hidden" style="background: rgba(34,211,238,0.1)">
+                            <div class="h-full rounded-[2px] transition-all duration-700" style="width: ${d1w}%; background: rgba(34,211,238,0.5)"></div>
+                        </div>
+                        <span class="text-cyan-400 text-right font-extralight">${workload.domain1} ชม.</span>
+
+                        <span class="text-emerald-400 font-extralight uppercase">ด้าน 2 ส่งเสริม</span>
+                        <div class="h-4 rounded-[2px] overflow-hidden" style="background: rgba(52,211,153,0.1)">
+                            <div class="h-full rounded-[2px] transition-all duration-700" style="width: ${d2w}%; background: rgba(52,211,153,0.5)"></div>
+                        </div>
+                        <span class="text-emerald-400 text-right font-extralight">${workload.domain2} ชม.</span>
+
+                        <span class="text-amber-400 font-extralight uppercase">ด้าน 3 พัฒนา</span>
+                        <div class="h-4 rounded-[2px] overflow-hidden" style="background: rgba(251,191,36,0.1)">
+                            <div class="h-full rounded-[2px] transition-all duration-700" style="width: ${d3w}%; background: rgba(251,191,36,0.5)"></div>
+                        </div>
+                        <span class="text-amber-400 text-right font-extralight">${workload.domain3} ชม.</span>
+
+                        <span class="text-violet-400 font-extralight uppercase">ด้าน 4 นโยบาย</span>
+                        <div class="h-4 rounded-[2px] overflow-hidden" style="background: rgba(167,139,250,0.1)">
+                            <div class="h-full rounded-[2px] transition-all duration-700" style="width: ${d4w}%; background: rgba(167,139,250,0.5)"></div>
+                        </div>
+                        <span class="text-violet-400 text-right font-extralight">${workload.domain4} ชม.</span>
+                    </div>
+
+                    <!-- Total Bar -->
+                    <div class="flex items-center gap-3 pt-2 border-t border-[var(--vs-border)]">
+                        <span class="text-[11px] font-extralight uppercase" style="color: ${st.text}; min-width: 120px">ภาระรวม</span>
+                        <div class="flex-1 h-5 rounded-[2px] overflow-hidden" style="background: rgba(var(--vs-accent-rgb), 0.08)">
+                            <div class="h-full rounded-[2px] transition-all duration-700" style="width: ${Math.min(100, workload.total / maxW * 100)}%; background: ${st.bg}; border: 1px solid ${st.text}30"></div>
+                        </div>
+                        <span class="text-[11px] font-extralight text-right" style="color: ${st.text}; min-width: 60px">${workload.total} ชม.</span>
+                    </div>
+                </div>`;
+        }
+    </script>
+
+    <style>
+        .icon {
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            background-color: currentColor;
+            display: inline-block;
+        }
+
+        .i-lightning {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M13 10V3L4 14h7v7l9-11h-7z'/%3E%3C/svg%3E");
+        }
+
+        .i-academic {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath d='M12 14l9-5-9-5-9 5 9 5z'/%3E%3Cpath d='M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222'/%3E%3C/svg%3E");
+        }
+
+        .i-refresh {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15'/%3E%3C/svg%3E");
+        }
+
+        .i-book {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'/%3E%3C/svg%3E");
+        }
+
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        select option {
+            background: #0a0a0c;
+            color: #cbd5e1;
+        }
+
+        @keyframes vs-pulse-cyan {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.4);
+            }
+
+            70% {
+                transform: scale(1.02);
+                box-shadow: 0 0 0 10px rgba(34, 211, 238, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(34, 211, 238, 0);
+            }
+        }
+
+        .vs-pulse-cyan {
+            animation: vs-pulse-cyan 2s infinite;
+        }
+
+        .dna-zone {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Toast Danger Override for High Visibility */
+        .vs-toast.danger .vs-toast-text {
+            color: var(--vs-danger);
+            opacity: 0.9;
+        }
+    </style>
+</body>
+
+</html>

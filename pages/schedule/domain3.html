@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Domain 3: งานพัฒนาคุณภาพฯ | IDLPMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../../assets/css/theme.css" />
+    <link rel="stylesheet" href="../../assets/css/styles.css?v=1.2" />
+    <script src="../../assets/js/data.js"></script>
+    <script src="../../src/services/DataService.js"></script>
+    <script src="../../src/services/AuthService.js"></script>
+</head>
+
+<body class="bg-transparent p-6 overflow-y-auto overflow-x-hidden font-['Sarabun'] antialiased vs-scrollbar">
+    <div class="max-w-[1600px] mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <span class="hud-badge-micro border-[#fbbf24]/30 text-[#fbbf24]">Domain 3</span>
+                <h1 class="text-xl font-extralight text-[var(--vs-text-title)] uppercase">
+                    งานพัฒนาคุณภาพฯ — School Quality</h1>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="dna-zone p-4 border-[#fbbf24]/15">
+            <p class="text-sm text-[var(--vs-text-muted)]">
+                โครงการตลอดปีการศึกษา เช่น เปิดบ้านวิชาการ ค่ายคุณธรรม — ไม่อยู่ในตารางรายสัปดาห์ แต่นับชั่วโมง กคศ.
+            </p>
+            <p class="text-sm text-[var(--vs-text-muted)] mt-1 opacity-45">ครูเท่านั้น (ภาพรวมปี)</p>
+        </div>
+
+        <!-- Project List -->
+        <div class="dna-zone p-6 border-[#fbbf24]/15 bg-[rgba(var(--vs-bg-deep-rgb),0.2)]">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="hud-badge-micro border-[#fbbf24]/30 text-[#fbbf24]">Projects</span>
+                <h2 class="text-lg font-extralight text-[var(--vs-text-title)] uppercase">
+                    รายการโครงการพัฒนาคุณภาพ</h2>
+            </div>
+            <div id="d3-project-list" class="space-y-2">
+                <!-- Populated by renderDomain3Panel() -->
+            </div>
+            <button onclick="addDomain3Project()"
+                class="mt-4 flex items-center gap-1 px-6 py-2.5 text-sm text-[#fbbf24] border border-[#fbbf24]/20 rounded-[var(--vs-radius)] hover:bg-[#fbbf24]/10 transition-all">
+                <span>+ เพิ่มโครงการ</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const DOMAIN_STORAGE_KEY = 'IDLPMS_DomainInputs_';
+
+        function getCurrentSchoolId() {
+            try {
+                const session = JSON.parse(localStorage.getItem('IDLPMS_Session') || '{}');
+                return session.schoolId || 'SCH_MABLUD';
+            } catch { return 'SCH_MABLUD'; }
+        }
+
+        function getDefaultDomain3() {
+            return [
+                { id: 'proj_1', name: 'เปิดบ้านวิชาการ', hoursPerYear: 20, semester: 2 },
+                { id: 'proj_2', name: 'ค่ายคุณธรรม', hoursPerYear: 12, semester: 1 },
+            ];
+        }
+
+        function loadDomainInputs(domain) {
+            const sid = getCurrentSchoolId();
+            try {
+                return JSON.parse(localStorage.getItem(`${DOMAIN_STORAGE_KEY}${sid}_d${domain}`) || 'null');
+            } catch { return null; }
+        }
+
+        function saveDomainInputs(domain, data) {
+            const sid = getCurrentSchoolId();
+            localStorage.setItem(`${DOMAIN_STORAGE_KEY}${sid}_d${domain}`, JSON.stringify(data));
+        }
+
+        function renderDomain3Panel() {
+            const container = document.getElementById('d3-project-list');
+            if (!container) return;
+            const projects = loadDomainInputs(3) || getDefaultDomain3();
+
+            let html = `<div class="grid grid-cols-[minmax(0,1fr)_80px_120px_36px] gap-3 text-sm text-[var(--vs-text-muted)] uppercase pb-1 border-b border-[rgba(63,63,70,0.5)]">
+                <span>โครงการ</span><span class="text-center">ชม./ปี</span><span class="text-center">ภาคเรียน</span><span></span>
+            </div>`;
+
+            projects.forEach((p, idx) => {
+                html += `<div class="grid grid-cols-[minmax(0,1fr)_80px_120px_36px] gap-3 items-center py-2 border-b border-[rgba(63,63,70,0.1)]">
+                    <input type="text" value="${p.name}" onchange="updateD3Project(${idx}, 'name', this.value)"
+                        class="bg-[rgba(255,255,255,0.03)] text-sm text-[var(--vs-text-body)] border border-[rgba(255,255,255,0.1)] rounded-[var(--vs-radius)] focus:border-[#fbbf24]/50 outline-none px-3 py-2" />
+                    <input type="number" value="${p.hoursPerYear}" min="1" max="100" onchange="updateD3Project(${idx}, 'hoursPerYear', parseInt(this.value))"
+                        class="bg-[var(--vs-bg-deep)] text-sm text-[var(--vs-text-body)] border border-[rgba(var(--vs-border-rgb),0.3)] rounded-[var(--vs-radius)] px-3 py-2 outline-none text-center w-full" />
+                    <select onchange="updateD3Project(${idx}, 'semester', parseInt(this.value))"
+                        class="bg-[var(--vs-bg-deep)] text-sm text-[var(--vs-text-body)] border border-[rgba(var(--vs-border-rgb),0.3)] rounded-[var(--vs-radius)] px-3 py-2 outline-none text-center">
+                        <option value="1" ${p.semester === 1 ? 'selected' : ''}>ภาคเรียนที่ 1</option>
+                        <option value="2" ${p.semester === 2 ? 'selected' : ''}>ภาคเรียนที่ 2</option>
+                        <option value="0" ${p.semester === 0 ? 'selected' : ''}>ตลอดปี</option>
+                    </select>
+                    <button onclick="removeD3Project(${idx})" class="text-[var(--vs-danger)] hover:bg-[var(--vs-danger)]/10 rounded-[var(--vs-radius)] p-1 text-sm">✕</button>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function updateD3Project(idx, field, value) {
+            const projects = loadDomainInputs(3) || getDefaultDomain3();
+            if (projects[idx]) { projects[idx][field] = value; saveDomainInputs(3, projects); }
+        }
+
+        function addDomain3Project() {
+            const projects = loadDomainInputs(3) || getDefaultDomain3();
+            projects.push({ id: `proj_${Date.now()}`, name: 'โครงการใหม่', hoursPerYear: 10, semester: 0 });
+            saveDomainInputs(3, projects);
+            renderDomain3Panel();
+        }
+
+        function removeD3Project(idx) {
+            const projects = loadDomainInputs(3) || getDefaultDomain3();
+            projects.splice(idx, 1);
+            saveDomainInputs(3, projects);
+            renderDomain3Panel();
+        }
+
+        window.addEventListener('DOMContentLoaded', renderDomain3Panel);
+    </script>
+</body>
+
+</html>

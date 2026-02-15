@@ -1,0 +1,284 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2. บทบาท / ผู้ใช้งาน | IDLPMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../../assets/css/theme.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+</head>
+
+<body class="bg-transparent px-8 pt-8 pb-24 overflow-y-auto font-['Sarabun'] antialiased">
+    <div class="max-w-[1600px] space-y-8">
+        <!-- Header -->
+        <header
+            class="h-12 px-6 flex items-center justify-between rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] ">
+            <h1 class="text-sm font-extralight text-[var(--vs-text-title)] uppercase">2. Roles / User Identities</h1>
+        </header>
+
+        <!-- 7-Role Hierarchy Table -->
+        <section class="space-y-6">
+            <h2 class="text-[var(--vs-accent)] text-sm font-extralight uppercase">01 7-Role Hierarchy (Chain of Command)
+            </h2>
+            <div
+                class="overflow-hidden rounded-[var(--vs-radius)] border border-[var(--vs-border)] bg-[var(--vs-bg-card)] Thai-Rule">
+                <table class="w-full text-left text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-[var(--vs-bg-panel)] text-[var(--vs-text-body)] uppercase text-sm">
+                            <th class="p-4 border-b border-[var(--vs-border)]">Level</th>
+                            <th class="p-4 border-b border-[var(--vs-border)]">Role Key</th>
+                            <th class="p-4 border-b border-[var(--vs-border)]">Identity Label</th>
+                            <th class="p-4 border-b border-[var(--vs-border)]">Operational Scope</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-[var(--vs-text-muted)]">
+                        <tr class="border-b border-[var(--vs-border)] hover:bg-[var(--vs-bg-card)] transition-colors">
+                            <td class="p-4 text-sm">Level 07</td>
+                            <td class="p-4 text-rose-400 font-extralight text-sm">MOE</td>
+                            <td class="p-4 text-[var(--vs-text-body)] text-sm font-extralight">กระทรวงศึกษาธิการ</td>
+                            <td class="p-4 text-sm text-[var(--vs-text-muted)] uppercase">National → Full System Access
+                            </td>
+                        </tr>
+                        <tr class="border-b border-[var(--vs-border)] hover:bg-[var(--vs-bg-card)] transition-colors">
+                            <td class="p-4 text-sm">Level 06</td>
+                            <td class="p-4 text-rose-400 font-extralight text-sm">OBEC</td>
+                            <td class="p-4 text-[var(--vs-text-body)] text-sm font-extralight">เลขาธิการ สพฐ.</td>
+                            <td class="p-4 text-sm text-[var(--vs-text-muted)] uppercase">National → Policy & Budget
+                            </td>
+                        </tr>
+                        <tr class="border-b border-[var(--vs-border)] hover:bg-[var(--vs-bg-card)] transition-colors">
+                            <td class="p-4 text-sm">Level 05</td>
+                            <td class="p-4 text-[var(--vs-accent)] font-extralight text-sm">ESA_DIR</td>
+                            <td class="p-4 text-[var(--vs-text-body)] text-sm font-extralight">ผู้อำนวยการเขตพื้นที่ฯ
+                                (ESA)</td>
+                            <td class="p-4 text-sm text-[var(--vs-text-muted)] uppercase">District → Oversee Schools &
+                                HS Parents</td>
+                        </tr>
+                        <tr class="border-b border-[var(--vs-border)] hover:bg-[var(--vs-bg-card)] transition-colors">
+                            <td class="p-4 text-sm">Level 04</td>
+                            <td class="p-4 text-[var(--vs-success)] font-extralight text-sm">SCHOOL_DIR</td>
+                            <td class="p-4 text-[var(--vs-text-body)] text-sm font-extralight">ผู้อำนวยการโรงเรียน
+                            </td>
+                            <td class="p-4 text-sm text-[var(--vs-text-muted)] uppercase">School → Manage Staff & Stats
+                            </td>
+                        </tr>
+                        <tr class="border-b border-[var(--vs-border)] hover:bg-[var(--vs-bg-card)] transition-colors">
+                            <td class="p-4 text-sm">Level 03</td>
+                            <td class="p-4 text-amber-400 font-extralight text-sm">TEACHER</td>
+                            <td class="p-4 text-[var(--vs-text-body)] text-sm font-extralight">ครูผู้สอน</td>
+                            <td class="p-4 text-sm text-[var(--vs-text-muted)] uppercase">Classroom → Teaching & Grades
+                            </td>
+                        </tr>
+                        <tr class="border-b border-[var(--vs-border)] hover:bg-[var(--vs-bg-card)] transition-colors">
+                            <td class="p-4 text-sm">Level 02</td>
+                            <td class="p-4 text-[var(--vs-accent)] font-extralight text-sm">PARENT</td>
+                            <td class="p-4 text-[var(--vs-text-body)] text-sm font-extralight">ผู้ปกครอง / ผู้ดูแล
+                            </td>
+                            <td class="p-4 text-sm text-[var(--vs-text-muted)] uppercase">Guardian → Student Progress
+                                View</td>
+                        </tr>
+                        <tr class="border-b border-[var(--vs-border)] hover:bg-[var(--vs-bg-card)] transition-colors">
+                            <td class="p-4 text-sm">Level 01</td>
+                            <td class="p-4 text-[var(--vs-accent)] font-extralight text-sm">STUDENT</td>
+                            <td class="p-4 text-[var(--vs-text-body)] text-sm font-extralight">นักเรียน</td>
+                            <td class="p-4 text-sm text-[var(--vs-text-muted)] uppercase">Learning → Submit Work &
+                                Grades</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- User Sub-Types -->
+        <section class="space-y-6">
+            <h2 class="text-[var(--vs-accent)] text-sm font-extralight uppercase">02 User Sub-Types</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Teacher Types -->
+                <div
+                    class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] space-y-4">
+                    <div class="text-zinc-200 font-extralight text-sm uppercase flex items-center space-x-2">
+                        <i class="icon i-academic h-4 w-4 text-amber-400"></i>
+                        <span>Teacher Classification</span>
+                    </div>
+                    <div class="space-y-3 text-sm uppercase">
+                        <div
+                            class="p-3 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[var(--vs-border)]">
+                            <div class="text-amber-400 font-extralight text-sm">CLASS_TEACHER</div>
+                            <div class="text-sm Thai-Rule text-[var(--vs-text-body)] mt-1">ครูประจำชั้น</div>
+                            <div class="text-sm text-[var(--vs-text-muted)] mt-1">Primary homeroom management
+                                responsibility.</div>
+                        </div>
+                        <div
+                            class="p-3 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[var(--vs-border)]">
+                            <div class="text-amber-400 font-extralight text-sm">SUBJECT_TEACHER</div>
+                            <div class="text-sm Thai-Rule text-[var(--vs-text-body)] mt-1">ครูประจำวิชา</div>
+                            <div class="text-sm text-[var(--vs-text-muted)] mt-1">Course-specific instructional
+                                authority.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Student Types -->
+                <div
+                    class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] space-y-4">
+                    <div class="text-zinc-200 font-extralight text-sm uppercase flex items-center space-x-2">
+                        <i class="icon i-user h-4 w-4 text-[var(--vs-accent)]"></i>
+                        <span>Student Classification</span>
+                    </div>
+                    <div class="space-y-3 text-sm uppercase">
+                        <div
+                            class="p-3 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[var(--vs-border)]">
+                            <div class="text-[var(--vs-accent)] font-extralight text-sm">SYSTEM_ENROLLED</div>
+                            <div class="text-sm Thai-Rule text-[var(--vs-text-body)] mt-1">นักเรียนในระบบ</div>
+                            <div class="text-sm text-[var(--vs-text-muted)] mt-1">Enrolled students under schoolId +
+                                classId.</div>
+                        </div>
+                        <div
+                            class="p-3 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[var(--vs-border)]">
+                            <div class="text-[var(--vs-accent)] font-extralight text-sm">HOMESCHOOL</div>
+                            <div class="text-sm Thai-Rule text-[var(--vs-text-body)] mt-1">เด็กจัดการศึกษาเอง</div>
+                            <div class="text-sm text-[var(--vs-text-muted)] mt-1">Independent learners under districtId.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Parent Types -->
+                <div
+                    class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] space-y-4">
+                    <div class="text-zinc-200 font-extralight text-sm uppercase flex items-center space-x-2">
+                        <i class="icon i-users h-4 w-4 text-[var(--vs-accent)]"></i>
+                        <span>Guardian Classification</span>
+                    </div>
+                    <div class="space-y-3 text-sm uppercase">
+                        <div
+                            class="p-3 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[var(--vs-border)]">
+                            <div class="text-[var(--vs-accent)] font-extralight text-sm">SYSTEM_PARENT</div>
+                            <div class="text-sm Thai-Rule text-[var(--vs-text-body)] mt-1">ผู้ปกครองในระบบ</div>
+                            <div class="text-sm text-[var(--vs-text-muted)] mt-1">Guardians of school-enrolled students.
+                            </div>
+                        </div>
+                        <div
+                            class="p-3 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[var(--vs-border)]">
+                            <div class="text-[var(--vs-accent)] font-extralight text-sm">HS_GUARDIAN</div>
+                            <div class="text-sm Thai-Rule text-[var(--vs-text-body)] mt-1">ผู้ปกครอง HS</div>
+                            <div class="text-sm text-[var(--vs-text-muted)] mt-1">Guardians registered with MOE
+                                District.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Grade Alignment & Access Sentinel -->
+        <section class="space-y-6">
+            <h2 class="text-[var(--vs-accent)] text-sm font-extralight uppercase">03 Grade Alignment & Access Sentinel
+                (Zero-Mismatch Policy)</h2>
+            <div
+                class="p-8 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] border-l-4 border-l-white">
+                <div class="flex items-center gap-4 mb-6">
+                    <div
+                        class="w-12 h-12 rounded-[var(--vs-radius)] bg-[rgba(var(--vs-bg-panel-rgb),0.5)] flex items-center justify-center border border-white/20">
+                        <i class="icon i-shield h-6 w-6 text-[var(--vs-accent)]"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-extralight text-[var(--vs-text-title)] Thai-Rule">Access Sentinel
+                            Intelligence</h3>
+                        <p class="text-[var(--vs-text-muted)] text-sm uppercase">Operational Security Protocol</p>
+                    </div>
+                </div>
+
+                <p class="text-[var(--vs-text-body)] text-sm mb-6 Thai-Rule leading-relaxed">
+                    ระบบ IDLPMS บังคับใช้นโยบาย <strong>Zero-Mismatch Policy</strong>
+                    เพื่อความสมบูรณ์ของข้อมูลการเรียนรู้ โดยระบบ Access Sentinel
+                    จะตรวจสอบความสอดคล้องระหว่างระดับชั้นของผู้ใช้ (gradeLevel) และระดับชั้นของเนื้อหา (Content
+                    Indicator) ในระดับ Real-time
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div class="text-[var(--vs-accent)] font-extralight text-sm uppercase">Verification Logic:</div>
+                        <ul class="space-y-3 text-[var(--vs-text-muted)] text-sm uppercase">
+                            <li class="flex items-start space-x-2">
+                                <div class="w-1 h-[3px] rounded-[var(--vs-radius)] bg-[var(--vs-accent)] mt-1.5"></div>
+                                <span>Extracts Grade ID from Indicator (e.g., "ป.6" → Grade 6).</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <div class="w-1 h-[3px] rounded-[var(--vs-radius)] bg-[var(--vs-accent)] mt-1.5"></div>
+                                <span>Cross-references with User Metadata (gradeLevel: 6).</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <div class="w-1 h-[3px] rounded-[var(--vs-radius)] bg-[var(--vs-accent)] mt-1.5"></div>
+                                <span>Triggers "Grade Mismatch" UI State if mismatch detected.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="text-[var(--vs-danger)] font-extralight text-sm uppercase">UI Enforcement (HUD):
+                        </div>
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] flex items-center gap-3">
+                            <div
+                                class="px-2 py-0.5 rounded-[2px] bg-rose-500/20 border border-rose-500/40 text-rose-500 text-[10px] animate-pulse">
+                                GRADE MISMATCH DETECTED
+                            </div>
+                            <span class="text-[var(--vs-text-muted)] text-[11px] uppercase">Active Alert Badge</span>
+                        </div>
+                        <p class="text-[var(--vs-text-muted)] text-sm Thai-Rule font-light italic">
+                            *หมายเหตุ: แม้ระบบจะอนุญาตให้เข้าดูเพื่อการวิจัยและพัฒนาได้ แต่ข้อมูลการเรียนรู้ (Mastery
+                            Scores) จะไม่ถูกบันทึกหากกระทำข้ามระดับชั้น
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Security Notes -->
+        <section class="space-y-6">
+            <h2 class="text-[var(--vs-accent)] text-sm font-medium uppercase">03 Security & Permissions</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
+                    <h3 class="text-zinc-200 font-sm font-medium mb-4 text-sm uppercase">Security Protocols</h3>
+                    <ul class="space-y-3 text-[var(--vs-text-muted)] text-sm uppercase">
+                        <li class="flex items-start space-x-2">
+                            <div class="w-1 h-[3px] rounded-[var(--vs-radius)] bg-[var(--vs-accent)] mt-1.5"></div>
+                            <span>Advanced PII encryption standards active.</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <div class="w-1 h-[3px] rounded-[var(--vs-radius)] bg-[var(--vs-accent)] mt-1.5"></div>
+                            <span>Multi-Factor Authentication (MFA) required for command roles.</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <div class="w-1 h-[3px] rounded-[var(--vs-radius)] bg-[var(--vs-accent)] mt-1.5"></div>
+                            <span>Role-Based Access Control (RBAC) governing all modules.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
+                    <h3 class="text-zinc-200 text-sm font-medium mb-4 uppercase">Data Governance</h3>
+                    <p class="text-[var(--vs-text-muted)] text-sm leading-relaxed uppercase">
+                        All access and modifications are logged via Audit Sentinel.
+                        Compliance with Personal Data Protection Act (PDPA) is strictly enforced.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 🧬 Admin DNA Accountability (Added) -->
+            <div class="mt-6 p-6 rounded-[var(--vs-radius)] bg-indigo-950/20 border border-indigo-500/30">
+                <h3 class="text-indigo-400 font-extralight uppercase mb-3 flex items-center gap-2">
+                    <i class="icon i-office h-5 w-5"></i>
+                    <span>Admin Analytical Depth (Accountability)</span>
+                </h3>
+                <p class="text-[var(--vs-text-muted)] text-sm Thai-Rule leading-relaxed">
+                    สำหรับผู้บริหาร (Level 04-07) ระบบจะวัดผล DNA ผ่าน <strong>"Analytical Depth"</strong>
+                    โดยคำนวณจากความถี่และความลึกซึ้งในการวินาสถิติ (Management M) และการใช้เหตุผลเชิงนโยบาย (Logic L)
+                    ซึ่งอ้างอิงจากข้อมูล Global Timestamp ของการเข้าใช้งาน Dashboard
+                </p>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>

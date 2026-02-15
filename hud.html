@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IDLPMS HUD | Platform Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/theme.css?v=2.4" />
+    <link rel="stylesheet" href="assets/css/styles.css?v=2.4" />
+    <link rel="stylesheet" href="assets/css/notifications.css?v=2.4" />
+    <link rel="stylesheet" href="assets/css/submenu.css?v=2.4" />
+    <link rel="stylesheet" href="assets/css/timeline_menu.css?v=3.2" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#22d3ee" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <script src="assets/js/data.js"></script>
+    <!-- HLS.js for DLTV video playback (Global) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.6.5/hls.min.js"></script>
+    <!-- Core Services -->
+    <script src="src/services/DataService.js"></script>
+    <script src="src/services/CacheService.js"></script>
+    <script src="src/services/SyncEngine.js"></script>
+    <script src="src/services/AuthService.js"></script>
+    <script src="src/services/AppBootstrap.js"></script>
+
+    <!-- Modular Learning Engines -->
+    <script src="src/lib/AIAuditor.js"></script>
+    <script src="src/engines/DNAHarvester.js"></script>
+    <script src="src/engines/QuizEngine.js"></script>
+    <script src="src/engines/SecurityEngine.js"></script>
+
+    <script src="assets/js/app.js?v=3.1"></script>
+</head>
+
+<body
+    class="bg-[var(--vs-bg-deep)] text-[var(--vs-text-body)] overflow-hidden font-['Sarabun'] antialiased select-none">
+    <div class="flex h-screen overflow-hidden border border-[var(--vs-border)]">
+        <!-- Activity Bar (Icons Only) -->
+        <aside class="vs-activity-bar z-50">
+            <div class="h-[48px] flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity">
+                <i class="icon i-academic h-6 w-6 text-[var(--vs-accent)]"></i>
+            </div>
+            <div class="flex-1 flex flex-col">
+                <div class="activity-item active" data-tooltip="สำรวจข้อมูล" data-view="explorer">
+                    <i class="icon i-folder h-6 w-6"></i>
+                    <div id="badge-explorer" class="vs-badge"></div>
+                </div>
+                <div class="activity-item" data-tooltip="แผงควบคุมหลัก" data-view="manage">
+                    <i class="icon i-squares h-6 w-6"></i>
+                    <div id="badge-manage" class="vs-badge"></div>
+                </div>
+                <div class="activity-item" data-tooltip="คู่มือการใช้งาน" data-view="manual">
+                    <i class="icon i-book h-6 w-6"></i>
+                    <div id="badge-manual" class="vs-badge"></div>
+                </div>
+                <div class="activity-item" data-tooltip="การสื่อสาร" data-view="chat">
+                    <i class="icon i-chat h-6 w-6"></i>
+                    <div id="badge-chat" class="vs-badge"></div>
+                </div>
+                <div class="activity-item" data-tooltip="ค้นหาระบบ" data-view="search">
+                    <i class="icon i-search h-6 w-6"></i>
+                </div>
+            </div>
+            <div class="mt-auto flex flex-col pb-2">
+                <div class="activity-item" data-tooltip="การตั้งค่า" data-view="settings">
+                    <i class="icon i-cog h-6 w-6"></i>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Sidebar Panel -->
+        <aside id="side-panel" class="vs-side-bar relative overflow-hidden">
+            <!-- Explorer View -->
+            <div id="panel-explorer" class="vs-sidebar-panel flex flex-col h-full">
+                <div class="vs-panel-header uppercase font-extralight text-[var(--vs-text-muted)] Thai-Rule">
+                    <span>ระบบติดตามข้อมูลสถานศึกษา</span>
+                    <i class="icon i-dots h-3 w-3"></i>
+                </div>
+
+                <!-- Standardized Universal Dash Icon -->
+                <div class="px-1 py-1 space-y-1">
+                    <button
+                        class="nav-item w-full text-left px-[18px] py-1.5 rounded-[var(--vs-radius)] transition-all hud-bg-cyan text-[var(--vs-accent)] font-extralight hud-border-cyan text-sm group active"
+                        data-page="pages/home.html" data-name="Dashboard Overview">
+                        <i
+                            class="icon i-squares h-4 w-4 inline-block mr-2 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-white group-hover:text-white">แดชบอร์ดภาพรวม</span>
+                    </button>
+                    <button
+                        class="nav-item w-full text-left px-[18px] py-1.5 rounded-[var(--vs-radius)] transition-all text-[var(--vs-text-title)] font-extralight text-sm group"
+                        data-page="pages/schedule.html" data-name="Class Schedule">
+                        <i
+                            class="icon i-calendar h-4 w-4 inline-block mr-2 group-hover:scale-110 transition-transform"></i>
+                        <span>ตารางปฏิบัติการ</span>
+                    </button>
+                    <button
+                        class="nav-item w-full text-left px-[18px] py-1.5 rounded-[var(--vs-radius)] transition-all text-[var(--vs-text-title)] font-extralight text-sm group"
+                        data-page="pages/dashboard_admin.html" data-name="Admin Dashboard">
+                        <i
+                            class="icon i-chart h-4 w-4 inline-block mr-2 group-hover:scale-110 transition-transform"></i>
+                        <span>Dashboard ผู้บริหาร</span>
+                    </button>
+                    <button
+                        class="nav-item w-full text-left px-[18px] py-1.5 rounded-[var(--vs-radius)] transition-all text-[var(--vs-text-title)] font-extralight text-sm group"
+                        data-page="pages/subject_cards.html" data-name="Subject Matrix">
+                        <i class="icon i-book h-4 w-4 inline-block mr-2 group-hover:scale-110 transition-transform"></i>
+                        <span>กลุ่มสาระการเรียนรู้</span>
+                    </button>
+                </div>
+
+                <div class="flex-1 flex flex-col items-center justify-center p-6 text-center opacity-20">
+                    <i class="icon i-finger-print h-12 w-12 mb-4"></i>
+                    <div class="hud-badge-micro uppercase Thai-Rule">รอการยืนยันตัวตนจากส่วนกลาง</div>
+                    <div class="text-[10px] mt-2 font-mono uppercase">Unified Intelligence Matrix v1.0</div>
+                </div>
+            </div>
+
+            <div id="panel-manual" class="vs-sidebar-panel flex flex-col h-full hidden">
+                <div class="vs-panel-header text-sm uppercase font-extralight text-[var(--vs-text-title)] Thai-Rule">
+                    <span>คู่มือการใช้งานระบบ</span>
+                    <i class="icon i-dots h-3 w-3"></i>
+                </div>
+
+                <nav class="flex-1 overflow-y-auto pt-2">
+                    <button
+                        class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-body)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)] active"
+                        data-page="pages/manual/vision.html" data-name="1. Vision / Strategy">
+                        <i class="icon i-eye h-4 w-4"></i>
+                        <span class="text-sm">1. VISION / STRATEGY</span>
+                    </button>
+                    <button
+                        class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-title)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)]"
+                        data-page="pages/manual/roles.html" data-name="2. Roles / Users">
+                        <i class="icon i-users h-4 w-4"></i>
+                        <span class="text-sm">2. ROLES / USERS</span>
+                    </button>
+                    <button
+                        class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-title)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)]"
+                        data-page="pages/manual/communication.html" data-name="3. Communications">
+                        <i class="icon i-chat h-4 w-4"></i>
+                        <span class="text-sm">3. COMMUNICATIONS</span>
+                    </button>
+                    <button
+                        class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-title)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)]"
+                        data-page="pages/manual/learning.html" data-name="4. Learning">
+                        <i class="icon i-lightning h-4 w-4"></i>
+                        <span class="text-sm">4. LEARNING ENGINE</span>
+                    </button>
+                    <button
+                        class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-title)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)]"
+                        data-page="pages/manual/database.html" data-name="5. Database">
+                        <i class="icon i-database h-4 w-4"></i>
+                        <span class="text-sm">5. DATABASE SCHEMA</span>
+                    </button>
+                    <button
+                        class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-title)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)]"
+                        data-page="pages/manual/architecture.html" data-name="6. Architecture">
+                        <i class="icon i-cube h-4 w-4"></i>
+                        <span class="text-sm">6. ARCHITECTURE</span>
+                    </button>
+                    <button
+                        class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-title)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)]"
+                        data-page="pages/manual/files.html" data-name="7. Files">
+                        <i class="icon i-folder h-4 w-4"></i>
+                        <span class="text-sm">7. FILE REPOSITORY</span>
+                    </button>
+                    <button
+                        class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-title)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)]"
+                        data-page="pages/manual/design.html" data-name="8. Design">
+                        <i class="icon i-eye h-4 w-4"></i>
+                        <span class="text-sm">8. DESIGN STANDARDS</span>
+                    </button>
+                    <button
+                        class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-title)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)]"
+                        data-page="pages/manual/offline.html" data-name="9. Offline & PWA">
+                        <i class="icon i-shield h-4 w-4"></i>
+                        <span class="text-sm">9. OFFLINE & PWA</span>
+                    </button>
+                    <button
+                        class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-title)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)]"
+                        data-page="pages/manual/data-service.html" data-name="10. DataService">
+                        <i class="icon i-database h-4 w-4"></i>
+                        <span class="text-sm">10. DATA SERVICE & API</span>
+                    </button>
+                    <button
+                        class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-title)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)]"
+                        data-page="pages/manual/infrastructure.html" data-name="11. Infrastructure">
+                        <i class="icon i-brand-github h-4 w-4"></i>
+                        <span class="text-sm">11. INFRASTRUCTURE & CD</span>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Management / Mission Control Panel -->
+            <div id="panel-manage" class="vs-sidebar-panel flex flex-col h-full hidden">
+                <div class="vs-panel-header uppercase font-extralight text-[var(--vs-text-muted)] Thai-Rule">
+                    <span>หน้าจัดการและปฏิบัติงาน</span>
+                    <i class="icon i-dots h-3 w-3"></i>
+                </div>
+                <div class="h-full flex flex-col overflow-y-auto p-3 space-y-4" id="management-content">
+                    <!-- Timeline groups rendered dynamically by ManagementEngine.renderDashboard() -->
+                </div>
+            </div>
+
+            <!-- Chat View -->
+            <div id="panel-chat" class="vs-sidebar-panel flex flex-col h-full hidden">
+                <div class="vs-panel-header text-sm uppercase font-extralight text-[var(--vs-text-title)] Thai-Rule">
+                    <span>ข้อความส่วนตัว</span>
+                    <i class="icon i-dots h-3 w-3"></i>
+                </div>
+                <div class="flex-1 overflow-y-auto px-1 py-1 space-y-1" id="chatList">
+                    <!-- Dynamic Chat List -->
+                    <div class="p-3 text-[var(--vs-text-muted)] text-sm uppercase Thai-Rule">
+                        กำลังเริ่มระบบการสื่อสาร...
+                    </div>
+                </div>
+            </div>
+
+            <div id="panel-search" class="vs-sidebar-panel flex flex-col h-full hidden">
+                <div class="vs-panel-header text-sm uppercase font-extralight text-[var(--vs-text-title)] Thai-Rule">
+                    <span>ค้นหาข้อมูล</span>
+                    <i class="icon i-search h-3 w-3"></i>
+                </div>
+                <div class="p-4">
+                    <input type="text" placeholder="ค้นหาเมนูหรือข้อมูล..."
+                        class="w-full bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] px-4 py-2 text-sm text-[var(--vs-text-body)] focus:outline-none focus:border-[var(--vs-accent)] Thai-Rule" />
+                </div>
+            </div>
+
+            <div id="panel-settings" class="vs-sidebar-panel flex flex-col h-full hidden">
+                <div class="vs-panel-header text-sm uppercase font-extralight text-[var(--vs-text-title)] Thai-Rule">
+                    <span>การตั้งค่าและการสลับตัวตน</span>
+                    <i class="icon i-dots h-3 w-3"></i>
+                </div>
+                <div class="p-4 space-y-4">
+                    <div class="text-sm text-[var(--vs-text-muted)] uppercase font-extralight Thai-Rule">
+                        สลับตัวตนในการใช้ระบบ
+                    </div>
+                    <div class="space-y-1.5" id="role-switcher-list">
+                        <!-- Role Buttons -->
+                        <button onclick="switchRole('MOE_001')"
+                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] transition-all flex items-center justify-between group">
+                            <span>ท่านรัฐมนตรี (MOE)</span>
+                            <i
+                                class="icon i-globe h-3 w-3 opacity-0 group-hover:opacity-100 text-[var(--vs-accent)]"></i>
+                        </button>
+                        <button onclick="switchRole('OBEC_001')"
+                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] transition-all flex items-center justify-between group">
+                            <span>ท่านเลขาฯ สพฐ. (OBEC)</span>
+                            <i
+                                class="icon i-library h-3 w-3 opacity-0 group-hover:opacity-100 text-[var(--vs-accent)]"></i>
+                        </button>
+                        <button onclick="switchRole('ESA_DIR_001')"
+                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] transition-all flex items-center justify-between group">
+                            <span>ดร.สมเกียรติ (ผอ.เขต 1)</span>
+                            <i
+                                class="icon i-building h-3 w-3 opacity-0 group-hover:opacity-100 text-[var(--vs-accent)]"></i>
+                        </button>
+                        <button onclick="switchRole('SCH_DIR_001')"
+                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] transition-all flex items-center justify-between group">
+                            <span>ผอ.ปรีชา (ผอ.โรงเรียน)</span>
+                            <i
+                                class="icon i-office h-3 w-3 opacity-0 group-hover:opacity-100 text-[var(--vs-accent)]"></i>
+                        </button>
+                        <button onclick="switchRole('TEA_001')"
+                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] transition-all flex items-center justify-between group">
+                            <span>ครูสายบัว (ครูประจำชั้น)</span>
+                            <i
+                                class="icon i-academic h-3 w-3 opacity-0 group-hover:opacity-100 text-[var(--vs-accent)]"></i>
+                        </button>
+                        <button onclick="switchRole('STU_001')"
+                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] transition-all flex items-center justify-between group font-extralight">
+                            <span>อัครพล (นักเรียน 6/1)</span>
+                            <i
+                                class="icon i-user h-3 w-3 opacity-0 group-hover:opacity-100 text-[var(--vs-accent)]"></i>
+                        </button>
+                        <button onclick="switchRole('PAR_001')"
+                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] transition-all flex items-center justify-between group">
+                            <span>นายสมพล (ผู้ปกครอง)</span>
+                            <i
+                                class="icon i-users h-3 w-3 opacity-0 group-hover:opacity-100 text-[var(--vs-accent)]"></i>
+                        </button>
+                    </div>
+
+                    <div class="pt-4 border-t border-[var(--vs-border)]">
+                        <div class="text-sm text-[var(--vs-text-muted)] uppercase font-extralight Thai-Rule mb-2">
+                            การแสดงผลของระบบ
+                        </div>
+                        <div
+                            class="flex items-center justify-between text-sm text-[var(--vs-text-body)] font-extralight Thai-Rule">
+                            <span>โทนสีของระบบ</span>
+                            <span
+                                class="text-[var(--vs-accent)] font-extralight text-sm uppercase">มาตรวัดศูนย์กลาง</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Profile (Bottom) -->
+            <div class="nav-item vs-menu-item mt-auto border-t border-[var(--vs-border)] px-[18px] py-4 bg-[var(--vs-bg-card)] cursor-pointer transition-all"
+                data-page="pages/profile.html" data-name="User Profile">
+                <div class="flex items-center space-x-3">
+                    <div id="pfp"
+                        class="w-10 h-10 rounded-full flex items-center justify-center font-extralight text-[var(--vs-text-muted)] text-sm border border-[var(--vs-border)] bg-[rgba(var(--vs-bg-card-rgb),0.3)]">
+                        --
+                    </div>
+                    <div class="flex-1 overflow-hidden">
+                        <div id="uName" class="font-extralight text-[var(--vs-text-title)] truncate Thai-Rule mb-0.5">
+                            กำลังเตรียมระบบ...
+                        </div>
+                        <div id="uRole"
+                            class="font-extralight uppercase text-[var(--vs-text-muted)] opacity-50 Thai-Rule">
+                            รอยืนยันตัวตน
+                        </div>
+                    </div>
+                    <button id="logoutBtn"
+                        class="p-2 hover:bg-[var(--vs-bg-main)] rounded-[var(--vs-radius)] transition-colors group"
+                        title="Logout" onclick="
+                                logout();
+                                event.stopPropagation();
+                            ">
+                        <i
+                            class="icon i-logout h-5 w-5 text-[var(--vs-text-muted)] group-hover:text-[var(--vs-danger)]"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Canvas -->
+        <main class="vs-content bg-[var(--vs-bg-main)]">
+            <!-- Universal Header (800-Baseline Aligned) -->
+            <header
+                class="h-12 bg-[var(--vs-bg-main)] border-b border-[var(--vs-border)] flex items-center justify-between px-8">
+                <div class="flex items-center space-x-1 Thai-Rule">
+                    <span class="text-[var(--vs-text-muted)] uppercase text-sm font-extralight">โครงสร้างระบบ</span>
+                    <span class="text-[var(--vs-text-muted)]">/</span>
+                    <span id="header-page-name"
+                        class="text-[var(--vs-text-title)] font-extralight text-sm">แดชบอร์ดภาพรวม</span>
+                </div>
+            </header>
+
+            <div class="vs-iframe-container">
+                <iframe id="main-frame" src="pages/home.html" title="Workspace Content"></iframe>
+            </div>
+
+            <div id="vs-status-bar"
+                class="h-6 bg-[var(--vs-bg-main)] border-t border-[var(--vs-border)] flex items-center justify-between px-6 text-sm uppercase text-[var(--vs-text-muted)] font-extralight">
+                <div class="flex items-center space-x-4">
+                    <div id="status-connection" class="flex items-center space-x-1">
+                        <div class="w-2 h-2 rounded-[var(--vs-radius)] bg-zinc-600 transition-colors"></div>
+                        <span class="font-extralight Thai-Rule">กำลังเชื่อมต่อ...</span>
+                    </div>
+                    <span class="font-extralight">UTF-8</span>
+                    <span class="font-extralight Thai-Rule">แบบอักษร สารบรรณ</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="font-extralight" style="
+                                color: rgba(var(--vs-text-muted-rgb, 113, 113, 122), 0.5);
+                            ">IDLPMS.HUD.V1</span>
+                    <div id="status-role-badge" class="flex items-center space-x-1"
+                        style="color: rgba(var(--vs-text-muted-rgb, 113, 113, 122), 0.5)">
+                        <i class="icon i-user h-3 w-3"></i>
+                        <span class="font-extralight Thai-Rule text-[10px]">ระดับสิทธิ: ข้อมูลพื้นฐาน</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="vs-toast-container"></div>
+
+    <script src="assets/js/components/tooltip.js?v=2.2"></script>
+    <script src="assets/js/notifications.js?v=2.4"></script>
+    <script src="assets/js/submenu.js?v=2.4"></script>
+    <script src="assets/js/timeline_menu.js?v=3.1"></script>
+    <script src="assets/js/explorer.js?v=2.4"></script>
+    <script src="assets/js/chat.js?v=2.4"></script>
+    <script src="assets/js/management.js?v=3.2"></script>
+    <script>
+        window.switchView = function (view, subId = null) {
+            const activityItem = document.querySelector(
+                `.activity-item[data-view="${view}"]`,
+            );
+            if (activityItem) {
+                activityItem.click();
+                if (view === "chat" && subId && window.ChatEngine) {
+                    setTimeout(
+                        () => window.ChatEngine.openChat(subId),
+                        100,
+                    );
+                }
+                // Timeline menus now rendered by ManagementEngine.renderDashboard()
+            }
+        };
+    </script>
+</body>
+
+</html>

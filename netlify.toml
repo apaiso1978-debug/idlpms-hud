@@ -1,0 +1,39 @@
+# Netlify Configuration
+# This file configures Netlify deployment settings
+
+[build]
+  # Directory with static files
+  publish = "."
+  
+  # Functions directory
+  functions = "netlify/functions"
+
+[dev]
+  # Local development port
+  port = 8888
+  
+  # When no command is specified, Netlify Dev will automatically
+  # serve the current directory if it contains an index.html
+  
+  # Auto-launch browser
+  autoLaunch = true
+
+# Redirects for the proxy
+[[redirects]]
+  from = "/api/dltv-proxy"
+  to = "/.netlify/functions/dltv-proxy"
+  status = 200
+
+# Headers for CORS
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type"
+
+# Headers for static assets caching
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"

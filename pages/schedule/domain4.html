@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Domain 4: งานตอบสนองนโยบาย | IDLPMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../../assets/css/theme.css" />
+    <link rel="stylesheet" href="../../assets/css/styles.css?v=1.2" />
+    <script src="../../assets/js/data.js"></script>
+    <script src="../../src/services/DataService.js"></script>
+    <script src="../../src/services/AuthService.js"></script>
+</head>
+
+<body class="bg-transparent p-6 overflow-y-auto overflow-x-hidden font-['Sarabun'] antialiased vs-scrollbar">
+    <div class="max-w-[1600px] mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <span class="hud-badge-micro border-[#34d399]/30 text-[#34d399]">Domain 4</span>
+                <h1 class="text-xl font-extralight text-[var(--vs-text-title)] uppercase">
+                    งานตอบสนองนโยบาย — Policy Activities</h1>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="dna-zone p-4 border-[#34d399]/15">
+            <p class="text-sm text-[var(--vs-text-muted)]">
+                สวดมนต์, กิจกรรมตามนโยบาย สพป./ผอ. — ทั้งนักเรียนและครูเห็น (นับชั่วโมง กคศ.)
+            </p>
+            <p class="text-sm text-[var(--vs-text-muted)] mt-1 opacity-45">นักเรียน + ครู</p>
+        </div>
+
+        <!-- Activity List -->
+        <div class="dna-zone p-6 border-[#34d399]/15 bg-[rgba(var(--vs-bg-deep-rgb),0.2)]">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="hud-badge-micro border-[#34d399]/30 text-[#34d399]">Activities</span>
+                <h2 class="text-lg font-extralight text-[var(--vs-text-title)] uppercase">
+                    รายการกิจกรรมนโยบาย</h2>
+            </div>
+            <div id="d4-activity-list" class="space-y-2">
+                <!-- Populated by renderDomain4Panel() -->
+            </div>
+            <button onclick="addDomain4Activity()"
+                class="mt-4 flex items-center gap-1 px-6 py-2.5 text-sm text-[#34d399] border border-[#34d399]/20 rounded-[var(--vs-radius)] hover:bg-[#34d399]/10 transition-all">
+                <span>+ เพิ่มกิจกรรม</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const DOMAIN_STORAGE_KEY = 'IDLPMS_DomainInputs_';
+        const DAY_LABELS = ['', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์'];
+
+        function getCurrentSchoolId() {
+            try {
+                const session = JSON.parse(localStorage.getItem('IDLPMS_Session') || '{}');
+                return session.schoolId || 'SCH_MABLUD';
+            } catch { return 'SCH_MABLUD'; }
+        }
+
+        function getDefaultDomain4() {
+            return [
+                { id: 'PRAY', name: 'สวดมนต์', day: 5, period: 7 },
+                { id: 'SCOUT', name: 'ลูกเสือ/เนตรนารี', day: 3, period: 7 },
+            ];
+        }
+
+        function loadDomainInputs(domain) {
+            const sid = getCurrentSchoolId();
+            try {
+                return JSON.parse(localStorage.getItem(`${DOMAIN_STORAGE_KEY}${sid}_d${domain}`) || 'null');
+            } catch { return null; }
+        }
+
+        function saveDomainInputs(domain, data) {
+            const sid = getCurrentSchoolId();
+            localStorage.setItem(`${DOMAIN_STORAGE_KEY}${sid}_d${domain}`, JSON.stringify(data));
+        }
+
+        function renderDomain4Panel() {
+            const container = document.getElementById('d4-activity-list');
+            if (!container) return;
+            const activities = loadDomainInputs(4) || getDefaultDomain4();
+
+            let html = `<div class="grid grid-cols-[minmax(0,1fr)_100px_160px_36px] gap-3 text-sm text-[var(--vs-text-muted)] uppercase pb-1 border-b border-[rgba(63,63,70,0.5)]">
+                <span>กิจกรรม</span><span class="text-center">วัน</span><span class="text-center">คาบ</span><span></span>
+            </div>`;
+
+            activities.forEach((a, idx) => {
+                html += `<div class="grid grid-cols-[minmax(0,1fr)_100px_160px_36px] gap-3 items-center py-2 border-b border-[rgba(63,63,70,0.1)]">
+                    <input type="text" value="${a.name}" onchange="updateD4Activity(${idx}, 'name', this.value)"
+                        class="bg-[rgba(255,255,255,0.03)] text-sm text-[var(--vs-text-body)] border border-[rgba(255,255,255,0.1)] rounded-[var(--vs-radius)] focus:border-[#34d399]/50 outline-none px-3 py-2" />
+                    <select onchange="updateD4Activity(${idx}, 'day', parseInt(this.value))"
+                        class="bg-[var(--vs-bg-deep)] text-sm text-[var(--vs-text-body)] border border-[rgba(var(--vs-border-rgb),0.3)] rounded-[var(--vs-radius)] px-3 py-2 outline-none text-center">
+                        ${[1, 2, 3, 4, 5].map(d => `<option value="${d}" ${a.day === d ? 'selected' : ''}>${DAY_LABELS[d]}</option>`).join('')}
+                    </select>
+                    <select onchange="updateD4Activity(${idx}, 'period', parseInt(this.value))"
+                        class="bg-[var(--vs-bg-deep)] text-sm text-[var(--vs-text-body)] border border-[rgba(var(--vs-border-rgb),0.3)] rounded-[var(--vs-radius)] px-3 py-2 outline-none text-center">
+                        ${[1, 2, 3, 4, 6, 7, 8].map(p => {
+                    let label = `คาบ ${p}`;
+                    if (p === 7) label = 'คาบ 6';
+                    else if (p === 8) label = 'คาบ 7';
+                    return `<option value="${p}" ${a.period === p ? 'selected' : ''}>${label}</option>`;
+                }).join('')}
+                    </select>
+                    <button onclick="removeD4Activity(${idx})" class="text-[var(--vs-danger)] hover:bg-[var(--vs-danger)]/10 rounded-[var(--vs-radius)] p-1 text-sm">✕</button>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function updateD4Activity(idx, field, value) {
+            const activities = loadDomainInputs(4) || getDefaultDomain4();
+            if (activities[idx]) { activities[idx][field] = value; saveDomainInputs(4, activities); }
+        }
+
+        function addDomain4Activity() {
+            const activities = loadDomainInputs(4) || getDefaultDomain4();
+            activities.push({ id: `d4_${Date.now()}`, name: 'กิจกรรมใหม่', day: 1, period: 7 });
+            saveDomainInputs(4, activities);
+            renderDomain4Panel();
+        }
+
+        function removeD4Activity(idx) {
+            const activities = loadDomainInputs(4) || getDefaultDomain4();
+            activities.splice(idx, 1);
+            saveDomainInputs(4, activities);
+            renderDomain4Panel();
+        }
+
+        window.addEventListener('DOMContentLoaded', renderDomain4Panel);
+    </script>
+</body>
+
+</html>

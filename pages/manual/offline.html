@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>9. Offline & PWA | System Manual | IDLPMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../../assets/css/theme.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+</head>
+
+<body class="bg-transparent px-8 pt-8 pb-24 overflow-y-auto font-['Sarabun'] antialiased">
+    <div class="max-w-[1600px] space-y-6">
+
+        <!-- Page Header -->
+        <div class="flex items-center justify-between border-b border-[var(--vs-border)] pb-6">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span
+                        class="hud-badge-micro px-2 py-0.5 rounded-[3px] font-extralight border border-white/20 bg-white/10 text-white">
+                        CHAPTER 09
+                    </span>
+                    <span class="text-sm text-[var(--vs-text-muted)] uppercase">System Manual</span>
+                </div>
+                <h1 class="text-3xl font-extralight text-[var(--vs-text-title)]">
+                    Offline System & PWA
+                </h1>
+                <p class="text-sm text-[var(--vs-text-body)] mt-2 max-w-2xl">
+                    ระบบการทำงานแบบออฟไลน์และ Progressive Web App
+                    สำหรับรองรับการใช้งานในพื้นที่ที่ไม่มีสัญญาณอินเทอร์เน็ต
+                </p>
+            </div>
+            <div class="text-right">
+                <div class="text-sm text-[var(--vs-text-muted)]">Version</div>
+                <div class="text-2xl font-extralight text-[var(--vs-accent)]">2.0.0</div>
+            </div>
+        </div>
+
+        <!-- Overview Section -->
+        <section class="space-y-6">
+            <h2 class="text-xl font-extralight text-[var(--vs-text-title)] flex items-center gap-3">
+                <i class="icon i-globe h-5 w-5 text-[var(--vs-accent)]"></i>
+                ภาพรวมระบบ Offline
+            </h2>
+
+            <div class="p-6 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+                <p class="text-sm text-[var(--vs-text-body)] leading-relaxed mb-6">
+                    IDLPMS ถูกออกแบบให้เป็น <strong class="text-[var(--vs-text-title)]">Progressive Web App
+                        (PWA)</strong>
+                    ที่สามารถทำงานได้แม้ในสภาวะที่ไม่มีการเชื่อมต่ออินเทอร์เน็ต
+                    เพื่อรองรับโรงเรียนในพื้นที่ห่างไกลที่อาจมีสัญญาณไม่เสถียร
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Service Worker -->
+                    <div class="p-5 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                        <div
+                            class="w-10 h-10 rounded-[3px] bg-white/10 border border-white/20 flex items-center justify-center mb-4">
+                            <i class="icon i-cog h-5 w-5 text-[var(--vs-accent)]"></i>
+                        </div>
+                        <h3 class="text-sm font-extralight text-[var(--vs-text-title)] mb-2">Service Worker</h3>
+                        <p class="text-sm text-[var(--vs-text-muted)]">
+                            จัดการ caching และ network requests โดยอัตโนมัติ รองรับหลาย caching strategies
+                        </p>
+                    </div>
+
+                    <!-- IndexedDB Cache -->
+                    <div class="p-5 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                        <div
+                            class="w-10 h-10 rounded-[3px] hud-bg-emerald hud-border-emerald flex items-center justify-center mb-4">
+                            <i class="icon i-database h-5 w-5 text-[var(--vs-success)]"></i>
+                        </div>
+                        <h3 class="text-sm font-extralight text-[var(--vs-text-title)] mb-2">IndexedDB Cache</h3>
+                        <p class="text-sm text-[var(--vs-text-muted)]">
+                            เก็บข้อมูลบน Browser แบบ persistent รองรับการทำงานออฟไลน์อย่างสมบูรณ์
+                        </p>
+                    </div>
+
+                    <!-- Background Sync -->
+                    <div class="p-5 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                        <div
+                            class="w-10 h-10 rounded-[3px] hud-bg-amber hud-border-amber flex items-center justify-center mb-4">
+                            <i class="icon i-refresh h-5 w-5 text-amber-400"></i>
+                        </div>
+                        <h3 class="text-sm font-extralight text-[var(--vs-text-title)] mb-2">Background Sync</h3>
+                        <p class="text-sm text-[var(--vs-text-muted)]">
+                            ซิงค์ข้อมูลอัตโนมัติเมื่อกลับมาออนไลน์ พร้อมระบบ conflict resolution
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Offline Priority Matrix -->
+        <section class="space-y-6">
+            <h2 class="text-xl font-extralight text-[var(--vs-text-title)] flex items-center gap-3">
+                <i class="icon i-chart h-5 w-5 text-[var(--vs-accent)]"></i>
+                Offline Priority Matrix
+            </h2>
+
+            <div class="p-6 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+                <p class="text-sm text-[var(--vs-text-body)] mb-6">
+                    ไม่ใช่ทุกฟีเจอร์ที่จำเป็นต้องทำงานออฟไลน์ได้ ระบบแบ่งระดับความสำคัญดังนี้:
+                </p>
+
+                <!-- Critical - Must Work Offline -->
+                <div class="mb-6">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span
+                            class="px-2 py-1 rounded-[3px] text-sm font-extralight bg-rose-500/20 text-rose-400 border border-rose-500/30">
+                            CRITICAL
+                        </span>
+                        <span class="text-sm text-[var(--vs-text-muted)]">ต้องทำงานออฟไลน์ได้ 100%</span>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div
+                            class="p-3 rounded-[3px] bg-rose-500/10 border border-rose-500/20 text-sm text-[var(--vs-text-body)]">
+                            <i class="icon i-check h-4 w-4 text-rose-400 inline-block mr-2"></i>
+                            บันทึกคะแนน/เกรด
+                        </div>
+                        <div
+                            class="p-3 rounded-[3px] bg-rose-500/10 border border-rose-500/20 text-sm text-[var(--vs-text-body)]">
+                            <i class="icon i-check h-4 w-4 text-rose-400 inline-block mr-2"></i>
+                            เช็คชื่อนักเรียน
+                        </div>
+                        <div
+                            class="p-3 rounded-[3px] bg-rose-500/10 border border-rose-500/20 text-sm text-[var(--vs-text-body)]">
+                            <i class="icon i-check h-4 w-4 text-rose-400 inline-block mr-2"></i>
+                            ดูข้อมูลนักเรียน
+                        </div>
+                        <div
+                            class="p-3 rounded-[3px] bg-rose-500/10 border border-rose-500/20 text-sm text-[var(--vs-text-body)]">
+                            <i class="icon i-check h-4 w-4 text-rose-400 inline-block mr-2"></i>
+                            บันทึกพฤติกรรม
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Important - Should Work Offline -->
+                <div class="mb-6">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span
+                            class="px-2 py-1 rounded-[3px] text-sm font-extralight bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                            IMPORTANT
+                        </span>
+                        <span class="text-sm text-[var(--vs-text-muted)]">ควรทำงานออฟไลน์ได้ (cached content)</span>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div
+                            class="p-3 rounded-[3px] bg-amber-500/10 border border-amber-500/20 text-sm text-[var(--vs-text-body)]">
+                            <i class="icon i-book h-4 w-4 text-amber-400 inline-block mr-2"></i>
+                            ดูเนื้อหาบทเรียน
+                        </div>
+                        <div
+                            class="p-3 rounded-[3px] bg-amber-500/10 border border-amber-500/20 text-sm text-[var(--vs-text-body)]">
+                            <i class="icon i-chart h-4 w-4 text-amber-400 inline-block mr-2"></i>
+                            Dashboard ส่วนตัว
+                        </div>
+                        <div
+                            class="p-3 rounded-[3px] bg-amber-500/10 border border-amber-500/20 text-sm text-[var(--vs-text-body)]">
+                            <i class="icon i-squares h-4 w-4 text-amber-400 inline-block mr-2"></i>
+                            ตารางสอน/ตารางเรียน
+                        </div>
+                        <div
+                            class="p-3 rounded-[3px] bg-amber-500/10 border border-amber-500/20 text-sm text-[var(--vs-text-body)]">
+                            <i class="icon i-folder h-4 w-4 text-amber-400 inline-block mr-2"></i>
+                            เอกสารที่ดาวน์โหลด
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Online Only -->
+                <div>
+                    <div class="flex items-center gap-2 mb-3">
+                        <span
+                            class="px-2 py-1 rounded-[3px] text-sm font-extralight bg-[var(--vs-bg-panel)] text-[var(--vs-text-muted)] border border-[var(--vs-border)]">
+                            ONLINE ONLY
+                        </span>
+                        <span class="text-sm text-[var(--vs-text-muted)]">ต้องการการเชื่อมต่ออินเทอร์เน็ต</span>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div
+                            class="p-3 rounded-[3px] bg-[rgba(var(--vs-bg-card-rgb),0.2)] border border-[var(--vs-border)] text-sm text-[var(--vs-text-muted)]">
+                            <i class="icon i-chat h-4 w-4 text-zinc-500 inline-block mr-2"></i>
+                            แชท/ข้อความ
+                        </div>
+                        <div
+                            class="p-3 rounded-[3px] bg-[rgba(var(--vs-bg-card-rgb),0.2)] border border-[var(--vs-border)] text-sm text-[var(--vs-text-muted)]">
+                            <i class="icon i-lightning h-4 w-4 text-zinc-500 inline-block mr-2"></i>
+                            Real-time updates
+                        </div>
+                        <div
+                            class="p-3 rounded-[3px] bg-[rgba(var(--vs-bg-card-rgb),0.2)] border border-[var(--vs-border)] text-sm text-[var(--vs-text-muted)]">
+                            <i class="icon i-globe h-4 w-4 text-zinc-500 inline-block mr-2"></i>
+                            รายงานระดับเขต
+                        </div>
+                        <div
+                            class="p-3 rounded-[3px] bg-[rgba(var(--vs-bg-card-rgb),0.2)] border border-[var(--vs-border)] text-sm text-[var(--vs-text-muted)]">
+                            <i class="icon i-users h-4 w-4 text-zinc-500 inline-block mr-2"></i>
+                            ค้นหาผู้ใช้ทั้งระบบ
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture Section -->
+        <section class="space-y-6">
+            <h2 class="text-xl font-extralight text-[var(--vs-text-title)] flex items-center gap-3">
+                <i class="icon i-cube h-5 w-5 text-[var(--vs-accent)]"></i>
+                สถาปัตยกรรมระบบ
+            </h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Caching Strategies -->
+                <div class="p-6 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+                    <h3 class="text-sm font-extralight text-[var(--vs-text-title)] mb-4 flex items-center gap-2">
+                        <span
+                            class="w-6 h-6 rounded-[3px] bg-[var(--vs-accent)] text-zinc-900 flex items-center justify-center text-sm font-extralight">1</span>
+                        Caching Strategies
+                    </h3>
+
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-extralight text-[var(--vs-accent)]">Cache-First</span>
+                                <span class="hud-badge-micro text-[var(--vs-text-muted)]">STATIC ASSETS</span>
+                            </div>
+                            <p class="text-sm text-[var(--vs-text-muted)]">
+                                ใช้กับ CSS, JS, Fonts, Images - โหลดจาก cache ก่อนเสมอ
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-extralight text-emerald-400">Network-First</span>
+                                <span class="hud-badge-micro text-[var(--vs-text-muted)]">API CALLS</span>
+                            </div>
+                            <p class="text-sm text-[var(--vs-text-muted)]">
+                                ใช้กับ API endpoints - พยายามโหลดจาก network ก่อน fallback ไป cache
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-extralight text-amber-400">Stale-While-Revalidate</span>
+                                <span class="hud-badge-micro text-[var(--vs-text-muted)]">HTML PAGES</span>
+                            </div>
+                            <p class="text-sm text-[var(--vs-text-muted)]">
+                                ใช้กับหน้า HTML - ส่ง cache ทันที แล้วอัพเดทใน background
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sync Engine -->
+                <div class="p-6 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+                    <h3 class="text-sm font-extralight text-[var(--vs-text-title)] mb-4 flex items-center gap-2">
+                        <span
+                            class="w-6 h-6 rounded-[3px] bg-[var(--vs-accent)] text-zinc-900 flex items-center justify-center text-sm font-extralight">2</span>
+                        Sync Engine
+                    </h3>
+
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-2 h-2 rounded-[3px] bg-emerald-500"></div>
+                                <span class="text-sm font-extralight text-[var(--vs-text-title)]">Optimistic
+                                    Updates</span>
+                            </div>
+                            <p class="text-sm text-[var(--vs-text-muted)]">
+                                บันทึกลง IndexedDB ทันที แสดง "Saved" ให้ user เห็น แล้วค่อย sync เมื่อมีเน็ต
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-2 h-2 rounded-[3px] bg-amber-500"></div>
+                                <span class="text-sm font-extralight text-[var(--vs-text-title)]">Conflict
+                                    Resolution</span>
+                            </div>
+                            <p class="text-sm text-[var(--vs-text-muted)]">
+                                ใช้ Last-Write-Wins เป็นหลัก หรือ Manual merge สำหรับข้อมูลสำคัญ
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-2 h-2 rounded-[3px] bg-[var(--vs-accent)]"></div>
+                                <span class="text-sm font-extralight text-[var(--vs-text-title)]">Retry Logic</span>
+                            </div>
+                            <p class="text-sm text-[var(--vs-text-muted)]">
+                                Exponential backoff สูงสุด 5 ครั้ง พร้อม priority-based queue
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Service Files -->
+        <section class="space-y-6">
+            <h2 class="text-xl font-extralight text-[var(--vs-text-title)] flex items-center gap-3">
+                <i class="icon i-folder h-5 w-5 text-[var(--vs-accent)]"></i>
+                ไฟล์ที่เกี่ยวข้อง
+            </h2>
+
+            <div class="p-6 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="border-b border-[var(--vs-border)]">
+                                <th class="py-3 px-4 text-sm font-extralight text-[var(--vs-text-muted)] uppercase">ไฟล์
+                                </th>
+                                <th class="py-3 px-4 text-sm font-extralight text-[var(--vs-text-muted)] uppercase">
+                                    หน้าที่
+                                </th>
+                                <th class="py-3 px-4 text-sm font-extralight text-[var(--vs-text-muted)] uppercase">
+                                    สถานะ
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm">
+                            <tr class="border-b border-[var(--vs-border)] opacity-50">
+                                <td class="py-3 px-4">
+                                    <code
+                                        class="px-2 py-1 rounded-[3px] bg-[var(--vs-bg-deep)] text-[var(--vs-accent)]">sw.js</code>
+                                </td>
+                                <td class="py-3 px-4 text-[var(--vs-text-body)]">Service Worker หลัก - จัดการ caching
+                                    และ offline</td>
+                                <td class="py-3 px-4">
+                                    <span
+                                        class="px-2 py-0.5 rounded-[3px] text-sm bg-emerald-500/20 text-emerald-400">Active</span>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-[var(--vs-border)] opacity-50">
+                                <td class="py-3 px-4">
+                                    <code
+                                        class="px-2 py-1 rounded-[3px] bg-[var(--vs-bg-deep)] text-[var(--vs-accent)]">manifest.json</code>
+                                </td>
+                                <td class="py-3 px-4 text-[var(--vs-text-body)]">PWA manifest - ข้อมูลแอพและ icons</td>
+                                <td class="py-3 px-4">
+                                    <span
+                                        class="px-2 py-0.5 rounded-[3px] text-sm bg-emerald-500/20 text-emerald-400">Active</span>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-[var(--vs-border)] opacity-50">
+                                <td class="py-3 px-4">
+                                    <code
+                                        class="px-2 py-1 rounded-[3px] bg-[var(--vs-bg-deep)] text-[var(--vs-accent)]">src/services/CacheService.js</code>
+                                </td>
+                                <td class="py-3 px-4 text-[var(--vs-text-body)]">IndexedDB wrapper สำหรับ data caching
+                                </td>
+                                <td class="py-3 px-4">
+                                    <span
+                                        class="px-2 py-0.5 rounded-[3px] text-sm bg-emerald-500/20 text-emerald-400">Active</span>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-[var(--vs-border)] opacity-50">
+                                <td class="py-3 px-4">
+                                    <code
+                                        class="px-2 py-1 rounded-[3px] bg-[var(--vs-bg-deep)] text-[var(--vs-accent)]">src/services/SyncEngine.js</code>
+                                </td>
+                                <td class="py-3 px-4 text-[var(--vs-text-body)]">Background sync และ conflict resolution
+                                </td>
+                                <td class="py-3 px-4">
+                                    <span
+                                        class="px-2 py-0.5 rounded-[3px] text-sm bg-emerald-500/20 text-emerald-400">Active</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4">
+                                    <code
+                                        class="px-2 py-1 rounded-[3px] bg-[var(--vs-bg-deep)] text-[var(--vs-accent)]">src/services/DataService.js</code>
+                                </td>
+                                <td class="py-3 px-4 text-[var(--vs-text-body)]">Abstract data layer รองรับ local และ
+                                    AppsScript</td>
+                                <td class="py-3 px-4">
+                                    <span
+                                        class="px-2 py-0.5 rounded-[3px] text-sm bg-emerald-500/20 text-emerald-400">Active</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Installation Guide -->
+        <section class="space-y-6">
+            <h2 class="text-xl font-extralight text-[var(--vs-text-title)] flex items-center gap-3">
+                <i class="icon i-download h-5 w-5 text-[var(--vs-accent)]"></i>
+                การติดตั้ง PWA
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Desktop -->
+                <div class="p-6 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div
+                            class="w-10 h-10 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] flex items-center justify-center">
+                            <i class="icon i-cube h-5 w-5 text-[var(--vs-text-muted)]"></i>
+                        </div>
+                        <h3 class="text-sm font-extralight text-[var(--vs-text-title)]">Desktop</h3>
+                    </div>
+                    <ol class="space-y-3 text-sm text-[var(--vs-text-body)]">
+                        <li class="flex gap-2">
+                            <span class="text-[var(--vs-accent)] font-extralight">1.</span>
+                            เปิด IDLPMS ใน Chrome/Edge
+                        </li>
+                        <li class="flex gap-2">
+                            <span class="text-[var(--vs-accent)] font-extralight">2.</span>
+                            คลิกไอคอน Install ใน address bar
+                        </li>
+                        <li class="flex gap-2">
+                            <span class="text-[var(--vs-accent)] font-extralight">3.</span>
+                            คลิก "Install" เพื่อยืนยัน
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- Android -->
+                <div class="p-6 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div
+                            class="w-10 h-10 rounded-[3px] bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
+                            <i class="icon i-cube h-5 w-5 text-emerald-400"></i>
+                        </div>
+                        <h3 class="text-sm font-extralight text-[var(--vs-text-title)]">Android</h3>
+                    </div>
+                    <ol class="space-y-3 text-sm text-[var(--vs-text-body)]">
+                        <li class="flex gap-2">
+                            <span class="text-emerald-400 font-extralight">1.</span>
+                            เปิด IDLPMS ใน Chrome
+                        </li>
+                        <li class="flex gap-2">
+                            <span class="text-emerald-400 font-extralight">2.</span>
+                            แตะเมนู (จุด 3 จุด) > "Add to Home screen"
+                        </li>
+                        <li class="flex gap-2">
+                            <span class="text-emerald-400 font-bold">3.</span>

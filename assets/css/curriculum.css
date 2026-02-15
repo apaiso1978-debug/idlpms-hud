@@ -1,0 +1,14 @@
+:root {
+    --sj-thai-rgb: 251, 113, 133;
+    --sj-math-rgb: 251, 191, 36;
+    --sj-sci-rgb: 34, 211, 238;
+    --sj-soc-rgb: 251, 146, 60;
+    --sj-eng-rgb: 129, 140, 248;
+    --sj-art-rgb: 217, 70, 239;
+    --sj-work-rgb: 52, 211, 153;
+    --sj-pe-rgb: 244, 63, 94;
+    --sj-his-rgb: 161, 161, 170;
+
+    /* Fallback for typo in styles.css */
+    --sj-his: var(--sj-hist, #a1a1aa);
+}

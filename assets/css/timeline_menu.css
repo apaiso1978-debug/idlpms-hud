@@ -1,0 +1,237 @@
+/**
+ * Timeline Menu System - Visual hierarchical menu with vertical timeline
+ * Designed for Mission Control panel: parent-child relationships with nodes
+ * Supports: collapsible groups, locked items, timeline nodes
+ */
+
+/* ─── Main Container ─── */
+.timeline-menu-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 6px;
+}
+
+/* ─── Parent (Group Header) ─── */
+.timeline-parent-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+    padding: 6px 12px;
+    border-radius: var(--vs-radius);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    gap: 10px;
+    position: relative;
+}
+
+.timeline-parent-item:hover {
+    background: var(--vs-bg-deep);
+}
+
+.timeline-parent-item .icon {
+    width: 16px;
+    height: 16px;
+    color: var(--vs-accent);
+    flex-shrink: 0;
+}
+
+.timeline-parent-item span {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--vs-accent);
+    flex: 1;
+}
+
+/* Collapse chevron */
+.timeline-chevron {
+    width: 12px;
+    height: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.25s ease;
+    color: var(--vs-text-muted);
+    flex-shrink: 0;
+    opacity: 0.5;
+    transform: rotate(90deg);
+    /* chevron-right rotated to point down */
+}
+
+.timeline-parent-item:hover .timeline-chevron {
+    opacity: 1;
+}
+
+.timeline-parent-item.collapsed .timeline-chevron {
+    transform: rotate(0deg);
+    /* back to right-pointing */
+}
+
+/* ─── Children Container (Timeline Rail) ─── */
+.timeline-children-container {
+    position: relative;
+    margin-left: 19px;
+    padding-left: 20px;
+    padding-top: 4px;
+    padding-bottom: 2px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+
+    /* Collapse animation — use clip-path instead of overflow:hidden
+       so nodes sticking out left are NOT clipped */
+    max-height: 500px;
+    overflow: visible;
+    transition: max-height 0.3s ease, opacity 0.25s ease, padding 0.3s ease;
+    opacity: 1;
+}
+
+/* The vertical rail line */
+.timeline-children-container::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom,
+            transparent 0px,
+            rgba(var(--vs-accent-rgb), 0.25) 12px,
+            rgba(var(--vs-accent-rgb), 0.15) calc(100% - 12px),
+            transparent 100%);
+}
+
+/* Collapsed state */
+.timeline-children-container.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow: hidden;
+    /* clip only when collapsed */
+}
+
+/* ─── Child Item (Submenu) ─── */
+.timeline-child-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+    padding: 7px 12px;
+    border-radius: var(--vs-radius);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    gap: 10px;
+    background: transparent;
+    border: none;
+}
+
+.timeline-child-item:hover {
+    background: var(--vs-bg-deep);
+}
+
+.timeline-child-item.active {
+    background: var(--vs-bg-deep);
+    border-left: 1px solid var(--vs-accent);
+}
+
+/* ─── Timeline Node (circle on the rail) ─── */
+.timeline-node {
+    position: absolute;
+    left: -20px;
+    /* centers on the rail: child starts at padding-left:20px */
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(250, 250, 250, 0.12);
+    border: 1.5px solid rgba(250, 250, 250, 0.35);
+    transition: all 0.2s ease;
+    z-index: 2;
+}
+
+/* Horizontal branch line: node → item */
+.timeline-node::after {
+    content: '';
+    position: absolute;
+    left: calc(100% + 1px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 1px;
+    background: linear-gradient(to right,
+            rgba(var(--vs-accent-rgb), 0.2),
+            transparent);
+}
+
+/* Node states */
+.timeline-child-item:hover .timeline-node {
+    background: rgba(250, 250, 250, 0.35);
+    border-color: rgba(250, 250, 250, 0.6);
+    box-shadow: 0 0 6px rgba(250, 250, 250, 0.15);
+}
+
+.timeline-child-item.active .timeline-node {
+    background: var(--vs-accent);
+    border-color: var(--vs-accent);
+    box-shadow: 0 0 10px rgba(var(--vs-accent-rgb), 0.4);
+}
+
+/* ─── Child item text & icon ─── */
+.timeline-child-item .icon {
+    width: 16px;
+    height: 16px;
+    color: var(--vs-text-body);
+    flex-shrink: 0;
+    transition: color 0.15s ease;
+}
+
+.timeline-child-item:hover .icon,
+.timeline-child-item.active .icon {
+    color: var(--vs-accent);
+}
+
+.timeline-child-item span {
+    font-size: 0.875rem;
+    /* text-sm — matches vs-menu-item standard */
+    font-weight: 200;
+    /* font-extralight — matches vs-menu-item standard */
+    color: var(--vs-text-title);
+    transition: color 0.15s ease;
+}
+
+.timeline-child-item:hover span,
+.timeline-child-item.active span {
+    color: var(--vs-text-title);
+}
+
+/* ─── Locked Item Override ─── */
+.timeline-child-item.locked {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.timeline-child-item.locked:hover {
+    background: transparent;
+}
+
+.timeline-child-item.locked:hover .timeline-node {
+    background: rgba(250, 250, 250, 0.15);
+    border-color: rgba(250, 250, 250, 0.3);
+    box-shadow: none;
+}
+
+.timeline-child-item.locked .lock-badge {
+    margin-left: auto;
+    color: var(--vs-text-muted);
+}
+
+.timeline-child-item.locked .lock-badge .icon {
+    width: 10px;
+    height: 10px;
+}

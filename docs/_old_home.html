@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page | IDLPMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body class="bg-transparent p-6 overflow-y-auto font-['Sarabun'] antialiased pt-8 px-8">
+    <div class="max-w-6xl mx-auto space-y-12 pt-8 px-8">
+
+        <!-- Hero Section -->
+        <section
+            class="relative p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)] ">
+            <!-- Blur element removed for Anti-Fung compliance -->
+
+            <div class="relative z-10 space-y-4 pt-8 px-8">
+                <h1 class="text-4xl font-extralight text-[var(--vs-text-title)] leading-tight pt-8 px-8">
+                    ระบบบริหารจัดการการเรียนรู้ <br>
+                    <span class="text-[var(--vs-accent)] pt-8 px-8">สถาปัตยกรรม "HUD" ยุคใหม่</span>
+                </h1>
+                <p class="text-lg text-[var(--vs-text-body)] max-w-2xl font-normal pt-8 px-8">
+                    หน้าจอแสดงผลอัจฉริยะที่รวบรวมข้อมูลการศึกษาที่สำคัญไว้ในที่เดียว
+                    ออกแบบมาเพื่อความแม่นยำ รวดเร็ว และรองรับผู้ใช้งานทุกบทบาท
+                    ตั้งแต่ระดับนักเรียนจนถึงผู้บริหารกระทรวง
+                </p>
+                <div class="flex space-x-4 pt-6">
+                    <button
+                        class="px-6 py-2 bg-[rgba(var(--vs-bg-card-rgb),0.3)] vs-hover-sharp text-[var(--vs-text-title)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-sm font-extralight transition-all hover:bg-[var(--vs-bg-card)]">
+                        เข้าสู่ระบบบริหารจัดการ
+                    </button>
+                    <button
+                        class="px-6 py-2 bg-[var(--vs-bg-card)] vs-hover-sharp text-[var(--vs-text-body)] rounded-[var(--vs-radius)] text-sm font-extralight transition-all border border-[var(--vs-border)]">
+                        ข้อมูลเชิงลึกทางเทคนิค
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 pt-8 px-8">
+            <div
+                class="p-6 bg-[var(--vs-bg-panel)] border border-[var(--vs-border)] rounded-[var(--vs-radius)]  pt-8 px-8">
+                <div class="hud-badge-micro mb-1 pt-8 px-8">Students</div>
+                <div class="text-3xl font-extralight text-[var(--vs-text-title)] pt-8 px-8">2.4M</div>
+                <div
+                    class="h-[3px] w-full bg-[var(--vs-border)] mt-4 rounded-[var(--vs-radius)] overflow-hidden pt-8 px-8">
+                    <div class="h-full bg-[var(--vs-accent)] w-[75%] pt-8 px-8"></div>
+                </div>
+            </div>
+            <div
+                class="p-6 bg-[var(--vs-bg-panel)] border border-[var(--vs-border)] rounded-[var(--vs-radius)]  pt-8 px-8">
+                <div class="hud-badge-micro mb-1 pt-8 px-8">Schools</div>
+                <div class="text-3xl font-extralight text-[var(--vs-text-title)] pt-8 px-8">32,450</div>
+                <div
+                    class="h-[3px] w-full bg-[var(--vs-border)] mt-4 rounded-[var(--vs-radius)] overflow-hidden pt-8 px-8">
+                    <div class="h-full bg-[var(--sj-math)] w-[60%] pt-8 px-8"></div>
+                </div>
+            </div>
+            <div
+                class="p-6 bg-[var(--vs-bg-panel)] border border-[var(--vs-border)] rounded-[var(--vs-radius)]  pt-8 px-8">
+                <div class="hud-badge-micro mb-1 pt-8 px-8">Teachers</div>
+                <div class="text-3xl font-extralight text-[var(--vs-text-title)] pt-8 px-8">450K</div>
+                <div
+                    class="h-[3px] w-full bg-[var(--vs-border)] mt-4 rounded-[var(--vs-radius)] overflow-hidden pt-8 px-8">
+                    <div class="h-full bg-[var(--sj-thai)] w-[85%] pt-8 px-8"></div>
+                </div>
+            </div>
+            <div
+                class="p-6 bg-[var(--vs-bg-panel)] border border-[var(--vs-border)] rounded-[var(--vs-radius)]  pt-8 px-8">
+                <div class="hud-badge-micro mb-1 pt-8 px-8">Uptime</div>
+                <div class="text-3xl font-extralight text-[var(--vs-text-title)] pt-8 px-8">99.9%</div>
+                <div
+                    class="h-[3px] w-full bg-[var(--vs-border)] mt-4 rounded-[var(--vs-radius)] overflow-hidden pt-8 px-8">
+                    <div class="h-full bg-[var(--vs-success)] w-[99%] pt-8 px-8"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 px-8">
+            <div class="space-y-4">
+                <div
+                    class="w-10 h-10 border border-[var(--vs-border)] flex items-center justify-center rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)]">
+                    <i class="icon i-lightning h-6 w-6 text-[var(--vs-accent)]"></i>
+                </div>
+                <h3 class="text-xl font-extralight text-[var(--vs-text-title)]">Razor-Sharp Performance</h3>
+                <p class="text-[var(--vs-text-body)] font-normal leading-relaxed">
+                    สัมผัสประสบการณ์การใช้งานแบบ HUD ที่แสดงผลข้อมูลสำคัญแบบเรียลไทม์
+                    ตอบสนองรวดเร็วทุกการโต้ตอบ เพื่อประสิทธิภาพสูงสุดในการบริหารจัดการ
+                </p>
+            </div>
+            <div class="space-y-4">
+                <div
+                    class="w-10 h-10 border border-[var(--vs-border)] flex items-center justify-center rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)]">
+                    <i class="icon i-shield h-6 w-6 text-[var(--vs-accent)]"></i>
+                </div>
+                <h3 class="text-xl font-extralight text-[var(--vs-text-title)]">Secure by Design</h3>
+                <p class="text-[var(--vs-text-body)] font-normal leading-relaxed">
+                    ความปลอดภัยของข้อมูลการศึกษาระดับสูงสุด มั่นใจด้วยมาตรฐานการเข้ารหัส
+                    และระบบควบคุมสิทธิ์ที่เข้มงวดตามมาตรฐาน PDPA ของภาครัฐ
+                </p>
+            </div>
+            <div class="space-y-4">
+                <div
+                    class="w-10 h-10 border border-[var(--vs-border)] flex items-center justify-center rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)]">
+                    <i class="icon i-pie h-6 w-6 text-[var(--vs-accent)]"></i>
+                </div>
+                <h3 class="text-xl font-extralight text-[var(--vs-text-title)]">Advanced Analytics</h3>
+                <p class="text-[var(--vs-text-body)] font-normal leading-relaxed">
+                    วิเคราะห์ข้อมูลเชิงลึกด้วยระบบประมวลผลอัจฉริยะ
+                    เพื่อการตัดสินใจที่แม่นยำและเพิ่มประสิทธิภาพในการวางแผนยุทธศาสตร์ชาติ
+                </p>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

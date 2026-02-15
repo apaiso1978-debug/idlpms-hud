@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ตั้งค่าข้อมูลสถานศึกษา | IDLPMS HUD</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <link rel="stylesheet" href="../assets/css/notifications.css" />
+    <script src="../assets/js/data.js"></script>
+    <script src="../src/services/DataService.js"></script>
+    <script src="../src/services/AuthService.js"></script>
+    <script src="../assets/js/notifications.js"></script>
+    <style>
+        .icon {
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            background-color: currentColor;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body class="p-6 bg-[var(--vs-bg-main)] text-[var(--vs-text-body)] font-extralight Thai-Rule">
+    <div class="max-w-4xl mx-auto space-y-6">
+        <!-- Header -->
+        <header class="flex items-center justify-between mb-8">
+            <div class="flex items-center space-x-4">
+                <div
+                    class="w-12 h-12 rounded-[var(--vs-radius)] bg-[rgba(var(--vs-accent-rgb),0.1)] flex items-center justify-center">
+                    <i class="icon i-office w-6 h-6 text-[var(--vs-accent)]"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl text-[var(--vs-text-title)] font-extralight Thai-Rule">
+                        ตั้งค่าข้อมูลพื้นฐานสถานศึกษา</h1>
+                    <p class="text-sm text-[var(--vs-text-muted)] Thai-Rule">กำหนดโครงสร้างเวลา การจัดการชั้นเรียน
+                        และข้อมูลผู้บริหาร</p>
+                </div>
+            </div>
+            <button onclick="saveSetup()" id="save-btn"
+                class="flex items-center space-x-2 px-6 py-2.5 bg-[rgba(var(--vs-accent-rgb),0.1)] border border-[var(--vs-accent)]/30 rounded-[var(--vs-radius)] text-[var(--vs-accent)] hover:bg-[var(--vs-accent)]/20 transition-all group">
+                <i class="icon i-save w-4 h-4"></i>
+                <span class="Thai-Rule">บันทึกข้อมูลโรงเรียน</span>
+            </button>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- 1. School Info -->
+            <div class="vs-section-card space-y-4">
+                <div class="flex items-center space-x-2 text-[var(--vs-accent)] mb-2">
+                    <i class="icon i-office w-4 h-4"></i>
+                    <span class="text-sm uppercase font-bold">School Profile</span>
+                </div>
+                <div>
+                    <label class="text-sm text-[var(--vs-text-muted)] uppercase block mb-1">ชื่อโรงเรียน</label>
+                    <input type="text" id="school-name" class="vs-setup-input Thai-Rule" placeholder="ระบุชื่อโรงเรียน">
+                </div>
+                <div>
+                    <label class="text-sm text-[var(--vs-text-muted)] uppercase block mb-1">สังกัดเขตพื้นที่
+                        (ESA)</label>
+                    <input type="text" id="school-esa" class="vs-setup-input Thai-Rule" placeholder="เช่น สพป. เขต 1">
+                </div>
+                <div>
+                    <label class="text-sm text-[var(--vs-text-muted)] uppercase block mb-1">ชื่อผู้อำนวยการ</label>
+                    <input type="text" id="school-director" class="vs-setup-input Thai-Rule"
+                        placeholder="ชื่อ-นามสกุล ผอ.">
+                </div>
+            </div>
+
+            <!-- 2. Schedule Structure -->
+            <div class="vs-section-card space-y-4">
+                <div class="flex items-center space-x-2 text-[var(--vs-accent)] mb-2">
+                    <i class="icon i-calendar w-4 h-4"></i>
+                    <span class="text-sm uppercase font-bold">Schedule Structure</span>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-sm text-[var(--vs-text-muted)] uppercase block mb-1">จำนวนวัน/สัปดาห์</label>
+                        <input type="number" id="days-per-week" class="vs-setup-input text-center" value="5" min="1"
+                            max="7">
+                    </div>
+                    <div>
+                        <label class="text-sm text-[var(--vs-text-muted)] uppercase block mb-1">จำนวนคาบ/วัน</label>
+                        <input type="number" id="periods-per-day" class="vs-setup-input text-center" value="8" min="4"
+                            max="12">
+                    </div>
+                    <div>
+                        <label class="text-sm text-[var(--vs-text-muted)] uppercase block mb-1">คาบพักกลางวัน
+                            (ลำดับที่)</label>
+                        <input type="number" id="lunch-period" class="vs-setup-input text-center" value="4" min="1"
+                            max="8">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Enrollment / Classes -->
+            <div class="vs-section-card md:col-span-2 space-y-4">
+                <div class="flex items-center space-x-2 text-[var(--vs-accent)] mb-2">
+                    <i class="icon i-users w-4 h-4"></i>
+                    <span class="text-sm uppercase font-bold">Grade Enrollment & Classes</span>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4" id="classes-grid">
+                    <!-- Grade Inputs injected here -->
+                </div>
+                <p class="text-[10px] text-[var(--vs-text-muted)] italic">* ระบุจำนวนห้องเรียนในแต่ละสายชั้น
+                    ระบบจะสร้างรหัสห้องให้อัตโนมัติ (เช่น 1/1, 1/2...)</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let authService, dataService;
+        let currentSchoolId = null;
+        let schoolData = null;
+
+        async function init() {
+            authService = new AuthService();
+            await authService.initialize();
+
+            dataService = await DataServiceFactory.getInstance();
+            const user = authService.getCurrentUser();
+            currentSchoolId = user?.schoolId || 'SCH_MABLUD';
+
+            schoolData = await dataService.getSchool(currentSchoolId);
+
+            // Render Grades
+            renderGrades();
+
+            // Populate Fields
+            if (schoolData) {
+                document.getElementById('school-name').value = schoolData.name || '';
+                document.getElementById('school-esa').value = schoolData.districtId || ''; // Mapping districtId to ESA for now
+                document.getElementById('school-director').value = schoolData.director || '';
+
+                const struct = schoolData.scheduleStructure || { daysPerWeek: 5, periodsPerDay: 8, lunchPeriod: 4 };
+                document.getElementById('days-per-week').value = struct.daysPerWeek;
+                document.getElementById('periods-per-day').value = struct.periodsPerDay;
+                document.getElementById('lunch-period').value = struct.lunchPeriod;
+
+                // Populate Class Counts
+                const counts = {};
+                (schoolData.classes || []).forEach(c => {
+                    const grade = c.split('/')[0];
+                    counts[grade] = (counts[grade] || 0) + 1;
+                });
+
+                for (let i = 1; i <= 6; i++) {
+                    const input = document.getElementById(`grade-${i}-sections`);
+                    if (input) input.value = counts[i] || 0;
+                }
+            }
+        }
+
+        function renderGrades() {
+            const grid = document.getElementById('classes-grid');
+            let html = '';
+            for (let i = 1; i <= 6; i++) {
+                html += `
+                    <div class="bg-[var(--vs-bg-panel)] p-3 rounded border border-[var(--vs-border)]">
+                        <label class="text-[10px] text-[var(--vs-accent)] uppercase block mb-1">ชั้นประถมศึกษาปีที่ ${i}</label>
+                        <div class="flex items-center space-x-2">
+                            <input type="number" id="grade-${i}-sections" class="vs-setup-input text-center text-sm" value="0" min="0" max="10">
+                            <span class="text-[10px] opacity-40">ห้อง</span>
+                        </div>
+                    </div>
+                `;
+            }
+            grid.innerHTML = html;
+        }
+
+        async function saveSetup() {
+            const updates = {
+                name: document.getElementById('school-name').value,
+                director: document.getElementById('school-director').value,
+                districtId: document.getElementById('school-esa').value,
+                scheduleStructure: {
+                    daysPerWeek: parseInt(document.getElementById('days-per-week').value),
+                    periodsPerDay: parseInt(document.getElementById('periods-per-day').value),
+                    lunchPeriod: parseInt(document.getElementById('lunch-period').value)
+                },
+                classes: []
+            };
+
+            // Generate class list based on section counts
+            for (let grade = 1; grade <= 6; grade++) {
+                const count = parseInt(document.getElementById(`grade-${grade}-sections`).value) || 0;
+                for (let section = 1; section <= count; section++) {
+                    updates.classes.push(`${grade}/${section}`);
+                }
+            }
+
+            try {
+                await dataService.updateSchool(currentSchoolId, updates);
+                HUD_NOTIFY.toast('บันทึกสำเร็จ', 'ข้อมูลโครงสร้างโรงเรียนถูกอัปเดตแล้ว', 'success');
+
+                const btn = document.getElementById('save-btn');
+                btn.classList.add('bg-green-500/20', 'text-green-400');
+                setTimeout(() => btn.classList.remove('bg-green-500/20', 'text-green-400'), 2000);
+            } catch (e) {
+                HUD_NOTIFY.toast('เกิดข้อผิดพลาด', e.message, 'danger');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

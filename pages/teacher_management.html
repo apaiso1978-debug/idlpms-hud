@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>บริหารจัดการครู | IDLPMS HUD</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <link rel="stylesheet" href="../assets/css/notifications.css" />
+    <script src="../assets/js/data.js"></script>
+    <script src="../src/services/DataService.js"></script>
+    <script src="../src/services/AuthService.js"></script>
+    <script src="../src/services/SchoolConfigService.js"></script>
+    <script src="../assets/js/notifications.js"></script>
+    <style>
+        .icon {
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            background-color: currentColor;
+            display: inline-block;
+        }
+
+        .i-users {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z'/%3E%3C/svg%3E");
+        }
+
+        .i-save {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4'/%3E%3C/svg%3E");
+        }
+
+        /* Custom styled checkboxes for Premium HUD feel */
+        input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border: 1px solid var(--vs-border);
+            border-radius: 3px;
+            background: var(--vs-bg-deep);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        input[type="checkbox"]:checked {
+            background: var(--vs-accent);
+            border-color: var(--vs-accent);
+        }
+
+        input[type="checkbox"]:checked::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 1px;
+            width: 4px;
+            height: 8px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .Thai-Rule {
+            font-size: 14px !important;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body class="p-6 bg-[var(--vs-bg-main)] text-[var(--vs-text-body)] font-extralight Thai-Rule">
+    <div class="max-w-7xl mx-auto space-y-6">
+        <!-- Header Section -->
+        <header class="flex items-center justify-between mb-8">
+            <div class="flex items-center space-x-4">
+                <div
+                    class="w-12 h-12 rounded-[var(--vs-radius)] bg-[rgba(var(--vs-accent-rgb),0.1)] flex items-center justify-center">
+                    <i class="icon i-users w-6 h-6 text-[var(--vs-accent)]"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl text-[var(--vs-text-title)] font-extralight Thai-Rule">
+                        จัดการฐานข้อมูลบุคลากรและภาระงาน</h1>
+                    <p class="text-sm text-[var(--vs-text-muted)] Thai-Rule">
+                        เพิ่ม/ลบ รายชื่อบุคลากร และกำหนดวิชาที่สามารถสอนได้</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="saveAll()" id="save-btn"
+                    class="flex items-center space-x-2 px-6 py-2.5 bg-[rgba(var(--vs-accent-rgb),0.1)] border border-[var(--vs-accent)]/30 rounded-[var(--vs-radius)] text-[var(--vs-accent)] hover:bg-[var(--vs-accent)]/20 transition-all group">
+                    <i class="icon i-save w-4 h-4 group-hover:scale-110 transition-transform"></i>
+                    <span class="Thai-Rule">บันทึกข้อมูลทั้งหมด</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Card -->
+        <div
+            class="bg-[var(--vs-bg-card)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] overflow-hidden shadow-2xl">
+            <div
+                class="p-4 border-b border-[var(--vs-border)] bg-[rgba(var(--vs-bg-deep-rgb),0.3)] flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 rounded-[3px] bg-[var(--vs-accent)] animate-pulse"></div>
+                    <span class="text-sm uppercase text-[var(--vs-text-muted)] font-extralight Thai-Rule">Personnel
+                        Management & Assignment Matrix</span>
+                </div>
+                <div id="school-name-badge" class="hud-badge-micro border-[var(--vs-border)] opacity-60">
+                    Loading school...
+                </div>
+            </div>
+
+            <div class="overflow-x-auto max-h-[calc(100vh-250px)] scrollbar-thin scrollbar-thumb-[var(--vs-border)]">
+                <div id="matrix-container" class="min-w-full">
+                    <div class="p-20 text-center opacity-30">
+                        <i class="icon i-refresh w-8 h-8 animate-spin mb-4"></i>
+                        <p class="Thai-Rule font-extralight italic">Synchronizing faculty data...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let teachers = [];
+        let subjects = [];
+        let currentSchoolId = null;
+        let authService, dataService;
+
+        async function init() {
+            try {
+                authService = new AuthService();
+                await authService.initialize();
+
+                dataService = await DataServiceFactory.getInstance();
+
+                const user = authService.getCurrentUser();
+                currentSchoolId = user?.schoolId || 'SCH_MABLUD';
+
+                const school = await dataService.getSchool(currentSchoolId);
+                if (school) {
+                    document.getElementById('school-name-badge').innerText = school.name;
+                }
+
+                // Load Data
+                await loadData();
+                renderMatrix();
+            } catch (error) {
+                console.error('Init failure:', error);
+            }
+        }
+
+        async function loadData() {
+            // 1. Load Teachers from DataService
+            const allUsers = await dataService.getUsersBySchool(currentSchoolId);
+            teachers = allUsers.filter(u => u.role === 'TEACHER');
+
+            // 2. Load Subjects (via SchoolConfigService for cards)
+            const schoolData = await SchoolConfigService.getSchoolData(currentSchoolId);
+            subjects = schoolData.subjects;
+        }
+
+        function renderMatrix() {
+            const container = document.getElementById('matrix-container');
+
+            let headerHtml = `
+                <th class="p-4 text-left font-extralight text-[var(--vs-text-muted)] w-[300px] min-w-[300px] sticky left-0 bg-[var(--vs-bg-deep)] z-10 border-b border-[var(--vs-border)]">ชื่อ-นามสกุล บุคลากร</th>
+            `;
+            subjects.forEach(s => {
+                const colorHex = s.color || 'var(--vs-border)';
+                headerHtml += `
+                    <th class="p-2 text-center font-extralight text-[11px] text-[var(--vs-text-muted)] min-w-[90px] border-b border-[var(--vs-border)]" 
+                        style="background: ${colorHex}08;">
+                        <div class="truncate px-1" title="${s.name}">${s.name}</div>
+                        <div class="w-full h-0.5 mt-1" style="background: ${colorHex}40"></div>
+                    </th>
+                `;
+            });
+            headerHtml += `
+                <th class="p-2 text-center font-extralight text-[11px] text-[var(--vs-text-muted)] w-[65px] border-b border-[var(--vs-border)]">คาบ/วัน</th>
+                <th class="p-2 text-center font-extralight text-[11px] text-[var(--vs-text-muted)] w-[65px] border-b border-[var(--vs-border)]">คาบ/สัปดาห์</th>
+                <th class="p-2 text-center font-extralight text-[11px] text-[var(--vs-text-muted)] w-[60px] border-b border-[var(--vs-border)]">ลบ</th>
+            `;
+
+            let bodyHtml = '';
+            teachers.forEach((teacher, tIdx) => {
+                bodyHtml += `
+                    <tr class="border-b border-[var(--vs-border)] hover:bg-[var(--vs-bg-card)] transition-colors group">
+                        <td class="p-4 text-[var(--vs-text-title)] font-extralight sticky left-0 bg-[var(--vs-bg-deep)] z-10 border-r border-[var(--vs-border)] shadow-r-xl min-w-[300px]">
+                            <input type="text" 
+                                class="bg-transparent border-none text-[14px] text-[var(--vs-text-title)] focus:ring-1 focus:ring-[var(--vs-accent)]/30 rounded px-2 py-1 w-full outline-none Thai-Rule"
+                                value="${teacher.fullName || teacher.name || ''}"
+                                onchange="updateTeacherField('${teacher.id}', 'fullName', this.value)" />
+                        </td>
+                `;
+
+                subjects.forEach(s => {
+                    const sid = s.id || s.subjectId;
+                    const isChecked = teacher.canTeachSubjects && teacher.canTeachSubjects.includes(sid);
+                    bodyHtml += `
+                        <td class="p-2 text-center border-r border-[var(--vs-border)] last:border-r-0">
+                            <input type="checkbox" 
+                                ${isChecked ? 'checked' : ''}
+                                onchange="updateAssignment('${teacher.id}', '${sid}', this.checked)" />
+                        </td>
+                    `;
+                });
+
+                bodyHtml += `
+                    <td class="p-2 text-center">
+                        <input type="number" 
+                            class="w-12 px-1 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-center text-sm text-[var(--vs-text-title)] font-extralight outline-none focus:border-[var(--vs-accent)]"
+                            value="${teacher.maxPeriodsPerDay || 6}"
+                            onchange="updateTeacherField('${teacher.id}', 'maxPeriodsPerDay', parseInt(this.value))" />
+                    </td>
+                    <td class="p-2 text-center">
+                        <input type="number"
+                            class="w-12 px-1 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-center text-sm text-[var(--vs-text-title)] font-extralight outline-none focus:border-[var(--vs-accent)]"
+                            value="${teacher.maxPeriodsPerWeek || 25}"
+                            onchange="updateTeacherField('${teacher.id}', 'maxPeriodsPerWeek', parseInt(this.value))" />
+                    </td>
+                    <td class="p-2 text-center">
+                        <button onclick="removeTeacher('${teacher.id}')" class="p-1.5 hover:bg-red-500/10 text-[var(--vs-text-muted)] hover:text-red-400 rounded transition-all">
+                            <i class="icon i-trash w-4 h-4"></i>
+                        </button>
+                    </td>
+                </tr>
+                `;
+            });
+
+            container.innerHTML = `
+                <table class="w-full border-collapse text-sm font-extralight text-[var(--vs-text-body)]">
+                    <thead class="sticky top-0 z-20">
+                        <tr class="bg-[var(--vs-bg-deep)]">${headerHtml}</tr>
+                    </thead>
+                    <tbody>${bodyHtml}</tbody>
+                </table>
+            `;
+        }
+
+        async function addTeacher() {
+            const name = prompt('กรุณาระบุชื่อบุคลากรใหม่:');
+            if (!name) return;
+
+            await dataService.createTeacher({
+                fullName: name,
+                schoolId: currentSchoolId,
+                canTeachSubjects: ['MATH', 'THAI', 'ENG'] // Default fillers
+            });
+
+            await loadData();
+            renderMatrix();
+            HUD_NOTIFY.toast('เพิ่มบุคลากร', `เพิ่ม ${name} เข้าสู่ระบบแล้ว`, 'accent');
+        }
+
+        function updateTeacherField(id, field, value) {
+            const t = teachers.find(x => x.id === id);
+            if (t) t[field] = value;
+        }
+
+        function updateAssignment(id, sid, checked) {
+            const t = teachers.find(x => x.id === id);
+            if (!t) return;
+            if (!t.canTeachSubjects) t.canTeachSubjects = [];
+
+            if (checked) {
+                if (!t.canTeachSubjects.includes(sid)) t.canTeachSubjects.push(sid);
+            } else {
+                t.canTeachSubjects = t.canTeachSubjects.filter(x => x !== sid);
+            }
+        }
+
+        async function removeTeacher(id) {
+            if (!confirm('ยืนยันระบบการลบบุคลากร? ข้อมูลตารางสอนที่เกี่ยวข้องอาจได้รับผลกระทบ')) return;
+            await dataService.deleteTeacher(id);
+            await loadData();
+            renderMatrix();
+            HUD_NOTIFY.toast('ลบบุคลากร', 'ลบข้อมูลบุคลากรออกจากระบบแล้ว', 'danger');
+        }
+
+        async function saveAll() {
+            // Batch update all teachers in DataService
+            for (const t of teachers) {
+                const { id, ...data } = t;
+                await dataService.updateUser(id, data);
+            }
+
+            // Sync with SchoolConfigService legacy key if needed (for Scheduler engine compatibility)
+            SchoolConfigService.saveTeacherConfig(currentSchoolId, teachers);
+
+            HUD_NOTIFY.toast('บันทึกสำเร็จ', 'ข้อมูลบุคลากรทั้งหมดถูกจัดเก็บลงในระบบแล้ว', 'success');
+
+            const btn = document.getElementById('save-btn');
+            btn.innerHTML = '<i class="icon i-check w-4 h-4"></i> <span class="Thai-Rule">จัดเก็บสำเร็จ</span>';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="icon i-save w-4 h-4"></i> <span class="Thai-Rule">บันทึกข้อมูลทั้งหมด</span>';
+            }, 2000);
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDLPMS | The Instructional Operating System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@100;200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/theme.css?v=2.4" />
+    <style>
+        :root {
+            --lp-bg: #09090b;
+            --lp-accent: #22d3ee;
+            --lp-glass: rgba(255, 255, 255, 0.03);
+            --lp-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: var(--lp-bg);
+            color: #fafafa;
+            overflow-x: hidden;
+        }
+
+        .hero-gradient {
+            background: radial-gradient(circle at 50% -20%, rgba(34, 211, 238, 0.15), transparent 70%);
+        }
+
+        .vs-glass {
+            background: var(--lp-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--lp-border);
+        }
+
+        .glow-text {
+            text-shadow: 0 0 20px rgba(34, 211, 238, 0.3);
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="hero-gradient min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav
+        class="fixed top-0 w-full z-50 px-8 py-6 flex justify-between items-center bg-zinc-950/50 backdrop-blur-md border-b border-white/5">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 vs-glass rounded-lg flex items-center justify-center">
+                <i class="icon i-academic h-6 w-6 text-[var(--lp-accent)]"></i>
+            </div>
+            <span class="text-xl font-light">IDLPMS <span
+                    class="text-[var(--lp-accent)] font-extralight">OS</span></span>
+        </div>
+        <div class="hidden md:flex space-x-8 text-sm font-light text-zinc-400">
+            <a href="#" class="hover:text-white transition-colors">Vision</a>
+            <a href="#" class="hover:text-white transition-colors">Technology</a>
+            <a href="#" class="hover:text-white transition-colors">Documentation</a>
+        </div>
+        <a href="login.html"
+            class="px-6 py-2 bg-[var(--lp-accent)] text-zinc-950 text-sm font-extralight rounded-full hover:brightness-110 transition-all">
+            เข้าสู่ระบบ
+        </a>
+    </nav>
+
+    <!-- Hero Section -->
+    <main class="flex-1 pt-32 pb-20 px-6">
+        <div class="max-w-6xl mx-auto flex flex-col items-center text-center">
+            <div
+                class="inline-flex items-center px-4 py-1.5 rounded-full vs-glass text-[10px] uppercase text-[var(--lp-accent)] mb-8 animate-in fade-in slide-in-from-bottom-4">
+                <span class="w-2 h-2 bg-[var(--lp-accent)] rounded-full mr-3 animate-pulse"></span>
+                System Live on Cloud v1.0
+            </div>
+
+            <h1
+                class="text-5xl md:text-7xl font-extralight mb-8 leading-tight animate-in fade-in slide-in-from-bottom-8 duration-700">
+                The Next Generation of <br />
+                <span class="font-normal text-[var(--lp-accent)] glow-text">Instructional Operating System</span>
+            </h1>
+
+            <p
+                class="max-w-2xl text-lg md:text-xl text-zinc-400 font-light mb-12 leading-relaxed animate-in fade-in slide-in-from-bottom-12 duration-1000">
+                ระบบจัดการเรียนรู้อัจฉริยะที่เชื่อมโยงทุกมิติการศึกษา <br class="hidden md:block" />
+                จากวิสัยทัศน์ส่วนกลาง สู่การเรียนการสอนในห้องเรียนจริงอย่างมีประสิทธิภาพ
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 mb-20 animate-in fade-in zoom-in duration-1000 delay-500">
+                <a href="login.html"
+                    class="px-10 py-4 bg-[var(--lp-accent)] text-zinc-950 font-extralight rounded-xl hover:scale-105 transition-all shadow-lg shadow-cyan-500/20">
+                    เข้าใช้งานระบบ HUD
+                </a>
+                <a href="pages/manual/vision.html"
+                    class="px-10 py-4 vs-glass rounded-xl hover:bg-white/5 transition-all">
+                    เรียนรู้เพิ่มเติม
+                </a>
+            </div>
+
+            <!-- Dashboard Preview -->
+            <div class="relative w-full max-w-5xl rounded-2xl overflow-hidden vs-glass shadow-2xl animate-float">
+                <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent"></div>
+                <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=2070"
+                    alt="HUD Interface"
+                    class="w-full h-auto opacity-40 grayscale hover:grayscale-0 transition-all duration-1000">
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="vs-glass p-8 rounded-2xl text-center max-w-md mx-4">
+                        <i class="icon i-globe h-12 w-12 text-[var(--lp-accent)] mx-auto mb-6"></i>
+                        <h3 class="text-xl font-light mb-2">Unified Intelligence Matrix</h3>
+                        <p class="text-sm text-zinc-400 font-light">สัมผัสประสบการณ์การบริหารจัดการข้อมูลสถานศึกษาแบบ
+                            Real-time บนระบบ Cloud ที่เสถียรที่สุด</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Features -->
+    <section class="py-24 px-6 border-t border-white/5 bg-zinc-950/30">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="p-8 vs-glass rounded-2xl hover:border-[var(--lp-accent)]/30 transition-colors group">
+                <div
+                    class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i class="icon i-database h-6 w-6 text-[var(--lp-accent)]"></i>
+                </div>
+                <h4 class="text-lg font-normal mb-3">Cloud Integrity</h4>
+                <p class="text-sm text-zinc-400 font-light leading-relaxed">ข้อมูลถูกจัดเก็บและประมวลผลบน InsForge Cloud
+                    มั่นใจได้ในความปลอดภัยและการเข้าถึงได้จากทุกที่ทุกเวลา</p>
+            </div>
+            <div class="p-8 vs-glass rounded-2xl hover:border-[var(--lp-accent)]/30 transition-colors group">
+                <div
+                    class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i class="icon i-squares h-6 w-6 text-[var(--lp-accent)]"></i>
+                </div>
+                <h4 class="text-lg font-normal mb-3">Persona HUD</h4>
+                <p class="text-sm text-zinc-400 font-light leading-relaxed">
+                    หน้าจอควบคุมที่ปรับเปลี่ยนตามบทบาทของผู้ใช้งาน ตั้งแต่ครูผู้ช่วย จนถึงระดับรัฐมนตรี (MOE)</p>
+            </div>
+            <div class="p-8 vs-glass rounded-2xl hover:border-[var(--lp-accent)]/30 transition-colors group">
+                <div
+                    class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <i class="icon i-lightning h-6 w-6 text-[var(--lp-accent)]"></i>
+                </div>
+                <h4 class="text-lg font-normal mb-3">Strategic Alignment</h4>
+                <p class="text-sm text-zinc-400 font-light leading-relaxed">
+                    เชื่อมโยงแผนการสอนและการประเมินผลให้สอดคล้องกับวิสัยทัศน์การศึกษาของชาติอย่างเป็นระบบ</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-6 text-center border-t border-white/5 opacity-40">
+        <p class="text-sm font-light uppercase">
+            IDLPMS v2.0 • Unified Protocol • Confidential Property of MOE
+        </p>
+    </footer>
+
+    <!-- Lucide Icons or Similar (using CSS classes from theme) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <script>
+        // Check for active session to suggest jumping to HUD
+        document.addEventListener('DOMContentLoaded', () => {
+            const userId = localStorage.getItem('idlpms_active_user_id');
+            if (userId) {
+                console.log('Session detected, redirecting to HUD...');
+                // Optionally show a "Resume Dashboard" toast or just redirect
+                window.location.href = 'hud.html';
+            }
+        });
+    </script>
+</body>
+
+</html>

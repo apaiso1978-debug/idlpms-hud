@@ -1,0 +1,486 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8. มาตรฐานการออกแบบ | IDLPMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../../assets/css/theme.css">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+</head>
+
+<body class="bg-transparent px-8 pt-8 pb-24 overflow-y-auto font-['Sarabun'] antialiased">
+    <div class="max-w-[1600px] space-y-8">
+        <!-- Header -->
+        <header
+            class="h-12 px-6 flex items-center justify-between rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] ">
+            <h1 class="text-sm font-extralight text-[var(--vs-text-title)] uppercase">8. มาตรฐานการออกแบบ</h1>
+
+        </header>
+
+        <!-- Color Scale -->
+        <section class="space-y-6">
+            <h2 class="text-[var(--vs-accent)] font-extralight text-sm uppercase">01 Color Hierarchy (850-Baseline)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div
+                    class="flex items-center space-x-4 p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+                    <div
+                        class="w-12 h-12 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                    </div>
+                    <div>
+                        <div class="text-[var(--vs-text-title)] text-sm font-extralight">Level 1: Floor (850)</div>
+                        <div class="text-[var(--vs-text-muted)] text-sm uppercase">Activity Bar / Main Canvas</div>
+                    </div>
+                </div>
+                <div
+                    class="flex items-center space-x-4 p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+                    <div
+                        class="w-12 h-12 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+                    </div>
+                    <div>
+                        <div class="text-[var(--vs-text-title)] text-sm font-extralight">Level 2: Panel (800)</div>
+                        <div class="text-[var(--vs-text-muted)] text-sm uppercase">Secondary Sidebar / Panels</div>
+                    </div>
+                </div>
+                <div
+                    class="flex items-center space-x-4 p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+                    <div
+                        class="w-12 h-12 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
+                    </div>
+                    <div>
+                        <div class="text-[var(--vs-text-title)] text-sm font-extralight">Level 3: Surface (750)</div>
+                        <div class="text-[var(--vs-text-muted)] text-sm uppercase">Primary Cards / HUD Modules</div>
+                    </div>
+                </div>
+                <div
+                    class="flex items-center space-x-4 p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+                    <div
+                        class="w-12 h-12 rounded-[var(--vs-radius)] bg-[var(--vs-border)] border border-[var(--vs-border)]">
+                    </div>
+                    <div>
+                        <div class="text-[var(--vs-text-title)] text-sm font-extralight">Level 4: Elevated (700)</div>
+                        <div class="text-[var(--vs-text-muted)] text-sm uppercase">Floating Modules / Highlight</div>
+                    </div>
+                </div>
+                <div
+                    class="flex items-center space-x-4 p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+                    <div
+                        class="w-12 h-12 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                    </div>
+                    <div>
+                        <div class="text-[var(--vs-text-title)] text-sm font-extralight">Level 5: Hover Inset (850)
+                        </div>
+                        <div class="text-[var(--vs-text-muted)] text-sm uppercase">Sidebar Buttons / Activity Bar</div>
+                    </div>
+                </div>
+                <div
+                    class="flex items-center space-x-4 p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+                    <div
+                        class="w-12 h-12 rounded-[var(--vs-radius)] bg-[var(--vs-border)] border border-[var(--vs-border)]">
+                    </div>
+                    <div>
+                        <div class="text-[var(--vs-text-title)] text-sm font-extralight">Level 6: Hover Panel (700)
+                        </div>
+                        <div class="text-[var(--vs-text-muted)] text-sm uppercase">Canvas Buttons / Highlights (Flat)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Subject Semantic Palette -->
+        <section class="space-y-6">
+            <h2 class="text-[var(--vs-accent)] font-extralight text-sm uppercase">02 Subject Semantic Palette (Hierarchy
+                Rules)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <!-- Thai -->
+                <div
+                    class="p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] flex items-center gap-3">
+                    <div
+                        class="w-8 h-8 rounded-[var(--vs-radius)] bg-[var(--sj-thai)] flex items-center justify-center opacity-80">
+                        <i class="icon i-book h-4 w-4 text-white"></i>
+                    </div>
+                    <div>
+                        <div class="text-[var(--vs-text-title)] text-sm font-extralight Thai-Rule">01 ภาษาไทย</div>
+                        <div class="text-[var(--vs-text-muted)] text-[10px] uppercase">#FF5252 (Pink-Red)</div>
+                    </div>
+                </div>
+                <!-- Math -->
+                <div
+                    class="p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] flex items-center gap-3">
+                    <div
+                        class="w-8 h-8 rounded-[var(--vs-radius)] bg-[var(--sj-math)] flex items-center justify-center opacity-80">
+                        <i class="icon i-calculator h-4 w-4 text-white"></i>
+                    </div>
+                    <div>
+                        <div class="text-[var(--vs-text-title)] text-sm font-extralight Thai-Rule">02 คณิตศาสตร์</div>
+                        <div class="text-[var(--vs-text-muted)] text-[10px] uppercase">#FFD600 (Yellow)</div>
+                    </div>
+                </div>
+                <!-- Science -->
+                <div
+                    class="p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] flex items-center gap-3">
+                    <div
+                        class="w-8 h-8 rounded-[var(--vs-radius)] bg-[var(--sj-sci)] flex items-center justify-center opacity-80">
+                        <i class="icon i-beaker h-4 w-4 text-white"></i>
+                    </div>
+                    <div>
+                        <div class="text-[var(--vs-text-title)] text-sm font-extralight Thai-Rule">03 วิทยาศาสตร์</div>
+                        <div class="text-[var(--vs-text-muted)] text-[10px] uppercase">#64FFDA (Teal-Turquoise)</div>
+                    </div>
+                </div>
+                <!-- Social -->
+                <div
+                    class="p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] flex items-center gap-3">
+                    <div
+                        class="w-8 h-8 rounded-[var(--vs-radius)] bg-[var(--sj-soc)] flex items-center justify-center opacity-80">
+                        <i class="icon i-globe h-4 w-4 text-white"></i>
+                    </div>
+                    <div>
+                        <div class="text-[var(--vs-text-title)] text-sm font-extralight Thai-Rule">04 สังคมศึกษา</div>
+                        <div class="text-[var(--vs-text-muted)] text-[10px] uppercase">#448AFF (Azure-Blue)</div>
+                    </div>
+                </div>
+                <!-- History -->
+                <div
+                    class="p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] flex items-center gap-3">
+                    <div
+                        class="w-8 h-8 rounded-[var(--vs-radius)] bg-[var(--sj-his)] flex items-center justify-center opacity-80">
+                        <i class="icon i-library h-4 w-4 text-white"></i>
+                    </div>
+                    <div>
+                        <div class="text-[var(--vs-text-title)] text-sm font-extralight Thai-Rule">05 ประวัติศาสตร์
+                        </div>
+                        <div class="text-[var(--vs-text-muted)] text-[10px] uppercase">#795548 (Brown-Copper)</div>
+                    </div>
+                </div>
+                <!-- PE -->
+                <div
+                    class="p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] flex items-center gap-3">
+                    <div
+                        class="w-8 h-8 rounded-[var(--vs-radius)] bg-[var(--sj-pe)] flex items-center justify-center opacity-80">
+                        <i class="icon i-heart h-4 w-4 text-white"></i>
+                    </div>
+                    <div>
+                        <div class="text-[var(--vs-text-title)] text-sm font-extralight Thai-Rule">06 สุขศึกษา/พละ</div>
+                        <div class="text-[var(--vs-text-muted)] text-[10px] uppercase">#FF5252 (Deep-Orange)</div>
+                    </div>
+                </div>
+                <!-- Art -->
+                <div
+                    class="p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] flex items-center gap-3">
+                    <div
+                        class="w-8 h-8 rounded-[var(--vs-radius)] bg-[var(--sj-art)] flex items-center justify-center opacity-80">
+                        <i class="icon i-swatch h-4 w-4 text-white"></i>
+                    </div>
+                    <div>
+                        <div class="text-[var(--vs-text-title)] text-sm font-extralight Thai-Rule">07 ศิลปะ</div>
+                        <div class="text-[var(--vs-text-muted)] text-[10px] uppercase">#E040FB (Violet-Purple)</div>
+                    </div>
+                </div>
+                <!-- Work -->
+                <div
+                    class="p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] flex items-center gap-3">
+                    <div
+                        class="w-8 h-8 rounded-[var(--vs-radius)] bg-[var(--sj-work)] flex items-center justify-center opacity-80">
+                        <i class="icon i-cog h-4 w-4 text-white"></i>
+                    </div>
+                    <div>
+                        <div class="text-[var(--vs-text-title)] text-sm font-extralight Thai-Rule">08 การงานอาชีพ</div>
+                        <div class="text-[var(--vs-text-muted)] text-[10px] uppercase">#4CAF50 (Green)</div>
+                    </div>
+                </div>
+                <!-- English -->
+                <div
+                    class="p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] flex items-center gap-3">
+                    <div
+                        class="w-8 h-8 rounded-[var(--vs-radius)] bg-[var(--sj-eng)] flex items-center justify-center opacity-80">
+                        <i class="icon i-chat h-4 w-4 text-white"></i>
+                    </div>
+                    <div>
+                        <div class="text-[var(--vs-text-title)] text-sm font-extralight Thai-Rule">09 ภาษาต่างประเทศ
+                        </div>
+                        <div class="text-[var(--vs-text-muted)] text-[10px] uppercase">#FF6E40 (Orange)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Iron Rules -->
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+            <div
+                class="p-8 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] border-l border-l-rose-500">
+                <h3 class="text-[var(--vs-danger)] font-extralight mb-4 flex items-center space-x-2">
+                    <i class="icon i-shield h-5 w-5"></i>
+                    <span>กฎเหล็ก (The Iron Rules)</span>
+                </h3>
+                <ul class="space-y-3 text-[var(--vs-text-body)] text-sm">
+                    <li class="flex items-start space-x-2">
+                        <span class="text-[var(--vs-danger)]">•</span>
+                        <span><strong>14px Universal Standard:</strong> ขนาดเดียวทั้งระบบคือ 14px (text-sm) เท่านั้น
+                            (ห้ามเล็กกว่าหรือใหญ่กว่าสำหรับ Body)</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <span class="text-[var(--vs-danger)]">•</span>
+                        <span><strong>45% Secondary Luminance:</strong> เมนูย่อยและข้อความรองต้องใช้ความสว่างระดับ 45%
+                            เท่านั้น</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <span class="text-[var(--vs-danger)]">•</span>
+                        <span><strong>3px Corner Radius:</strong> บังคับใช้ `rounded-[var(--vs-radius)]` ทุกจุด (Unity
+                            Standard)</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <span class="text-[var(--vs-danger)]">•</span>
+                        <span><strong>850-Baseline HUD:</strong> พื้นหลังหลักต้องใช้ค่าสี Zinc-850 Baseline
+                            (var(--vs-bg-deep))
+                            เป็นมาตรฐาน</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <span class="text-[var(--vs-danger)]">•</span>
+                        <span><strong>Zero Glow Elevation:</strong> ห้ามใช้ Drop Shadow, Blur หรือ Glow ทุกจุด (100%
+                            Flat)</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <span class="text-[var(--vs-danger)]">•</span>
+                        <span><strong>300px Sidebar:</strong> ความกว้างของ Sidebar คงที่ 300px
+                            เพื่อความสมมาตรทางสายตา</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <span class="text-[var(--vs-danger)]">•</span>
+                        <span><strong>0% Unicode Policy:</strong> ห้ามใช้ไอคอนจาก Unicode ให้ใช้ CSS Mask
+                            เท่านั้น</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <span class="text-[var(--vs-danger)]">•</span>
+                        <span><strong>1px Icon Precision:</strong> ไอคอนทุกตัวต้องมี `stroke-width="1"`
+                            เพื่อความคมชัดสูงสุด</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <span class="text-[var(--vs-danger)]">•</span>
+                        <span><strong>3px Precision Bars:</strong> Progress bar และ Scroll bar ต้องมีความหนา 3px
+                            เพื่อความประณีต</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <span class="text-[var(--vs-danger)]">•</span>
+                        <span><strong>Unified Spacing Scale:</strong> ใช้ระบบ Padding เป็น 4-8-16-24px เท่านั้น
+                            (p-1, p-2, p-4, p-6) ห้ามใช้ p-8, p-12, p-10</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <span class="text-[var(--vs-danger)]">•</span>
+                        <span><strong>24px Page Padding:</strong> ทุกหน้าต้องใช้ padding 24px (p-6)
+                            สำหรับ body element</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <span class="text-[var(--vs-danger)]">•</span>
+                        <span><strong>16px Card Padding:</strong> ทุก Card และ Section ต้องใช้ padding 16px (p-4)
+                            ภายใน</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <span class="text-[var(--vs-danger)]">•</span>
+                        <span><strong>1px Universal Border:</strong> เส้นทุกเส้น ขอบทุกขอบทุก Element
+                            บังคับใช้ความหนาแค่ 1px เท่านั้นทั้งระบบ</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <span class="text-[var(--vs-danger)]">•</span>
+                        <span><strong>16px Gap Standard:</strong> ใช้ gap-4 (16px) สำหรับ grid/flex layouts
+                            ห้ามใช้ gap-6, gap-8</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div
+                class="p-8 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] border-l-4 border-l-white">
+                <h3 class="text-[var(--vs-accent)] font-extralight mb-4 flex items-center space-x-2">
+                    <i class="icon i-sparkles h-5 w-5"></i>
+                    <span>สุนทรียภาพระดับพรีเมียม (Premium HUD Aesthetics)</span>
+                </h3>
+                <ul class="space-y-3 text-[var(--vs-text-body)] text-sm">
+                    <li class="flex items-start space-x-2">
+                        <span class="text-[var(--vs-accent)]">•</span>
+                        <span><strong>Zero Fung:</strong> ห้ามใช้เทคนิคสีฟุ้งหรือความพร่ามัว (No Glow / No Blur)</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <span class="text-[var(--vs-accent)]">•</span>
+                        <span><strong>Industrial Typography:</strong> ความหนาของตัวอักษรต้องเป็น 200 (Extra Light)
+                            ทั้งระบบทุกจุด ห้ามใช้ 300 หรือ 500</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <span class="text-[var(--vs-accent)]">•</span>
+                        <span><strong>Heroicon CSS Mask:</strong> ใช้ระบบครอบหน้ากากไอคอนด้วย CSS
+                            เพื่อการเปลี่ยนสี</span>
+                    </li>
+            </div>
+        </div>
+
+        <!-- DNA Radar HUD (Unity 6 Standard) -->
+        <section class="space-y-6">
+            <h2 class="text-[var(--vs-accent)] font-extralight text-sm uppercase">04 DNA Radar HUD (Unity 6 Standard)
+            </h2>
+            <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
+                <h3 class="text-[var(--vs-accent)] font-extralight mb-4 flex items-center space-x-2">
+                    <i class="icon i-chip h-5 w-5"></i>
+                    <span>กฎการออกแบบกราฟ Intelligence DNA สำหรับทุก Role</span>
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <h4 class="text-[var(--vs-text-title)] font-extralight text-sm uppercase">Structural Elements
+                        </h4>
+                        <ul class="space-y-2 text-[var(--vs-text-body)] text-sm">
+                            <li class="flex items-start space-x-2">
+                                <span class="text-[var(--vs-accent)]">•</span>
+                                <span><strong>.dna-grid-line:</strong> เส้นหกเหลี่ยมซ้อนกัน 5 ชั้น stroke-dasharray: 4
+                                    2</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-[var(--vs-accent)]">•</span>
+                                <span><strong>.dna-axis:</strong> 3 เส้นเต็มความยาว (K-F, P-L, A-M) Opacity 30%</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-[var(--vs-accent)]">•</span>
+                                <span><strong>.dna-data-polygon:</strong> พื้นที่ข้อมูล Fill Accent/15%</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-[var(--vs-accent)]">•</span>
+                                <span><strong>.dna-focus-point:</strong> จุดข้อมูลขนาด r=3.5 Transition 0.3s</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="space-y-4">
+                        <h4 class="text-[var(--vs-text-title)] font-extralight text-sm uppercase">Label System</h4>
+                        <ul class="space-y-2 text-[var(--vs-text-body)] text-sm">
+                            <li class="flex items-start space-x-2">
+                                <span class="text-[var(--vs-accent)]">•</span>
+                                <span><strong>.dna-label-badge:</strong> วงกลมสี var(--vs-bg-panel) ขอบ
+                                    var(--vs-border)/40%</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-[var(--vs-accent)]">•</span>
+                                <span><strong>.dna-label-text:</strong> 14px Sarabun Weight 200/300 สี Title</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-[var(--vs-accent)]">•</span>
+                                <span><strong>Abbreviations:</strong> ใช้ตัวย่ออักษรเดียว (K, P, A, F, L, M)</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div
+                    class="mt-6 p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                    <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-2 font-extralight">Unity Core Mandate
+                    </div>
+                    <p class="text-sm text-[var(--vs-text-body)]">ทุก Role (Student, Teacher, Admin, Parent)
+                        ต้องใช้โครงสร้าง 6 แกนเดียวกันเพื่อความเป็นหนึ่งเดียวของระบบ</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Unified Layout Architecture (Phase 1) -->
+        <section class="space-y-6">
+            <h2 class="text-[var(--vs-accent)] font-extralight text-sm uppercase">05 Unified Layout Architecture</h2>
+            <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
+                <h3 class="text-[var(--vs-accent)] font-extralight mb-4 flex items-center space-x-2">
+                    <i class="icon i-squares h-5 w-5"></i>
+                    <span>กฎการจัดวาง DNA Zone ในตำแหน่งเดียวกันสำหรับทุก Role</span>
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <h4 class="text-[var(--vs-text-title)] font-extralight text-sm uppercase">DNA Zone Container
+                        </h4>
+                        <ul class="space-y-2 text-[var(--vs-text-body)] text-sm">
+                            <li class="flex items-start space-x-2">
+                                <span class="text-[var(--vs-accent)]">•</span>
+                                <span><strong>.dna-zone:</strong> max-width 320px, min-height 280px</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-[var(--vs-accent)]">•</span>
+                                <span><strong>.dna-zone-header:</strong> Header with border-bottom</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-[var(--vs-accent)]">•</span>
+                                <span><strong>.dna-zone-content:</strong> Flex container for visualization</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="space-y-4">
+                        <h4 class="text-[var(--vs-text-title)] font-extralight text-sm uppercase">Role Badges</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="role-badge role-badge-student">Student</span>
+                            <span class="role-badge role-badge-teacher">Teacher</span>
+                            <span class="role-badge role-badge-admin">Admin</span>
+                            <span class="role-badge role-badge-parent">Parent</span>
+                            <span class="role-badge role-badge-director">Director</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 space-y-4">
+                    <h4 class="text-[var(--vs-text-title)] font-extralight text-sm uppercase">View Toggle (Teacher Only)
+                    </h4>
+                    <div class="view-toggle">
+                        <button class="view-toggle-btn active">Individual</button>
+                        <button class="view-toggle-btn">Class</button>
+                    </div>
+                    <p class="text-sm text-[var(--vs-text-muted)]">Toggle ระหว่าง Spider Chart (รายคน) และ Heatmap
+                        (ทั้งห้อง) สำหรับครูเท่านั้น</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Automated Enforcement -->
+        <section class="space-y-6">
+            <h2 class="text-[var(--vs-accent)] font-extralight text-sm uppercase">03 Automated Enforcement</h2>
+            <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
+                <h3 class="text-[var(--vs-accent)] font-extralight mb-4 flex items-center space-x-2">
+                    <i class="icon i-shield h-5 w-5"></i>
+                    <span>Pre-commit Hook Protection</span>
+                </h3>
+                <p class="text-[var(--vs-text-body)] text-sm mb-4">
+                    ระบบติดตั้ง Pre-commit Hook อัตโนมัติ ที่จะตรวจสอบ Iron Rules ก่อนอนุญาตให้ commit ทุกครั้ง
+                </p>
+                <div class="space-y-3">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-[var(--vs-danger)] font-extralight">❌</span>
+                        <div>
+                            <strong class="text-[var(--vs-text-title)]">text-xs</strong>
+                            <span class="text-[var(--vs-text-muted)]">— ห้ามใช้สำหรับภาษาอังกฤษ (ใช้ text-sm แทน)</span>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-[var(--vs-danger)] font-extralight">❌</span>
+                        <div>
+                            <strong class="text-[var(--vs-text-title)]">bg-[var(...)]/opacity</strong>
+                            <span class="text-[var(--vs-text-muted)]">— ห้ามใช้ opacity shorthand (ใช้ rgba()
+                                แทน)</span>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-[var(--vs-warning)] font-extralight">⚠️</span>
+                        <div>
+                            <strong class="text-[var(--vs-text-title)]">font-medium</strong>
+                            <span class="text-[var(--vs-text-muted)]">— ควรใช้ font-extralight (ยกเว้น
+                                hud-badge-micro)</span>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-[var(--vs-warning)] font-extralight">⚠️</span>
+                        <div>
+                            <strong class="text-[var(--vs-text-title)]">tracking-*</strong>
+                            <span class="text-[var(--vs-text-muted)]">— ห้ามใช้ letter-spacing (ใช้ค่า default
+                                เท่านั้น)</span>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="mt-6 p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                    <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-2 font-extralight">Manual Check Command
+                    </div>
+                    <code
+                        class="text-sm text-[var(--vs-accent)] font-mono">powershell -ExecutionPolicy Bypass -File ".agent/skills/design_guard/scripts/lint_iron_rules.ps1"</code>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>

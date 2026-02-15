@@ -1,0 +1,173 @@
+{
+    "name": "IDLPMS HUD - ระบบบริหารจัดการการเรียนรู้ดิจิทัล",
+    "short_name": "IDLPMS",
+    "description": "Integrated Digital Learning Platform Management System - ระบบบริหารจัดการแพลตฟอร์มการเรียนรู้ดิจิทัลแบบบูรณาการ",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "orientation": "any",
+    "background_color": "#1c1c1f",
+    "theme_color": "#22d3ee",
+    "scope": "/",
+    "lang": "th",
+    "dir": "ltr",
+    "categories": ["education", "productivity"],
+    "icons": [
+        {
+            "src": "assets/icons/icon-72x72.png",
+            "sizes": "72x72",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-96x96.png",
+            "sizes": "96x96",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-128x128.png",
+            "sizes": "128x128",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-152x152.png",
+            "sizes": "152x152",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable any"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "แดชบอร์ด",
+            "short_name": "Dashboard",
+            "description": "เปิดหน้าแดชบอร์ดภาพรวม",
+            "url": "/index.html?view=dashboard",
+            "icons": [
+                {
+                    "src": "assets/icons/shortcut-dashboard.png",
+                    "sizes": "96x96",
+                    "type": "image/png"
+                }
+            ]
+        },
+        {
+            "name": "Mission Control",
+            "short_name": "Missions",
+            "description": "เปิดศูนย์ควบคุมภารกิจการเรียนรู้",
+            "url": "/index.html?view=manage",
+            "icons": [
+                {
+                    "src": "assets/icons/shortcut-missions.png",
+                    "sizes": "96x96",
+                    "type": "image/png"
+                }
+            ]
+        },
+        {
+            "name": "แชท",
+            "short_name": "Chat",
+            "description": "เปิดระบบสื่อสาร",
+            "url": "/index.html?view=chat",
+            "icons": [
+                {
+                    "src": "assets/icons/shortcut-chat.png",
+                    "sizes": "96x96",
+                    "type": "image/png"
+                }
+            ]
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "assets/screenshots/desktop-dashboard.png",
+            "sizes": "1920x1080",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "IDLPMS Dashboard - Desktop View"
+        },
+        {
+            "src": "assets/screenshots/desktop-missions.png",
+            "sizes": "1920x1080",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Mission Control - Desktop View"
+        },
+        {
+            "src": "assets/screenshots/mobile-dashboard.png",
+            "sizes": "750x1334",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "IDLPMS Dashboard - Mobile View"
+        }
+    ],
+    "related_applications": [],
+    "prefer_related_applications": false,
+    "protocol_handlers": [
+        {
+            "protocol": "web+idlpms",
+            "url": "/index.html?action=%s"
+        }
+    ],
+    "share_target": {
+        "action": "/index.html",
+        "method": "POST",
+        "enctype": "multipart/form-data",
+        "params": {
+            "title": "title",
+            "text": "text",
+            "url": "url",
+            "files": [
+                {
+                    "name": "files",
+                    "accept": [
+                        "image/*",
+                        "application/pdf",
+                        ".doc",
+                        ".docx",
+                        ".xls",
+                        ".xlsx"
+                    ]
+                }
+            ]
+        }
+    },
+    "handle_links": "preferred",
+    "launch_handler": {
+        "client_mode": "navigate-existing"
+    },
+    "edge_side_panel": {
+        "preferred_width": 400
+    },
+    "display_override": [
+        "window-controls-overlay",
+        "standalone",
+        "browser"
+    ],
+    "id": "com.idlpms.hud",
+    "iarc_rating_id": ""
+}

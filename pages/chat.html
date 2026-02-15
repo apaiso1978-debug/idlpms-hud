@@ -1,0 +1,652 @@
+﻿<!doctype html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat Interface | IDLPMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <script src="../assets/js/data.js"></script>
+</head>
+
+<body class="bg-transparent font-['Sarabun'] antialiased overflow-hidden h-screen flex flex-col">
+    <!-- Chat Central Canvas -->
+    <div class="flex-1 flex flex-col w-full h-full">
+        <!-- Chat Header (Fixed 48px) -->
+        <header
+            class="h-12 min-h-[48px] px-8 flex items-center justify-between border-b border-[var(--vs-border)] bg-[var(--vs-bg-panel)] relative overflow-hidden">
+            <!-- Normal Header Content -->
+            <div id="headerContent" class="flex items-center justify-between w-full">
+                <div class="flex items-center space-x-4">
+                    <div id="targetAvatar"
+                        class="w-10 h-10 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] flex items-center justify-center text-sm font-extralight text-[var(--vs-accent)]">
+                        --
+                    </div>
+                    <div class="flex items-center space-x-2 text-sm font-extralight">
+                        <h2 id="targetName" class="text-[var(--vs-text-title)]">
+                            Loading conversation...
+                        </h2>
+                        <span class="text-[var(--vs-text-muted)] opacity-30">/</span>
+                        <p id="targetStatus" class="text-[var(--vs-success)] uppercase leading-none">
+                            Online / Secure Channel
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div class="hidden md:flex items-center space-x-2 mr-4 text-sm font-extralight uppercase Thai-Rule">
+                        <div class="flex items-center space-x-1.5 text-amber-500 opacity-80">
+                            <span class="w-1.5 h-1.5 bg-amber-500 rounded-[3px] animate-pulse"></span>
+                            <span>Bridge: JS-TEST-MODE</span>
+                        </div>
+                        <span class="text-[var(--vs-text-muted)] opacity-30">/</span>
+                        <span class="text-[var(--vs-text-muted)]">AppScript Sync: Ready</span>
+                    </div>
+                    <button id="searchBtn"
+                        class="p-2 text-[var(--vs-text-muted)] hover:text-[var(--vs-accent)] transition-colors rounded-[var(--vs-radius)]">
+                        <i class="icon i-search h-5 w-5"></i>
+                    </button>
+                    <button id="detailsBtn"
+                        class="p-2 text-[var(--vs-text-muted)] hover:text-[var(--vs-accent)] transition-colors rounded-[var(--vs-radius)]">
+                        <i class="icon i-user-group h-5 w-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search Mode Header (Hidden) -->
+            <div id="searchContainer"
+                class="absolute inset-0 bg-[var(--vs-bg-panel)] px-8 flex items-center space-x-4 translate-y-full transition-transform duration-300 z-10">
+                <i class="icon i-search h-5 w-5 text-[var(--vs-accent)]"></i>
+                <input type="text" id="searchInput" placeholder="Search secure message history..."
+                    class="flex-1 bg-transparent border-none outline-none text-sm text-[var(--vs-text-title)] placeholder-[var(--vs-text-muted)] font-extralight" />
+                <button id="closeSearch" class="text-[var(--vs-text-muted)] hover:text-[var(--vs-accent)] p-2">
+                    ✕
+                </button>
+            </div>
+        </header>
+
+        <!-- Personnel Details Flyout -->
+        <div id="personnelFlyout"
+            class="hidden absolute top-16 right-6 w-80 bg-[var(--vs-bg-panel)] border border-[var(--vs-border)] shadow-2xl rounded-[var(--vs-radius)] z-[100] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div class="p-6 space-y-6">
+                <!-- Profile Header -->
+                <div class="flex flex-col items-center text-center space-y-3">
+                    <div id="flyoutAvatar"
+                        class="w-24 h-24 rounded-[var(--vs-radius)] flex items-center justify-center text-3xl font-extralight border-2 border-[var(--vs-border)] bg-[var(--vs-bg-deep)] text-[var(--vs-accent)]">
+                    </div>
+                    <div>
+                        <h4 id="flyoutName" class="text-sm font-extralight text-[var(--vs-text-title)]">Personnel Name
+                        </h4>
+                        <p id="flyoutRole" class="text-sm text-[var(--vs-accent)] uppercase font-medium mt-1">
+                            Role Title</p>
+                    </div>
+                </div>
+
+                <!-- Metadata Grid -->
+                <div class="grid grid-cols-2 gap-4 border-t border-[var(--vs-border)] pt-6">
+                    <div class="space-y-1">
+                        <div class="text-sm text-[var(--vs-text-muted)] uppercase font-medium">Organization</div>
+                        <div id="flyoutOrg" class="text-sm text-[var(--vs-text-body)] truncate">ESA District 01</div>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="text-sm text-[var(--vs-text-muted)] uppercase font-medium">Rank</div>
+                        <div id="flyoutRank" class="text-sm text-[var(--vs-text-body)] uppercase">COMMANDER</div>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="text-sm text-[var(--vs-text-muted)] uppercase font-medium">Location</div>
+                        <div id="flyoutLocation" class="text-sm text-[var(--vs-text-body)]">Wat Map Chalud</div>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="text-sm text-[var(--vs-text-muted)] uppercase font-medium">Encryption</div>
+                        <div class="text-sm text-emerald-500 flex items-center">
+                            <i class="icon i-shield-check h-3 w-3 mr-1"></i>
+                            AES-256
+                        </div>
+                    </div>
+                </div>
+
+                <button id="closeFlyout"
+                    class="w-full py-2.5 bg-[var(--vs-bg-deep)] hover:bg-[rgba(var(--vs-border-rgb),0.3)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-muted)] uppercase font-medium transition-all">
+                    Dismiss Dossier
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Stream -->
+    <div id="messageStream" class="flex-1 overflow-y-auto px-8 py-6 space-y-4 scroll-smooth custom-scrollbar">
+        <!-- Secure Banner -->
+        <div id="secureBanner" class="text-center py-12 opacity-30">
+            <i class="icon i-lock h-12 w-12 mb-3 mx-auto"></i>
+            <p class="text-sm uppercase">End-to-End Encryption Active</p>
+        </div>
+    </div>
+
+    <!-- Empty State Placeholder (Visible when no chat selected) -->
+    <div id="emptyPlaceholder" class="hidden flex-1 flex flex-col items-center justify-center p-6 text-center">
+        <div
+            class="w-16 h-16 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] flex items-center justify-center mb-6">
+            <i class="icon i-chat h-8 w-8 text-[var(--vs-accent)] opacity-40"></i>
+        </div>
+        <h3 class="text-[var(--vs-text-title)] text-lg font-extralight mb-2 uppercase">Select a
+            Conversation</h3>
+        <p class="text-[var(--vs-text-muted)] text-sm max-w-xs font-extralight leading-relaxed uppercase">
+            Choose a contact or group from the sidebar to begin secure communication.
+        </p>
+    </div>
+
+    <!-- Typing Indicator -->
+    <div id="typingIndicator" class="hidden px-8 py-2 flex items-center space-x-2">
+        <div class="flex space-x-1">
+            <div class="w-1.5 h-1.5 bg-[var(--vs-accent)] rounded-[3px] animate-bounce" style="animation-delay: 0s">
+            </div>
+            <div class="w-1.5 h-1.5 bg-[var(--vs-accent)] rounded-[3px] animate-bounce" style="animation-delay: 0.2s">
+            </div>
+            <div class="w-1.5 h-1.5 bg-[var(--vs-accent)] rounded-[3px] animate-bounce" style="animation-delay: 0.4s">
+            </div>
+        </div>
+        <span class="text-sm text-[var(--vs-text-muted)] uppercase">
+            <span id="typingName">Someone</span> is typing...
+        </span>
+    </div>
+
+    <!-- Input Area -->
+    <footer class="px-8 py-6 bg-[var(--vs-bg-panel)] border-t border-[var(--vs-border)]">
+        <div class="space-y-4">
+            <!-- Quick Templates -->
+            <div id="quickTemplates" class="flex items-center space-x-2 overflow-x-auto pb-1 no-scrollbar pl-[96px]">
+                <button
+                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
+                    รับทราบครับ
+                </button>
+                <button
+                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
+                    ขอบคุณครับ
+                </button>
+                <button
+                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
+                    กรุณารอสักครู่
+                </button>
+                <button
+                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
+                    ดำเนินการแล้ว
+                </button>
+                <button
+                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
+                    ส่งเอกสารแล้ว
+                </button>
+            </div>
+
+            <!-- Consolidated Input Area -->
+            <div id="inputArea" class="flex items-stretch space-x-3">
+                <!-- Action Buttons (No Box) -->
+                <div class="flex items-center space-x-1 px-1">
+                    <button id="attachBtn"
+                        class="p-2 text-[var(--vs-text-muted)] hover:text-[var(--vs-accent)] transition-colors rounded-[var(--vs-radius)] hover:bg-[var(--vs-border)]/20">
+                        <i class="icon i-paper-clip h-5 w-5"></i>
+                    </button>
+                    <button id="emojiBtn"
+                        class="p-2 text-[var(--vs-text-muted)] hover:text-[var(--vs-accent)] transition-colors rounded-[var(--vs-radius)] hover:bg-[var(--vs-border)]/20">
+                        <i class="icon i-emoji h-5 w-5"></i>
+                    </button>
+                    <input type="file" id="fileInput" class="hidden" multiple />
+                </div>
+
+                <!-- Text Input -->
+                <textarea id="messageInput" rows="1" placeholder="พิมพ์ข้อความ..."
+                    class="flex-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] px-4 py-3 text-sm text-[var(--vs-text-title)] placeholder-[var(--vs-text-muted)] focus:border-[var(--vs-accent)] focus:outline-none resize-none Thai-Rule min-h-[46px]"></textarea>
+
+                <button id="sendBtn"
+                    class="h-[46px] w-[46px] flex items-center justify-center bg-[var(--vs-accent)] text-[var(--vs-bg-deep)] rounded-[var(--vs-radius)] hover:opacity-90 active:scale-95 transition-all shrink-0 self-end">
+                    <i class="icon i-paper-airplane h-5 w-5"></i>
+                </button>
+            </div>
+
+            <!-- Emoji Picker (Hidden) -->
+            <div id="emojiPicker"
+                class="hidden p-4 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] w-full max-w-[400px]">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-sm text-[var(--vs-text-muted)] uppercase">Select Emoji</span>
+                    <button id="closeEmoji"
+                        class="text-[var(--vs-text-muted)] hover:text-[var(--vs-text-title)]">✕</button>
+                </div>
+                <div class="max-h-[220px] overflow-y-auto no-scrollbar">
+                    <div class="grid grid-cols-10 gap-1">
+                        <!-- Smileys & Emotions -->
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">👍</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">👎</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">❤️</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">😂</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">😊</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">😍</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">😭</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">✨</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🔥</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">💯</button>
+
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🙏</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">👋</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">👏</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🙌</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🤝</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">💪</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">⭐</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🌟</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">💡</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🎉</button>
+
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">✅</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">❌</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">⚠️</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">📍</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">📌</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">📝</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">📎</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">📁</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🎯</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">⚙️</button>
+
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🤣</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🥳</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">😎</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🤔</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">😱</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">😴</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">😇</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🥺</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">😌</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🤩</button>
+
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🐱</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🐶</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🦊</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🐼</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🐯</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🦁</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🦄</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🐝</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🦋</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🌈</button>
+
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🍎</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🍕</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🍔</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🍦</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">☕</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🥤</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🍺</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🍇</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🍓</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🍰</button>
+
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">⚽</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🏀</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🎮</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🎸</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🎨</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">📚</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">💻</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">🖥️</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">📱</button>
+                        <button
+                            class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">📷</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status Bar -->
+            <div class="flex items-center justify-between text-sm text-[var(--vs-text-muted)]">
+                <span class="flex items-center space-x-1">
+                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-[3px]"></span>
+                    <span>Encrypted</span>
+                </span>
+                <span>Press Enter to send</span>
+            </div>
+        </div>
+    </footer>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get('userId') || params.get('id');
+        const isGroup = params.get('isGroup') === 'true' || params.get('type') === 'group';
+        const currentUser =
+            typeof parent.window.getCurrentUser === 'function'
+                ? parent.window.getCurrentUser()
+                : typeof getCurrentUser === 'function'
+                    ? getCurrentUser()
+                    : null;
+
+        let targetUser = null;
+        if (userId && typeof IDLPMS_DATA !== 'undefined') {
+            targetUser = IDLPMS_DATA.users[userId] || IDLPMS_DATA.groups?.[userId];
+        }
+
+        const broadcasts = [
+            { id: 'BROADCAST_ALL', name: 'All Personnel', avatar: '📢', color: 'amber' },
+            { id: 'BROADCAST_ESA', name: 'ESA Directors', avatar: '🏛️', color: 'indigo' },
+        ];
+
+        // DOM Elements
+        const stream = document.getElementById('messageStream');
+        const input = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const emojiBtn = document.getElementById('emojiBtn');
+        const attachBtn = document.getElementById('attachBtn');
+        const fileInput = document.getElementById('fileInput');
+        const emojiPicker = document.getElementById('emojiPicker');
+        const closeEmoji = document.getElementById('closeEmoji');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const typingName = document.getElementById('typingName');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!targetUser && !isGroup) {
+                document.getElementById('targetName').innerText = 'Select a conversation';
+                document.getElementById('targetStatus').innerText = 'No active chat';
+
+                // Show placeholder, hide others
+                document.getElementById('emptyPlaceholder').classList.remove('hidden');
+                document.getElementById('messageStream').classList.add('hidden');
+                document.getElementById('quickTemplates').classList.add('hidden');
+                document.getElementById('inputArea').classList.add('hidden');
+                document.querySelectorAll('footer .flex.items-center.justify-between').forEach(el => el.classList.add('hidden'));
+                return;
+            }
+
+            const statusMap = {
+                ONLINE: { text: 'Online / Secure Channel', class: 'text-[var(--vs-success)]' },
+                BUSY: { text: 'Busy / Do Not Disturb', class: 'text-rose-400' },
+                AWAY: { text: 'Away / Will respond later', class: 'text-amber-400' },
+                OFFLINE: { text: 'Offline', class: 'text-[var(--vs-text-muted)]' },
+            };
+
+            const isBroadcast = userId?.startsWith('BROADCAST') || userId?.startsWith('BR_');
+            const status = statusMap[targetUser?.status] || statusMap.ONLINE;
+            const statusEl = document.getElementById('targetStatus');
+
+            document.getElementById('targetName').innerText =
+                targetUser?.fullName || targetUser?.name || 'Unknown';
+            statusEl.innerText = isBroadcast ? 'Broadcast Channel' : status.text;
+            statusEl.className = `text-sm uppercase leading-none mt-0.5 ${status.class}`;
+
+            const avatar = document.getElementById('targetAvatar');
+            const pColor = targetUser?.color || 'id-def';
+            avatar.innerText = targetUser?.avatar || targetUser?.fullName?.substring(0, 2) || (targetUser?.name ? targetUser.name.substring(0, 2) : '??');
+            avatar.style.background = `rgba(var(--${pColor}-rgb), 0.08)`;
+            avatar.style.border = `1px solid rgba(var(--${pColor}-rgb), 0.25)`;
+            avatar.style.color = `rgb(var(--${pColor}-rgb))`;
+
+            // Welcome message
+            addMessage(
+                `ยินดีต้อนรับสู่การสนทนากับ ${targetUser?.fullName || targetUser?.name || 'ผู้ใช้'}`,
+                false,
+                'system'
+            );
+        });
+
+        // Add Message
+        function addMessage(content, isSelf = false, type = 'text') {
+            const time = new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+            const bubble = document.createElement('div');
+
+            if (type === 'system') {
+                bubble.className = 'text-center py-2';
+                bubble.innerHTML = `<span class="text-sm text-[var(--vs-text-muted)] uppercase">${content}</span>`;
+            } else {
+                bubble.className = `flex ${isSelf ? 'justify-end' : 'justify-start'}`;
+
+                let innerContent = '';
+                if (type === 'image') {
+                    innerContent = `<img src="${content.url}" alt="${content.name}" class="max-w-[280px] rounded-[var(--vs-radius)] border border-[var(--vs-border)]" />`;
+                } else if (type === 'file') {
+                    innerContent = `
+                            <div class="flex items-center space-x-3 p-3 bg-[var(--vs-bg-deep)] rounded-[var(--vs-radius)] border border-[var(--vs-border)]">
+                                <i class="icon i-document h-8 w-8 text-[var(--vs-accent)]"></i>
+                                <div>
+                                    <div class="text-sm text-[var(--vs-text-title)] font-medium">${content.name}</div>
+                                    <div class="text-sm text-[var(--vs-text-muted)]">${content.size}</div>
+                                </div>
+                            </div>
+                        `;
+                } else {
+                    innerContent = `<p class="text-sm Thai-Rule">${content}</p>`;
+                }
+
+                const bgColor = isSelf ? 'bg-[var(--vs-accent)] text-[var(--vs-bg-deep)]' : 'bg-[var(--vs-bg-card)] text-[var(--vs-text-title)]';
+
+                bubble.innerHTML = `
+                        <div class="max-w-[70%] ${bgColor} rounded-[var(--vs-radius)] p-3 space-y-1">
+                            ${innerContent}
+                            <div class="flex items-center justify-end space-x-1 opacity-60">
+                                <span class="text-sm">${time}</span>
+                                ${isSelf ? '<i class="icon i-check h-3 w-3"></i>' : ''}
+                            </div>
+                        </div>
+                    `;
+            }
+
+            stream.appendChild(bubble);
+            stream.scrollTop = stream.scrollHeight;
+        }
+
+        // Send Message
+        function handleSend() {
+            const content = input.value.trim();
+            if (!content) return;
+
+            addMessage(content, true);
+            input.value = '';
+            input.style.height = 'auto';
+
+            // Simulate typing
+            typingName.innerText = targetUser?.fullName?.split(' ')[0] || 'User';
+            typingIndicator.classList.remove('hidden');
+
+            setTimeout(() => {
+                typingIndicator.classList.add('hidden');
+                const replies = [
+                    'รับทราบครับ',
+                    'ขอบคุณสำหรับข้อมูลครับ',
+                    'จะดำเนินการให้ครับ',
+                    'เข้าใจแล้วครับ',
+                    'ได้เลยครับ',
+                ];
+                addMessage(replies[Math.floor(Math.random() * replies.length)], false);
+            }, 1500 + Math.random() * 1000);
+        }
+
+        // Event Listeners
+        sendBtn.addEventListener('click', handleSend);
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+            }
+        });
+
+        input.addEventListener('input', () => {
+            input.style.height = 'auto';
+            input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+        });
+
+        emojiBtn.addEventListener('click', () => emojiPicker.classList.toggle('hidden'));
+        closeEmoji.addEventListener('click', () => emojiPicker.classList.add('hidden'));
+
+        emojiPicker.querySelectorAll('button:not(#closeEmoji)').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                input.value += btn.innerText;
+                input.focus();
+            });
+        });
+
+        attachBtn.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => {
+            Array.from(e.target.files).forEach((file) => {
+                const isImage = file.type.startsWith('image/');
+                const size = (file.size / 1024).toFixed(1) + ' KB';
+
+                if (isImage) {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        addMessage({ url: ev.target.result, name: file.name }, true, 'image');
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    addMessage({ name: file.name, size }, true, 'file');
+                }
+            });
+            fileInput.value = '';
+        });
+
+        // Quick Templates
+        document.querySelectorAll('#quickTemplates button').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                input.value = btn.innerText;
+                input.focus();
+            });
+        });
+
+        // DOM Elements
+        const headerContent = document.getElementById('headerContent');
+        const searchContainer = document.getElementById('searchContainer');
+        const searchBtn = document.getElementById('searchBtn');
+        const closeSearch = document.getElementById('closeSearch');
+        const searchInput = document.getElementById('searchInput');
+
+        // Search Logic
+        searchBtn.addEventListener('click', () => {
+            searchContainer.classList.remove('translate-y-full');
+            searchInput.focus();
+        });
+
+        closeSearch.addEventListener('click', () => {
+            searchContainer.classList.add('translate-y-full');
+            searchInput.value = '';
+            handleSearch('');
+        });
+
+        searchInput.addEventListener('input', (e) => handleSearch(e.target.value));
+
+        function handleSearch(query) {
+            const bubbles = stream.querySelectorAll('.flex.justify-start, .flex.justify-end');
+            bubbles.forEach(bubble => {
+                const text = bubble.innerText.toLowerCase();
+                if (text.includes(query.toLowerCase())) {
+                    bubble.classList.remove('hidden');
+                } else {
+                    bubble.classList.add('hidden');
+                }
+            });
+        }
+
+        // Flyout logic enhanced
+        const detailsBtn = document.getElementById('detailsBtn');
+        const personnelFlyout = document.getElementById('personnelFlyout');
+        const closeFlyout = document.getElementById('closeFlyout');
+
+        detailsBtn.addEventListener('click', () => {
+            if (targetUser) {
+                document.getElementById('flyoutAvatar').innerText = targetUser.avatar || '??';
+                const fAvatar = document.getElementById('flyoutAvatar');
+                const pColor = targetUser.color || 'id-def';
+                fAvatar.style.background = `rgba(var(--${pColor}-rgb), 0.08)`;
+                fAvatar.style.border = `2px solid rgba(var(--${pColor}-rgb), 0.25)`;
+                fAvatar.style.color = `rgb(var(--${pColor}-rgb))`;
+                document.getElementById('flyoutName').innerText = targetUser.fullName || 'Unknown';
+
+                const roleMap = {
+                    'STUDENT': { rank: 'Cadet', clearance: 'Level 1' },
+                    'TEACHER': { rank: 'Instructor', clearance: 'Level 2' },
+                    'SCHOOL_DIR': { rank: 'Director', clearance: 'Level 3' },
+                    'ESA_DIR': { rank: 'Regional Lead', clearance: 'Level 4' },
+                    'OBEC': { rank: 'Command Staff', clearance: 'Level 5' },
+                    'MOE': { rank: 'Secretary General', clearance: 'Level 6' }
+                };
+
+                const meta = roleMap[targetUser.role] || { rank: 'Guest', clearance: 'None' };
+                document.getElementById('flyoutRole').innerText = targetUser.role || 'User';
+                document.getElementById('flyoutRank').innerText = meta.rank;
+                document.getElementById('flyoutOrg').innerText = targetUser.org || 'Department of Education';
+                document.getElementById('flyoutLocation').innerText = targetUser.schoolId ? IDLPMS_DATA.structure.schools[targetUser.schoolId]?.name : 'Regional HQ';
+            }
+            personnelFlyout.classList.toggle('hidden');
+        });
+
+        closeFlyout.addEventListener('click', () => personnelFlyout.classList.add('hidden'));
+
+        // Welcome message...
+    </script>
+</body>
+
+</html>

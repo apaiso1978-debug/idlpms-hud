@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>เพิ่มบุคลากรใหม่ | IDLPMS HUD</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <link rel="stylesheet" href="../assets/css/notifications.css" />
+    <script src="../assets/js/data.js"></script>
+    <script src="../src/services/DataService.js"></script>
+    <script src="../src/services/AuthService.js"></script>
+    <script src="../assets/js/notifications.js"></script>
+    <style>
+        .icon {
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            background-color: currentColor;
+            display: inline-block;
+        }
+
+        .i-user-plus {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z'/%3E%3C/svg%3E");
+        }
+
+        .i-save {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4'/%3E%3C/svg%3E");
+        }
+
+        .i-arrow-left {
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10 19l-7-7m0 0l7-7m-7 7h18'/%3E%3C/svg%3E");
+        }
+
+        .Thai-Rule {
+            font-size: 14px !important;
+            line-height: 1.6;
+        }
+
+        .form-input {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--vs-radius);
+            padding: 8px 12px;
+            color: var(--vs-text-body);
+            outline: none;
+            transition: all 0.2s;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .form-input:focus {
+            border-color: var(--vs-accent);
+            background: rgba(var(--vs-bg-card-rgb), 0.3);
+        }
+
+        .subject-checkbox-label {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            background: rgba(var(--vs-bg-panel-rgb), 0.5);
+            border: 1px solid var(--vs-border);
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .subject-checkbox-label:hover {
+            background: rgba(var(--vs-bg-card-rgb), 0.5);
+            border-color: var(--vs-accent);
+        }
+
+        .subject-checkbox-label input[type="checkbox"] {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 1px solid var(--vs-border);
+            border-radius: 3px;
+            background: var(--vs-bg-deep);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+            margin-right: 10px;
+        }
+
+        .subject-checkbox-label input[type="checkbox"]:checked {
+            background: var(--vs-accent);
+            border-color: var(--vs-accent);
+        }
+
+        .subject-checkbox-label input[type="checkbox"]:checked::after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 3px;
+            width: 4px;
+            height: 8px;
+            border: solid var(--vs-bg-deep);
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+
+<body class="p-6 bg-[var(--vs-bg-main)] text-[var(--vs-text-body)] font-extralight Thai-Rule">
+    <div class="max-w-4xl mx-auto space-y-6">
+        <!-- Header Section -->
+        <header class="flex items-center justify-between mb-8">
+            <div class="flex items-center space-x-4">
+                <div
+                    class="w-12 h-12 rounded-[var(--vs-radius)] bg-[var(--vs-accent)]/10 flex items-center justify-center">
+                    <i class="icon i-user-plus w-6 h-6 text-[var(--vs-accent)]"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl text-[var(--vs-text-title)] font-extralight Thai-Rule">
+                        เพิ่มบุคลากรใหม่เข้าสู่ระบบ</h1>
+                    <p class="text-sm text-[var(--vs-text-muted)] Thai-Rule">
+                        กรอกข้อมูลบุคลากรและกำหนดวิชาที่สามารถสอนได้</p>
+                </div>
+            </div>
+            <button onclick="goBack()"
+                class="flex items-center space-x-2 px-4 py-2 bg-[var(--vs-bg-panel)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-white/70 hover:bg-[var(--vs-bg-card)] hover:text-white transition-all group">
+                <i class="icon i-arrow-left w-4 h-4"></i>
+                <span class="Thai-Rule">กลับ</span>
+            </button>
+        </header>
+
+        <!-- Main Form Card -->
+        <div
+            class="bg-[var(--vs-bg-card)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] overflow-hidden shadow-2xl">
+            <div
+                class="p-4 border-b border-[var(--vs-border)] bg-[var(--vs-bg-deep)]/30 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 rounded-[3px] bg-[var(--vs-accent)] animate-pulse"></div>
+                    <span class="text-sm uppercase text-[var(--vs-text-muted)] font-extralight Thai-Rule">New
+                        Personnel Registration Form</span>
+                </div>
+            </div>
+
+            <div class="p-8 space-y-6">
+                <!-- ชื่อ-นามสกุล -->
+                <div>
+                    <label class="text-sm text-[var(--vs-text-muted)] uppercase block mb-2 Thai-Rule">
+                        ชื่อ-นามสกุล บุคลากร
+                    </label>
+                    <input type="text" id="teacher-name" class="form-input Thai-Rule"
+                        placeholder="ระบุชื่อ-นามสกุลเต็ม (เช่น นางสาวสมหญิง ใจดี)">
+                </div>
+
+                <!-- วิชาที่สอนได้ -->
+                <div>
+                    <label class="text-sm text-[var(--vs-text-muted)] uppercase block mb-3 Thai-Rule">
+                        วิชาที่สามารถสอนได้
+                    </label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" id="subject-checkboxes">
+                        <!-- Checkboxes will be injected here -->
+                    </div>
+                </div>
+
+                <!-- ภาระงานสูงสุด -->
+                <div>
+                    <label class="text-sm text-[var(--vs-text-muted)] uppercase block mb-3 Thai-Rule">
+                        ภาระงานสูงสุด (Maximum Workload)
+                    </label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-sm text-[var(--vs-text-muted)] block mb-2 Thai-Rule">
+                                คาบต่อวัน (สูงสุด)
+                            </label>
+                            <input type="number" id="teacher-max-day" class="form-input text-center" value="7" min="1"
+                                max="10">
+                        </div>
+                        <div>
+                            <label class="text-sm text-[var(--vs-text-muted)] block mb-2 Thai-Rule">
+                                คาบต่อสัปดาห์ (สูงสุด)
+                            </label>
+                            <input type="number" id="teacher-max-week" class="form-input text-center" value="35" min="1"
+                                max="50">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="p-6 border-t border-[var(--vs-border)] bg-[var(--vs-bg-deep)]/30 flex justify-end space-x-3">
+                <button onclick="goBack()"
+                    class="px-6 py-2.5 bg-[var(--vs-bg-panel)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-white/70 hover:bg-[var(--vs-bg-card)] hover:text-white transition-all Thai-Rule">
+                    ยกเลิก
+                </button>
+                <button onclick="saveNewTeacher()" id="save-btn"
+                    class="flex items-center space-x-2 px-6 py-2.5 bg-[var(--vs-accent)]/10 border border-[var(--vs-accent)]/30 rounded-[var(--vs-radius)] text-[var(--vs-accent)] hover:bg-[var(--vs-accent)]/20 transition-all group">
+                    <i class="icon i-save w-4 h-4 group-hover:scale-110 transition-transform"></i>
+                    <span class="Thai-Rule">บันทึกข้อมูลบุคลากร</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let dataService, authService;
+        let currentSchoolId = null;
+        let subjects = [];
+
+        async function init() {
+            try {
+                authService = new AuthService();
+                await authService.initialize();
+
+                dataService = await DataServiceFactory.getInstance();
+
+                const user = authService.getCurrentUser();
+                currentSchoolId = user?.schoolId || 'SCH_MABLUD';
+
+                // Load subjects
+                subjects = await dataService.getAllSubjects();
+
+                // Render subject checkboxes
+                renderSubjectCheckboxes();
+            } catch (error) {
+                console.error('Init failure:', error);
+                HUD_NOTIFY.toast('เกิดข้อผิดพลาด', 'ไม่สามารถโหลดข้อมูลได้', 'danger');
+            }
+        }
+
+        function renderSubjectCheckboxes() {
+            const container = document.getElementById('subject-checkboxes');
+            if (!container) return;
+
+            const subjectList = [
+                { id: 'MATH', name: 'คณิตศาสตร์', color: 'var(--sj-math)' },
+                { id: 'THAI', name: 'ภาษาไทย', color: 'var(--sj-thai)' },
+                { id: 'ENG', name: 'ภาษาอังกฤษ', color: 'var(--sj-eng)' },
+                { id: 'SCI', name: 'วิทยาศาสตร์', color: 'var(--sj-sci)' },
+                { id: 'SOC', name: 'สังคมศึกษา', color: 'var(--sj-soc)' },
+                { id: 'HIST', name: 'ประวัติศาสตร์', color: 'var(--sj-hist)' },
+                { id: 'PE', name: 'สุขศึกษาและพลศึกษา', color: 'var(--sj-pe)' },
+                { id: 'ART', name: 'ศิลปะ', color: 'var(--sj-art)' },
+                { id: 'WORK', name: 'การงานอาชีพ', color: 'var(--sj-work)' }
+            ];
+
+            container.innerHTML = subjectList.map(s => `
+                <label class="subject-checkbox-label">
+                    <input type="checkbox" value="${s.id}" class="teacher-subject-checkbox">
+                    <span class="text-sm text-[var(--vs-text-body)] Thai-Rule">${s.name}</span>
+                </label>
+            `).join('');
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        async function saveNewTeacher() {
+            const name = document.getElementById('teacher-name').value.trim();
+            const selectedSubjects = Array.from(document.querySelectorAll('.teacher-subject-checkbox:checked'))
+                .map(cb => cb.value);
+            const maxDay = parseInt(document.getElementById('teacher-max-day').value);
+            const maxWeek = parseInt(document.getElementById('teacher-max-week').value);
+
+            // Validation
+            if (!name) {
+                HUD_NOTIFY.toast('ข้อผิดพลาด', 'กรุณาระบุชื่อ-นามสกุล', 'danger');
+                return;
+            }
+
+            if (selectedSubjects.length === 0) {
+                HUD_NOTIFY.toast('ข้อผิดพลาด', 'กรุณาเลือกวิชาที่สอนได้อย่างน้อย 1 วิชา', 'danger');
+                return;
+            }
+
+            if (maxDay < 1 || maxDay > 10) {
+                HUD_NOTIFY.toast('ข้อผิดพลาด', 'คาบต่อวันต้องอยู่ระหว่าง 1-10', 'danger');
+                return;
+            }
+
+            if (maxWeek < 1 || maxWeek > 50) {
+                HUD_NOTIFY.toast('ข้อผิดพลาด', 'คาบต่อสัปดาห์ต้องอยู่ระหว่าง 1-50', 'danger');
+                return;
+            }
+
+            try {
+                // Create teacher
+                const btn = document.getElementById('save-btn');
+                btn.innerHTML = '<i class="icon i-refresh w-4 h-4 animate-spin"></i> <span class="Thai-Rule">กำลังบันทึก...</span>';
+                btn.disabled = true;
+
+                await dataService.createTeacher({
+                    fullName: name,
+                    schoolId: currentSchoolId,
+                    canTeachSubjects: selectedSubjects,
+                    maxPeriodsPerDay: maxDay,
+                    maxPeriodsPerWeek: maxWeek
+                });
+
+                HUD_NOTIFY.toast('เพิ่มบุคลากรสำเร็จ', `เพิ่ม ${name} เข้าสู่ระบบแล้ว`, 'success');
+
+                // Wait a bit then go back
+                setTimeout(() => {
+                    window.location.href = 'teacher_management.html';
+                }, 1500);
+
+            } catch (error) {
+                console.error('Save error:', error);
+                HUD_NOTIFY.toast('เกิดข้อผิดพลาด', error.message, 'danger');
+
+                const btn = document.getElementById('save-btn');
+                btn.innerHTML = '<i class="icon i-save w-4 h-4"></i> <span class="Thai-Rule">บันทึกข้อมูลบุคลากร</span>';
+                btn.disabled = false;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Subject HUD | IDLPMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <script src="../assets/js/data.js"></script>
+    <script src="../assets/js/components/dna_spider.js"></script>
+    <script src="../assets/js/components/tooltip.js"></script>
+    <style>
+        .hud-scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--vs-accent), transparent);
+            animation: scan 4s linear infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0;
+            }
+
+            100% {
+                top: 100%;
+            }
+        }
+
+        /* Anti-Slidebar (Force Hide Scrollbar) */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Force Expansion */
+        #mission-hud-content {
+            width: 100%;
+            min-width: 1000px;
+            /* Ensure 20 modules * 40px + gaps fit */
+        }
+
+        /* Anti-Slidebar (Force Hide Scrollbar) */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+
+<body class="bg-transparent p-6 overflow-y-auto overflow-x-hidden font-['Sarabun'] antialiased vs-scrollbar"
+    style="height: auto; min-height: 100vh; overflow-y: auto !important;">
+    <div id="mission-hud-content" class="max-w-[1600px] space-y-6 animate-in fade-in zoom-in-95 duration-500">
+        <!-- Dynamic Content injected by JS -->
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const subjectId = params.get('id');
+
+        function init() {
+            let user = { role: 'STUDENT', gradeLevel: 6, schoolId: 'SCH_001', fullName: 'Guest User' };
+            try {
+                if (parent && parent.window && typeof parent.window.getCurrentUser === 'function') {
+                    user = parent.window.getCurrentUser();
+                }
+            } catch (e) {
+                console.warn('Security restriction: Cannot access parent.window.getCurrentUser()', e);
+            }
+
+            const rawId = (subjectId || '').replace('SUB_', '');
+            const subject = IDLPMS_DATA.curriculum[rawId] || {
+                name: 'วิชาทั่วไป',
+                color: 'var(--vs-accent)',
+                units: []
+            };
+
+            // Find teacher
+            const teacher = Object.values(IDLPMS_DATA.users).find(
+                (u) =>
+                    u.role === 'TEACHER' &&
+                    u.schoolId === user.schoolId &&
+                    (u.subjectId === rawId || u.subject === subject.name)
+            );
+
+            // Grade Mismatch Logic (Iron Rule)
+            let mismatch = false;
+            let contentGrade = null;
+
+            // Attempt to detect grade from first lesson indicator (e.g. ว 1.2 ป.6/1 -> 6)
+            if (subject.units && subject.units[0] && subject.units[0].lessons[0]) {
+                const firstLesson = subject.units[0].lessons[0];
+                const indicator = (firstLesson.pedagogicalData && firstLesson.pedagogicalData.indicator) || '';
+                const match = indicator.match(/ป\.?\s?(\d)/);
+                if (match) {
+                    contentGrade = parseInt(match[1]);
+                    if (user.gradeLevel && contentGrade !== user.gradeLevel) {
+                        mismatch = true;
+                    }
+                }
+            }
+
+            renderHUD(subject, teacher, user, mismatch, contentGrade);
+        }
+
+        function renderHUD(subject, teacher, user, mismatch, contentGrade) {
+            const container = document.getElementById('mission-hud-content');
+            const userGradeStr = user.gradeLevel ? `Grade ${user.gradeLevel}` : 'N/A';
+            const userClassStr = user.classId ? `/ Section ${user.classId}` : '';
+
+            // Robust access to currentLessonIndex
+            let currentLessonIndex = 0;
+            let currentStep = 1;
+            let dnaStats = { k: 50, p: 50, a: 50, e: 50, d: 50 };
+
+            try {
+                currentLessonIndex = parent.ManagementEngine?.currentLessonIndex ?? 0;
+                currentStep = parent.ManagementEngine?.currentStep ?? 1;
+                dnaStats = parent.ManagementEngine?.calculateDNAStats(subjectId) || dnaStats;
+            } catch (e) { }
+
+            this.currentDNA = dnaStats; // Store for spider chart toggle
+
+            container.innerHTML = `
+                <!-- Hero Header Card -->
+                <div class="relative p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)] overflow-hidden">
+                    <div class="hud-scan-line"></div>
+
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="hud-badge-micro px-2 py-0.5 rounded-[var(--vs-radius)] font-extralight hud-border-cyan hud-bg-cyan" style="color: var(--vs-accent)">
+                                    ACTIVE MISSION
+                                </span>
+                                <span class="text-sm text-[var(--vs-text-muted)] font-extralight uppercase">
+                                    User Identity: ${userGradeStr}${userClassStr}
+                                </span>
+                                ${mismatch ? `
+                                    <span class="px-2 py-0.5 rounded-[var(--vs-radius)] text-[10px] bg-rose-500/20 border border-rose-500/50 text-rose-400 font-bold uppercase animate-pulse">
+                                        Grade Mismatch detected
+                                    </span>
+                                ` : ''}
+                            </div>
+                            <h1 class="vs-title-thai-hero text-[var(--vs-text-title)] Thai-Rule">
+                                ${subject.name}
+                            </h1>
+                            <div class="flex items-center gap-4">
+                                <p class="text-sm text-white/40 font-bold uppercase leading-none">National Curriculum Standard Code: ${subjectId}</p>
+                                <span class="h-3 w-[1px] bg-[var(--vs-border)] opacity-50"></span>
+                                <p class="text-sm text-white/60 font-bold uppercase">Target: Grade ${contentGrade || '??'}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-end">
+                            <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-2">Mastery Status</div>
+                            <div class="text-4xl font-black text-[var(--vs-accent)] uppercase">
+                                Module ${(currentLessonIndex + 1).toString().padStart(2, '0')}
+                                <span class="text-lg opacity-30 text-[var(--vs-text-title)]">/20</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Roadmap Timeline (Unified 20-Step Conduit) -->
+                    <div class="mt-10 relative px-4">
+                        <!-- Horizontal Conduit Line -->
+                        <div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-[1px] bg-[var(--vs-border)] opacity-20 z-0"></div>
+                        
+                        <!-- Timeline Nodes Container (Expansion Logic) -->
+                        <div class="relative z-10 flex justify-between items-center gap-2 overflow-visible">
+                            ${(() => {
+                    const totalBlocks = 20;
+                    const curModule = currentLessonIndex + 1;
+                    return Array.from({ length: totalBlocks })
+                        .map((_, i) => {
+                            const stepNum = i + 1;
+                            const isPast = stepNum < curModule;
+                            const isCurrent = stepNum === curModule;
+                            const isFuture = stepNum > curModule;
+
+                            return `
+                                            <div class="flex flex-col items-center group cursor-pointer relative" onclick="try { parent.ManagementEngine.changeLesson(${i}); } catch(e) { }">
+                                                <!-- Unified Roadmap Milestone Node -->
+                                                <div class="vs-milestone-node 
+                                                    ${isCurrent ? 'vs-node-active animate-node-pulse' :
+                                    isPast ? 'vs-node-past' :
+                                        'vs-node-future'}">
+                                                    ${stepNum.toString().padStart(2, '0')}
+                                                </div>
+                                            </div>
+                                        `;
+                        })
+                        .join('');
+                })()}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left: Mastery Protocol & Timeline -->
+                    <div class="lg:col-span-2 space-y-6">
+
+                        <!-- DNA Activity Timeline (Global Time Tracking Proof) -->
+                        <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]" id="timeline-section-card">
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-sm font-extralight text-[var(--vs-text-muted)] uppercase">Neural Learning Trace</h2>
+                                <span class="text-[10px] text-[var(--vs-accent)] font-bold uppercase animate-pulse">Live Feed</span>
+                            </div>
+                            
+                            <div id="dna-timeline-content" class="space-y-4">
+                                <!-- Timeline items injected by updateTimeline() -->
+                            </div>
+                        </div>
+
+                        <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)] vs-scrollbar pb-20">
+                            <h2 class="text-sm font-extralight text-[var(--vs-text-muted)] uppercase mb-6">Mastery Curriculum Matrix</h2>
+                            <div class="space-y-8" data-admin-action="Curriculum Structure Audit">
+                                ${subject.units
+                    ? subject.units
+                        .map((u, i) => {
+                            // Calculate start index for this unit
+                            let unitStartIndex = 0;
+                            for (let j = 0; j < i; j++) {
+                                unitStartIndex += subject.units[j].lessons.length;
+                            }
+
+                            return `
+                                    <div class="relative">
+                                        <div class="flex items-center gap-4 mb-4 pl-4">
+                                            <h3 class="text-sm font-extralight text-[var(--vs-accent)] uppercase Thai-Rule opacity-70">
+                                                ${u.name}
+                                            </h3>
+                                            <div class="h-[1px] flex-1 bg-[var(--vs-border)] opacity-20"></div>
+                                        </div>
+                                        
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                            ${u.lessons.map((l, li) => {
+                                const globalIdx = unitStartIndex + li;
+                                return `
+                                                    <div class="flex items-center gap-3 p-3 rounded-[3px] bg-[rgba(var(--vs-bg-card-rgb),0.3)] border border-[var(--vs-border)] hover:bg-[rgba(var(--vs-accent-rgb),0.05)] hover:border-[rgba(var(--vs-accent-rgb),0.3)] group cursor-pointer transition-all"
+                                                         onclick="try { parent.ManagementEngine.changeLesson(${globalIdx}); parent.ManagementEngine.startMission(); } catch(e) { location.href='learning_flow.html'; }">
+                                                        <!-- Unified Matrix Milestone Node -->
+                                                        <div class="vs-milestone-node 
+                                                            ${globalIdx === currentLessonIndex ? 'vs-node-active animate-node-pulse' :
+                                        globalIdx < currentLessonIndex ? 'vs-node-past' : 'vs-node-future'} 
+                                                            group-hover:vs-node-active transition-all">
+                                                            ${(globalIdx + 1).toString().padStart(2, '0')}
+                                                        </div>
+                                                        <div class="flex-1 min-w-0">
+                                                            <div class="text-sm font-extralight text-[var(--vs-text-title)] Thai-Rule truncate group-hover:text-white transition-colors">${l.name}</div>
+                                                            <div class="text-[10px] text-[var(--vs-text-muted)] uppercase font-extralight">Mastery Protocol Active</div>
+                                                        </div>
+                                                        <i class="icon i-play h-4 w-4 opacity-0 group-hover:opacity-100 text-[var(--vs-accent)] transition-all"></i>
+                                                    </div>
+                                                `;
+                            }).join('')}
+                                        </div>
+                                    </div>
+                                `;
+                        })
+                        .join('')
+                    : '<p class="text-sm text-[var(--vs-text-muted)] opacity-40 text-center py-10">Curriculum units pending synchronization...</p>'
+                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: DNA Analysis & Launch Control -->
+                    <div class="space-y-6">
+                        <!-- Subject Intelligence DNA (Unified DNA Zone) -->
+                        <div class="dna-zone p-6" id="dna-section-card">
+                            <div class="dna-zone-header">
+                                <div class="flex items-center gap-2">
+                                    <a href="manual/learning.html#intelligence-dna" 
+                                       class="dna-zone-title hover:text-[var(--vs-accent)] transition-colors cursor-pointer">
+                                        Intelligence DNA Analysis
+                                    </a>
+                                </div>
+                                <span class="role-badge role-badge-student">KPA+ Unity</span>
+                            </div>
+                            
+                            <div class="dna-zone-content flex-col gap-6">
+                                <!-- Spider Chart (Upper) -->
+                                <div id="dna-spider-view" class="w-full h-[360px] flex items-center justify-center p-2 rounded-[3px] bg-[var(--vs-bg-deep)] backdrop-blur-md border border-[var(--vs-border)]">
+                                    <div id="spider-chart-container" class="w-full h-full" data-admin-action="Deep Analytical Spider Chart Review"></div>
+                                </div>
+
+                                <!-- DNA Bars (Lower) -->
+                                <div id="dna-bars-view" class="w-full grid grid-cols-1 gap-y-3 animate-in fade-in slide-in-from-bottom-2 duration-700">
+                                    <!-- Bars injected by populateDNABars() -->
+                                </div>
+                            </div>
+
+                                <p class="text-[11px] text-[var(--vs-text-muted)] font-extralight Thai-Rule leading-relaxed opacity-50">
+                                    * ระบบใช้หลักการ <span class="text-[var(--vs-accent)]">Neural Decay</span> ป้องกันการสะสมคะแนนซ้ำซ้อน และประมวลผลผ่าน <span class="text-[var(--vs-accent)]">5-Axis KPA+ Matrix</span> เพื่อความโปร่งใสสูงสุด
+                                </p>
+                        </div>
+                        <!-- Launch Control -->
+                        <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-accent)] group relative overflow-hidden cursor-pointer active:scale-95 transition-all"
+                             onclick="try { parent.ManagementEngine.startMission(); } catch(e) { location.href='learning_flow.html'; }">
+                            <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div class="relative z-10 text-zinc-900 text-center">
+                                <div class="px-3 py-0.5 rounded-[var(--vs-radius)] border border-[rgba(0,0,0,0.2)] bg-[rgba(0,0,0,0.1)] mb-2 inline-block">
+                                    <span class="text-sm font-extralight text-zinc-900 uppercase">Execution Protocol</span>
+                                </div>
+                                <div class="text-2xl font-extralight uppercase flex items-center justify-center gap-2">
+                                    <i class="icon i-play h-6 w-6"></i>
+                                    Resume Mission
+                                </div>
+                                <div id="launch-status" class="text-sm font-extralight mt-2 opacity-60 uppercase Thai-Rule">
+                                    กำลังเริ่ม: บทที่ ${currentLessonIndex + 1} ขั้นที่ ${currentStep}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Secondary Support Section -->
+            <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                <h2 class="text-sm font-extralight text-[var(--vs-text-muted)] uppercase mb-4">Support Repository</h2>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between text-sm group cursor-pointer hover:text-[var(--vs-accent)] transition-colors">
+                        <span class="Thai-Rule text-[var(--vs-text-body)]">คู่มือการเรียนฉบับย่อ</span>
+                        <i class="icon i-document h-4 w-4 opacity-30 group-hover:opacity-100"></i>
+                    </div>
+                    <div class="flex items-center justify-between text-sm group cursor-pointer hover:text-[var(--vs-accent)] transition-colors">
+                        <span class="Thai-Rule text-[var(--vs-text-body)]">คลังข้อสอบเก่า (Level 6)</span>
+                        <i class="icon i-folder h-4 w-4 opacity-30 group-hover:opacity-100"></i>
+                    </div>
+                </div>
+            </div>
+                        </div>
+                    </div>
+            `;
+        }
+
+        function initSpiderChart(user) {
+            const spiderContainer = document.getElementById('spider-chart-container');
+            const barsContainer = document.getElementById('dna-bars-view');
+            if (!spiderContainer) return;
+
+            // Get Role-Based Config from Centralized Engine
+            const config = (parent.window.ManagementEngine && parent.window.ManagementEngine.getRoleDimensions)
+                ? parent.window.ManagementEngine.getRoleDimensions(user)
+                : {
+                    labels: ['K', 'P', 'A', 'E', 'D'],
+                    keys: ['k', 'p', 'a', 'e', 'd'],
+                    benchmark: { 'K': 60, 'P': 60, 'A': 60, 'E': 60, 'D': 60 }
+                };
+
+            const axesLabels = config.labels;
+            const benchmark = config.benchmark;
+
+            // Calculate actual DNA stats
+            const currentDNAStats = (parent.window.ManagementEngine && parent.window.ManagementEngine.calculateDNAStats)
+                ? parent.window.ManagementEngine.calculateDNAStats()
+                : { k: 50, p: 50, a: 50, e: 50, d: 50 };
+
+            // 1. Populate DNA Bars
+            if (barsContainer) {
+                // Use system palette for DNA dimensions (Explicit Var Mapping for guaranteed rendering)
+                const colors = [
+                    'var(--dna-k)', // K: Cyan
+                    'var(--dna-p)', // P: Emerald
+                    'var(--dna-a)', // A: Rose
+                    'var(--dna-e)', // E: Amber
+                    'var(--dna-d)'  // D: Indigo
+                ];
+
+                barsContainer.innerHTML = config.labels.map((label, i) => {
+                    const key = config.keys[i];
+                    const val = Math.round(currentDNAStats[key] || 55);
+                    const colorVar = colors[i] || 'var(--vs-text-muted)';
+                    return `
+                        <div class="space-y-1">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-[var(--vs-text-muted)] font-extralight uppercase">${label}</span>
+                                <span class="text-sm font-extralight" style="color: ${colorVar}">${val}%</span>
+                            </div>
+                            <div class="vs-progress-track">
+                                <div class="vs-progress-fill opacity-80" style="width: ${val}%; background-color: ${colorVar}"></div>
+                            </div>
+                        </div>
+            `;
+                }).join('');
+            }
+
+            // 2. Render Spider Chart
+            const normalizedDNA = {};
+            axesLabels.forEach((label, idx) => {
+                const key = config.keys[idx];
+                normalizedDNA[label] = currentDNAStats[key] || 0;
+            });
+
+            const spider = new DNASpider('spider-chart-container', {
+                axes: axesLabels.length,
+                labels: axesLabels,
+                size: 400,
+                levels: 10
+            });
+
+            spider.render(normalizedDNA, benchmark);
+
+            // Neural Transparency: Initialize Observer
+            if (parent.window.ManagementEngine && parent.window.ManagementEngine.initDNAObserver) {
+                parent.window.ManagementEngine.initDNAObserver();
+            }
+        }
+
+        function updateTimeline(dnaStats) {
+            const timelineContainer = document.getElementById('dna-timeline-content');
+            if (!timelineContainer) return;
+
+            let buffer = {};
+            try {
+                buffer = parent.ManagementEngine?.stepTiming?.neuralBuffer || {};
+            } catch (e) { return; }
+
+            // Flatten all signals into a single array
+            const allSignals = [];
+            Object.keys(buffer).forEach(dim => {
+                buffer[dim].forEach(s => allSignals.push({ ...s, dim }));
+            });
+
+            // Sort by latest
+            allSignals.sort((a, b) => b.timestamp - a.timestamp);
+
+            // Take last 5
+            const latest = allSignals.slice(0, 5);
+
+            if (latest.length === 0) {
+                timelineContainer.innerHTML = `<div class="text-center py-6 text-[var(--vs-text-muted)] font-extralight text-sm uppercase">No neural signals detected in current session</div>`;
+                return;
+            }
+
+            timelineContainer.innerHTML = latest.map(s => `
+                <div class="flex items-start gap-4 p-3 rounded-[3px] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] hover:bg-[rgba(var(--vs-accent-rgb),0.05)] transition-all group">
+                    <div class="w-8 h-8 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] flex items-center justify-center text-[var(--vs-accent)] group-hover:scale-110 transition-transform">
+                        <i class="icon i-lightning w-4 h-4"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-light text-[var(--vs-text-title)]">${s.dim} Matrix: <span class="text-[var(--vs-accent)]">+${s.value}%</span></span>
+                            <span class="text-[10px] text-[var(--vs-text-muted)] font-mono">${s.time}</span>
+                        </div>
+                        <div class="text-[11px] text-[var(--vs-text-muted)] font-extralight truncate Thai-Rule opacity-60">${s.action}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.updateDNABars = (dnaStats) => {
+            let user = { role: 'STUDENT', gradeLevel: 6 };
+            try {
+                if (parent && parent.window && typeof parent.window.getCurrentUser === 'function') {
+                    user = parent.window.getCurrentUser();
+                }
+            } catch (e) { }
+
+            initSpiderChart(user);
+            updateTimeline();
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+
+            let user = { role: 'STUDENT', gradeLevel: 6 };
+            try {
+                if (parent && parent.window && typeof parent.window.getCurrentUser === 'function') {
+                    user = parent.window.getCurrentUser();
+                }
+            } catch (e) { }
+
+            initSpiderChart(user);
+            updateTimeline();
+        });
+    </script>
+</body>
+
+</html>
+```

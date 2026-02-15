@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Learning Flow | IDLPMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <script src="../assets/js/data.js"></script>
+    <!-- HLS.js for DLTV video playback -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.6.5/hls.min.js"></script>
+</head>
+
+<body class="bg-[var(--vs-bg-deep)] p-6 overflow-x-hidden font-['Sarabun'] antialiased">
+    <div id="learning-flow-container" class="max-w-[1600px] min-h-[calc(100vh-80px)] overflow-y-auto">
+        <!-- Mastery Flow UI will be injected here by ManagementEngine -->
+        <div class="flex items-center justify-center h-full opacity-20 Thai-Rule text-lg">
+            Initializing Mastery Protocol...
+        </div>
+    </div>
+
+    <script src="../assets/js/management.js"></script>
+    <script>
+        function init() {
+            const container = document.getElementById('learning-flow-container');
+            let engine = null;
+
+            // Try to get ManagementEngine from parent (when loaded in iframe)
+            try {
+                if (parent && parent.window && parent.window.ManagementEngine) {
+                    engine = parent.window.ManagementEngine;
+                }
+            } catch (e) {
+                console.warn('Security restriction: Cannot access parent.window.ManagementEngine', e);
+            }
+
+            // If no parent engine, use the local ManagementEngine (loaded via script tag)
+            if (!engine && window.ManagementEngine) {
+                engine = window.ManagementEngine;
+                console.log('Using local ManagementEngine.');
+
+                // Initialize subject from URL params if available
+                const params = new URLSearchParams(window.location.search);
+                const subjectId = params.get('id') || 'SUB_HIST';
+                engine.currentSubjectID = subjectId;
+            }
+
+            if (engine && typeof engine.renderMasteryFlow === 'function') {
+                engine.renderMasteryFlow(container);
+            } else {
+                console.error('ManagementEngine.renderMasteryFlow is not available.');
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-full space-y-4">
+                        <div class="hud-badge-micro text-rose-500 uppercase">Mastery Protocol: Initialization Failed</div>
+                        <div class="text-sm text-[var(--vs-text-muted)] Thai-Rule">ไม่พบระบบควบคุม Mastery Flow กรุณารีเฟรชหน้านี้หรือกลับไปที่หน้าหลัก</div>
+                        <a href="../index.html" class="px-6 py-2 bg-[var(--vs-accent)] text-[var(--vs-bg-deep)] rounded-[3px] uppercase text-sm font-extralight">Return to Dashboard</a>
+                    </div>
+                `;
+            }
+        }
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

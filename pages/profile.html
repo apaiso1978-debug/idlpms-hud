@@ -1,0 +1,379 @@
+﻿<!doctype html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Work Passport | IDLPMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <link rel="stylesheet" href="../assets/css/passport.css" />
+</head>
+
+<body class="bg-[var(--vs-bg-main)] text-[var(--vs-text-body)] font-['Sarabun'] antialiased p-6">
+    <div class="max-w-[1600px] space-y-6">
+
+        <!-- ═══ Page Header ═══ -->
+        <header class="flex items-center justify-between h-12">
+            <h1 class="text-sm font-extralight text-[var(--vs-text-title)] uppercase">
+                Self-Service / Work Passport
+            </h1>
+            <button onclick="handleSave()" id="save-btn"
+                class="px-4 py-2 bg-[var(--vs-accent)] text-[var(--vs-bg-deep)] font-extralight text-sm rounded-[var(--vs-radius)] flex items-center space-x-2 hover:opacity-90 active:scale-95 transition-all">
+                <i class="icon i-save h-4 w-4"></i>
+                <span>Save All Changes</span>
+            </button>
+        </header>
+
+        <!-- ═══ Profile Header Card ═══ -->
+        <section class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] hud-border">
+            <div class="flex items-center space-x-6">
+                <div class="relative">
+                    <div id="prof-avatar"
+                        class="w-20 h-20 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] flex items-center justify-center text-[var(--vs-accent)] hud-border text-2xl font-extralight">
+                        U
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <h2 id="prof-name" class="text-xl font-extralight text-[var(--vs-text-title)]">
+                        Loading...
+                    </h2>
+                    <p class="text-sm text-[var(--vs-text-muted)] flex items-center space-x-2">
+                        <i class="icon i-user h-4 w-4"></i>
+                        <span id="prof-id">ID: 0000</span>
+                    </p>
+                    <div class="flex space-x-2">
+                        <span id="prof-role-badge"
+                            class="px-2 py-0.5 bg-[var(--vs-bg-deep)] hud-border text-[var(--vs-text-body)] text-sm uppercase font-extralight rounded-[var(--vs-radius)]">
+                            Role
+                        </span>
+                        <span id="prof-org-badge"
+                            class="px-2 py-0.5 bg-[var(--vs-bg-deep)] hud-border text-[var(--vs-text-body)] text-sm uppercase font-extralight rounded-[var(--vs-radius)]">
+                            Organization
+                        </span>
+                    </div>
+                </div>
+                <!-- Export Button (right side) -->
+                <div class="ml-auto flex items-center space-x-2">
+                    <button
+                        class="px-4 py-2 bg-[var(--vs-bg-deep)] hud-border text-sm text-[var(--vs-text-body)] font-extralight rounded-[var(--vs-radius)] flex items-center space-x-2 hover:border-[var(--vs-accent)]/30 transition-all">
+                        <i class="icon i-download h-4 w-4"></i>
+                        <span>Export PDF</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ Tab Switcher ═══ -->
+        <nav class="passport-tabs">
+            <button data-tab="basic" class="passport-tab active">
+                <i class="icon i-user h-4 w-4"></i>
+                <span>Basic</span>
+            </button>
+            <button data-tab="workflow" class="passport-tab">
+                <i class="icon i-clipboard-check h-4 w-4"></i>
+                <span>Workflow</span>
+            </button>
+            <button data-tab="settings" class="passport-tab">
+                <i class="icon i-cog h-4 w-4"></i>
+                <span>Settings</span>
+            </button>
+        </nav>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             TAB: BASIC
+             ═══════════════════════════════════════════════════════════ -->
+        <div id="panel-basic" class="passport-panel space-y-6">
+
+            <!-- Personal Information -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <section class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] hud-border">
+                    <h3
+                        class="text-sm font-extralight text-[var(--vs-text-muted)] uppercase flex items-center space-x-2 mb-4">
+                        <i class="icon i-user h-4 w-4"></i>
+                        <span>Personal Information</span>
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label class="text-sm text-[var(--vs-text-muted)] uppercase">Full Name</label>
+                                <input id="in-name" type="text"
+                                    class="w-full bg-[var(--vs-bg-deep)] hud-border rounded-[var(--vs-radius)] px-3 py-2 text-sm text-[var(--vs-text-title)] focus:border-[var(--vs-accent)] focus:outline-none transition-colors" />
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-sm text-[var(--vs-text-muted)] uppercase">Citizen ID</label>
+                                <input id="in-citizen" type="text"
+                                    class="w-full bg-[var(--vs-bg-deep)] hud-border rounded-[var(--vs-radius)] px-3 py-2 text-sm text-[var(--vs-text-muted)] focus:outline-none"
+                                    readonly />
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label class="text-sm text-[var(--vs-text-muted)] uppercase">Email Address</label>
+                                <input id="in-email" type="email"
+                                    class="w-full bg-[var(--vs-bg-deep)] hud-border rounded-[var(--vs-radius)] px-3 py-2 text-sm text-[var(--vs-text-title)] focus:border-[var(--vs-accent)] focus:outline-none transition-colors" />
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-sm text-[var(--vs-text-muted)] uppercase">Phone Number</label>
+                                <input id="in-phone" type="text"
+                                    class="w-full bg-[var(--vs-bg-deep)] hud-border rounded-[var(--vs-radius)] px-3 py-2 text-sm text-[var(--vs-text-title)] focus:border-[var(--vs-accent)] focus:outline-none transition-colors" />
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-sm text-[var(--vs-text-muted)] uppercase">Residential Address</label>
+                            <textarea id="in-address" rows="3"
+                                class="w-full bg-[var(--vs-bg-deep)] hud-border rounded-[var(--vs-radius)] px-3 py-2 text-sm text-[var(--vs-text-title)] focus:border-[var(--vs-accent)] focus:outline-none transition-colors resize-none"></textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Account Security -->
+                <section class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] hud-border">
+                    <h3
+                        class="text-sm font-extralight text-[var(--vs-text-muted)] uppercase flex items-center space-x-2 mb-4">
+                        <i class="icon i-lock h-4 w-4"></i>
+                        <span>Account Security</span>
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-[var(--vs-bg-deep)] hud-border rounded-[var(--vs-radius)] space-y-4">
+                            <div class="space-y-1">
+                                <label class="text-sm text-[var(--vs-text-muted)] uppercase">New Password</label>
+                                <input type="password" placeholder="••••••••"
+                                    class="w-full bg-[var(--vs-bg-panel)] hud-border rounded-[var(--vs-radius)] px-3 py-2 text-sm text-[var(--vs-text-title)] focus:border-rose-500/50 focus:outline-none transition-colors" />
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-sm text-[var(--vs-text-muted)] uppercase">Confirm New
+                                    Password</label>
+                                <input type="password" placeholder="••••••••"
+                                    class="w-full bg-[var(--vs-bg-panel)] hud-border rounded-[var(--vs-radius)] px-3 py-2 text-sm text-[var(--vs-text-title)] focus:border-rose-500/50 focus:outline-none transition-colors" />
+                            </div>
+                            <button
+                                class="w-full py-2 bg-rose-500/20 border border-rose-500/30 text-sm text-rose-400 font-extralight rounded-[var(--vs-radius)] hover:bg-rose-500/30 transition-all">
+                                Update Security Credentials
+                            </button>
+                        </div>
+                        <div
+                            class="p-4 bg-[var(--vs-bg-deep)] hud-border rounded-[var(--vs-radius)] flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <i class="icon i-shield h-4 w-4 text-emerald-500"></i>
+                                <span class="text-sm text-[var(--vs-text-body)]">Two-Factor Authentication</span>
+                            </div>
+                            <span class="text-sm text-emerald-500 font-extralight uppercase">Active</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Role Metrics -->
+            <section class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] hud-border">
+                <h3
+                    class="text-sm font-extralight text-[var(--vs-text-muted)] uppercase flex items-center space-x-2 mb-4">
+                    <i class="icon i-chart h-4 w-4"></i>
+                    <span id="metrics-title">Performance Metrics</span>
+                </h3>
+                <div id="metrics-grid" class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <!-- Dynamic Metrics -->
+                </div>
+            </section>
+
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             TAB: WORKFLOW
+             ═══════════════════════════════════════════════════════════ -->
+        <div id="panel-workflow" class="passport-panel hidden space-y-6">
+
+            <!-- Workflow Stats Bar -->
+            <div class="flex items-center space-x-6">
+                <div
+                    class="flex items-center space-x-2 px-4 py-2 bg-[var(--vs-bg-card)] hud-border rounded-[var(--vs-radius)]">
+                    <i class="icon i-clipboard-check h-4 w-4 text-[var(--vs-accent)]"></i>
+                    <span class="text-sm text-[var(--vs-text-muted)]">Total:</span>
+                    <span id="wf-total" class="text-sm text-[var(--vs-text-title)] font-extralight">0</span>
+                </div>
+                <div
+                    class="flex items-center space-x-2 px-4 py-2 bg-[var(--vs-bg-card)] hud-border rounded-[var(--vs-radius)]">
+                    <i class="icon i-check h-4 w-4 text-emerald-400"></i>
+                    <span class="text-sm text-[var(--vs-text-muted)]">Verified:</span>
+                    <span id="wf-verified" class="text-sm text-emerald-400 font-extralight">0</span>
+                </div>
+                <div
+                    class="flex items-center space-x-2 px-4 py-2 bg-[var(--vs-bg-card)] hud-border rounded-[var(--vs-radius)]">
+                    <i class="icon i-clock h-4 w-4 text-amber-400"></i>
+                    <span class="text-sm text-[var(--vs-text-muted)]">Pending:</span>
+                    <span id="wf-pending" class="text-sm text-amber-400 font-extralight">0</span>
+                </div>
+            </div>
+
+            <!-- Category Filters (5 Unified Categories) -->
+            <div class="passport-filters">
+                <button class="passport-filter active" data-cat="all">All</button>
+                <button class="passport-filter" data-cat="position">
+                    <i class="icon i-office h-4 w-4"></i>
+                    <span>Position</span>
+                </button>
+                <button class="passport-filter" data-cat="achievement">
+                    <i class="icon i-star h-4 w-4"></i>
+                    <span>Achievement</span>
+                </button>
+                <button class="passport-filter" data-cat="development">
+                    <i class="icon i-chart h-4 w-4"></i>
+                    <span>Development</span>
+                </button>
+                <button class="passport-filter" data-cat="award">
+                    <i class="icon i-academic h-4 w-4"></i>
+                    <span>Award</span>
+                </button>
+                <button class="passport-filter" data-cat="transfer">
+                    <i class="icon i-globe h-4 w-4"></i>
+                    <span>Transfer</span>
+                </button>
+            </div>
+
+            <!-- Timeline -->
+            <div id="workflow-timeline" class="space-y-3">
+                <!-- Dynamic entries rendered by passport.js -->
+            </div>
+
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             TAB: SETTINGS
+             ═══════════════════════════════════════════════════════════ -->
+        <div id="panel-settings" class="passport-panel hidden space-y-6">
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                <!-- Theme & Display -->
+                <section class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] hud-border">
+                    <h3
+                        class="text-sm font-extralight text-[var(--vs-text-muted)] uppercase flex items-center space-x-2 mb-4">
+                        <i class="icon i-cog h-4 w-4"></i>
+                        <span>Theme & Display</span>
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-[var(--vs-text-body)]">Dark Mode</span>
+                            <div class="settings-toggle active"></div>
+                        </div>
+                        <div class="border-t border-[var(--vs-border)] opacity-50 my-0" style="border-width: 1px;">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-[var(--vs-text-body)]">Large Text</span>
+                            <div class="settings-toggle"></div>
+                        </div>
+                        <div class="border-t border-[var(--vs-border)] opacity-50 my-0" style="border-width: 1px;">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-[var(--vs-text-body)]">Animations</span>
+                            <div class="settings-toggle active"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Notifications -->
+                <section class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] hud-border">
+                    <h3
+                        class="text-sm font-extralight text-[var(--vs-text-muted)] uppercase flex items-center space-x-2 mb-4">
+                        <i class="icon i-bell h-4 w-4"></i>
+                        <span>Notifications</span>
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-[var(--vs-text-body)]">Verification Updates</span>
+                            <div class="settings-toggle active"></div>
+                        </div>
+                        <div class="border-t border-[var(--vs-border)] opacity-50 my-0" style="border-width: 1px;">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-[var(--vs-text-body)]">System Announcements</span>
+                            <div class="settings-toggle active"></div>
+                        </div>
+                        <div class="border-t border-[var(--vs-border)] opacity-50 my-0" style="border-width: 1px;">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-[var(--vs-text-body)]">Chat Messages</span>
+                            <div class="settings-toggle active"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Privacy Level -->
+            <section class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] hud-border">
+                <h3
+                    class="text-sm font-extralight text-[var(--vs-text-muted)] uppercase flex items-center space-x-2 mb-4">
+                    <i class="icon i-shield h-4 w-4"></i>
+                    <span>Passport Privacy</span>
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="privacy-option" data-level="public">
+                        <div class="flex items-center space-x-3 mb-2">
+                            <i class="icon i-eye h-4 w-4 text-[var(--vs-accent)]"></i>
+                            <span class="text-sm text-[var(--vs-text-title)] font-extralight">Public</span>
+                        </div>
+                        <p class="text-sm text-[var(--vs-text-muted)]">Visible to all IDLPMS users</p>
+                    </div>
+                    <div class="privacy-option selected" data-level="org">
+                        <div class="flex items-center space-x-3 mb-2">
+                            <i class="icon i-building h-4 w-4 text-amber-400"></i>
+                            <span class="text-sm text-[var(--vs-text-title)] font-extralight">Organization Only</span>
+                        </div>
+                        <p class="text-sm text-[var(--vs-text-muted)]">Visible to same school/district</p>
+                    </div>
+                    <div class="privacy-option" data-level="private">
+                        <div class="flex items-center space-x-3 mb-2">
+                            <i class="icon i-lock h-4 w-4 text-rose-400"></i>
+                            <span class="text-sm text-[var(--vs-text-title)] font-extralight">Private</span>
+                        </div>
+                        <p class="text-sm text-[var(--vs-text-muted)]">Only you + supervisors</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Active Role -->
+            <section class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] hud-border">
+                <h3
+                    class="text-sm font-extralight text-[var(--vs-text-muted)] uppercase flex items-center space-x-2 mb-4">
+                    <i class="icon i-users h-4 w-4"></i>
+                    <span>Active Role</span>
+                </h3>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-sm text-[var(--vs-text-body)]">Current active role:</span>
+                        <span id="settings-active-role"
+                            class="px-3 py-1 bg-[var(--vs-bg-deep)] text-[var(--vs-accent)] text-sm font-extralight rounded-[var(--vs-radius)]"
+                            style="border: 1px solid rgba(34, 211, 238, 0.3)">
+                            TEACHER
+                        </span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Danger Zone -->
+            <section class="p-6 rounded-[var(--vs-radius)] border border-rose-500/30 bg-rose-500/5">
+                <h3 class="text-sm font-extralight text-rose-400 uppercase mb-4">Danger Zone</h3>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-[var(--vs-text-title)]">Sign Out from all devices</p>
+                        <p class="text-sm text-[var(--vs-text-muted)]">Disconnect all active sessions immediately.
+                        </p>
+                    </div>
+                    <button onclick="window.parent.logout()"
+                        class="px-4 py-2 border border-rose-500/50 text-sm text-rose-400 hover:bg-rose-500/20 rounded-[var(--vs-radius)] transition-colors">
+                        Sign Out
+                    </button>
+                </div>
+            </section>
+
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/data.js"></script>
+    <script src="../assets/js/passport.js"></script>
+</body>
+
+</html>
