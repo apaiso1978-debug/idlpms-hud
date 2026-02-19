@@ -9,7 +9,7 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 /* ─── Parent (Group Header) ─── */
@@ -18,7 +18,7 @@
     align-items: center;
     width: 100%;
     text-align: left;
-    padding: 6px 12px;
+    padding: 4px 12px;
     border-radius: var(--vs-radius);
     border: none;
     background: transparent;
@@ -41,6 +41,7 @@
 
 .timeline-parent-item span {
     font-size: 13px;
+    /* Standard HUD 14px */
     font-weight: 300;
     color: var(--vs-accent);
     flex: 1;
@@ -73,13 +74,17 @@
 /* ─── Children Container (Timeline Rail) ─── */
 .timeline-children-container {
     position: relative;
-    margin-left: 19px;
+    margin-left: 20px;
+    /* 4px Grid */
     padding-left: 20px;
+    /* 4px Grid */
     padding-top: 4px;
-    padding-bottom: 2px;
+    padding-bottom: 4px;
+    /* 4px Grid */
     display: flex;
     flex-direction: column;
-    gap: 1px;
+    gap: 4px;
+    /* 4px Grid */
 
     /* Collapse animation — use clip-path instead of overflow:hidden
        so nodes sticking out left are NOT clipped */
@@ -121,7 +126,7 @@
     align-items: center;
     width: 100%;
     text-align: left;
-    padding: 7px 12px;
+    padding: 4px 12px;
     border-radius: var(--vs-radius);
     cursor: pointer;
     transition: all 0.15s ease;
@@ -173,13 +178,11 @@
 .timeline-child-item:hover .timeline-node {
     background: rgba(250, 250, 250, 0.35);
     border-color: rgba(250, 250, 250, 0.6);
-    box-shadow: 0 0 6px rgba(250, 250, 250, 0.15);
 }
 
 .timeline-child-item.active .timeline-node {
     background: var(--vs-accent);
     border-color: var(--vs-accent);
-    box-shadow: 0 0 10px rgba(var(--vs-accent-rgb), 0.4);
 }
 
 /* ─── Child item text & icon ─── */
@@ -197,9 +200,9 @@
 }
 
 .timeline-child-item span {
-    font-size: 0.875rem;
-    /* text-sm — matches vs-menu-item standard */
-    font-weight: 200;
+    font-size: 13px;
+    /* Standard 14px — matches vs-menu-item standard */
+    font-weight: 300;
     /* font-extralight — matches vs-menu-item standard */
     color: var(--vs-text-title);
     transition: color 0.15s ease;

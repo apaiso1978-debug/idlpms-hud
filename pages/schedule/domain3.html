@@ -18,33 +18,33 @@
 
         <!-- Header -->
         <div class="flex items-center justify-between">
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2">
                 <span class="hud-badge-micro border-[#fbbf24]/30 text-[#fbbf24]">Domain 3</span>
-                <h1 class="text-xl font-extralight text-[var(--vs-text-title)] uppercase">
+                <h1 class="text-xl font-light text-[var(--vs-text-title)] uppercase">
                     งานพัฒนาคุณภาพฯ — School Quality</h1>
             </div>
         </div>
 
         <!-- Description -->
         <div class="dna-zone p-4 border-[#fbbf24]/15">
-            <p class="text-sm text-[var(--vs-text-muted)]">
+            <p class="text-[13px] text-[var(--vs-text-muted)]">
                 โครงการตลอดปีการศึกษา เช่น เปิดบ้านวิชาการ ค่ายคุณธรรม — ไม่อยู่ในตารางรายสัปดาห์ แต่นับชั่วโมง กคศ.
             </p>
-            <p class="text-sm text-[var(--vs-text-muted)] mt-1 opacity-45">ครูเท่านั้น (ภาพรวมปี)</p>
+            <p class="text-[13px] text-[var(--vs-text-muted)] mt-1 opacity-45">ครูเท่านั้น (ภาพรวมปี)</p>
         </div>
 
         <!-- Project List -->
         <div class="dna-zone p-6 border-[#fbbf24]/15 bg-[rgba(var(--vs-bg-deep-rgb),0.2)]">
-            <div class="flex items-center gap-3 mb-4">
+            <div class="flex items-center gap-2 mb-4">
                 <span class="hud-badge-micro border-[#fbbf24]/30 text-[#fbbf24]">Projects</span>
-                <h2 class="text-lg font-extralight text-[var(--vs-text-title)] uppercase">
+                <h2 class="text-lg font-light text-[var(--vs-text-title)] uppercase">
                     รายการโครงการพัฒนาคุณภาพ</h2>
             </div>
             <div id="d3-project-list" class="space-y-2">
                 <!-- Populated by renderDomain3Panel() -->
             </div>
             <button onclick="addDomain3Project()"
-                class="mt-4 flex items-center gap-1 px-6 py-2.5 text-sm text-[#fbbf24] border border-[#fbbf24]/20 rounded-[var(--vs-radius)] hover:bg-[#fbbf24]/10 transition-all">
+                class="mt-4 flex items-center gap-1 px-6 py-2.5 text-[13px] text-[#fbbf24] border border-[#fbbf24]/20 rounded-[var(--vs-radius)] hover:bg-[#fbbf24]/10 transition-all">
                 <span>+ เพิ่มโครงการ</span>
             </button>
         </div>
@@ -84,23 +84,23 @@
             if (!container) return;
             const projects = loadDomainInputs(3) || getDefaultDomain3();
 
-            let html = `<div class="grid grid-cols-[minmax(0,1fr)_80px_120px_36px] gap-3 text-sm text-[var(--vs-text-muted)] uppercase pb-1 border-b border-[rgba(63,63,70,0.5)]">
+            let html = `<div class="grid grid-cols-[minmax(0,1fr)_80px_120px_36px] gap-3 text-[13px] text-[var(--vs-text-muted)] uppercase pb-1 border-b border-[rgba(63,63,70,0.5)]">
                 <span>โครงการ</span><span class="text-center">ชม./ปี</span><span class="text-center">ภาคเรียน</span><span></span>
             </div>`;
 
             projects.forEach((p, idx) => {
                 html += `<div class="grid grid-cols-[minmax(0,1fr)_80px_120px_36px] gap-3 items-center py-2 border-b border-[rgba(63,63,70,0.1)]">
                     <input type="text" value="${p.name}" onchange="updateD3Project(${idx}, 'name', this.value)"
-                        class="bg-[rgba(255,255,255,0.03)] text-sm text-[var(--vs-text-body)] border border-[rgba(255,255,255,0.1)] rounded-[var(--vs-radius)] focus:border-[#fbbf24]/50 outline-none px-3 py-2" />
+                        class="bg-[rgba(255,255,255,0.03)] text-[13px] text-[var(--vs-text-body)] border border-[rgba(255,255,255,0.1)] rounded-[var(--vs-radius)] focus:border-[#fbbf24]/50 outline-none px-3 py-2" />
                     <input type="number" value="${p.hoursPerYear}" min="1" max="100" onchange="updateD3Project(${idx}, 'hoursPerYear', parseInt(this.value))"
-                        class="bg-[var(--vs-bg-deep)] text-sm text-[var(--vs-text-body)] border border-[rgba(var(--vs-border-rgb),0.3)] rounded-[var(--vs-radius)] px-3 py-2 outline-none text-center w-full" />
+                        class="bg-[var(--vs-bg-deep)] text-[13px] text-[var(--vs-text-body)] border border-[rgba(var(--vs-border-rgb),0.3)] rounded-[var(--vs-radius)] px-3 py-2 outline-none text-center w-full" />
                     <select onchange="updateD3Project(${idx}, 'semester', parseInt(this.value))"
-                        class="bg-[var(--vs-bg-deep)] text-sm text-[var(--vs-text-body)] border border-[rgba(var(--vs-border-rgb),0.3)] rounded-[var(--vs-radius)] px-3 py-2 outline-none text-center">
+                        class="bg-[var(--vs-bg-deep)] text-[13px] text-[var(--vs-text-body)] border border-[rgba(var(--vs-border-rgb),0.3)] rounded-[var(--vs-radius)] px-3 py-2 outline-none text-center">
                         <option value="1" ${p.semester === 1 ? 'selected' : ''}>ภาคเรียนที่ 1</option>
                         <option value="2" ${p.semester === 2 ? 'selected' : ''}>ภาคเรียนที่ 2</option>
                         <option value="0" ${p.semester === 0 ? 'selected' : ''}>ตลอดปี</option>
                     </select>
-                    <button onclick="removeD3Project(${idx})" class="text-[var(--vs-danger)] hover:bg-[rgba(var(--vs-danger-rgb),0.1)] rounded-[var(--vs-radius)] p-1 text-sm">✕</button>
+                    <button onclick="removeD3Project(${idx})" class="text-[var(--vs-danger)] hover:bg-[rgba(var(--vs-danger-rgb),0.1)] rounded-[var(--vs-radius)] p-1 text-[13px]">✕</button>
                 </div>`;
             });
             container.innerHTML = html;

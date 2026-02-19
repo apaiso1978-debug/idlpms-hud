@@ -53,7 +53,10 @@ window.HUD_NOTIFY = {
 
         console.log("HUD: Running Smart Logic for", user.role);
 
-        // Example Role-Specific Intelligence
+        // ── Transfer Escalation Alerts (Unity: shared logic) ──
+        this._checkTransferAlerts(user);
+
+        // ── Role-Specific Notifications ──
         setTimeout(() => {
             if (user.role === 'STUDENT') {
                 this.toast('การสื่อสาร', 'คุณได้รับข้อความใหม่จากเจ้าหน้าที่ (FACULTY_ID_042)');
@@ -65,8 +68,14 @@ window.HUD_NOTIFY = {
                 this.toast('ประกาศสำคัญ', 'กำหนดการประชุมผู้ปกครอง: วันศุกร์นี้ (Q1)', 'success');
             }
             else if (user.role === 'TEACHER') {
-                this.toast('ระบบวิชาการ', 'มี 5 รายงานผลการเรียนที่รอการอนุมัติ');
-                this.setBadge('explorer', true);
+                this.toast('คำสั่งจากผู้บริหาร', 'ผอ. มอบหมาย: สรุปผลการเรียนประจำเดือน กุมภาพันธ์', 'danger', 10000);
+                setTimeout(() => {
+                    this.toast('งานรอตรวจ', 'มีงานนักเรียน 2 ชิ้นรอการตรวจ (REFLECT + MASTER)', 'accent');
+                    this.setBadge('explorer', true);
+                }, 2000);
+                setTimeout(() => {
+                    this.toast('AI แจ้งเตือน', 'พบคำตอบที่ AI ให้คะแนนต่ำ (55%) ควรตรวจด้วยตนเอง', 'warning');
+                }, 5000);
             }
             else if (user.role === 'SCHOOL_DIR') {
                 this.toast('แจ้งเตือนสถานศึกษา', 'พบความผิดปกติของการมาเรียน: ลดลง 5% จากเกณฑ์');
@@ -82,6 +91,56 @@ window.HUD_NOTIFY = {
                 this.setBadge('explorer', true);
             }
         }, 3000);
+    },
+
+    /**
+     * Transfer Escalation Alert — Unity pattern for all authority levels
+     * ครู: เห็นเฉพาะนักเรียนในห้องตัวเอง
+     * ผอ.: เห็นทั้งโรงเรียน
+     * ESA/OBEC: เห็นเมื่อ escalate ถึงระดับ
+     */
+    _checkTransferAlerts(user) {
+        try {
+            const ds = window.getApp?.()?.data;
+            if (!ds || typeof ds.getTransferAlerts !== 'function') return;
+
+            const schoolId = user.schoolId || null;
+            const alerts = ds.getTransferAlerts(schoolId);
+            if (!alerts.length) return;
+
+            // Filter by role scope
+            let scopedAlerts = alerts;
+            if (user.role === 'TEACHER' && user.homeroomClass) {
+                scopedAlerts = alerts.filter(a => a.classId === user.homeroomClass);
+            } else if (user.role === 'ESA_DIR') {
+                scopedAlerts = alerts.filter(a => ['ESA', 'OBEC'].includes(a.alertLevel));
+            } else if (user.role === 'OBEC' || user.role === 'MOE') {
+                scopedAlerts = alerts.filter(a => a.alertLevel === 'OBEC');
+            }
+
+            if (!scopedAlerts.length) return;
+
+            // Group by severity
+            const critical = scopedAlerts.filter(a => a.alertStatus === 'DROPOUT');
+            const atRisk = scopedAlerts.filter(a => a.alertStatus === 'CRITICAL');
+            const pending = scopedAlerts.filter(a => a.alertStatus === 'AT_RISK');
+
+            setTimeout(() => {
+                if (critical.length) {
+                    this.toast('🚨 เด็กหลุดระบบ', `พบ ${critical.length} คน เกิน 90 วัน — ต้องรายงานหน่วยเหนือ`, 'danger', 15000);
+                }
+                if (atRisk.length) {
+                    this.toast('🔴 วิกฤต', `พบ ${atRisk.length} คน เกิน 60 วัน — แจ้ง สพป. แล้ว`, 'danger', 10000);
+                }
+                if (pending.length) {
+                    this.toast('⚠️ ติดตามนักเรียนย้าย', `พบ ${pending.length} คน เกิน 30 วัน ยังไม่มีโรงเรียนรับ`, 'warning', 8000);
+                }
+                this.setBadge('explorer', true);
+            }, 1500);
+
+        } catch (e) {
+            console.warn('Transfer alert check failed:', e.message);
+        }
     }
 };
 

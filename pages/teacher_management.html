@@ -36,7 +36,7 @@
             -webkit-appearance: none;
             width: 14px;
             height: 14px;
-            border: 1px solid var(--vs-border);
+            border: 1px solid rgba(63, 63, 70, 0.5);
             border-radius: 3px;
             background: var(--vs-bg-deep);
             cursor: pointer;
@@ -45,7 +45,9 @@
         }
 
         input[type="checkbox"]:checked {
-            background: var(--vs-accent);
+            background: rgba(34, 211, 238, 0.1);
+            color: var(--vs-accent);
+            border: 1px solid rgba(34, 211, 238, 0.3);
             border-color: var(--vs-accent);
         }
 
@@ -68,7 +70,7 @@
     </style>
 </head>
 
-<body class="p-6 bg-[var(--vs-bg-main)] text-[var(--vs-text-body)] font-extralight Thai-Rule">
+<body class="p-6 bg-[var(--vs-bg-main)] text-[var(--vs-text-body)] font-light Thai-Rule">
     <div class="max-w-7xl mx-auto space-y-6">
         <!-- Header Section -->
         <header class="flex items-center justify-between mb-8">
@@ -78,9 +80,9 @@
                     <i class="icon i-users w-6 h-6 text-[var(--vs-accent)]"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl text-[var(--vs-text-title)] font-extralight Thai-Rule">
+                    <h1 class="text-xl text-[var(--vs-text-title)] font-light Thai-Rule">
                         จัดการฐานข้อมูลบุคลากรและภาระงาน</h1>
-                    <p class="text-sm text-[var(--vs-text-muted)] Thai-Rule">
+                    <p class="text-[13px] text-[var(--vs-text-muted)] Thai-Rule">
                         เพิ่ม/ลบ รายชื่อบุคลากร และกำหนดวิชาที่สามารถสอนได้</p>
                 </div>
             </div>
@@ -95,12 +97,12 @@
 
         <!-- Main Card -->
         <div
-            class="bg-[var(--vs-bg-card)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] overflow-hidden shadow-2xl">
+            class="bg-[var(--vs-bg-card)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] overflow-hidden ">
             <div
                 class="p-4 border-b border-[var(--vs-border)] bg-[rgba(var(--vs-bg-deep-rgb),0.3)] flex items-center justify-between">
                 <div class="flex items-center space-x-2">
                     <div class="w-2 h-2 rounded-[3px] bg-[var(--vs-accent)] animate-pulse"></div>
-                    <span class="text-sm uppercase text-[var(--vs-text-muted)] font-extralight Thai-Rule">Personnel
+                    <span class="text-[13px] uppercase text-[var(--vs-text-muted)] font-light Thai-Rule">Personnel
                         Management & Assignment Matrix</span>
                 </div>
                 <div id="school-name-badge" class="hud-badge-micro border-[var(--vs-border)] opacity-60">
@@ -112,7 +114,7 @@
                 <div id="matrix-container" class="min-w-full">
                     <div class="p-20 text-center opacity-30">
                         <i class="icon i-refresh w-8 h-8 animate-spin mb-4"></i>
-                        <p class="Thai-Rule font-extralight italic">Synchronizing faculty data...</p>
+                        <p class="Thai-Rule font-light ">Synchronizing faculty data...</p>
                     </div>
                 </div>
             </div>
@@ -162,31 +164,31 @@
             const container = document.getElementById('matrix-container');
 
             let headerHtml = `
-                <th class="p-4 text-left font-extralight text-[var(--vs-text-muted)] w-[300px] min-w-[300px] sticky left-0 bg-[var(--vs-bg-deep)] z-10 border-b border-[var(--vs-border)]">ชื่อ-นามสกุล บุคลากร</th>
+                <th class="p-4 text-left font-light text-[var(--vs-text-muted)] w-[300px] min-w-[300px] sticky left-0 bg-[var(--vs-bg-deep)] z-10 border-b border-[var(--vs-border)]">ชื่อ-นามสกุล บุคลากร</th>
             `;
             subjects.forEach(s => {
                 const colorHex = s.color || 'var(--vs-border)';
                 headerHtml += `
-                    <th class="p-2 text-center font-extralight text-[11px] text-[var(--vs-text-muted)] min-w-[90px] border-b border-[var(--vs-border)]" 
-                        style="background: ${colorHex}08;">
+                    <th class="p-2 text-center font-light text-[13px] text-[var(--vs-text-muted)] min-w-[90px] border-b border-[var(--vs-border)]" 
+                        style="background: color-mix(in srgb, ${colorHex} 5%, transparent);">
                         <div class="truncate px-1" title="${s.name}">${s.name}</div>
-                        <div class="w-full h-0.5 mt-1" style="background: ${colorHex}40"></div>
+                        <div class="w-full h-0.5 mt-1" style="background: color-mix(in srgb, ${colorHex} 25%, transparent)"></div>
                     </th>
                 `;
             });
             headerHtml += `
-                <th class="p-2 text-center font-extralight text-[11px] text-[var(--vs-text-muted)] w-[65px] border-b border-[var(--vs-border)]">คาบ/วัน</th>
-                <th class="p-2 text-center font-extralight text-[11px] text-[var(--vs-text-muted)] w-[65px] border-b border-[var(--vs-border)]">คาบ/สัปดาห์</th>
-                <th class="p-2 text-center font-extralight text-[11px] text-[var(--vs-text-muted)] w-[60px] border-b border-[var(--vs-border)]">ลบ</th>
+                <th class="p-2 text-center font-light text-[13px] text-[var(--vs-text-muted)] w-[65px] border-b border-[var(--vs-border)]">คาบ/วัน</th>
+                <th class="p-2 text-center font-light text-[13px] text-[var(--vs-text-muted)] w-[65px] border-b border-[var(--vs-border)]">คาบ/สัปดาห์</th>
+                <th class="p-2 text-center font-light text-[13px] text-[var(--vs-text-muted)] w-[60px] border-b border-[var(--vs-border)]">ลบ</th>
             `;
 
             let bodyHtml = '';
             teachers.forEach((teacher, tIdx) => {
                 bodyHtml += `
                     <tr class="border-b border-[var(--vs-border)] hover:bg-[var(--vs-bg-card)] transition-colors group">
-                        <td class="p-4 text-[var(--vs-text-title)] font-extralight sticky left-0 bg-[var(--vs-bg-deep)] z-10 border-r border-[var(--vs-border)] shadow-r-xl min-w-[300px]">
+                        <td class="p-4 text-[var(--vs-text-title)] font-light sticky left-0 bg-[var(--vs-bg-deep)] z-10 border-r border-[var(--vs-border)] shadow-r-xl min-w-[300px]">
                             <input type="text" 
-                                class="bg-transparent border-none text-[14px] text-[var(--vs-text-title)] focus:ring-1 focus:ring-[var(--vs-accent)]/30 rounded px-2 py-1 w-full outline-none Thai-Rule"
+                                class="bg-transparent border-none text-[13px] text-[var(--vs-text-title)] focus:ring-1 focus:ring-[var(--vs-accent)]/30 rounded px-2 py-1 w-full outline-none Thai-Rule"
                                 value="${teacher.fullName || teacher.name || ''}"
                                 onchange="updateTeacherField('${teacher.id}', 'fullName', this.value)" />
                         </td>
@@ -207,13 +209,13 @@
                 bodyHtml += `
                     <td class="p-2 text-center">
                         <input type="number" 
-                            class="w-12 px-1 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-center text-sm text-[var(--vs-text-title)] font-extralight outline-none focus:border-[var(--vs-accent)]"
+                            class="w-12 px-1 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-center text-[13px] text-[var(--vs-text-title)] font-light outline-none focus:border-[var(--vs-accent)]"
                             value="${teacher.maxPeriodsPerDay || 6}"
                             onchange="updateTeacherField('${teacher.id}', 'maxPeriodsPerDay', parseInt(this.value))" />
                     </td>
                     <td class="p-2 text-center">
                         <input type="number"
-                            class="w-12 px-1 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-center text-sm text-[var(--vs-text-title)] font-extralight outline-none focus:border-[var(--vs-accent)]"
+                            class="w-12 px-1 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-center text-[13px] text-[var(--vs-text-title)] font-light outline-none focus:border-[var(--vs-accent)]"
                             value="${teacher.maxPeriodsPerWeek || 25}"
                             onchange="updateTeacherField('${teacher.id}', 'maxPeriodsPerWeek', parseInt(this.value))" />
                     </td>
@@ -227,7 +229,7 @@
             });
 
             container.innerHTML = `
-                <table class="w-full border-collapse text-sm font-extralight text-[var(--vs-text-body)]">
+                <table class="w-full border-collapse text-[13px] font-light text-[var(--vs-text-body)]">
                     <thead class="sticky top-0 z-20">
                         <tr class="bg-[var(--vs-bg-deep)]">${headerHtml}</tr>
                     </thead>

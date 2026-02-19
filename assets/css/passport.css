@@ -26,8 +26,8 @@
     gap: 8px;
     padding: 8px 16px;
     font-family: 'Sarabun', sans-serif;
-    font-size: 14px;
-    font-weight: 200;
+    font-size: 13px;
+    font-weight: 300;
     color: rgba(255, 255, 255, 0.45);
     background: transparent;
     border: 1px solid transparent;
@@ -82,8 +82,8 @@
     gap: 6px;
     padding: 6px 12px;
     font-family: 'Sarabun', sans-serif;
-    font-size: 14px;
-    font-weight: 200;
+    font-size: 13px;
+    font-weight: 300;
     color: rgba(255, 255, 255, 0.45);
     background: transparent;
     border: 1px solid var(--vs-border);
@@ -133,8 +133,8 @@
 .timeline-year {
     flex-shrink: 0;
     width: 48px;
-    font-size: 14px;
-    font-weight: 200;
+    font-size: 13px;
+    font-weight: 300;
     color: rgba(255, 255, 255, 0.45);
     text-align: center;
 }
@@ -145,14 +145,14 @@
 }
 
 .timeline-title {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 300;
     color: var(--vs-text-title);
 }
 
 .timeline-meta {
-    font-size: 14px;
-    font-weight: 200;
+    font-size: 13px;
+    font-weight: 300;
     color: rgba(255, 255, 255, 0.45);
     margin-top: 2px;
 }
@@ -169,8 +169,8 @@
     align-items: center;
     gap: 4px;
     padding: 2px 8px;
-    font-size: 14px;
-    font-weight: 200;
+    font-size: 13px;
+    font-weight: 300;
     border-radius: var(--vs-radius);
 }
 

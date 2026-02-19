@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบใบลาบุคลากร | IDLPMS</title>
+    <link rel="stylesheet" href="../assets/css/theme.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../assets/js/LeaveService.js"></script>
+    <style>
+        .leave-card {
+            background: var(--vs-bg-card);
+            border: 1px solid rgba(63, 63, 70, 0.5);
+            border-radius: var(--vs-radius);
+            padding: 16px;
+            transition: all 0.25s ease;
+        }
+
+        .leave-card:hover {
+            border-color: var(--vs-accent);
+            transform: translateY(-1px);
+        }
+
+        .leave-card.active {
+            border-color: var(--vs-accent);
+            box-shadow: 0 0 0 1px var(--vs-accent), 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .balance-bar {
+            height: 3px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+        }
+
+        .balance-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.6s ease;
+        }
+
+        .guide-panel {
+            background: var(--vs-bg-deep);
+            border: 1px solid rgba(63, 63, 70, 0.5);
+            border-radius: var(--vs-radius);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.35s ease;
+        }
+
+        .guide-panel.open {
+            max-height: 600px;
+            padding: 16px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 10px;
+            border-radius: var(--vs-radius);
+            font-size: 13px;
+            font-weight: 300;
+        }
+
+        .history-row {
+            background: var(--vs-bg-card);
+            border: 1px solid rgba(63, 63, 70, 0.5);
+            border-radius: var(--vs-radius);
+            padding: 12px 16px;
+            transition: all 0.2s;
+        }
+
+        .history-row:hover {
+            border-color: var(--vs-accent);
+        }
+
+        .form-input {
+            background: var(--vs-bg-deep);
+            border: none;
+            border-radius: var(--vs-radius);
+            color: var(--vs-text-body);
+            font-size: 13px;
+            font-weight: 300;
+            padding: 8px 12px;
+            min-height: 36px;
+            width: 100%;
+            outline: none;
+            transition: all 0.2s;
+            color-scheme: dark;
+        }
+
+        .form-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 1px var(--vs-accent);
+        }
+
+        select.form-input {
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 20 20' fill='%2367e8f9'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 32px;
+        }
+
+        .quickout-card {
+            background: var(--vs-bg-card);
+            border: 1px solid rgba(63, 63, 70, 0.5);
+            border-radius: var(--vs-radius);
+            padding: 16px;
+            transition: all 0.25s ease;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--vs-success);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            animation: pulse-glow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5);
+            }
+
+            50% {
+                box-shadow: 0 0 0 6px rgba(52, 211, 153, 0);
+            }
+        }
+
+        .btn-primary {
+            background: rgba(34, 211, 238, 0.1);
+            color: var(--vs-accent);
+            font-weight: 300;
+            font-size: 13px;
+            padding: 8px 20px;
+            border-radius: var(--vs-radius);
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: rgba(34, 211, 238, 0.15);
+            border-color: rgba(34, 211, 238, 0.5);
+            box-shadow: 0 0 8px rgba(34, 211, 238, 0.1);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--vs-text-muted);
+            font-size: 13px;
+            padding: 8px 16px;
+            border-radius: var(--vs-radius);
+            border: 1px solid rgba(63, 63, 70, 0.5);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--vs-accent);
+            color: var(--vs-accent);
+        }
+
+        .tab-btn {
+            padding: 8px 16px;
+            font-size: 13px;
+            color: var(--vs-text-muted);
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+        }
+
+        .tab-btn.active {
+            color: var(--vs-accent);
+            border-bottom-color: var(--vs-accent);
+        }
+    </style>
+</head>
+
+<body class="p-6 Thai-Rule bg-transparent">
+    <!-- HEADER -->
+    <div class="mb-6">
+        <h2 class="text-[13px] text-[var(--vs-text-muted)] uppercase mb-1 flex items-center gap-2">
+            <div class="w-1.5 h-4 bg-[var(--vs-accent)]"></div>
+            Personnel Leave Management
+        </h2>
+        <p class="text-[13px] text-[var(--vs-text-muted)] opacity-60 ml-4">
+            ระบบใบลาบุคลากร — อ้างอิงระเบียบสำนักนายกรัฐมนตรี ว่าด้วยการลาของข้าราชการ พ.ศ. 2555
+        </p>
+    </div>
+
+    <!-- TAB NAVIGATION -->
+    <div class="flex gap-1 border-b border-[var(--vs-border)] mb-6 flex-wrap">
+        <button class="tab-btn active" onclick="switchTab('balance')">สิทธิ์ลาคงเหลือ</button>
+        <button class="tab-btn" onclick="switchTab('request')">ยื่นใบลา</button>
+        <button class="tab-btn" onclick="switchTab('quickout')">ออกธุระชั่วคราว</button>
+        <button class="tab-btn" onclick="switchTab('history')">ประวัติการลา</button>
+        <button class="tab-btn" onclick="switchTab('guide')">คู่มือการลา</button>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- TAB 1: สิทธิ์ลาคงเหลือ (Leave Balance Dashboard)     -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div id="tab-balance" class="tab-content">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="balance-cards">
+            <!-- Populated by JS -->
+        </div>
+
+        <!-- Quick Alert Banner -->
+        <div id="balance-alert" class="mt-4 p-3 rounded-[3px] hidden">
+            <!-- Shows warning if any leave type is running low -->
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- TAB 2: ยื่นใบลา (Leave Request Form)                  -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div id="tab-request" class="tab-content hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Form (2/3) -->
+            <div class="lg:col-span-2 space-y-4">
+                <div class="leave-card">
+                    <h3 class="text-[13px] font-light text-white mb-4 flex items-center gap-2">
+                        <i class="icon i-document-plus w-4 h-4"></i>
+                        แบบฟอร์มยื่นใบลา
+                    </h3>
+                    <div class="space-y-4">
+                        <!-- Leave Type -->
+                        <div>
+                            <label class="text-[13px] text-[var(--vs-text-muted)] block mb-1">ประเภทการลา</label>
+                            <select id="leave-type" class="form-input" onchange="onLeaveTypeChange()">
+                                <option value="">— เลือกประเภทการลา —</option>
+                            </select>
+                        </div>
+
+                        <!-- Inline Guide (appears when type selected) -->
+                        <div id="inline-guide" class="guide-panel">
+                            <!-- Populated by JS -->
+                        </div>
+
+                        <!-- Date Range -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[13px] text-[var(--vs-text-muted)] block mb-1">วันที่เริ่มลา</label>
+                                <input type="date" id="leave-start" class="form-input" onchange="calcDays()">
+                            </div>
+                            <div>
+                                <label class="text-[13px] text-[var(--vs-text-muted)] block mb-1">วันที่สิ้นสุด</label>
+                                <input type="date" id="leave-end" class="form-input" onchange="calcDays()">
+                            </div>
+                        </div>
+
+                        <!-- Day Count Display -->
+                        <div id="day-count" class="text-[13px] text-[var(--vs-accent)] hidden">
+                            <i class="icon i-information-circle w-4 h-4 inline-block align-middle mr-1.5"></i>
+                            <span id="day-count-text"></span>
+                        </div>
+
+                        <!-- Remaining Balance Warning -->
+                        <div id="balance-warning"
+                            class="text-[13px] bg-yellow-500/10 border border-yellow-500/30 p-3 rounded-[3px] hidden">
+                            <i
+                                class="icon i-exclamation-triangle w-4 h-4 inline-block align-middle mr-1.5 text-yellow-400"></i>
+                            <span id="balance-warning-text" class="text-yellow-200"></span>
+                        </div>
+
+                        <!-- Reason -->
+                        <div>
+                            <label class="text-[13px] text-[var(--vs-text-muted)] block mb-1">เหตุผลการลา</label>
+                            <textarea id="leave-reason" class="form-input" rows="3"
+                                placeholder="ระบุเหตุผลการลา..."></textarea>
+                        </div>
+
+                        <!-- Attachment -->
+                        <div>
+                            <label class="text-[13px] text-[var(--vs-text-muted)] block mb-1">เอกสารแนบ (ถ้ามี)</label>
+                            <input type="file" id="leave-attachment" class="form-input" accept=".pdf,.jpg,.png">
+                            <div id="required-docs" class="text-[13px] text-[var(--vs-text-muted)] mt-1 hidden">
+                                <i class="icon i-information-circle w-3 h-3 inline-block align-middle mr-1.5"></i>
+                                <span id="required-docs-text"></span>
+                            </div>
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="flex items-center gap-2 pt-2">
+                            <button id="submit-btn" class="btn-primary" onclick="submitLeave()" disabled>
+                                ยื่นใบลา
+                            </button>
+                            <button class="btn-outline" onclick="resetForm()">ล้างฟอร์ม</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar: Current Balance (1/3) -->
+            <div class="space-y-4">
+                <div class="leave-card">
+                    <h3 class="text-[13px] font-light text-white mb-3 flex items-center gap-2">
+                        <i class="icon i-chart w-4 h-4"></i>
+                        สิทธิ์ลาคงเหลือ
+                    </h3>
+                    <div id="sidebar-balance" class="space-y-3">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Recent requests -->
+                <div class="leave-card">
+                    <h3 class="text-[13px] font-light text-white mb-3 flex items-center gap-2">
+                        <i class="icon i-clock w-4 h-4"></i>
+                        สถานะล่าสุด
+                    </h3>
+                    <div id="sidebar-recent" class="space-y-2">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- TAB 3: ประวัติการลา (Leave History)                   -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div id="tab-history" class="tab-content hidden">
+        <div class="space-y-3" id="history-list">
+            <!-- Populated by JS -->
+        </div>
+        <div id="history-empty" class="text-center text-[13px] text-[var(--vs-text-muted)] py-12 hidden">
+            ยังไม่มีประวัติการลา
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- TAB: ออกธุระชั่วคราว (Quick Out)                      -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div id="tab-quickout" class="tab-content hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Quick Out Form (2/3) -->
+            <div class="lg:col-span-2 space-y-4">
+                <!-- Active Out Banner -->
+                <div id="qo-active" class="hidden">
+                    <div class="quickout-card border-[var(--vs-success)] bg-[rgba(34,197,94,0.05)]">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <div class="pulse-dot"></div>
+                                <div>
+                                    <div class="text-[13px] text-[var(--vs-success)] font-light">กำลังออกธุระ</div>
+                                    <div id="qo-active-detail" class="text-[13px] text-[var(--vs-text-muted)]"></div>
+                                </div>
+                            </div>
+                            <button class="btn-primary" onclick="quickOutReturn()"
+                                style="background: rgba(34,197,94,0.1); color: var(--vs-success); border: 1px solid rgba(34,197,94,0.3);">กลับถึงแล้ว</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Out Form -->
+                <div id="qo-form-section" class="quickout-card">
+                    <h3 class="text-[13px] font-light text-white mb-4 flex items-center gap-2">
+                        <i class="icon i-lightning w-4 h-4"></i>
+                        แจ้งออกธุระชั่วคราว
+                    </h3>
+                    <p class="text-[13px] text-[var(--vs-text-muted)] mb-4 opacity-70">
+                        สำหรับออกไปทำธุระเล็กน้อย 2-3 ชั่วโมง เช่น ไปธนาคาร ไปหาหมอ ส่งเอกสาร — ไม่นับเป็นวันลาราชการ
+                        แต่เก็บสถิติเพื่อประกอบเป็นหลักฐาน
+                    </p>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[13px] text-[var(--vs-text-muted)] block mb-1">ประเภทธุระ</label>
+                            <select id="qo-reason" class="form-input">
+                                <option value="">— เลือก —</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[13px] text-[var(--vs-text-muted)] block mb-1">รายละเอียด</label>
+                            <input type="text" id="qo-detail" class="form-input"
+                                placeholder="เช่น โอนเงินที่ธนาคารกรุงไทย">
+                        </div>
+                        <button id="qo-submit" class="btn-primary" onclick="quickOutStart()" disabled>
+                            บันทึกเวลาออก
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Out History -->
+                <div class="quickout-card">
+                    <h3 class="text-[13px] font-light text-white mb-3 flex items-center gap-2">
+                        <i class="icon i-clock w-4 h-4"></i>
+                        ประวัติออกธุระ
+                    </h3>
+                    <div id="qo-history" class="space-y-2">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Out Stats (1/3) -->
+            <div class="space-y-4">
+                <div class="quickout-card">
+                    <h3 class="text-[13px] font-light text-white mb-3 flex items-center gap-2">
+                        <i class="icon i-chart w-4 h-4"></i>
+                        สถิติประจำเดือน
+                    </h3>
+                    <div id="qo-stats" class="space-y-3"></div>
+                </div>
+                <div class="quickout-card border-[rgba(234,179,8,0.3)] bg-[rgba(234,179,8,0.05)]">
+                    <div class="text-[13px] text-[var(--vs-warning)] flex items-start gap-2">
+                        <i class="icon i-information-circle w-4 h-4 mt-0.5 flex-shrink-0"
+                            style="background-color: var(--vs-warning)"></i>
+                        <span>ข้อมูลนี้จัดเก็บเพื่อประกอบการประเมินเงินเดือนและการพิจารณาความดีความชอบ
+                            ไม่หักสิทธิ์ลาราชการ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- TAB 4: คู่มือการลา (Leave Guide)                      -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div id="tab-guide" class="tab-content hidden">
+        <div class="space-y-4" id="guide-list">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- SUCCESS MODAL                                          -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div id="success-modal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 hidden">
+        <div class="leave-card max-w-sm text-center">
+            <div class="w-12 h-12 mx-auto mb-3 rounded-[3px] bg-[rgba(34,197,94,0.1)] flex items-center justify-center">
+                <i class="icon i-check-circle w-6 h-6 text-[var(--vs-success)]"
+                    style="background-color: var(--vs-success)"></i>
+            </div>
+            <h3 class="text-white font-light mb-1">ยื่นใบลาสำเร็จ</h3>
+            <p class="text-[13px] text-[var(--vs-text-muted)] mb-1" id="modal-leave-id"></p>
+            <p class="text-[13px] text-[var(--vs-warning)] mb-4">สถานะ: รออนุมัติจาก ผอ.</p>
+            <button class="btn-primary" onclick="closeModal()">ตกลง</button>
+        </div>
+    </div>
+
+    <script>
+        // ─── State ──────────────────────────────────────────────
+        const CURRENT_TEACHER = 'TEA_WORACHAI'; // from session
+        let currentTab = 'balance';
+
+        // ─── Init ───────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof LeaveService === 'undefined') return;
+            LeaveService.init();
+            populateLeaveTypes();
+            renderBalanceTab();
+            renderSidebarBalance();
+            renderSidebarRecent();
+            renderHistoryTab();
+            renderGuideTab();
+            initQuickOut();
+        });
+
+        // ─── Tab Switching ──────────────────────────────────────
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tab).classList.remove('hidden');
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // ─── Balance Tab ────────────────────────────────────────
+        function renderBalanceTab() {
+            const balance = LeaveService.getLeaveBalance(CURRENT_TEACHER);
+            const container = document.getElementById('balance-cards');
+            let html = '';
+            let warnings = [];
+
+            for (const [code, data] of Object.entries(balance)) {
+                const pct = Math.max(0, (data.remaining / data.maxDaysPerYear) * 100);
+                const isLow = data.remaining <= Math.ceil(data.maxDaysPerYear * 0.2);
+                const barColor = isLow ? 'var(--vs-danger)' : data.color;
+
+                if (isLow && data.used > 0) {
+                    warnings.push(`${data.name}: เหลือ ${data.remaining} วัน`);
+                }
+
+                html += `
+                <div class="leave-card">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-8 h-8 rounded flex items-center justify-center" style="background: color-mix(in srgb, ${data.color} 15%, transparent)">
+                            <i class="icon ${data.icon} w-4 h-4" style="background-color: ${data.color}"></i>
+                        </div>
+                        <div>
+                            <div class="text-[13px] font-light text-white">${data.name}</div>
+                            <div class="text-[13px] text-[var(--vs-text-muted)]">สิทธิ์สูงสุด ${data.maxDaysPerYear} วัน/ปี</div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 text-center mb-3">
+                        <div>
+                            <div class="text-lg font-light" style="color: ${data.color}">${data.maxDaysPerYear}</div>
+                            <div class="text-[13px] text-[var(--vs-text-muted)] uppercase">Total</div>
+                        </div>
+                        <div>
+                            <div class="text-lg font-light text-white">${data.used}</div>
+                            <div class="text-[13px] text-[var(--vs-text-muted)] uppercase">ลาแล้ว</div>
+                        </div>
+                        <div>
+                            <div class="text-lg font-light ${isLow ? 'text-red-400' : 'text-[var(--vs-success)]'}">${data.remaining}</div>
+                            <div class="text-[13px] text-[var(--vs-text-muted)] uppercase">คงเหลือ</div>
+                        </div>
+                    </div>
+                    <div class="balance-bar">
+                        <div class="balance-bar-fill" style="width: ${pct}%; background: ${barColor}"></div>
+                    </div>
+                    ${isLow && data.used > 0 ? `<div class="text-[13px] text-red-400 mt-2 flex items-center gap-1.5"><i class="icon i-exclamation-triangle w-3 h-3" style="background-color: var(--vs-danger)"></i> สิทธิ์ลาเหลือน้อย</div>` : ''}
+                </div>`;
+            }
+            container.innerHTML = html;
+
+            // Alert banner
+            const alertEl = document.getElementById('balance-alert');
+            if (warnings.length > 0) {
+                alertEl.className = 'mt-4 p-3 rounded-[3px] bg-red-500/10 border border-red-500/30';
+                alertEl.innerHTML = `
+                    <div class="flex items-center gap-2 text-red-200 text-[13px]">
+                        <i class="icon i-exclamation-circle w-4 h-4" style="background-color: var(--vs-danger)"></i>
+                        <span><strong>แจ้งเตือน:</strong> ${warnings.join(' | ')}</span>
+                    </div>`;
+            }
+        }
+
+        // ─── Sidebar Balance (on Request tab) ───────────────────
+        function renderSidebarBalance() {
+            const balance = LeaveService.getLeaveBalance(CURRENT_TEACHER);
+            const container = document.getElementById('sidebar-balance');
+            let html = '';
+            for (const [code, data] of Object.entries(balance)) {
+                const pct = Math.max(0, (data.remaining / data.maxDaysPerYear) * 100);
+                html += `
+                <div>
+                    <div class="flex justify-between text-[13px] mb-1">
+                        <span style="color: ${data.color}">${data.name}</span>
+                        <span class="text-white">${data.used}/${data.maxDaysPerYear} <span class="text-[var(--vs-text-muted)]">(เหลือ ${data.remaining})</span></span>
+                    </div>
+                    <div class="balance-bar">
+                        <div class="balance-bar-fill" style="width: ${pct}%; background: ${data.color}"></div>
+                    </div>
+                </div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        // ─── Sidebar Recent ─────────────────────────────────────
+        function renderSidebarRecent() {
+            const requests = LeaveService.getByPersonnel(CURRENT_TEACHER).slice(-3).reverse();
+            const container = document.getElementById('sidebar-recent');
+            if (requests.length === 0) {
+                container.innerHTML = '<div class="text-[13px] text-[var(--vs-text-muted)]">ยังไม่มีรายการ</div>';
+                return;
+            }
+            let html = '';
+            for (const req of requests) {
+                const status = LeaveService.STATUSES[req.status];
+                const type = LeaveService.LEAVE_TYPES[req.type];
+                html += `
+                <div class="flex items-center justify-between py-1.5 border-b border-[var(--vs-border)] last:border-0">
+                    <div>
+                        <div class="text-[13px] text-white">${type.name}</div>
+                        <div class="text-[13px] text-[var(--vs-text-muted)]">${formatDate(req.startDate)} — ${req.days} วัน</div>
+                    </div>
+                    <span class="status-badge" style="background: color-mix(in srgb, ${status.color} 15%, transparent); color: ${status.color}; border: 1px solid color-mix(in srgb, ${status.color} 30%, transparent)">
+                        <i class="icon ${status.icon} w-3 h-3" style="background-color: ${status.color}"></i>
+                        ${status.name}
+                    </span>
+                </div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        // ─── Form Logic ─────────────────────────────────────────
+        function populateLeaveTypes() {
+            const select = document.getElementById('leave-type');
+            for (const [code, type] of Object.entries(LeaveService.LEAVE_TYPES)) {
+                const opt = document.createElement('option');
+                opt.value = code;
+                opt.textContent = `${type.name}`;
+                select.appendChild(opt);
+            }
+        }
+
+        function onLeaveTypeChange() {
+            const code = document.getElementById('leave-type').value;
+            const guidePanel = document.getElementById('inline-guide');
+            const docsEl = document.getElementById('required-docs');
+            const docsText = document.getElementById('required-docs-text');
+
+            if (!code) {
+                guidePanel.classList.remove('open');
+                docsEl.classList.add('hidden');
+                validateForm();
+                return;
+            }
+
+            const guide = LeaveService.getLeaveGuide(code);
+            const type = LeaveService.LEAVE_TYPES[code];
+            const balance = LeaveService.getLeaveBalance(CURRENT_TEACHER)[code];
+
+            guidePanel.innerHTML = `
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="icon ${type.icon} w-4 h-4" style="background-color: ${type.color}"></i>
+                    <span class="text-[13px] font-light text-white">${type.name}</span>
+                    <span class="text-[13px] text-[var(--vs-text-muted)]">— ${guide.summary}</span>
+                </div>
+                <div class="p-2 rounded bg-[rgba(34,211,238,0.05)] border border-[rgba(34,211,238,0.2)] mb-3">
+                    <div class="grid grid-cols-3 text-center">
+                        <div>
+                            <div class="text-[13px] font-light" style="color: ${type.color}">${balance.maxDaysPerYear}</div>
+                            <div class="text-[13px] text-[var(--vs-text-muted)]">สิทธิ์สูงสุด</div>
+                        </div>
+                        <div>
+                            <div class="text-[13px] font-light text-white">${balance.used}</div>
+                            <div class="text-[13px] text-[var(--vs-text-muted)]">ใช้ไปแล้ว</div>
+                        </div>
+                        <div>
+                            <div class="text-[13px] font-light text-[var(--vs-success)]">${balance.remaining}</div>
+                            <div class="text-[13px] text-[var(--vs-text-muted)]">คงเหลือ</div>
+                        </div>
+                    </div>
+                </div>
+                <ul class="space-y-1 text-[13px] text-[var(--vs-text-muted)]">
+                    ${guide.rules.map(r => `<li class="flex items-start gap-2"><span class="text-[var(--vs-accent)] mt-0.5">›</span> ${r}</li>`).join('')}
+                </ul>
+                ${guide.note ? `<div class="mt-2 text-[13px] text-[var(--vs-warning)] flex items-center gap-1.5"><i class="icon i-information-circle w-3 h-3" style="background-color: var(--vs-warning)"></i> ${guide.note}</div>` : ''}
+            `;
+            guidePanel.classList.add('open');
+
+            // Show required documents
+            if (guide.documents && guide.documents.length > 0) {
+                docsText.textContent = 'เอกสารที่ต้องแนบ: ' + guide.documents.join(', ');
+                docsEl.classList.remove('hidden');
+            } else {
+                docsEl.classList.add('hidden');
+            }
+
+            validateForm();
+        }
+
+        function calcDays() {
+            const start = document.getElementById('leave-start').value;
+            const end = document.getElementById('leave-end').value;
+            const countEl = document.getElementById('day-count');
+            const countText = document.getElementById('day-count-text');
+            const warningEl = document.getElementById('balance-warning');
+            const warningText = document.getElementById('balance-warning-text');
+
+            if (start && end) {
+                const days = Math.ceil((new Date(end) - new Date(start)) / (1000 * 60 * 60 * 24)) + 1;
+                if (days > 0) {
+                    countText.textContent = `จำนวนวันลา: ${days} วัน (${formatDate(start)} ถึง ${formatDate(end)})`;
+                    countEl.classList.remove('hidden');
+
+                    // Check balance
+                    const code = document.getElementById('leave-type').value;
+                    if (code) {
+                        const balance = LeaveService.getLeaveBalance(CURRENT_TEACHER)[code];
+                        if (days > balance.remaining) {
+                            warningText.textContent = `จำนวนวันลา (${days} วัน) มากกว่าสิทธิ์คงเหลือ (${balance.remaining} วัน) — อาจไม่ได้รับอนุมัติ`;
+                            warningEl.classList.remove('hidden');
+                        } else {
+                            warningEl.classList.add('hidden');
+                        }
+                    }
+                } else {
+                    countEl.classList.add('hidden');
+                }
+            } else {
+                countEl.classList.add('hidden');
+                warningEl.classList.add('hidden');
+            }
+            validateForm();
+        }
+
+        function validateForm() {
+            const type = document.getElementById('leave-type').value;
+            const start = document.getElementById('leave-start').value;
+            const end = document.getElementById('leave-end').value;
+            const reason = document.getElementById('leave-reason').value.trim();
+            document.getElementById('submit-btn').disabled = !(type && start && end && reason);
+        }
+        // Listen for reason input
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('leave-reason')?.addEventListener('input', validateForm);
+        });
+
+        function submitLeave() {
+            const type = document.getElementById('leave-type').value;
+            const start = document.getElementById('leave-start').value;
+            const end = document.getElementById('leave-end').value;
+            const reason = document.getElementById('leave-reason').value.trim();
+
+            const result = LeaveService.createLeaveRequest({
+                personnelId: CURRENT_TEACHER,
+                type,
+                startDate: start,
+                endDate: end,
+                reason
+            });
+
+            // Show success modal
+            document.getElementById('modal-leave-id').textContent = `เลขที่ใบลา: ${result.id}`;
+            document.getElementById('success-modal').classList.remove('hidden');
+
+            // Refresh views
+            renderBalanceTab();
+            renderSidebarBalance();
+            renderSidebarRecent();
+            renderHistoryTab();
+            resetForm();
+        }
+
+        function resetForm() {
+            document.getElementById('leave-type').value = '';
+            document.getElementById('leave-start').value = '';
+            document.getElementById('leave-end').value = '';
+            document.getElementById('leave-reason').value = '';
+            document.getElementById('inline-guide').classList.remove('open');
+            document.getElementById('day-count').classList.add('hidden');
+            document.getElementById('balance-warning').classList.add('hidden');
+            document.getElementById('required-docs').classList.add('hidden');
+            document.getElementById('submit-btn').disabled = true;
+        }
+
+        function closeModal() {
+            document.getElementById('success-modal').classList.remove('hidden');
+            document.getElementById('success-modal').classList.add('hidden');
+        }
+
+        // ─── History Tab ────────────────────────────────────────
+        function renderHistoryTab() {
+            const requests = LeaveService.getByPersonnel(CURRENT_TEACHER).reverse();
+            const container = document.getElementById('history-list');
+            const emptyEl = document.getElementById('history-empty');
+
+            if (requests.length === 0) {
+                container.innerHTML = '';
+                emptyEl.classList.remove('hidden');
+                return;
+            }
+            emptyEl.classList.add('hidden');
+
+            let html = '';
+            for (const req of requests) {
+                const type = LeaveService.LEAVE_TYPES[req.type];
+                const status = LeaveService.STATUSES[req.status];
+
+                html += `
+                <div class="history-row">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded flex items-center justify-center" style="background: color-mix(in srgb, ${type.color} 15%, transparent)">
+                                <i class="icon ${type.icon} w-4 h-4" style="background-color: ${type.color}"></i>
+                            </div>
+                            <div>
+                                <div class="text-[13px] text-white">${type.name}</div>
+                                <div class="text-[13px] text-[var(--vs-text-muted)]">${req.id} | ${formatDate(req.startDate)} — ${formatDate(req.endDate)} (${req.days} วัน)</div>
+                            </div>
+                        </div>
+                        <span class="status-badge" style="background: color-mix(in srgb, ${status.color} 15%, transparent); color: ${status.color}; border: 1px solid color-mix(in srgb, ${status.color} 30%, transparent)">
+                            <i class="icon ${status.icon} w-3 h-3" style="background-color: ${status.color}"></i>
+                            ${status.name}
+                        </span>
+                    </div>
+                    <div class="ml-11 mt-1 text-[13px] text-[var(--vs-text-muted)]">
+                        <strong>เหตุผล:</strong> ${req.reason}
+                    </div>
+                    ${req.approverNote ? `<div class="ml-11 mt-1 text-[13px] text-[var(--vs-success)]"><strong>ผอ.:</strong> ${req.approverNote}</div>` : ''}
+                </div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        // ─── Guide Tab ──────────────────────────────────────────
+        function renderGuideTab() {
+            const guides = LeaveService.getAllLeaveGuides();
+            const container = document.getElementById('guide-list');
+            let html = '';
+
+            for (const g of guides) {
+                html += `
+                <div class="leave-card">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-10 h-10 rounded flex items-center justify-center" style="background: color-mix(in srgb, ${g.color} 15%, transparent)">
+                            <i class="icon ${g.icon} w-5 h-5" style="background-color: ${g.color}"></i>
+                        </div>
+                        <div>
+                            <div class="text-[13px] font-light text-white">${g.name}</div>
+                            <div class="text-[13px] text-[var(--vs-text-muted)]">${g.summary}</div>
+                        </div>
+                        <div class="ml-auto text-right">
+                            <div class="text-lg font-light" style="color: ${g.color}">${g.maxDays}</div>
+                            <div class="text-[13px] text-[var(--vs-text-muted)]">วัน/ปี</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="text-[13px] text-[var(--vs-accent)] font-light mb-1">เงื่อนไขการลา</div>
+                        <ul class="space-y-1">
+                            ${g.rules.map(r => `<li class="text-[13px] text-[var(--vs-text-muted)] flex items-start gap-2"><span class="text-[var(--vs-accent)] mt-0.5">›</span> ${r}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="mb-2">
+                        <div class="text-[13px] text-[var(--vs-accent)] font-light mb-1">เอกสารที่ต้องใช้</div>
+                        <ul class="space-y-1">
+                            ${g.documents.map(d => `<li class="text-[13px] text-[var(--vs-text-muted)] flex items-center gap-2"><i class="icon i-document w-3 h-3" style="background-color: var(--vs-text-muted)"></i> ${d}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    ${g.note ? `<div class="mt-2 p-2 rounded bg-[rgba(234,179,8,0.1)] border border-[rgba(234,179,8,0.2)] text-[13px] text-[var(--vs-warning)] flex items-center gap-2"><i class="icon i-exclamation-triangle w-4 h-4" style="background-color: var(--vs-warning)"></i> ${g.note}</div>` : ''}
+                </div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        // ─── Quick Out Logic ─────────────────────────────────────
+        function initQuickOut() {
+            const select = document.getElementById('qo-reason');
+            for (const r of LeaveService.QUICKOUT_REASONS) {
+                const opt = document.createElement('option');
+                opt.value = r.code;
+                opt.textContent = r.name;
+                select.appendChild(opt);
+            }
+            // Validate
+            select.addEventListener('change', validateQO);
+            document.getElementById('qo-detail').addEventListener('input', validateQO);
+            renderQuickOutTab();
+        }
+
+        function validateQO() {
+            const reason = document.getElementById('qo-reason').value;
+            const detail = document.getElementById('qo-detail').value.trim();
+            document.getElementById('qo-submit').disabled = !(reason && detail);
+        }
+
+        function renderQuickOutTab() {
+            const summary = LeaveService.getQuickOutSummary(CURRENT_TEACHER);
+            const records = LeaveService.getQuickOutsByPersonnel(CURRENT_TEACHER).reverse();
+
+            // Active out banner
+            const activeEl = document.getElementById('qo-active');
+            const formSection = document.getElementById('qo-form-section');
+            if (summary.activeOut) {
+                const r = LeaveService.QUICKOUT_REASONS.find(x => x.code === summary.activeOut.reasonCode);
+                document.getElementById('qo-active-detail').textContent =
+                    `${r?.name || ''}: ${summary.activeOut.reasonDetail} — ออกเวลา ${summary.activeOut.timeOut}`;
+                activeEl.classList.remove('hidden');
+                formSection.style.display = 'none';
+            } else {
+                activeEl.classList.add('hidden');
+                formSection.style.display = '';
+            }
+
+            // Stats
+            document.getElementById('qo-stats').innerHTML = `
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="text-center p-2 rounded bg-[rgba(255,255,255,0.03)]">
+                        <div class="text-lg font-light text-[var(--vs-accent)]">${summary.monthTrips}</div>
+                        <div class="text-[13px] text-[var(--vs-text-muted)]">ครั้ง/เดือนนี้</div>
+                    </div>
+                    <div class="text-center p-2 rounded bg-[rgba(255,255,255,0.03)]">
+                        <div class="text-lg font-light text-[var(--vs-warning)]">${summary.monthHours}</div>
+                        <div class="text-[13px] text-[var(--vs-text-muted)]">ชม./เดือนนี้</div>
+                    </div>
+                    <div class="text-center p-2 rounded bg-[rgba(255,255,255,0.03)]">
+                        <div class="text-lg font-light text-white">${summary.totalTrips}</div>
+                        <div class="text-[13px] text-[var(--vs-text-muted)]">ครั้ง/ทั้งหมด</div>
+                    </div>
+                    <div class="text-center p-2 rounded bg-[rgba(255,255,255,0.03)]">
+                        <div class="text-lg font-light text-white">${summary.totalHours}</div>
+                        <div class="text-[13px] text-[var(--vs-text-muted)]">ชม./ทั้งหมด</div>
+                    </div>
+                </div>`;
+
+            // History
+            const histEl = document.getElementById('qo-history');
+            if (records.length === 0) {
+                histEl.innerHTML = '<div class="text-[13px] text-[var(--vs-text-muted)] text-center py-4">ยังไม่มีประวัติ</div>';
+                return;
+            }
+            let html = '';
+            for (const rec of records) {
+                const r = LeaveService.QUICKOUT_REASONS.find(x => x.code === rec.reasonCode);
+                const isOut = rec.status === 'OUT';
+                html += `
+                <div class="flex items-center justify-between py-2 border-b border-[var(--vs-border)] last:border-0">
+                    <div class="flex items-center gap-2">
+                        <i class="icon ${r?.icon || 'i-dots'} w-4 h-4" style="background-color: var(--vs-text-muted)"></i>
+                        <div>
+                            <div class="text-[13px] text-white">${rec.reasonDetail}</div>
+                            <div class="text-[13px] text-[var(--vs-text-muted)]">${formatDate(rec.date)} • ${rec.timeOut}${rec.timeIn ? ' → ' + rec.timeIn : ''}</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        ${isOut
+                        ? '<span class="text-[13px] text-[var(--vs-success)] flex items-center gap-1.5"><span class="pulse-dot" style="width:6px;height:6px"></span> ออกอยู่</span>'
+                        : `<span class="text-[13px] text-[var(--vs-text-muted)]">${rec.hours} ชม.</span>`
+                    }
+                    </div>
+                </div>`;
+            }
+            histEl.innerHTML = html;
+        }
+
+        function quickOutStart() {
+            const reason = document.getElementById('qo-reason').value;
+            const detail = document.getElementById('qo-detail').value.trim();
+            LeaveService.quickOutStart({ personnelId: CURRENT_TEACHER, reasonCode: reason, reasonDetail: detail });
+            document.getElementById('qo-reason').value = '';
+            document.getElementById('qo-detail').value = '';
+            document.getElementById('qo-submit').disabled = true;
+            renderQuickOutTab();
+        }
+
+        function quickOutReturn() {
+            const summary = LeaveService.getQuickOutSummary(CURRENT_TEACHER);
+            if (summary.activeOut) {
+                LeaveService.quickOutEnd(summary.activeOut.id);
+                renderQuickOutTab();
+            }
+        }
+
+        // ─── Helpers ────────────────────────────────────────────
+        function formatDate(dateStr) {
+            if (!dateStr) return '—';
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+        }
+
+        function formatDateTime(isoStr) {
+            if (!isoStr) return '—';
+            const d = new Date(isoStr);
+            return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }) + ' ' +
+                d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+        }
+    </script>
+</body>
+
+</html>

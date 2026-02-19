@@ -471,9 +471,9 @@ window.ManagementEngine = {
                     <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
                 </svg>
                 <div class="flex flex-col">
-                    <span class="text-[10px] text-[var(--vs-text-muted)] font-extralight uppercase Thai-Rule">ตรวจพบสัญญาณจากระบบ</span>
-                    <span class="text-sm font-light text-[var(--vs-text-title)] Thai-Rule">บันทึกข้อมูล DNA: <span class="text-[#fbbf24] font-bold">+${window.formatNumberStandard(value)}%</span></span>
-                    <span class="text-[9px] text-[var(--vs-text-muted)] font-extralight italic truncate max-w-[150px] opacity-60">${action}</span>
+                    <span class="text-[10px] text-[var(--vs-text-muted)] font-light uppercase Thai-Rule">ตรวจพบสัญญาณจากระบบ</span>
+                    <span class="text-[13px] font-light text-[var(--vs-text-title)] Thai-Rule">บันทึกข้อมูล DNA: <span class="text-[#fbbf24] font-bold">+${window.formatNumberStandard(value)}%</span></span>
+                    <span class="text-[9px] text-[var(--vs-text-muted)] font-light italic truncate max-w-[150px] opacity-60">${action}</span>
                 </div>
             </div>
         `;
@@ -970,6 +970,29 @@ window.ManagementEngine = {
                 TimelineMenu.render(`tl-group-${i}`, cfg);
             });
         }
+        // --- Delegation Panel: Auto-render in sidebar for Director roles ---
+        const userRole = currentUser?.role ||
+            JSON.parse(localStorage.getItem('CURRENT_USER') || '{}').role;
+        if (window.DelegationPanel && ['SCHOOL_DIR', 'ESA_DIR'].includes(userRole)) {
+            requestAnimationFrame(() => {
+                // Avoid duplicates
+                if (document.getElementById('sidebar-deleg-panel')) return;
+                const delegContainer = document.createElement('div');
+                delegContainer.id = 'sidebar-deleg-panel';
+                delegContainer.className = 'mt-3 border-t border-[var(--vs-border)] pt-3';
+                container.appendChild(delegContainer);
+
+                const pagePath = window.currentPagePath || 'GENERAL';
+                DelegationPanel.render('sidebar-deleg-panel', {
+                    moduleId: pagePath,
+                    moduleTitle: 'งานมอบหมายทั่วไป'
+                });
+                // Load teacher dropdown
+                if (DelegationPanel._loadTeachers) {
+                    DelegationPanel._loadTeachers();
+                }
+            });
+        }
     },
 
     /**
@@ -1000,41 +1023,83 @@ window.ManagementEngine = {
      */
     getAdminTimelineConfigs() {
         return [
+            // Group 0: Dashboard ผอ. (Director Command Center)
             {
-                parent: { name: '\u0e27\u0e34\u0e0a\u0e32\u0e01\u0e32\u0e23', icon: 'i-book', page: 'pages/schedule/domain1.html', active: true },
+                parent: { name: 'Dashboard ผอ.', icon: 'i-home', page: 'pages/director_dashboard.html', active: true },
                 children: [
-                    { name: '\u0e15\u0e32\u0e23\u0e32\u0e07\u0e2a\u0e2d\u0e19 (Domain 1)', icon: 'i-calendar', page: 'pages/schedule/domain1.html', action: 'schedule-d1' },
-                    { name: '\u0e07\u0e32\u0e19\u0e2a\u0e19\u0e31\u0e1a\u0e2a\u0e19\u0e38\u0e19 (Domain 2)', icon: 'i-shield', page: 'pages/schedule/domain2.html', action: 'schedule-d2' },
-                    { name: '\u0e1e\u0e31\u0e12\u0e19\u0e32\u0e04\u0e38\u0e13\u0e20\u0e32\u0e1e (Domain 3)', icon: 'i-chart', page: 'pages/schedule/domain3.html', action: 'schedule-d3' },
-                    { name: '\u0e19\u0e42\u0e22\u0e1a\u0e32\u0e22 (Domain 4)', icon: 'i-globe', page: 'pages/schedule/domain4.html', action: 'schedule-d4' },
-                    { name: 'Engine + \u0e15\u0e32\u0e23\u0e32\u0e07\u0e1c\u0e25\u0e25\u0e31\u0e1e\u0e18\u0e4c', icon: 'i-lightning', page: 'pages/auto_schedule.html', action: 'auto-schedule' },
-                    { name: '\u0e01\u0e33\u0e2b\u0e19\u0e14\u0e27\u0e34\u0e0a\u0e32/\u0e04\u0e23\u0e39 (Matrix)', icon: 'i-squares', page: 'pages/teacher_management.html', action: 'assignment-matrix' },
-                    { name: '\u0e2a\u0e23\u0e49\u0e32\u0e07\u0e01\u0e32\u0e23\u0e4c\u0e14\u0e27\u0e34\u0e0a\u0e32', icon: 'i-academic', page: 'pages/subject_cards.html', action: 'subject-cards' },
-                    { name: '\u0e08\u0e31\u0e14\u0e01\u0e32\u0e23\u0e15\u0e32\u0e23\u0e32\u0e07\u0e2a\u0e2d\u0e19\u0e42\u0e23\u0e07\u0e40\u0e23\u0e35\u0e22\u0e19', icon: 'i-calendar', page: 'pages/schedule.html', action: 'school-schedule' }
+                    { name: 'Overview โรงเรียน', icon: 'i-chart', page: 'pages/director_dashboard.html', action: 'dir-overview' },
+                    { name: 'กล่องรออนุมัติ', icon: 'i-inbox', page: 'pages/director_inbox.html', action: 'dir-inbox', badge: 3 },
+                    { name: 'แจ้งเตือนด่วน', icon: 'i-bell', page: 'pages/director_alerts.html', action: 'dir-alerts', badge: 2 },
+                    { name: 'ปฏิทินโรงเรียน', icon: 'i-calendar', page: 'pages/school_calendar.html', action: 'school-cal' },
                 ],
-                activeItem: 'schedule-d1'
+                activeItem: 'dir-overview'
             },
+            // Group 1: วิชาการ (Academic Affairs)
             {
-                parent: { name: '\u0e1a\u0e38\u0e04\u0e04\u0e25', icon: 'i-users', page: 'pages/teacher_management.html' },
+                parent: { name: 'วิชาการ', icon: 'i-book', page: 'pages/schedule/domain1.html' },
                 children: [
-                    { name: '\u0e08\u0e31\u0e14\u0e01\u0e32\u0e23\u0e10\u0e32\u0e19\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e1a\u0e38\u0e04\u0e25\u0e32\u0e01\u0e23\u0e41\u0e25\u0e30\u0e20\u0e32\u0e23\u0e30\u0e07\u0e32\u0e19', icon: 'i-users', page: 'pages/teacher_management.html', action: 'manage-personnel' },
-                    { name: '\u0e40\u0e1e\u0e34\u0e48\u0e21\u0e1a\u0e38\u0e04\u0e25\u0e32\u0e01\u0e23', icon: 'i-user-plus', page: 'pages/add_teacher.html', action: 'add-personnel' },
-                    { name: '\u0e23\u0e30\u0e1a\u0e1a\u0e1b\u0e23\u0e30\u0e40\u0e21\u0e34\u0e19 \u0e27PA', icon: 'i-chart', locked: true }
+                    { name: 'ตารางสอน (Domain 1)', icon: 'i-calendar', page: 'pages/schedule/domain1.html', action: 'schedule-d1' },
+                    { name: 'งานสนับสนุน (Domain 2)', icon: 'i-shield', page: 'pages/schedule/domain2.html', action: 'schedule-d2' },
+                    { name: 'พัฒนาคุณภาพ (Domain 3)', icon: 'i-chart', page: 'pages/schedule/domain3.html', action: 'schedule-d3' },
+                    { name: 'นโยบาย (Domain 4)', icon: 'i-globe', page: 'pages/schedule/domain4.html', action: 'schedule-d4' },
+                    { name: 'Auto Schedule + ผลลัพธ์', icon: 'i-lightning', page: 'pages/auto_schedule.html', action: 'auto-schedule' },
+                    { name: 'มอบหมายวิชา/ครู (Matrix)', icon: 'i-squares', page: 'pages/teacher_management.html', action: 'assignment-matrix' },
+                    { name: 'สร้างการ์ดวิชา', icon: 'i-academic', page: 'pages/subject_cards.html', action: 'subject-cards' },
+                    { name: 'ผลการเรียนรวม', icon: 'i-chart', page: 'pages/academic_results.html', action: 'academic-results' },
+                    { name: 'ลงนาม ปพ.1', icon: 'i-document', page: 'pages/sign_sor1.html', action: 'sign-sor1', directorOnly: true }
                 ]
             },
+            // Group 2: บุคคล (Personnel Management)
             {
-                parent: { name: '\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e1e\u0e37\u0e49\u0e19\u0e10\u0e32\u0e19', icon: 'i-cog', page: 'pages/school_setup.html' },
+                parent: { name: 'บุคคล', icon: 'i-users', page: 'pages/teacher_management.html' },
                 children: [
-                    { name: '\u0e23\u0e30\u0e1a\u0e1a\u0e42\u0e04\u0e23\u0e07\u0e2a\u0e23\u0e49\u0e32\u0e07\u0e2a\u0e16\u0e32\u0e19\u0e28\u0e36\u0e01\u0e29\u0e32', icon: 'i-office', page: 'pages/school_setup.html', action: 'school-setup' },
-                    { name: '\u0e23\u0e30\u0e1a\u0e1a\u0e40\u0e2d\u0e01\u0e2a\u0e32\u0e23\u0e23\u0e32\u0e0a\u0e01\u0e32\u0e23', icon: 'i-folder', page: 'pages/admin_docs.html', action: 'admin-docs' },
-                    { name: '\u0e08\u0e31\u0e14\u0e01\u0e32\u0e23\u0e2b\u0e49\u0e2d\u0e07\u0e40\u0e23\u0e35\u0e22\u0e19/\u0e19\u0e31\u0e01\u0e40\u0e23\u0e35\u0e22\u0e19', icon: 'i-academic', locked: true },
-                    { name: '\u0e07\u0e1a\u0e1b\u0e23\u0e30\u0e21\u0e32\u0e13', icon: 'i-database', locked: true }
+                    { name: 'ฐานข้อมูลบุคลากร', icon: 'i-users', page: 'pages/teacher_management.html', action: 'manage-personnel' },
+                    { name: 'ใบลาบุคลากร', icon: 'i-document-text', page: 'pages/leave_approval.html', action: 'leave-approval' },
+                    { name: 'เพิ่มบุคลากร', icon: 'i-user-plus', page: 'pages/add_teacher.html', action: 'add-personnel' },
+                    { name: 'ภาระงาน 4 ด้าน (รวม)', icon: 'i-chart', page: 'pages/workload_overview.html', action: 'workload-overview' },
+                    { name: 'ประเมิน วPA (ผู้ประเมิน)', icon: 'i-shield', page: 'pages/wpa_director.html', action: 'wpa-dir', directorOnly: true },
+                    { name: 'PLC ติดตาม', icon: 'i-users', page: 'pages/plc_tracker.html', action: 'plc-track', locked: true },
+                    { name: 'คำสั่งมอบหมายงาน', icon: 'i-document', page: 'pages/duty_orders.html', action: 'duty-orders', directorOnly: true }
                 ]
             },
+            // Group 3: กิจการนักเรียน (Student Affairs)
             {
-                parent: { name: '\u0e23\u0e32\u0e22\u0e07\u0e32\u0e19', icon: 'i-chart', page: 'pages/admin_stats.html' },
+                parent: { name: 'กิจการนักเรียน', icon: 'i-academic', page: 'pages/students.html' },
                 children: [
-                    { name: '\u0e23\u0e32\u0e22\u0e07\u0e32\u0e19\u0e2a\u0e16\u0e34\u0e15\u0e34\u0e23\u0e27\u0e21', icon: 'i-chart', page: 'pages/admin_stats.html', action: 'admin-stats' }
+                    { name: 'ทะเบียนนักเรียน', icon: 'i-users', page: 'pages/students.html', action: 'student-registry' },
+                    { name: 'เพิ่ม/รับนักเรียน', icon: 'i-user-plus', page: 'pages/student_input.html', action: 'student-add' },
+                    { name: 'สถิติการมาเรียน', icon: 'i-clock', page: 'pages/attendance_overview.html', action: 'attendance-ov' },
+                    { name: 'นักเรียนกลุ่มเสี่ยง', icon: 'i-alert', page: 'pages/at_risk_students.html', action: 'at-risk', badge: 2 },
+                    { name: 'สมรรถภาพทางกาย', icon: 'i-heart', page: 'pages/fitness_test.html', action: 'fitness-test' },
+                    { name: 'ลงนาม ปพ.2', icon: 'i-document', page: 'pages/sign_sor2.html', action: 'sign-sor2', directorOnly: true },
+                ]
+            },
+            // Group 4: งบประมาณ (Budget Management)
+            {
+                parent: { name: 'งบประมาณ', icon: 'i-database', page: 'pages/budget.html' },
+                children: [
+                    { name: 'แผนงบประมาณ', icon: 'i-document', page: 'pages/budget_plan.html', action: 'budget-plan', locked: true },
+                    { name: 'ติดตามเบิกจ่าย', icon: 'i-chart', page: 'pages/budget_tracker.html', action: 'budget-track', locked: true },
+                    { name: 'อนุมัติเบิกจ่าย', icon: 'i-check', page: 'pages/budget_approve.html', action: 'budget-approve', locked: true, directorOnly: true },
+                ]
+            },
+            // Group 5: บริหารทั่วไป (General Administration)
+            {
+                parent: { name: 'บริหารทั่วไป', icon: 'i-cog', page: 'pages/school_setup.html' },
+                children: [
+                    { name: 'โครงสร้างสถานศึกษา', icon: 'i-office', page: 'pages/school_setup.html', action: 'school-setup' },
+                    { name: 'Smart Config (ผอ.)', icon: 'i-cog', page: 'pages/director_config.html', action: 'dir-config', directorOnly: true },
+                    { name: 'ระบบเอกสารราชการ', icon: 'i-folder', page: 'pages/admin_docs.html', action: 'admin-docs' },
+                    { name: 'ลงนามเอกสารด่วน', icon: 'i-document', page: 'pages/sign_queue.html', action: 'sign-queue', directorOnly: true },
+                ]
+            },
+            // Group 6: ประกันคุณภาพ & รายงาน (QA & Reports)
+            {
+                parent: { name: 'ประกันคุณภาพ', icon: 'i-chart', page: 'pages/admin_stats.html' },
+                children: [
+                    { name: 'สถิติรวมโรงเรียน', icon: 'i-chart', page: 'pages/admin_stats.html', action: 'admin-stats' },
+                    { name: 'ผลสัมฤทธิ์นักเรียน', icon: 'i-trending-up', page: 'pages/achievement_report.html', action: 'achieve-report' },
+                    { name: 'SAR (รายงานตนเอง)', icon: 'i-document', page: 'pages/sar.html', action: 'sar-report', locked: true },
                 ]
             }
         ];
@@ -1066,6 +1131,15 @@ window.ManagementEngine = {
                 children: [
                     { name: '\u0e40\u0e0a\u0e47\u0e04\u0e0a\u0e37\u0e48\u0e2d/\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e40\u0e27\u0e25\u0e32', icon: 'i-check', page: 'pages/attendance.html', action: 'attendance' },
                     { name: '\u0e15\u0e32\u0e23\u0e32\u0e07\u0e2a\u0e2d\u0e19\u0e02\u0e2d\u0e07\u0e15\u0e19\u0e40\u0e2d\u0e07', icon: 'i-calendar', page: 'pages/schedule.html', action: 'my-schedule' }
+                ]
+            },
+            // Group 4: งานบุคคล (Personnel / Leave)
+            {
+                parent: { name: 'งานบุคคล', icon: 'i-user-circle', page: 'pages/teacher_leave.html' },
+                children: [
+                    { name: 'ยื่นใบลา', icon: 'i-document-plus', page: 'pages/teacher_leave.html', action: 'leave-request' },
+                    { name: 'ประวัติการลา', icon: 'i-clock', page: 'pages/teacher_leave.html#history', action: 'leave-history' },
+                    { name: 'สิทธิ์ลาคงเหลือ', icon: 'i-chart', page: 'pages/teacher_leave.html#balance', action: 'leave-balance' }
                 ]
             }
         ];
@@ -1152,15 +1226,23 @@ window.ManagementEngine = {
                         .map(
                             (item, index, array) => {
                                 const isSubmenu = item.isSubmenu || false;
-                                const nextIsSubmenu = array[index + 1]?.isSubmenu || false;
+                                const isLocked = item.locked || false;
+                                const hasBadge = item.badge && item.badge > 0;
+                                const isDirOnly = item.directorOnly || false;
 
                                 return `
-                        <button onclick="window.ManagementEngine.handleMenuClick('${item.id}', '${item.path}', '${item.type}')"
-                                class="nav-item vs-menu-item w-full text-left ${isSubmenu ? 'pl-8 menu-submenu-item' : 'px-3'} py-[7px] rounded-[var(--vs-radius)] transition-all flex items-center group ${this.activeModule === item.id ? 'active' : ''}">
+                        <button onclick="${isLocked ? `HUD_NOTIFY.warn('FEATURE LOCKED', 'This module is scheduled for Phase 3 rollout.')` : `window.ManagementEngine.handleMenuClick('${item.id}', '${item.path}', '${item.type}')`}"
+                                class="nav-item vs-menu-item w-full text-left ${isSubmenu ? 'pl-8 menu-submenu-item' : 'px-3'} py-[7px] rounded-[var(--vs-radius)] transition-all flex items-center group ${this.activeModule === item.id ? 'active' : ''} ${isLocked ? 'opacity-40 grayscale cursor-not-allowed' : ''}">
                             ${isSubmenu ? '<div class="menu-timeline-connector"></div>' : ''}
-                            <i class="icon ${item.icon} h-4 w-4 mr-3 transition-colors" ${item.color ? `style="color:${item.color}"` : ''}></i>
-                            <span class="text-sm font-extralight Thai-Rule truncate">${item.label}</span>
-                            ${item.type === 'PRIMARY' ? `<div class="ml-auto w-1 h-[3px] rounded-[3px] bg-[var(--vs-accent)] animate-pulse"></div>` : ''}
+                            <i class="icon ${item.icon} h-4 w-4 mr-3 transition-colors ${isDirOnly ? 'text-[var(--vs-accent)]' : ''}" ${item.color ? `style="color:${item.color}"` : ''}></i>
+                            <span class="text-[13px] font-light Thai-Rule truncate ${isDirOnly ? 'text-white' : ''}">${item.label}</span>
+                            
+                            <div class="ml-auto flex items-center gap-2">
+                                ${isLocked ? '<i class="icon i-lock h-3 w-3 opacity-50"></i>' : ''}
+                                ${isDirOnly && !isLocked && !hasBadge ? '<i class="icon i-shield-check h-3 w-3 text-[var(--vs-accent)] opacity-80"></i>' : ''}
+                                ${hasBadge ? `<span class="vs-count">${item.badge}</span>` : ''}
+                                ${item.type === 'PRIMARY' ? `<div class="w-1 h-[3px] rounded-[3px] bg-[var(--vs-accent)] animate-pulse"></div>` : ''}
+                            </div>
                         </button>
                     `;
                             }
@@ -1255,8 +1337,8 @@ window.ManagementEngine = {
                         return `
                     <div>
                         <div class="flex justify-between mb-0.5">
-                            <span class="text-[var(--vs-text-muted)] uppercase font-extralight text-[14px]">${key}</span>
-                            <span class="text-zinc-300 font-extralight text-[14px]">${val}%</span>
+                            <span class="text-[var(--vs-text-muted)] uppercase font-light text-[13px]">${key}</span>
+                            <span class="text-zinc-300 font-light text-[13px]">${val}%</span>
                         </div>
                         <div class="h-[3px] bg-[var(--vs-border)] rounded-[3px] overflow-hidden">
                             <div class="h-full" style="width: ${val}%; background: ${dnaColor}"></div>
@@ -1290,15 +1372,15 @@ window.ManagementEngine = {
                             <i class="icon ${group.icon} h-4 w-4" style="background-color: ${group.color} !important"></i>
                         </div>
                         <div>
-                            <h3 class="text-sm font-extralight text-[var(--vs-text-title)] Thai-Rule">${group.name} ${options.subtitle ? `<span class="text-sm text-[var(--vs-text-muted)] font-extralight">| ${options.subtitle}</span>` : ''}</h3>
-                            <p class="text-sm text-[var(--vs-text-muted)]">Core National Curriculum Standard</p>
+                            <h3 class="text-[13px] font-light text-[var(--vs-text-title)] Thai-Rule">${group.name} ${options.subtitle ? `<span class="text-[13px] text-[var(--vs-text-muted)] font-light">| ${options.subtitle}</span>` : ''}</h3>
+                            <p class="text-[13px] text-[var(--vs-text-muted)]">Core National Curriculum Standard</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Performance Hub -->
                 <div class="mb-3">
-                    <div class="flex justify-between hud-badge-micro mb-1 uppercase font-extralight">
+                    <div class="flex justify-between hud-badge-micro mb-1 uppercase font-light">
                         <span>${options.progressLabel || 'Progress'}</span>
                         <span style="color: ${group.color}">${options.progressValue || 0}%</span>
                     </div>
@@ -1307,7 +1389,7 @@ window.ManagementEngine = {
                     </div>
                 </div>
 
-                <button onclick="${options.onClick}" class="w-full py-1.5 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[3px] text-sm font-extralight uppercase transition-all hover:bg-[var(--vs-bg-panel)]" style="color: ${group.color}">
+                <button onclick="${options.onClick}" class="w-full py-1.5 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[3px] text-[13px] font-light uppercase transition-all hover:bg-[var(--vs-bg-panel)]" style="color: ${group.color}">
                     Establish Mastery Flow
                 </button>
             </div>
@@ -1328,7 +1410,7 @@ window.ManagementEngine = {
                 .map(
                     ([key, val]) => `
                             <div class="space-y-1.5">
-                                <div class="flex justify-between hud-badge-micro font-extralight uppercase">
+                                <div class="flex justify-between hud-badge-micro font-light uppercase">
                                     <span class="text-[var(--vs-text-muted)]">${key}</span>
                                     <span class="text-[var(--vs-accent)]">${val}%</span>
                                 </div>
@@ -1350,8 +1432,8 @@ window.ManagementEngine = {
                             <i class="icon i-book h-5 w-5 text-[var(--vs-accent)]"></i>
                         </div>
                         <div>
-                            <h3 class="text-sm font-extralight text-[var(--vs-text-title)] Thai-Rule leading-tight">ภาษาไทย ป.6/1</h3>
-                            <p class="text-sm text-[var(--vs-text-muted)]">Step 2: Acquisition</p>
+                            <h3 class="text-[13px] font-light text-[var(--vs-text-title)] Thai-Rule leading-tight">ภาษาไทย ป.6/1</h3>
+                            <p class="text-[13px] text-[var(--vs-text-muted)]">Step 2: Acquisition</p>
                         </div>
                     </div>
                     <div class="mt-4">
@@ -1400,11 +1482,11 @@ window.ManagementEngine = {
                 ? `
                 <section class="grid grid-cols-1 xl:grid-cols-2 gap-8 pt-10 border-t border-[var(--vs-border)]">
                     <div class="space-y-4">
-                        <h2 class="text-sm font-extralight text-[var(--vs-text-muted)] uppercase">Neural DNA Profile</h2>
+                        <h2 class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase">Neural DNA Profile</h2>
                         ${this.renderNeuralDNA()}
                     </div>
                     <div class="space-y-4">
-                        <h2 class="text-sm font-extralight text-[var(--vs-text-muted)] uppercase">Active Behavioral Matrix</h2>
+                        <h2 class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase">Active Behavioral Matrix</h2>
                         <div class="p-6 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] h-full">
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 ${this.renderTrait('Patriotism', 95, 'text-red-400')}
@@ -1443,17 +1525,17 @@ window.ManagementEngine = {
                             <i class="icon ${group.icon} h-6 w-6" style="background-color: ${group.color} !important"></i>
                         </div>
                         <div class="flex items-center justify-center p-1 rounded-[3px] border border-white/20 bg-white/10">
-                            <span class="hud-badge-micro font-extralight text-[var(--vs-accent)] uppercase px-1">Protocol Ready</span>
+                            <span class="hud-badge-micro font-light text-[var(--vs-accent)] uppercase px-1">Protocol Ready</span>
                         </div>
                     </div>
 
                     <div class="mb-6">
-                        <h3 class="text-xl font-extralight text-[var(--vs-text-title)] Thai-Rule mb-1">${group.name}</h3>
-                        <p class="text-sm text-[var(--vs-text-muted)] uppercase font-extralight opacity-40">Status: Mission Active</p>
+                        <h3 class="text-xl font-light text-[var(--vs-text-title)] Thai-Rule mb-1">${group.name}</h3>
+                        <p class="text-[13px] text-[var(--vs-text-muted)] uppercase font-light opacity-40">Status: Mission Active</p>
                     </div>
 
                     <div class="space-y-2">
-                        <div class="flex justify-between hud-badge-micro font-extralight">
+                        <div class="flex justify-between hud-badge-micro font-light">
                             <span>Mastery Progress</span>
                             <span style="color: ${group.color}">70%</span>
                         </div>
@@ -1492,8 +1574,8 @@ window.ManagementEngine = {
                 .map(
                     ([key, val]) => `
                             <div>
-                                <div class="flex justify-between text-sm mb-1.5">
-                                    <span class="text-[var(--vs-text-title)] uppercase font-extralight">${key} Pulse</span>
+                                <div class="flex justify-between text-[13px] mb-1.5">
+                                    <span class="text-[var(--vs-text-title)] uppercase font-light">${key} Pulse</span>
                                     <span class="text-[var(--vs-accent)]">${val}%</span>
                                 </div>
                                 <div class="h-[3px] bg-[var(--vs-bg-deep)] rounded-[3px] overflow-hidden">
@@ -1509,10 +1591,10 @@ window.ManagementEngine = {
                 <!-- Character Assessment Indicator -->
                 <div class="pt-6 border-t border-[var(--vs-border)]">
                     <div class="p-3 bg-[var(--vs-bg-deep)] rounded-[3px] border border-[var(--vs-border)]">
-                        <div class="hud-badge-micro uppercase font-extralight mb-1">Active Character Status</div>
+                        <div class="hud-badge-micro uppercase font-light mb-1">Active Character Status</div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm font-extralight text-[var(--vs-text-title)] Thai-Rule">วินัยและความรับผิดชอบ</span>
-                            <span class="text-sm text-[var(--vs-success)] font-extralight uppercase italic">A+ Excellent</span>
+                            <span class="text-[13px] font-light text-[var(--vs-text-title)] Thai-Rule">วินัยและความรับผิดชอบ</span>
+                            <span class="text-[13px] text-[var(--vs-success)] font-light uppercase italic">A+ Excellent</span>
                         </div>
                     </div>
                 </div>
@@ -1705,68 +1787,74 @@ window.ManagementEngine = {
     getAdminMenu(title) {
         return [
             {
-                section: title,
+                section: '0 — 🏠 DASHBOARD ผอ.',
                 items: [
-                    {
-                        id: 'ADMIN_STATS',
-                        label: 'รายงานสถิติรวม',
-                        icon: 'i-chart',
-                        type: 'SECONDARY',
-                        path: 'pages/admin_stats.html',
-                    },
-                    {
-                        id: 'ADMIN_SCHOOL_SETUP',
-                        label: 'ระบบโครงสร้างสถานศึกษา',
-                        icon: 'i-office',
-                        type: 'SECONDARY',
-                        path: 'pages/school_setup.html',
-                        roles: ['DIRECTOR'] // 👔 Only Director can manage infrastructure
-                    },
-                    {
-                        id: 'ADMIN_USERS',
-                        label: 'จัดการฐานข้อมูลบุคลากรและภาระงาน',
-                        icon: 'i-users',
-                        type: 'SECONDARY',
-                        path: 'pages/teacher_management.html',
-                        roles: ['DIRECTOR'] // 👔 Only Director can manage faculty registry
-                    },
-                    {
-                        id: 'ADMIN_ADD_TEACHER',
-                        label: '+ เพิ่มบุคลากร',
-                        icon: 'i-user-plus',
-                        type: 'SECONDARY',
-                        path: 'pages/add_teacher.html',
-                        roles: ['DIRECTOR'],
-                        isSubmenu: true // Mark as submenu item
-                    },
-                    {
-                        id: 'ADMIN_SCHEDULE',
-                        label: 'จัดการตารางสอนโรงเรียน',
-                        icon: 'i-calendar',
-                        type: 'SECONDARY',
-                        path: 'pages/schedule.html',
-                    },
-                    {
-                        id: 'ADMIN_AUTO_SCHEDULE',
-                        label: 'ระบบจัดตารางเรียนอัตโนมัติ',
-                        icon: 'i-lightning',
-                        type: 'SECONDARY',
-                        path: 'pages/auto_schedule.html',
-                    },
-                    {
-                        id: 'ADMIN_SUBJECT_CARDS',
-                        label: 'สร้างการ์ดวิชา',
-                        icon: 'i-academic',
-                        type: 'SECONDARY',
-                        path: 'pages/subject_cards.html',
-                    },
-                    {
-                        id: 'ADMIN_DOCS',
-                        label: 'ระบบเอกสารราชการ',
-                        icon: 'i-folder',
-                        type: 'SECONDARY',
-                        path: 'pages/admin_docs.html',
-                    },
+                    { id: 'DIR_DASHBOARD', label: 'Overview โรงเรียน', icon: 'i-chart', path: 'pages/director_dashboard.html', directorOnly: true },
+                    { id: 'DIR_INBOX', label: 'กล่องรออนุมัติ', icon: 'i-inbox', path: 'pages/director_inbox.html', badge: 3, directorOnly: true },
+                    { id: 'DIR_ALERTS', label: 'แจ้งเตือนด่วน', icon: 'i-bell', path: 'pages/director_alerts.html', badge: 2, directorOnly: true },
+                    { id: 'SCHOOL_CALENDAR', label: 'ปฏิทินโรงเรียน', icon: 'i-calendar', path: 'pages/school_calendar.html' },
+                ],
+            },
+            {
+                section: '1 — 📚 วิชาการ',
+                items: [
+                    { id: 'ADMIN_SCHEDULE_D1', label: 'ตารางสอน (Domain 1)', icon: 'i-calendar', path: 'pages/schedule/domain1.html' },
+                    { id: 'ADMIN_SCHEDULE_D2', label: 'งานสนับสนุน (Domain 2)', icon: 'i-shield', path: 'pages/schedule/domain2.html' },
+                    { id: 'ADMIN_SCHEDULE_D3', label: 'พัฒนาคุณภาพ (Domain 3)', icon: 'i-chart', path: 'pages/schedule/domain3.html' },
+                    { id: 'ADMIN_SCHEDULE_D4', label: 'นโยบาย (Domain 4)', icon: 'i-globe', path: 'pages/schedule/domain4.html' },
+                    { id: 'ADMIN_AUTO_SCHED', label: 'Auto Schedule + ผลลัพธ์', icon: 'i-lightning', path: 'pages/auto_schedule.html' },
+                    { id: 'ADMIN_MATRIX', label: 'มอบหมายวิชา/ครู (Matrix)', icon: 'i-squares', path: 'pages/teacher_management.html' },
+                    { id: 'ADMIN_RESULTS', label: 'ผลการเรียนรวม', icon: 'i-trending-up', path: 'pages/academic_results.html' },
+                    { id: 'DIR_SIGN_SOR1', label: 'ลงนาม ปพ.1', icon: 'i-document', path: 'pages/sign_sor1.html', directorOnly: true },
+                    { id: 'ADMIN_DNA_VIEW', label: 'DNA Overview โรงเรียน', icon: 'i-cpu', path: 'pages/school_dna.html' },
+                ],
+            },
+            {
+                section: '2 — 👥 บุคคล',
+                items: [
+                    { id: 'ADMIN_PERSONNEL', label: 'ฐานข้อมูลบุคลากร', icon: 'i-users', path: 'pages/teacher_management.html' },
+                    { id: 'ADMIN_ADD_TEACHER', label: 'เพิ่มบุคลากร', icon: 'i-user-plus', path: 'pages/add_teacher.html', isSubmenu: true },
+                    { id: 'ADMIN_WORKLOAD', label: 'ภาระงาน 4 ด้าน (รวม)', icon: 'i-chart', path: 'pages/workload_overview.html' },
+                    { id: 'DIR_WPA', label: 'ประเมิน วPA (ผู้ประเมิน)', icon: 'i-shield', path: 'pages/wpa_director.html', directorOnly: true },
+                    { id: 'ADMIN_PLC', label: 'PLC ติดตาม', icon: 'i-users', path: 'pages/plc_tracker.html' },
+                    { id: 'DIR_ORDERS', label: 'คำสั่งมอบหมายงาน', icon: 'i-document', path: 'pages/duty_orders.html', directorOnly: true },
+                    { id: 'DIR_DELEG_TRACK', label: 'ติดตามภาระงานมอบหมาย', icon: 'i-clipboard', path: 'pages/delegation_tracker.html', directorOnly: true },
+                ],
+            },
+            {
+                section: '3 — 🎓 กิจการนักเรียน',
+                items: [
+                    { id: 'STU_REGISTRY', label: 'ทะเบียนนักเรียน', icon: 'i-users', path: 'pages/students.html' },
+                    { id: 'STU_INPUT', label: 'เพิ่ม/รับนักเรียน', icon: 'i-user-plus', path: 'pages/student_input.html' },
+                    { id: 'STU_ATTEND_OV', label: 'สถิติการมาเรียน (รวม)', icon: 'i-clock', path: 'pages/attendance_overview.html' },
+                    { id: 'STU_AT_RISK', label: 'นักเรียนกลุ่มเสี่ยง', icon: 'i-alert', path: 'pages/at_risk_students.html', badge: 2 },
+                    { id: 'DIR_SIGN_SOR2', label: 'ลงนาม ปพ.2', icon: 'i-document', path: 'pages/sign_sor2.html', directorOnly: true },
+                ],
+            },
+            {
+                section: '4 — 💰 งบประมาณ',
+                items: [
+                    { id: 'BUDGET_PLAN', label: 'แผนงบประมาณประจำปี', icon: 'i-document', path: 'pages/budget_plan.html' },
+                    { id: 'BUDGET_TRACK', label: 'ติดตามการเบิกจ่าย', icon: 'i-chart', path: 'pages/budget_tracker.html' },
+                    { id: 'DIR_APPROVE', label: 'อนุมัติเบิกจ่าย', icon: 'i-check', path: 'pages/budget_approve.html', directorOnly: true },
+                ],
+            },
+            {
+                section: '5 — 🏫 บริหารทั่วไป',
+                items: [
+                    { id: 'ADMIN_SCHOOL_SETUP', label: 'โครงสร้างสถานศึกษา', icon: 'i-office', path: 'pages/school_setup.html' },
+                    { id: 'DIR_CONFIG', label: 'Smart Config (ผอ.)', icon: 'i-cog', path: 'pages/director_config.html', directorOnly: true },
+                    { id: 'ADMIN_DOCS', label: 'ระบบเอกสารราชการ', icon: 'i-folder', path: 'pages/admin_docs.html' },
+                    { id: 'DIR_SIGN_QUEUE', label: 'ลงนามเอกสารด่วน', icon: 'i-document', path: 'pages/sign_queue.html', directorOnly: true },
+                ],
+            },
+            {
+                section: '6 — 📊 ประกันคุณภาพ',
+                items: [
+                    { id: 'ADMIN_STATS', label: 'สถิติรวมโรงเรียน', icon: 'i-chart', path: 'pages/admin_stats.html' },
+                    { id: 'ADMIN_ACHIEVE', label: 'ผลสัมฤทธิ์นักเรียน', icon: 'i-trending-up', path: 'pages/achievement_report.html' },
+                    { id: 'ADMIN_SAR', label: 'SAR (รายงานตนเอง)', icon: 'i-document', path: 'pages/sar.html' },
+                    { id: 'ADMIN_STANDARDS', label: 'ตัวชี้วัดมาตรฐาน 3 ด้าน', icon: 'i-shield', path: 'pages/standards_kpi.html' },
                 ],
             },
         ];
@@ -1890,7 +1978,7 @@ window.ManagementEngine = {
         return `
             <div class="space-y-1">
                 <div class="flex justify-between items-center hud-badge-micro">
-                    <span class="text-[var(--vs-text-muted)] uppercase font-extralight">${label}</span>
+                    <span class="text-[var(--vs-text-muted)] uppercase font-light">${label}</span>
                     <span class="${colorClass} font-mono">${value}%</span>
                 </div>
                 <div class="h-[2px] bg-[var(--vs-border)] rounded-[3px] overflow-hidden">
@@ -2058,7 +2146,7 @@ window.ManagementEngine = {
                  <!-- Lesson Selector Overlay -->
                 <div id="lesson-selector-dropdown" class="hidden absolute top-16 left-0 z-50 w-96 max-h-[600px] overflow-y-auto bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[3px] animate-in fade-in zoom-in-95 duration-200">
                     <div class="p-4 border-b border-[var(--vs-border)] bg-[var(--vs-bg-panel)] sticky top-0 flex items-center justify-between">
-                        <h3 class="text-sm font-extralight text-[var(--vs-text-title)] uppercase">Select Learning Module</h3>
+                        <h3 class="text-[13px] font-light text-[var(--vs-text-title)] uppercase">Select Learning Module</h3>
                         <span class="hud-badge-micro text-[var(--vs-text-muted)] opacity-50">PROTOCOL</span>
                     </div>
                     <div class="p-2 space-y-1">
@@ -2068,8 +2156,8 @@ window.ManagementEngine = {
                                     <div class="hud-badge-micro text-[var(--vs-accent)] uppercase">MODULE ${idx + 1}</div>
                                     <div class="hud-badge-micro text-[var(--vs-text-muted)] opacity-50 uppercase">${l.type || 'PROTOCOL'}</div>
                                 </div>
-                                <div class="text-sm font-extralight text-[var(--vs-text-title)] Thai-Rule line-clamp-1 mb-0.5 group-hover:text-white">${l.name}</div>
-                                <div class="text-[14px] font-extralight text-[var(--vs-text-muted)] Thai-Rule line-clamp-1 opacity-70 group-hover:opacity-100">${l.unitName}</div>
+                                <div class="text-[13px] font-light text-[var(--vs-text-title)] Thai-Rule line-clamp-1 mb-0.5 group-hover:text-white">${l.name}</div>
+                                <div class="text-[13px] font-light text-[var(--vs-text-muted)] Thai-Rule line-clamp-1 opacity-70 group-hover:opacity-100">${l.unitName}</div>
                             </button>
                         `).join('')}
                     </div>
@@ -2084,9 +2172,9 @@ window.ManagementEngine = {
                     </button>
                     <div>
                         <div class="flex items-baseline gap-3 group cursor-pointer" onclick="parent.ManagementEngine.toggleLessonSelector()">
-                            <h1 class="text-2xl font-extralight text-[var(--vs-text-title)] Thai-Rule leading-none">${subject.name}</h1>
-                            <span class="text-xl text-[var(--vs-text-muted)] font-extralight">|</span>
-                            <h2 class="text-xl font-extralight text-[var(--vs-accent)] Thai-Rule hover:text-white transition-all">
+                            <h1 class="text-2xl font-light text-[var(--vs-text-title)] Thai-Rule leading-none">${subject.name}</h1>
+                            <span class="text-xl text-[var(--vs-text-muted)] font-light">|</span>
+                            <h2 class="text-xl font-light text-[var(--vs-accent)] Thai-Rule hover:text-white transition-all">
                                 บทที่ ${window.formatNumberStandard(this.currentLessonIndex + 1)}: ${lesson.name}
                                 <i class="icon i-chevron-down inline-block ml-2 w-4 h-4 opacity-50 group-hover:opacity-100"></i>
                             </h2>
@@ -2095,10 +2183,10 @@ window.ManagementEngine = {
                 </div>
                 
                 <div class="flex flex-col items-end">
-                    <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-1 font-mono">Mastery Status</div>
+                    <div class="text-[13px] text-[var(--vs-text-muted)] uppercase mb-1 font-mono">Mastery Status</div>
                     <div class="text-2xl font-black text-[var(--vs-accent)] uppercase">
                         MODULE ${(this.currentLessonIndex + 1).toString().padStart(2, '0')}
-                        <span class="text-sm opacity-30 text-[var(--vs-text-title)]">/${allLessons.length.toString().padStart(2, '0')}</span>
+                        <span class="text-[13px] opacity-30 text-[var(--vs-text-title)]">/${allLessons.length.toString().padStart(2, '0')}</span>
                     </div>
                 </div>
             </div>
@@ -2143,7 +2231,7 @@ window.ManagementEngine = {
                 ? 'text-[rgba(251,191,36,1)] bg-[rgba(251,191,36,0.1)] border border-[rgba(251,191,36,0.3)]'
                 : 'text-[var(--vs-text-muted)] opacity-30 hover:opacity-100'} transition-all rounded-[3px]"
                                         title="Toggle Dev Bypass Mode">
-                                        <span class="uppercase font-extralight text-[12px]">${this.devBypassEnabled ? 'DEV ON' : 'DEV'}</span>
+                                        <span class="uppercase font-light text-[13px]">${this.devBypassEnabled ? 'DEV ON' : 'DEV'}</span>
                                     </button>
                                     <div class="px-3 py-1 bg-[rgba(39,39,42,0.8)] rounded-[3px]">
                                         <span class="hud-badge-micro uppercase">${step.meta}</span>
@@ -2151,7 +2239,7 @@ window.ManagementEngine = {
                                 </div>
                             </div>
                             <h2 class="vs-title-thai-hero text-[var(--vs-text-title)] Thai-Rule leading-tight">${step.labelTH}</h2>
-                            <p class="text-sm text-[var(--vs-text-muted)] mt-2 italic font-extralight">${step.description}</p>
+                            <p class="text-[13px] text-[var(--vs-text-muted)] mt-2 italic font-light">${step.description}</p>
                         </div>
 
                         <div class="flex-1">
@@ -2174,21 +2262,21 @@ window.ManagementEngine = {
                     return objectives.map((obj, idx) => `
                                         <div class="flex items-start gap-3">
                                             <div class="w-2 h-2 rounded-[3px] mt-1.5 ${idx === 0 ? 'bg-[var(--vs-accent)]' : 'bg-zinc-600'}"></div>
-                                            <span class="text-sm font-extralight text-[var(--vs-text-body)] Thai-Rule leading-relaxed">${obj}</span>
+                                            <span class="text-[13px] font-light text-[var(--vs-text-body)] Thai-Rule leading-relaxed">${obj}</span>
                                         </div>
                                     `).join('');
                 } else if (typeof objectives === 'object') {
                     return ['K', 'P', 'A'].map(key => objectives[key] ? `
                                         <div class="flex items-start gap-3">
                                             <div class="w-2 h-2 rounded-[3px] mt-1.5 ${key === 'K' ? 'bg-[var(--vs-accent)]' : 'bg-zinc-600'}"></div>
-                                            <span class="text-sm font-extralight text-[var(--vs-text-body)] Thai-Rule leading-relaxed">${key}: ${objectives[key]}</span>
+                                            <span class="text-[13px] font-light text-[var(--vs-text-body)] Thai-Rule leading-relaxed">${key}: ${objectives[key]}</span>
                                         </div>
                                     ` : '').join('');
                 }
                 return `
                                     <div class="flex items-center gap-3 opacity-40">
                                         <div class="w-2 h-2 rounded-[3px] bg-zinc-700"></div>
-                                        <span class="text-sm font-extralight text-[var(--vs-text-body)] Thai-Rule italic">ยังไม่มีข้อมูลจุดประสงค์</span>
+                                        <span class="text-[13px] font-light text-[var(--vs-text-body)] Thai-Rule italic">ยังไม่มีข้อมูลจุดประสงค์</span>
                                     </div>
                                 `;
             })()}
@@ -2196,12 +2284,12 @@ window.ManagementEngine = {
                     </div>
 
                     <div class="p-6 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
-                        <h3 class="text-[var(--vs-text-muted)] mb-4 uppercase text-sm font-extralight">Neural DNA Impact</h3>
+                        <h3 class="text-[var(--vs-text-muted)] mb-4 uppercase text-[13px] font-light">Neural DNA Impact</h3>
                         ${this.renderMiniMatrix()}
                     </div>
 
                     <div class="mt-auto">
-                        <button id="next-step-btn" onclick="parent.ManagementEngine.nextStep()" class="w-full py-4 bg-[var(--vs-accent)] hover:bg-[rgba(var(--vs-accent-rgb),0.8)] text-zinc-900 rounded-[3px] text-sm font-extralight uppercase transition-all flex items-center justify-center gap-3">
+                        <button id="next-step-btn" onclick="parent.ManagementEngine.nextStep()" class="w-full py-4 bg-[var(--vs-accent)] hover:bg-[rgba(var(--vs-accent-rgb),0.8)] text-zinc-900 rounded-[3px] text-[13px] font-light uppercase transition-all flex items-center justify-center gap-3">
                             <span>${this.currentStep === 7 ? 'FINISH MASTERY' : 'ESTABLISH NEXT PROTOCOL'}</span>
                             <i class="icon i-chevron-right h-5 w-5"></i>
                         </button>
@@ -2250,7 +2338,7 @@ window.ManagementEngine = {
             const quiz = pedagogy.quiz || [];
             if (quiz.length === 0) {
                 return `<div class="p-10 text-center opacity-40">
-            <p class="text-sm font-extralight text-[var(--vs-text-muted)] Thai-Rule italic">ยังไม่มีข้อมูล Pre-test สำหรับบทเรียนนี้</p>
+            <p class="text-[13px] font-light text-[var(--vs-text-muted)] Thai-Rule italic">ยังไม่มีข้อมูล Pre-test สำหรับบทเรียนนี้</p>
                 </div>`;
             }
 
@@ -2261,14 +2349,14 @@ window.ManagementEngine = {
             <div class="space-y-8 animate-in fade-in duration-500">
                     <div class="flex items-center justify-between mb-2">
                         <div class="hud-badge-micro text-[var(--vs-accent)]">Question ${this.currentQuestionIndex + 1} of ${quiz.length}</div>
-                        <div class="text-sm font-mono text-zinc-500">${Math.round(((this.currentQuestionIndex) / quiz.length) * 100)}% Complete</div>
+                        <div class="text-[13px] font-mono text-zinc-500">${Math.round(((this.currentQuestionIndex) / quiz.length) * 100)}% Complete</div>
                     </div>
                     
                     <div class="h-1 bg-zinc-800 rounded-[3px] overflow-hidden mb-8">
                         <div class="h-full bg-[var(--vs-accent)] transition-all duration-500" style="width: ${((this.currentQuestionIndex) / quiz.length) * 100}%"></div>
                     </div>
 
-                    <h3 class="text-2xl font-extralight text-[var(--vs-text-title)] Thai-Rule leading-relaxed mb-8">
+                    <h3 class="text-2xl font-light text-[var(--vs-text-title)] Thai-Rule leading-relaxed mb-8">
                         ${q.question}
                     </h3>
 
@@ -2276,7 +2364,7 @@ window.ManagementEngine = {
                         ${q.options.map((opt, idx) => `
                             <button onclick="parent.ManagementEngine.submitQuizAnswer(${idx})" 
                                     class="p-4 text-left rounded-[3px] bg-[rgba(255,255,255,0.02)] border border-[var(--vs-border)] hover:bg-[rgba(var(--vs-accent-rgb),0.1)] hover:border-[rgba(var(--vs-accent-rgb),0.3)] group transition-all">
-                                <span class="text-sm font-extralight text-[var(--vs-text-body)] Thai-Rule group-hover:text-white">${opt}</span>
+                                <span class="text-[13px] font-light text-[var(--vs-text-body)] Thai-Rule group-hover:text-white">${opt}</span>
                             </button>
                         `).join('')}
                     </div>
@@ -2305,35 +2393,35 @@ window.ManagementEngine = {
             <div class="flex items-center justify-between p-3 bg-[rgba(var(--vs-accent-rgb),0.1)] border border-[rgba(var(--vs-accent-rgb),0.3)] rounded-[var(--vs-radius)]">
                 <div class="flex items-center gap-3">
                     <i class="icon i-clock h-5 w-5 text-[var(--vs-accent)]"></i>
-                    <span class="text-sm text-[var(--vs-text-body)]">Reading Time</span>
+                    <span class="text-[13px] text-[var(--vs-text-body)]">Reading Time</span>
                 </div>
                 <div class="flex items-center gap-2">
-                    <span id="step2-countdown" class="text-sm font-mono text-[var(--vs-accent)]">20</span>
-                    <span class="text-sm text-[var(--vs-text-muted)]">sec remaining</span>
+                    <span id="step2-countdown" class="text-[13px] font-mono text-[var(--vs-accent)]">20</span>
+                    <span class="text-[13px] text-[var(--vs-text-muted)]">sec remaining</span>
                 </div>
             </div>
                     
                     ${indicator ? `
                         <div class="flex items-center gap-3">
                             <div class="px-3 py-1.5 bg-[rgba(var(--vs-accent-rgb),0.15)] border border-[rgba(var(--vs-accent-rgb),0.3)] rounded-[var(--vs-radius)]">
-                                <span class="text-sm font-mono text-[var(--vs-accent)] uppercase">${indicator}</span>
+                                <span class="text-[13px] font-mono text-[var(--vs-accent)] uppercase">${indicator}</span>
                             </div>
                         </div>
                     ` : ''
                 }
 
         <div class="p-6 bg-[var(--vs-bg-deep)] rounded-[3px] border border-[var(--vs-border)]">
-            <h3 class="text-sm text-[var(--vs-accent)] mb-4 uppercase font-extralight">จุดประสงค์การเรียนรู้ K-P-A</h3>
+            <h3 class="text-[13px] text-[var(--vs-accent)] mb-4 uppercase font-light">จุดประสงค์การเรียนรู้ K-P-A</h3>
             <div class="space-y-4">
                 ${isObjectFormat
                     ? ['K', 'P', 'A'].map(key => objectives[key] ? `
                                     <div class="flex items-start gap-4 p-4 bg-[rgba(255,255,255,0.02)] rounded-[3px] border border-[var(--vs-border)]">
                                         <div class="w-10 h-10 rounded-[3px] flex items-center justify-center flex-shrink-0" style="background: rgba(${key === 'K' ? '0,204,255' : key === 'P' ? '34,197,94' : '168,85,247'},0.2)">
-                                            <span class="text-sm font-extralight" style="color: ${kpaLabels[key].color}">${key}</span>
+                                            <span class="text-[13px] font-light" style="color: ${kpaLabels[key].color}">${key}</span>
                                         </div>
                                         <div class="flex-1">
-                                            <p class="text-sm text-[var(--vs-text-muted)] mb-1 uppercase font-extralight">${kpaLabels[key].label}</p>
-                                            <p class="text-sm font-extralight text-[var(--vs-text-title)] Thai-Rule leading-relaxed">${objectives[key]}</p>
+                                            <p class="text-[13px] text-[var(--vs-text-muted)] mb-1 uppercase font-light">${kpaLabels[key].label}</p>
+                                            <p class="text-[13px] font-light text-[var(--vs-text-title)] Thai-Rule leading-relaxed">${objectives[key]}</p>
                                         </div>
                                     </div>
                                 ` : '').join('')
@@ -2341,16 +2429,16 @@ window.ManagementEngine = {
                         ? objectives.map((obj, idx) => `
                                         <div class="flex items-start gap-4 p-4 bg-[rgba(var(--vs-accent-rgb),0.05)] rounded-[3px] border border-[rgba(var(--vs-accent-rgb),0.2)]">
                                             <div class="w-8 h-8 rounded-[3px] bg-[rgba(var(--vs-accent-rgb),0.2)] flex items-center justify-center flex-shrink-0">
-                                                <span class="text-sm font-extralight text-[var(--vs-accent)]">${idx + 1}</span>
+                                                <span class="text-[13px] font-light text-[var(--vs-accent)]">${idx + 1}</span>
                                             </div>
                                             <div class="flex-1">
-                                                <p class="text-sm font-extralight text-[var(--vs-text-title)] Thai-Rule leading-relaxed">${obj}</p>
+                                                <p class="text-[13px] font-light text-[var(--vs-text-title)] Thai-Rule leading-relaxed">${obj}</p>
                                             </div>
                                         </div>
                                     `).join('')
                         : `
                                         <div class="text-center py-10 opacity-40">
-                                            <p class="text-sm font-extralight text-[var(--vs-text-muted)] Thai-Rule italic">ยังไม่มีข้อมูลจุดประสงค์สำหรับบทเรียนนี้</p>
+                                            <p class="text-[13px] font-light text-[var(--vs-text-muted)] Thai-Rule italic">ยังไม่มีข้อมูลจุดประสงค์สำหรับบทเรียนนี้</p>
                                         </div>
                                     `
                     )
@@ -2384,8 +2472,8 @@ window.ManagementEngine = {
                         <div class="hud-badge-micro text-[rgba(239,68,68,0.9)] mb-1 uppercase">
                             REWIND Protocol Active — Attempt ${this.rewatchCount}
                         </div>
-                        <div class="text-sm font-extralight text-[var(--vs-text-title)] Thai-Rule">
-                            คุณตกที่ขั้นตอน <span class="text-[rgba(239,68,68,0.9)] font-extralight">${failedStepName}</span> — ต้องดูวีดีโอผ่าน <span class="text-[var(--vs-accent)] font-mono">${this.requiredWatchPercent}%</span> ก่อนลองใหม่
+                        <div class="text-[13px] font-light text-[var(--vs-text-title)] Thai-Rule">
+                            คุณตกที่ขั้นตอน <span class="text-[rgba(239,68,68,0.9)] font-light">${failedStepName}</span> — ต้องดูวีดีโอผ่าน <span class="text-[var(--vs-accent)] font-mono">${this.requiredWatchPercent}%</span> ก่อนลองใหม่
                         </div>
                     </div>
                 </div>
@@ -2411,7 +2499,7 @@ window.ManagementEngine = {
                                 <div class="hud-badge-micro mb-1 uppercase">
                                     ${isRewindMode ? `REWIND MODE — Required ${this.requiredWatchPercent}%` : (useHLS ? 'DLTV Live Stream Active' : 'Video Protocol Active')}
                                 </div>
-                                <div class="text-sm font-extralight text-[var(--vs-text-title)] Thai-Rule">
+                                <div class="text-[13px] font-light text-[var(--vs-text-title)] Thai-Rule">
                                     ${isRewindMode ? 'ทบทวนเนื้อหาเพื่อเตรียมพร้อมลองอีกครั้ง' : 'รับชมวิดีโอเพื่อปลดล็อกขั้นตอนถัดไป'}
                                 </div>
                             </div>
@@ -2423,7 +2511,7 @@ window.ManagementEngine = {
                                 <div class="w-32 h-[3px] bg-[rgba(255,255,255,0.1)] rounded-[var(--vs-radius)] overflow-hidden">
                                 <div id="watch-progress-bar" class="h-full ${isRewindMode ? 'bg-[rgba(239,68,68,0.8)]' : 'bg-[var(--vs-accent)]'} transition-all duration-500" style="width: ${this.videoWatchedPercent}%"></div>
                             </div>
-                            <span class="text-sm font-mono ${isRewindMode ? 'text-[rgba(239,68,68,0.8)]' : 'text-[var(--vs-accent)]'}" id="watch-progress-text">${this.videoWatchedPercent}%</span>
+                            <span class="text-[13px] font-mono ${isRewindMode ? 'text-[rgba(239,68,68,0.8)]' : 'text-[var(--vs-accent)]'}" id="watch-progress-text">${this.videoWatchedPercent}%</span>
                             </div>
                         </div>
                     </div>
@@ -2432,14 +2520,14 @@ window.ManagementEngine = {
             ${summary ? `
                         <div class="p-6 bg-[var(--vs-bg-deep)] rounded-[var(--vs-radius)] border border-[var(--vs-border)]">
                             <h3 class="hud-badge-micro text-[var(--vs-accent)] mb-3 uppercase">Key Points</h3>
-                            <p class="text-sm font-extralight text-[var(--vs-text-body)] Thai-Rule leading-relaxed">${summary}</p>
+                            <p class="text-[13px] font-light text-[var(--vs-text-body)] Thai-Rule leading-relaxed">${summary}</p>
                         </div>
                     ` : ''
                 }
 
                     <!-- Sim button (HLS simulation placeholder) -->
             ${useHLS ? '' : `
-                        <button onclick="parent.ManagementEngine.simulateVideoWatch()" class="w-full py-2 text-sm text-zinc-600 uppercase font-extralight hover:text-zinc-400 transition-colors">
+                        <button onclick="parent.ManagementEngine.simulateVideoWatch()" class="w-full py-2 text-[13px] text-zinc-600 uppercase font-light hover:text-zinc-400 transition-colors">
                             [ Simulation: Advance Video Progress ]
                         </button>
                     `}
@@ -2452,7 +2540,7 @@ window.ManagementEngine = {
             const quiz = pedagogy.quiz || [];
             if (quiz.length === 0) {
                 return `<div class="p-10 text-center opacity-40">
-            <p class="text-sm font-extralight text-[var(--vs-text-muted)] Thai-Rule italic">ยังไม่มีข้อมูล Post-test สำหรับบทเรียนนี้</p>
+            <p class="text-[13px] font-light text-[var(--vs-text-muted)] Thai-Rule italic">ยังไม่มีข้อมูล Post-test สำหรับบทเรียนนี้</p>
                 </div>`;
             }
 
@@ -2463,14 +2551,14 @@ window.ManagementEngine = {
             <div class="space-y-8 animate-in fade-in duration-500">
                     <div class="flex items-center justify-between mb-2">
                         <div class="hud-badge-micro text-[var(--vs-accent)]">Question ${this.currentQuestionIndex + 1} of ${quiz.length}</div>
-                        <div class="text-sm font-mono text-zinc-500">${Math.round(((this.currentQuestionIndex) / quiz.length) * 100)}% Complete</div>
+                        <div class="text-[13px] font-mono text-zinc-500">${Math.round(((this.currentQuestionIndex) / quiz.length) * 100)}% Complete</div>
                     </div>
                     
                     <div class="h-1 bg-zinc-800 rounded-[3px] overflow-hidden mb-8">
                         <div class="h-full bg-[var(--vs-accent)] transition-all duration-500" style="width: ${((this.currentQuestionIndex) / quiz.length) * 100}%"></div>
                     </div>
 
-                    <h3 class="text-2xl font-extralight text-[var(--vs-text-title)] Thai-Rule leading-relaxed mb-8">
+                    <h3 class="text-2xl font-light text-[var(--vs-text-title)] Thai-Rule leading-relaxed mb-8">
                         ${q.question}
                     </h3>
 
@@ -2478,7 +2566,7 @@ window.ManagementEngine = {
                         ${q.options.map((opt, idx) => `
                             <button onclick="parent.ManagementEngine.submitQuizAnswer(${idx})" 
                                     class="p-4 text-left rounded-[3px] bg-[rgba(255,255,255,0.02)] border border-[var(--vs-border)] hover:bg-[rgba(var(--vs-accent-rgb),0.1)] hover:border-[rgba(var(--vs-accent-rgb),0.3)] group transition-all">
-                                <span class="text-sm font-extralight text-[var(--vs-text-body)] Thai-Rule group-hover:text-white">${opt}</span>
+                                <span class="text-[13px] font-light text-[var(--vs-text-body)] Thai-Rule group-hover:text-white">${opt}</span>
                             </button>
                         `).join('')}
                     </div>
@@ -2493,7 +2581,7 @@ window.ManagementEngine = {
             const instruction = syncData.instruction || 'ลากเส้นเชื่อมจากซ้ายไปขวาให้ถูกต้อง';
 
             if (pairs.length === 0) {
-                return `<div class="p-4 bg-zinc-900/50 border border-zinc-800/50 rounded-[3px] text-center py-20 opacity-40 italic text-sm uppercase">Interactive SYNC Content Placeholder</div>`;
+                return `<div class="p-4 bg-zinc-900/50 border border-zinc-800/50 rounded-[3px] text-center py-20 opacity-40 italic text-[13px] uppercase">Interactive SYNC Content Placeholder</div>`;
             }
 
             // Store pairs for validation and shuffle right side
@@ -2505,8 +2593,8 @@ window.ManagementEngine = {
             <div class="space-y-6">
                 <div class="p-6 bg-[var(--vs-bg-deep)] rounded-[3px] border border-[var(--vs-border)]">
                     <h3 class="hud-badge-micro text-[var(--vs-accent)] mb-4 uppercase">กิจกรรมจับคู่ความหมาย</h3>
-                    <p class="text-sm font-extralight text-[var(--vs-text-body)] Thai-Rule mb-2">${instruction}</p>
-                    <p class="text-sm font-extralight text-[var(--vs-text-muted)] mb-6 flex items-center gap-2"><i class="icon i-lightning h-4 w-4 text-amber-500"></i> คลิกที่กล่องซ้าย แล้วคลิกที่กล่องขวาเพื่อเชื่อม (คลิกซ้ายซ้ำเพื่อยกเลิก)</p>
+                    <p class="text-[13px] font-light text-[var(--vs-text-body)] Thai-Rule mb-2">${instruction}</p>
+                    <p class="text-[13px] font-light text-[var(--vs-text-muted)] mb-6 flex items-center gap-2"><i class="icon i-lightning h-4 w-4 text-amber-500"></i> คลิกที่กล่องซ้าย แล้วคลิกที่กล่องขวาเพื่อเชื่อม (คลิกซ้ายซ้ำเพื่อยกเลิก)</p>
 
                     <div id="sync-match-container" class="relative">
                         <!-- SVG Layer for drawing lines -->
@@ -2523,7 +2611,7 @@ window.ManagementEngine = {
                                              data-left-idx="${idx}" 
                                              data-left-text="${pair.left}"
                                              onclick="parent.ManagementEngine.selectSyncLeft(${idx})">
-                                            <span class="text-sm font-extralight text-[var(--vs-text-title)] Thai-Rule">${pair.left}</span>
+                                            <span class="text-[13px] font-light text-[var(--vs-text-title)] Thai-Rule">${pair.left}</span>
                                         </div>
                                     `).join('')}
                             </div>
@@ -2536,7 +2624,7 @@ window.ManagementEngine = {
                                              data-right-idx="${idx}" 
                                              data-right-text="${right}"
                                              onclick="parent.ManagementEngine.selectSyncRight(${idx})">
-                                            <span class="text-sm font-extralight text-[var(--vs-text-title)] Thai-Rule">${right}</span>
+                                            <span class="text-[13px] font-light text-[var(--vs-text-title)] Thai-Rule">${right}</span>
                                         </div>
                                     `).join('')}
                             </div>
@@ -2544,10 +2632,10 @@ window.ManagementEngine = {
                     </div>
 
                     <div class="mt-6 pt-4 border-t border-[var(--vs-border)] flex gap-4">
-                        <button onclick="parent.ManagementEngine.clearSyncConnections()" class="flex-1 py-3 bg-[rgba(255,255,255,0.05)] border border-[var(--vs-border)] rounded-[3px] text-[var(--vs-text-muted)] hover:bg-[rgba(255,255,255,0.1)] transition-colors font-extralight uppercase text-sm">
+                        <button onclick="parent.ManagementEngine.clearSyncConnections()" class="flex-1 py-3 bg-[rgba(255,255,255,0.05)] border border-[var(--vs-border)] rounded-[3px] text-[var(--vs-text-muted)] hover:bg-[rgba(255,255,255,0.1)] transition-colors font-light uppercase text-[13px]">
                             ล้างทั้งหมด
                         </button>
-                        <button onclick="parent.ManagementEngine.checkSyncAnswers()" class="flex-1 py-3 bg-[rgba(var(--vs-accent-rgb),0.2)] border border-[rgba(var(--vs-accent-rgb),0.4)] rounded-[3px] text-[var(--vs-accent)] hover:bg-[rgba(var(--vs-accent-rgb),0.3)] transition-colors font-extralight uppercase text-sm">
+                        <button onclick="parent.ManagementEngine.checkSyncAnswers()" class="flex-1 py-3 bg-[rgba(var(--vs-accent-rgb),0.2)] border border-[rgba(var(--vs-accent-rgb),0.4)] rounded-[3px] text-[var(--vs-accent)] hover:bg-[rgba(var(--vs-accent-rgb),0.3)] transition-colors font-light uppercase text-[13px]">
                             ตรวจคำตอบ
                         </button>
                     </div>
@@ -2561,7 +2649,7 @@ window.ManagementEngine = {
             const tasks = pedagogy.reflectTasks || [];
 
             if (tasks.length === 0) {
-                return `<div class="p-4 bg-zinc-900/50 border border-zinc-800/50 rounded-[3px] text-center py-20 opacity-40 italic text-sm uppercase">Interactive REFLECT Content Placeholder</div>`;
+                return `<div class="p-4 bg-zinc-900/50 border border-zinc-800/50 rounded-[3px] text-center py-20 opacity-40 italic text-[13px] uppercase">Interactive REFLECT Content Placeholder</div>`;
             }
 
             const task = tasks[0]; // First task
@@ -2572,11 +2660,11 @@ window.ManagementEngine = {
                     <h3 class="hud-badge-micro text-[var(--vs-accent)] mb-4 uppercase">กิจกรรมสะท้อนคิด</h3>
 
                     <div class="p-4 bg-[rgba(168,85,247,0.1)] border border-[rgba(168,85,247,0.3)] rounded-[3px] mb-6">
-                        <p class="text-sm font-extralight text-[var(--vs-text-title)] Thai-Rule leading-relaxed">${task.question}</p>
+                        <p class="text-[13px] font-light text-[var(--vs-text-title)] Thai-Rule leading-relaxed">${task.question}</p>
                     </div>
 
                     <textarea id="reflect-answer"
-                        class="w-full h-40 p-4 bg-[rgba(255,255,255,0.03)] border border-[var(--vs-border)] rounded-[3px] text-sm font-extralight text-[var(--vs-text-body)] Thai-Rule resize-none focus:outline-none focus:border-[var(--vs-accent)]"
+                        class="w-full h-40 p-4 bg-[rgba(255,255,255,0.03)] border border-[var(--vs-border)] rounded-[3px] text-[13px] font-light text-[var(--vs-text-body)] Thai-Rule resize-none focus:outline-none focus:border-[var(--vs-accent)]"
                         placeholder="เขียนคำตอบของนักเรียนที่นี่..."
                         onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); parent.ManagementEngine.submitReflection(); }"></textarea>
 
@@ -2585,14 +2673,14 @@ window.ManagementEngine = {
                                 <div class="hud-badge-micro text-[rgba(255,193,7,0.8)] mb-2 uppercase">HINTS</div>
                                 <ul class="space-y-1">
                                     ${task.hints.map(hint => `
-                                        <li class="text-sm font-extralight text-[var(--vs-text-muted)] Thai-Rule">- ${hint}</li>
+                                        <li class="text-[13px] font-light text-[var(--vs-text-muted)] Thai-Rule">- ${hint}</li>
                                     `).join('')}
                                 </ul>
                             </div>
                         ` : ''}
 
                     <div class="mt-6 pt-4 border-t border-[var(--vs-border)]">
-                        <button onclick="parent.ManagementEngine.submitReflection()" class="w-full py-3 bg-[rgba(168,85,247,0.2)] border border-[rgba(168,85,247,0.4)] rounded-[3px] text-[rgb(168,85,247)] hover:bg-[rgba(168,85,247,0.3)] transition-colors font-extralight uppercase text-sm">
+                        <button onclick="parent.ManagementEngine.submitReflection()" class="w-full py-3 bg-[rgba(168,85,247,0.2)] border border-[rgba(168,85,247,0.4)] rounded-[3px] text-[rgb(168,85,247)] hover:bg-[rgba(168,85,247,0.3)] transition-colors font-light uppercase text-[13px]">
                             บันทึกคำตอบ
                         </button>
                     </div>
@@ -2606,7 +2694,7 @@ window.ManagementEngine = {
             const challenge = pedagogy.masterChallenge || {};
 
             if (!challenge.scenario) {
-                return `<div class="p-4 bg-zinc-900/50 border border-zinc-800/50 rounded-[3px] text-center py-20 opacity-40 italic text-sm uppercase">Interactive MASTER Content Placeholder</div>`;
+                return `<div class="p-4 bg-zinc-900/50 border border-zinc-800/50 rounded-[3px] text-center py-20 opacity-40 italic text-[13px] uppercase">Interactive MASTER Content Placeholder</div>`;
             }
 
             return `
@@ -2617,18 +2705,18 @@ window.ManagementEngine = {
                     <!-- Scenario Box -->
                     <div class="p-5 bg-[rgba(255,193,7,0.1)] border border-[rgba(255,193,7,0.3)] rounded-[3px] mb-6">
                         <div class="hud-badge-micro text-[rgba(255,193,7,0.8)] mb-2 uppercase">สถานการณ์</div>
-                        <p class="text-sm font-extralight text-[var(--vs-text-title)] Thai-Rule leading-relaxed">${challenge.scenario}</p>
+                        <p class="text-[13px] font-light text-[var(--vs-text-title)] Thai-Rule leading-relaxed">${challenge.scenario}</p>
                     </div>
 
                     <!-- Question Box -->
                     <div class="p-5 bg-[rgba(var(--vs-accent-rgb),0.1)] border border-[rgba(var(--vs-accent-rgb),0.3)] rounded-[3px] mb-6">
                         <div class="hud-badge-micro text-[var(--vs-accent)] mb-2 uppercase">คำถาม</div>
-                        <p class="text-sm font-extralight text-[var(--vs-text-title)] Thai-Rule leading-relaxed">${challenge.question}</p>
+                        <p class="text-[13px] font-light text-[var(--vs-text-title)] Thai-Rule leading-relaxed">${challenge.question}</p>
                     </div>
 
                     <!-- Answer Area -->
                     <textarea id="master-answer"
-                        class="w-full h-48 p-4 bg-[rgba(255,255,255,0.03)] border border-[var(--vs-border)] rounded-[3px] text-sm font-extralight text-[var(--vs-text-body)] Thai-Rule resize-none focus:outline-none focus:border-[var(--vs-accent)]"
+                        class="w-full h-48 p-4 bg-[rgba(255,255,255,0.03)] border border-[var(--vs-border)] rounded-[3px] text-[13px] font-light text-[var(--vs-text-body)] Thai-Rule resize-none focus:outline-none focus:border-[var(--vs-accent)]"
                         placeholder="เขียนคำตอบอย่างละเอียด..."
                         onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); parent.ManagementEngine.submitMasterChallenge(); }"></textarea>
 
@@ -2637,14 +2725,14 @@ window.ManagementEngine = {
                                 <div class="hud-badge-micro text-[var(--vs-text-muted)] mb-2 uppercase">เกณฑ์การให้คะแนน</div>
                                 <ul class="space-y-1">
                                     ${challenge.rubric.map((r, i) => `
-                                        <li class="text-sm font-extralight text-[var(--vs-text-muted)] Thai-Rule flex items-center gap-2"><i class="icon i-check h-3 w-3 text-[var(--vs-success)]"></i> ${r}</li>
+                                        <li class="text-[13px] font-light text-[var(--vs-text-muted)] Thai-Rule flex items-center gap-2"><i class="icon i-check h-3 w-3 text-[var(--vs-success)]"></i> ${r}</li>
                                     `).join('')}
                                 </ul>
                             </div>
                         ` : ''}
 
                     <div class="mt-6 pt-4 border-t border-[var(--vs-border)]">
-                        <button onclick="parent.ManagementEngine.submitMasterChallenge()" class="w-full py-3 bg-[rgba(255,193,7,0.2)] border border-[rgba(255,193,7,0.4)] rounded-[3px] text-[rgba(255,193,7,1)] hover:bg-[rgba(255,193,7,0.3)] transition-colors font-extralight uppercase text-sm">
+                        <button onclick="parent.ManagementEngine.submitMasterChallenge()" class="w-full py-3 bg-[rgba(255,193,7,0.2)] border border-[rgba(255,193,7,0.4)] rounded-[3px] text-[rgba(255,193,7,1)] hover:bg-[rgba(255,193,7,0.3)] transition-colors font-light uppercase text-[13px]">
                             <i class="icon i-chevron-right h-4 w-4 inline-block mr-1"></i> ส่งคำตอบ Master Challenge
                         </button>
                     </div>
@@ -2654,7 +2742,7 @@ window.ManagementEngine = {
         }
 
         // ─── Default Placeholder for other steps ───
-        return `<div class="p-4 bg-zinc-900/50 border border-zinc-800/50 rounded-[3px] text-center py-20 opacity-40 italic text-sm uppercase">Interactive ${this.masterySteps[this.currentStep - 1].label} Content Placeholder</div>`;
+        return `<div class="p-4 bg-zinc-900/50 border border-zinc-800/50 rounded-[3px] text-center py-20 opacity-40 italic text-[13px] uppercase">Interactive ${this.masterySteps[this.currentStep - 1].label} Content Placeholder</div>`;
     },
 
     // ─── Quiz Answer Handler (Pre-test: NO ANSWER REVEAL) ───
@@ -2856,7 +2944,7 @@ window.ManagementEngine = {
                                 <i class="icon i-x-circle h-12 w-12 text-[rgba(239,68,68,0.9)]"></i>
                             </div>
                         </div>
-                        <h1 class="text-4xl font-extralight text-[var(--vs-text-title)] uppercase">Mastery Protocol Failed</h1>
+                        <h1 class="text-4xl font-light text-[var(--vs-text-title)] uppercase">Mastery Protocol Failed</h1>
                         <div class="hud-badge-micro text-[rgba(239,68,68,0.9)] bg-[rgba(239,68,68,0.1)] px-4 py-1.5 rounded-[3px] inline-block border border-[rgba(239,68,68,0.3)]">
                             UNSATISFACTORY PERFORMANCE AT: ${data.stepLabel.toUpperCase()}
                         </div>
@@ -2865,27 +2953,27 @@ window.ManagementEngine = {
                     <!-- Progress Statistics -->
                     <div class="grid grid-cols-2 gap-8 py-8 border-y border-[rgba(255,255,255,0.05)]">
                         <div class="text-right border-r border-[rgba(255,255,255,0.05)] pr-8">
-                            <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-2">Achieved Score</div>
+                            <div class="text-[13px] text-[var(--vs-text-muted)] uppercase mb-2">Achieved Score</div>
                             <div class="text-6xl font-black text-[rgba(239,68,68,0.9)]">${data.score}%</div>
                         </div>
                         <div class="text-left pl-8">
-                            <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-2">Threshold Goal</div>
+                            <div class="text-[13px] text-[var(--vs-text-muted)] uppercase mb-2">Threshold Goal</div>
                             <div class="text-6xl font-black text-white opacity-40">${data.required}%</div>
                         </div>
                     </div>
 
                     <!-- Instruction & Timer -->
                     <div class="space-y-6 pt-4">
-                        <p class="text-lg font-extralight text-[var(--vs-text-body)] Thai-Rule leading-relaxed">
+                        <p class="text-lg font-light text-[var(--vs-text-body)] Thai-Rule leading-relaxed">
                             คะแนนของคุณยังไม่ผ่านเกณฑ์พื้นฐานที่ระบบกำหนด<br/>
                             กรุณาทบทวน <span class="text-[var(--vs-accent)] font-normal">PROTOCOL 03: วิดีโอบทเรียน</span> อีกครั้งเพื่อความเข้าใจที่ชัดเจน
                         </p>
                         
                         <div class="flex flex-col items-center">
-                            <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-2 opacity-50">Rewind Cooldown Active</div>
+                            <div class="text-[13px] text-[var(--vs-text-muted)] uppercase mb-2 opacity-50">Rewind Cooldown Active</div>
                             <div class="flex items-baseline gap-2">
                                 <span id="rewind-timer-display" class="text-7xl font-mono font-black text-white digital-timer-glow">${this.rewindCountdown.toString().padStart(2, '0')}</span>
-                                <span class="text-xl font-extralight text-[var(--vs-text-muted)] uppercase">sec</span>
+                                <span class="text-xl font-light text-[var(--vs-text-muted)] uppercase">sec</span>
                             </div>
                         </div>
                     </div>
@@ -2893,7 +2981,7 @@ window.ManagementEngine = {
                     <!-- Dev Bypass Button (shown only if dev bypass enabled) -->
                     ${this.devBypassEnabled ? `
                         <div class="pt-8 opacity-40 hover:opacity-100 transition-opacity">
-                            <button onclick="parent.ManagementEngine.bypassFailCooldown()" class="px-6 py-2 border border-amber-500/30 text-amber-500/70 text-sm hover:bg-amber-500/10 rounded-[3px] uppercase">
+                            <button onclick="parent.ManagementEngine.bypassFailCooldown()" class="px-6 py-2 border border-amber-500/30 text-amber-500/70 text-[13px] hover:bg-amber-500/10 rounded-[3px] uppercase">
                                 Dev Bypass: Skip Cooldown
                             </button>
                         </div>
@@ -3325,8 +3413,8 @@ window.ManagementEngine = {
                         <i class="icon ${badge.iconClass}" style="width: 64px; height: 64px; background-color: ${badge.color};"></i>
                     </div>
                     <div style="
-                        font-size: 14px;
-                        font-weight: 200;
+                        font-size: 13px;
+                        font-weight: 300;
                         color: ${badge.color};
                         text-transform: uppercase;
                         margin-bottom: 8px;
@@ -3335,13 +3423,13 @@ window.ManagementEngine = {
                     <!-- Congrats Message -->
                     <h1 style="
                         font-size: 24px;
-                        font-weight: 200;
+                        font-weight: 300;
                         color: var(--vs-accent);
                         margin-bottom: 8px;
                     ">ยินดีด้วย!</h1>
                     <p style="
-                        font-size: 14px;
-                        font-weight: 200;
+                        font-size: 13px;
+                        font-weight: 300;
                         color: var(--vs-text-body);
                         margin-bottom: 24px;
                     ">คุณเชี่ยวชาญบทเรียน <strong style="color:var(--vs-text-title)">${stats.lessonName}</strong> แล้ว!</p>
@@ -3358,22 +3446,22 @@ window.ManagementEngine = {
                         border: 1px solid var(--vs-border);
                     ">
                         <div>
-                            <div style="font-size: 14px; color: var(--vs-text-muted); font-weight: 200;">PRE-TEST</div>
-                            <div style="font-size: 24px; color: var(--vs-text-title); font-weight: 200;">${stats.pretestScore}%</div>
+                            <div style="font-size: 13px; color: var(--vs-text-muted); font-weight: 300;">PRE-TEST</div>
+                            <div style="font-size: 24px; color: var(--vs-text-title); font-weight: 300;">${stats.pretestScore}%</div>
                         </div>
                         <div>
-                            <div style="font-size: 14px; color: var(--vs-text-muted); font-weight: 200;">POST-TEST</div>
-                            <div style="font-size: 24px; color: var(--vs-success); font-weight: 200;">${stats.posttestScore}%</div>
+                            <div style="font-size: 13px; color: var(--vs-text-muted); font-weight: 300;">POST-TEST</div>
+                            <div style="font-size: 24px; color: var(--vs-success); font-weight: 300;">${stats.posttestScore}%</div>
                         </div>
                         <div>
-                            <div style="font-size: 14px; color: var(--vs-text-muted); font-weight: 200;">IMPROVEMENT</div>
-                            <div style="font-size: 24px; color: ${stats.improvement >= 0 ? 'var(--vs-success)' : 'var(--vs-danger)'}; font-weight: 200;">
+                            <div style="font-size: 13px; color: var(--vs-text-muted); font-weight: 300;">IMPROVEMENT</div>
+                            <div style="font-size: 24px; color: ${stats.improvement >= 0 ? 'var(--vs-success)' : 'var(--vs-danger)'}; font-weight: 300;">
                                 ${stats.improvement >= 0 ? '+' : ''}${stats.improvement}%
                             </div>
                         </div>
                     </div>
                     
-                    <div style="font-size: 14px; color: var(--vs-text-muted); margin-bottom: 24px; font-weight: 200;">
+                    <div style="font-size: 13px; color: var(--vs-text-muted); margin-bottom: 24px; font-weight: 300;">
                         เวลาที่ใช้: ${stats.totalMins} นาที
                     </div>
                     
@@ -3381,8 +3469,8 @@ window.ManagementEngine = {
                     <div style="display: flex; gap: 12px; justify-content: center;">
                         <button onclick="(parent.window.ManagementEngine || window.ManagementEngine).gotoNextLesson()" style="
                             padding: 12px 24px;
-                            font-size: 14px;
-                            font-weight: 200;
+                            font-size: 13px;
+                            font-weight: 300;
                             color: var(--vs-bg-deep);
                             background: var(--vs-accent);
                             border: none;
@@ -3391,8 +3479,8 @@ window.ManagementEngine = {
                         ">เรียนบทถัดไป →</button>
                         <button onclick="(parent.window.ManagementEngine || window.ManagementEngine).closeVictoryScreen()" style="
                             padding: 12px 24px;
-                            font-size: 14px;
-                            font-weight: 200;
+                            font-size: 13px;
+                            font-weight: 300;
                             color: var(--vs-text-body);
                             background: transparent;
                             border: 1px solid var(--vs-border);
@@ -3660,18 +3748,18 @@ window.ManagementEngine = {
                                     <div class="absolute inset-0 bg-red-500/5 animate-pulse pointer-events-none"></div>
                                     <div class="relative z-10 flex flex-col items-center">
                                         <i class="icon i-exclamation-circle h-14 w-14 text-zinc-700 mb-6"></i>
-                                        <h3 class="text-zinc-300 font-extralight text-lg mb-2 Thai-Rule">Security Protocol: Access Restricted</h3>
-                                        <p class="text-sm text-zinc-500 mb-8 Thai-Rule max-w-sm">
+                                        <h3 class="text-zinc-300 font-light text-lg mb-2 Thai-Rule">Security Protocol: Access Restricted</h3>
+                                        <p class="text-[13px] text-zinc-500 mb-8 Thai-Rule max-w-sm">
                                             ตรวจพบปัญหาโครงสร้างความปลอดภัย (CORS) <br>
                                             <span class="text-zinc-400">วิธีที่แนะนำ:</span> รันด้วย <span class="text-[var(--vs-accent)]">netlify dev</span> แทนการใช้ Extension
                                         </p>
                                         
                                         <div class="flex flex-col sm:flex-row gap-4">
-                                            <button onclick="parent.ManagementEngine.loadHLSVideo()" class="px-8 py-2.5 bg-[var(--vs-accent)] text-black rounded-[3px] text-sm font-extralight uppercase transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
+                                            <button onclick="parent.ManagementEngine.loadHLSVideo()" class="px-8 py-2.5 bg-[var(--vs-accent)] text-black rounded-[3px] text-[13px] font-light uppercase transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
                                                 <i class="icon i-refresh h-4 w-4"></i>
                                                 RETRY CONNECTION
                                             </button>
-                                            <button onclick="parent.ManagementEngine.showNetlifyGuide()" class="px-8 py-2.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-[3px] text-sm font-extralight uppercase transition-all hover:bg-zinc-700">
+                                            <button onclick="parent.ManagementEngine.showNetlifyGuide()" class="px-8 py-2.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-[3px] text-[13px] font-light uppercase transition-all hover:bg-zinc-700">
                                                 HOW TO FIX
                                             </button>
                                         </div>
@@ -3898,10 +3986,10 @@ window.ManagementEngine = {
 
             if (remaining > 0) {
                 countdownEl.textContent = remaining;
-                countdownEl.className = 'text-sm font-mono text-[var(--vs-accent)]';
+                countdownEl.className = 'text-[13px] font-mono text-[var(--vs-accent)]';
             } else {
                 countdownEl.textContent = 'READY';
-                countdownEl.className = 'text-sm font-mono text-[rgba(34,197,94,1)]';
+                countdownEl.className = 'text-[13px] font-mono text-[rgba(34,197,94,1)]';
                 countdownEl.nextElementSibling.textContent = '';
                 clearInterval(this.step2CountdownInterval);
             }
@@ -3916,7 +4004,7 @@ window.ManagementEngine = {
     renderTrait(label, percent, colorClass) {
         return `
             <div>
-                <div class="flex justify-between text-sm mb-1 font-extralight">
+                <div class="flex justify-between text-[13px] mb-1 font-light">
                     <span class="text-[var(--vs-text-muted)] uppercase">${label}</span>
                     <span class="${colorClass}">${percent}%</span>
                 </div>
@@ -3931,8 +4019,8 @@ window.ManagementEngine = {
         return `
             <div class="p-4 rounded-[3px] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]  flex items-center justify-between group hover:border-white/30 transition-all">
                 <div>
-                    <div class="text-sm text-[var(--vs-text-muted)] uppercase font-extralight mb-1">${label}</div>
-                    <div class="text-2xl font-extralight text-[var(--vs-text-title)]">${value}</div>
+                    <div class="text-[13px] text-[var(--vs-text-muted)] uppercase font-light mb-1">${label}</div>
+                    <div class="text-2xl font-light text-[var(--vs-text-title)]">${value}</div>
                 </div>
                 <div class="w-10 h-10 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] flex items-center justify-center">
                     <i class="icon ${icon} h-5 w-5 opacity-40 group-hover:opacity-100 transition-opacity"></i>
@@ -3949,10 +4037,10 @@ window.ManagementEngine = {
                 </div>
                 <div class="flex-1 min-w-0">
                     <div class="flex justify-between items-center mb-1">
-                        <span class="text-sm font-extralight text-[var(--vs-text-title)] Thai-Rule truncate">${name}</span>
-                        <span class="text-sm text-[var(--vs-accent)] font-extralight">${percent}</span>
+                        <span class="text-[13px] font-light text-[var(--vs-text-title)] Thai-Rule truncate">${name}</span>
+                        <span class="text-[13px] text-[var(--vs-accent)] font-light">${percent}</span>
                     </div>
-                    <div class="text-sm text-[var(--vs-text-muted)] uppercase font-extralight truncate">${task}</div>
+                    <div class="text-[13px] text-[var(--vs-text-muted)] uppercase font-light truncate">${task}</div>
                 </div>
             </div>
         `;

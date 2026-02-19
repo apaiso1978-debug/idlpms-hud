@@ -7,6 +7,64 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.1.0] - 2026-02-17
+
+### 🎯 Delegated Authority (DMDP) & Student Registration Form
+
+This release adds the Dynamic Mirroring & Delegation Protocol (DMDP) for authority delegation,
+and a complete redesign of the Student Registration form aligned with the Person-First Architecture.
+
+### Added
+
+#### DMDP — Dynamic Mirroring & Delegation Protocol
+-  **`getDelegations()` API** in `AbstractDataService` and `LocalDataService` (`src/services/DataService.js`)
+   - Returns delegation records filtered by `delegatee_id` and `school_id`
+   - Mock data supports both `TEA_M_01/SCH_MABLUD` and `TEA_001/SCH_001` user contexts
+- **"DELEGATED AUTHORITY" sidebar group** (`assets/js/management.js`)
+   - Dynamically rendered via `capabilityMap` when teacher has active delegations
+   - Uses `DataServiceFactory.getInstance()` directly (fixes initialization timing)
+   - Supports `ADMIN_STUDENT_MGMT` capability with link to `pages/student_input.html`
+
+#### Student Profile Design Document
+- **`docs/STUDENT_PROFILE_DESIGN_V01.md`** — Formal specification for student data model
+  - Person-First Architecture (single `persons` table for all roles)
+  - 8 tables: `persons`, `person_addresses`, `student_profiles`, `guardians`, `student_health_records`, `student_vaccines`, `student_ld_records`, `student_transfer_logs`
+  - 3-priority guardian system (primary, secondary, emergency)
+  - G-Code / Pending ID support for stateless children
+  - Time-series health and LD tracking
+
+### Changed
+
+#### Student Registration Form — Complete Redesign
+- **`pages/student_input.html`** — Rebuilt from scratch
+  - **Layout**: Vertical sidebar stepper → horizontal step indicator (saves width in HUD iframe)
+  - **5 Steps** aligned with database schema:
+    1. Core Identity → `persons` table (19 fields: id_type, name TH/EN, nickname, birth, gender, nationality, ethnicity, religion, blood type, phone, Line ID, email)
+    2. Geographic → `person_addresses` (registered + current with "same address" toggle, stay_type)
+    3. Guardians → `guardians` (priority 1/2/3 with relationship, income, family status, siblings, emergency note)
+    4. Enrollment → `student_profiles` (student_code, enrollment_date, status, type, grade ป.1-ม.6, classroom, previous school, scholarship)
+    5. Health Baseline → `student_health_records` (weight, height, vision, chronic disease, drug/food allergies, disability, notes)
+  - **Draft save** and **Final submit** buttons in header
+- **`assets/css/student_input.css`** — Complete rewrite
+  - **iframe-aware**: Removed standalone `max-w-[1600px]` and `p-6`, uses `box-sizing: border-box`
+  - **Iron Rules compliant**:
+    - Thai text: `16px` minimum (labels, radio groups, descriptions)
+    - English text: `14px` (step labels, badges, buttons)
+    - Font weight: `200` everywhere (no exceptions except `.hud-badge-micro`)
+    - Letter-spacing: `0 !important` on all text elements
+    - Input canvas: `var(--vs-bg-card)` background (Iron Rule #11)
+    - Border radius: `var(--vs-radius)` (3px) everywhere
+    - No drop shadows
+  - **Responsive**: `@media` breakpoints at 900px and 600px for narrow iframes
+  - **Horizontal step indicator**: `.step-tab`, `.step-num`, `.step-label` with active/complete states
+  - **Grid system**: 12-column CSS Grid with `.vs-col-{2,3,4,6,8,12}`
+
+### Fixed
+- **DMDP timing bug**: `management.js` now uses `DataServiceFactory.getInstance()` instead of `window.app.data` which was not available during sidebar render
+- **Iron Rules violations**: Thai labels previously at 14px, now 16px; removed `text-transform: uppercase` from Thai labels; removed stale `letter-spacing` values
+
+---
+
 ## [2.0.0] - 2024-01-XX
 
 ### 🚀 Major Architecture Update - Offline-First & Modular Services

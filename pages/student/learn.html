@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Learn | IDLPMS Student</title>
+    <link rel="stylesheet" href="../../assets/css/utilities.css" />
+    <link rel="stylesheet" href="../../assets/css/theme.css?v=2.5" />
+    <link rel="stylesheet" href="../../assets/css/student_input.css?v=2.5" />
+    <!-- HLS.js for DLTV video playback -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.6.5/hls.min.js"></script>
+
+    <style>
+        body {
+            background-color: var(--vs-bg-deep);
+            color: var(--vs-text-body);
+            font-family: 'Sarabun', sans-serif;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Mobile Adjustments for renderMasteryFlow output */
+        #learning-flow-container {
+            padding: 16px;
+        }
+
+        /* Override the px-8 and grid from management.js for mobile */
+        #learning-flow-container .p-8 {
+            padding: 16px !important;
+        }
+
+        #learning-flow-container .grid {
+            gap: 16px !important;
+        }
+
+        /* Ensure nodes fit on small screens */
+        .vs-milestone-node {
+            width: 32px !important;
+            height: 32px !important;
+            font-size: 10px !important;
+        }
+
+        /* Hide desktop-only elements */
+        .lg\:col-span-1 {
+            margin-top: 16px;
+        }
+
+        /* Fix Header spacing in mobile */
+        #learning-flow-container .border-b {
+            margin-bottom: 16px !important;
+            padding-bottom: 8px !important;
+        }
+
+        #learning-flow-container h1 {
+            font-size: 1.25rem !important;
+        }
+
+        #learning-flow-container h2 {
+            font-size: 1rem !important;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+    <div id="learning-flow-container">
+        <!-- Mastery Flow UI will be injected here by ManagementEngine -->
+        <div class="flex flex-col items-center justify-center h-[60vh] opacity-20 Thai-Rule text-center">
+            <div class="w-8 h-8 border border-[rgba(34,211,238,0.3)] border-t-transparent rounded-[3px] animate-spin">
+            </div>
+            <div class="text-[13px]">?????????????? Mastery Protocol...</div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Mock data logic for standalone testing or integration
+        window.formatNumberStandard = (n) => n.toString().padStart(2, '0');
+
+        function init() {
+            const container = document.getElementById('learning-flow-container');
+            let engine = null;
+
+            // Try to get ManagementEngine from student.html shell
+            try {
+                if (parent && parent.window && parent.window.ManagementEngine) {
+                    engine = parent.window.ManagementEngine;
+                }
+            } catch (e) {
+                console.warn('Security restriction: Cannot access parent.window.ManagementEngine', e);
+            }
+
+            if (engine && typeof engine.renderMasteryFlow === 'function') {
+                // Set default subject if none active
+                if (!engine.currentSubjectID) {
+                    engine.currentSubjectID = 'SUB_HIST';
+                }
+                engine.renderMasteryFlow(container);
+            } else {
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center p-10 text-center">
+                        <div class="hud-badge-micro text-rose-500 uppercase">Protocol Error</div>
+                        <div class="text-[13px] text-[var(--vs-text-muted)] Thai-Rule">
+                            ???????????? Engine ??????? ???????????????????????????
+                        </div>
+                        <a href="../../student.html" target="_top" class="px-6 bg-[rgba(34,211,238,0.1)] text-[var(--vs-accent)] border border-[rgba(34,211,238,0.3)] rounded-[3px] uppercase text-[13px]">Back to Home</a>
+                    </div>
+                `;
+            }
+        }
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

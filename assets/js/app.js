@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             avatarContainer.style.background = `color-mix(in srgb, var(--${user.color}, #71717a), transparent 85%)`;
             avatarContainer.style.border = `1px solid color-mix(in srgb, var(--${user.color}, #71717a), transparent 60%)`;
             avatarContainer.style.color = `var(--${user.color}, #71717a)`;
-            avatarContainer.className = `w-10 h-10 rounded-full flex items-center justify-center font-extralight text-sm`;
+            avatarContainer.className = `w-8 h-8 rounded-[3px] flex items-center justify-center font-light text-[13px] flex-shrink-0`;
         }
     }
 
@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (err) {
         console.error('System bootstrap failed:', err);
     }
+
 
     // Unified Logout Logic
     window.logout = function () {

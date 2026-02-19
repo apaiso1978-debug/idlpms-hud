@@ -4,7 +4,9 @@
 class SchoolConfigService {
     static STORAGE_KEYS = {
         TEACHER_CONFIG: 'IDLPMS_TeacherConfig_',
-        SUBJECT_CARDS: 'IDLPMS_SubjectCards'
+        SUBJECT_CARDS: 'IDLPMS_SubjectCards',
+        DIRECTOR_SUBJECT_BANK: 'IDLPMS_DirectorSubjectBank',  // ← Hierarchy: Director's master catalog
+        TEACHER_SUBJECT_BANK: 'idlpms_subject_bank'            // ← Teacher's personal bank
     };
 
     /**
@@ -37,7 +39,8 @@ class SchoolConfigService {
                 };
             });
 
-            // 3. Get Subjects — Priority: IDLPMS_DATA.subjects (data.js) > LocalStorage SubjectCards
+            // 3. Get Subjects — Priority: data.js > Director Bank > Teacher Bank
+            //    Hierarchy: Director's catalog is the authoritative source
             let subjects = [];
             if (typeof IDLPMS_DATA !== 'undefined' && IDLPMS_DATA.subjects) {
                 // Use centralized subject bank from data.js
@@ -49,11 +52,14 @@ class SchoolConfigService {
                     periodsPerWeek: s.periodsPerWeek || {}
                 }));
             } else {
-                // Fallback to LocalStorage Subject Cards
-                const subjectCards = JSON.parse(localStorage.getItem(this.STORAGE_KEYS.SUBJECT_CARDS) || '[]');
+                // Fallback: Director Bank → Teacher Bank → legacy key
+                const directorBank = localStorage.getItem(this.STORAGE_KEYS.DIRECTOR_SUBJECT_BANK);
+                const teacherBank = localStorage.getItem(this.STORAGE_KEYS.TEACHER_SUBJECT_BANK);
+                const legacyBank = localStorage.getItem(this.STORAGE_KEYS.SUBJECT_CARDS);
+                const subjectCards = JSON.parse(directorBank || teacherBank || legacyBank || '[]');
                 subjects = subjectCards.map(card => ({
                     id: card.subjectId || card.id,
-                    name: card.subjectName || card.name,
+                    name: card.subjectName || card.nameTH || card.name,
                     color: card.color,
                     type: 'CORE',
                     periodsPerWeek: {
@@ -91,8 +97,36 @@ class SchoolConfigService {
                 constraints.subjectPriority[s.id] = s.type === 'CORE' ? 100 : s.type === 'EXTRA' ? 50 : 10;
             });
 
-            // 6. Pre-assigned slots (สวดมนต์ ศุกร์คาบ 8, ลูกเสือ พุธคาบ 8, etc.)
-            const preAssignedSlots = school.preAssignedSlots || [];
+            // 6. Pre-assigned slots — Hierarchy cascade:
+            //    Priority: school profile (data.js) > Director's Domain 4 policy (localStorage)
+            let preAssignedSlots = school.preAssignedSlots || [];
+
+            if (preAssignedSlots.length === 0) {
+                // Fallback: build from Director's Domain 2+4 inputs
+                const sid = schoolId;
+                const domainKey = 'IDLPMS_DomainInputs_';
+                try {
+                    const d2 = JSON.parse(localStorage.getItem(`${domainKey}${sid}_d2`) || 'null');
+                    const d4 = JSON.parse(localStorage.getItem(`${domainKey}${sid}_d4`) || 'null');
+
+                    if (d2) {
+                        d2.forEach(a => preAssignedSlots.push({
+                            subjectId: (a.id || '').replace(/_\d+$/, ''),
+                            day: a.day, period: a.period,
+                            domain: 2, visibility: 'teacher-only'
+                        }));
+                    }
+                    if (d4) {
+                        d4.forEach(a => preAssignedSlots.push({
+                            subjectId: a.id,
+                            day: a.day, period: a.period,
+                            domain: 4, visibility: 'all'
+                        }));
+                    }
+                } catch (e) {
+                    console.warn('SchoolConfigService: Could not load Domain inputs', e);
+                }
+            }
 
             return {
                 scheduleStructure,

@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STUDENT REGISTRATION | IDLPMS HUD</title>
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <link rel="stylesheet" href="../assets/css/notifications.css" />
+    <link rel="stylesheet" href="../assets/css/student_input.css" />
+    <script src="../assets/js/data.js"></script>
+    <script src="../src/services/DataService.js"></script>
+    <script src="../src/services/AuthService.js"></script>
+    <script src="../assets/js/notifications.js"></script>
+</head>
+
+<body class="vs-bg-deep">
+    <div class="student-page">
+        <!-- ═══ TOP HEADER ═══ -->
+        <header class="student-header">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <h1>Student Registration</h1>
+                <span class="hud-badge-micro" style="color:var(--vs-text-muted)">PERSON-FIRST ARCHITECTURE V2.0</span>
+            </div>
+            <div class="header-actions">
+                <button onclick="saveDraft()" class="vs-btn vs-btn-outline">
+                    <span>SAVE DRAFT</span>
+                </button>
+                <button onclick="submitForm()" class="vs-btn vs-btn-solid">
+                    <span>FINAL SUBMIT</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- ═══ HORIZONTAL STEP INDICATOR ═══ -->
+        <nav class="step-indicator" id="stepIndicator">
+            <div class="step-tab active" onclick="goToStep(1)">
+                <div class="step-num">1</div>
+                <div class="step-label">
+                    <span class="step-label-en">Core Identity</span>
+                    <span class="step-label-th">ข้อมูลส่วนตัว</span>
+                </div>
+            </div>
+            <div class="step-tab" onclick="goToStep(2)">
+                <div class="step-num">2</div>
+                <div class="step-label">
+                    <span class="step-label-en">Geographic</span>
+                    <span class="step-label-th">ที่อยู่</span>
+                </div>
+            </div>
+            <div class="step-tab" onclick="goToStep(3)">
+                <div class="step-num">3</div>
+                <div class="step-label">
+                    <span class="step-label-en">Guardians</span>
+                    <span class="step-label-th">ผู้ปกครอง</span>
+                </div>
+            </div>
+            <div class="step-tab" onclick="goToStep(4)">
+                <div class="step-num">4</div>
+                <div class="step-label">
+                    <span class="step-label-en">Enrollment</span>
+                    <span class="step-label-th">ข้อมูลการศึกษา</span>
+                </div>
+            </div>
+            <div class="step-tab" onclick="goToStep(5)">
+                <div class="step-num">5</div>
+                <div class="step-label">
+                    <span class="step-label-en">Health</span>
+                    <span class="step-label-th">สุขภาพ</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- ═══ FORM CONTENT ═══ -->
+        <form id="studentRegistrationForm" onsubmit="return false;">
+
+            <!-- ════════════════════════════════════════════
+                 STEP 1: CORE IDENTITY → persons table
+                 ════════════════════════════════════════════ -->
+            <div id="step1" class="form-tab active">
+                <!-- Section: ID & Name -->
+                <div class="vs-section-card" style="margin-bottom:16px">
+                    <div class="form-section-header">
+                        <span class="section-title">ข้อมูลพื้นฐานบุคคล</span>
+                        <span class="section-badge">persons</span>
+                    </div>
+                    <div class="vs-form-grid">
+                        <!-- id_type -->
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ประเภทรหัสประจำตัว</label>
+                                <select id="id_type" class="vs-input-industrial">
+                                    <option value="citizen_id">บัตรประชาชน</option>
+                                    <option value="g_code">G-Code (ไร้สัญชาติ)</option>
+                                    <option value="foreign_id">บัตรต่างด้าว</option>
+                                    <option value="passport">Passport</option>
+                                    <option value="pending">ยังไม่มี (เติมทีหลัง)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- id_number -->
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">หมายเลขประจำตัว</label>
+                                <input type="text" id="id_number" class="vs-input-industrial"
+                                    placeholder="X-XXXX-XXXXX-XX-X">
+                            </div>
+                        </div>
+                        <!-- prefix_th -->
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">คำนำหน้าชื่อ</label>
+                                <select id="prefix_th" class="vs-input-industrial">
+                                    <option value="เด็กชาย">เด็กชาย</option>
+                                    <option value="เด็กหญิง">เด็กหญิง</option>
+                                    <option value="นาย">นาย</option>
+                                    <option value="นางสาว">นางสาว</option>
+                                    <option value="นาง">นาง</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- first_name_th -->
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ชื่อภาษาไทย *</label>
+                                <input type="text" id="first_name_th" class="vs-input-industrial" required
+                                    placeholder="ระบุชื่อ">
+                            </div>
+                        </div>
+                        <!-- last_name_th -->
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">นามสกุลภาษาไทย *</label>
+                                <input type="text" id="last_name_th" class="vs-input-industrial" required
+                                    placeholder="ระบุนามสกุล">
+                            </div>
+                        </div>
+                        <!-- nickname -->
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ชื่อเล่น</label>
+                                <input type="text" id="nickname" class="vs-input-industrial" placeholder="ระบุชื่อเล่น">
+                            </div>
+                        </div>
+
+                        <!-- first_name_en -->
+                        <div class="vs-col-6">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label-en">First Name (English)</label>
+                                <input type="text" id="first_name_en" class="vs-input-industrial"
+                                    placeholder="Given Name">
+                            </div>
+                        </div>
+                        <!-- last_name_en -->
+                        <div class="vs-col-6">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label-en">Last Name (English)</label>
+                                <input type="text" id="last_name_en" class="vs-input-industrial"
+                                    placeholder="Family Name">
+                            </div>
+                        </div>
+
+                        <!-- birth_date -->
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">วัน/เดือน/ปี เกิด *</label>
+                                <input type="date" id="birth_date" class="vs-input-industrial" required>
+                            </div>
+                        </div>
+                        <!-- gender -->
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">เพศ</label>
+                                <div class="vs-radio-group">
+                                    <label class="vs-radio-label">
+                                        <input type="radio" name="gender" value="male"> ชาย
+                                    </label>
+                                    <label class="vs-radio-label">
+                                        <input type="radio" name="gender" value="female"> หญิง
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- nationality -->
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">สัญชาติ</label>
+                                <input type="text" id="nationality" class="vs-input-industrial" value="ไทย">
+                            </div>
+                        </div>
+                        <!-- ethnicity -->
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">เชื้อชาติ</label>
+                                <input type="text" id="ethnicity" class="vs-input-industrial" value="ไทย">
+                            </div>
+                        </div>
+
+                        <!-- religion -->
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ศาสนา</label>
+                                <select id="religion" class="vs-input-industrial">
+                                    <option value="พุทธ">พุทธ</option>
+                                    <option value="อิสลาม">อิสลาม</option>
+                                    <option value="คริสต์">คริสต์</option>
+                                    <option value="ฮินดู">ฮินดู</option>
+                                    <option value="อื่นๆ">อื่นๆ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- blood_type -->
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">หมู่เลือด</label>
+                                <select id="blood_type" class="vs-input-industrial">
+                                    <option value="unknown">ไม่ทราบ</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="AB">AB</option>
+                                    <option value="O">O</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="vs-col-4"></div>
+
+                        <!-- phone -->
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">เบอร์โทรศัพท์</label>
+                                <input type="tel" id="phone" class="vs-input-industrial" placeholder="0XX-XXX-XXXX">
+                            </div>
+                        </div>
+                        <!-- line_id -->
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label-en">Line ID</label>
+                                <input type="text" id="line_id" class="vs-input-industrial"
+                                    placeholder="ระดับ ม.ต้นขึ้นไป">
+                            </div>
+                        </div>
+                        <!-- email -->
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label-en">Email</label>
+                                <input type="email" id="email" class="vs-input-industrial"
+                                    placeholder="student@example.com">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-nav">
+                    <div></div>
+                    <button type="button" onclick="goToStep(2)" class="vs-btn vs-btn-accent">
+                        <span>ถัดไป: ที่อยู่</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ════════════════════════════════════════════
+                 STEP 2: GEOGRAPHIC → person_addresses
+                 ════════════════════════════════════════════ -->
+            <div id="step2" class="form-tab">
+                <!-- Registered Address -->
+                <div class="vs-section-card" style="margin-bottom:16px">
+                    <div class="form-section-header">
+                        <span class="section-title">ที่อยู่ตามทะเบียนบ้าน</span>
+                        <span class="section-badge">registered</span>
+                    </div>
+                    <div class="vs-form-grid">
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">บ้านเลขที่</label>
+                                <input type="text" id="reg_house" class="vs-input-industrial" placeholder="เช่น 123/4">
+                            </div>
+                        </div>
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">หมู่บ้าน</label>
+                                <input type="text" id="reg_village" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">หมู่ที่</label>
+                                <input type="text" id="reg_moo" class="vs-input-industrial" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ซอย</label>
+                                <input type="text" id="reg_soi" class="vs-input-industrial">
+                            </div>
+                        </div>
+
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ถนน</label>
+                                <input type="text" id="reg_road" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ตำบล/แขวง</label>
+                                <input type="text" id="reg_subdistrict" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">อำเภอ/เขต</label>
+                                <input type="text" id="reg_district" class="vs-input-industrial">
+                            </div>
+                        </div>
+
+                        <div class="vs-col-6">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">จังหวัด</label>
+                                <input type="text" id="reg_province" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <div class="vs-col-6">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">รหัสไปรษณีย์</label>
+                                <input type="text" id="reg_postal" class="vs-input-industrial" placeholder="XXXXX">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Address -->
+                <div class="vs-section-card" style="margin-bottom:16px">
+                    <div class="form-section-header">
+                        <span class="section-title">ที่อยู่ปัจจุบัน</span>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <label class="vs-radio-label" style="font-size:14px; color:var(--vs-text-muted);">
+                                <input type="checkbox" id="sameAddress" onchange="toggleSameAddress(this)">
+                                <span>ใช้ที่อยู่เดียวกับทะเบียนบ้าน</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div id="currentAddressGroup" class="vs-form-grid">
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">บ้านเลขที่</label>
+                                <input type="text" id="cur_house" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">หมู่บ้าน</label>
+                                <input type="text" id="cur_village" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">หมู่ที่</label>
+                                <input type="text" id="cur_moo" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ซอย</label>
+                                <input type="text" id="cur_soi" class="vs-input-industrial">
+                            </div>
+                        </div>
+
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ถนน</label>
+                                <input type="text" id="cur_road" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ตำบล/แขวง</label>
+                                <input type="text" id="cur_subdistrict" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">อำเภอ/เขต</label>
+                                <input type="text" id="cur_district" class="vs-input-industrial">
+                            </div>
+                        </div>
+
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">จังหวัด</label>
+                                <input type="text" id="cur_province" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">รหัสไปรษณีย์</label>
+                                <input type="text" id="cur_postal" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <!-- stay_type -->
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ลักษณะที่พัก</label>
+                                <select id="stay_type" class="vs-input-industrial">
+                                    <option value="own_home">บ้านตนเอง</option>
+                                    <option value="relative">อยู่กับญาติ</option>
+                                    <option value="dormitory">หอพัก</option>
+                                    <option value="rental">เช่า</option>
+                                    <option value="orphanage">สถานสงเคราะห์</option>
+                                    <option value="other">อื่นๆ</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-nav">
+                    <button type="button" onclick="goToStep(1)" class="vs-btn vs-btn-outline">
+                        <span>ย้อนกลับ</span>
+                    </button>
+                    <button type="button" onclick="goToStep(3)" class="vs-btn vs-btn-accent">
+                        <span>ถัดไป: ผู้ปกครอง</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ════════════════════════════════════════════
+                 STEP 3: GUARDIANS → guardians table
+                 ════════════════════════════════════════════ -->
+            <div id="step3" class="form-tab">
+                <!-- Guardian Priority 1 -->
+                <div class="vs-section-card" style="margin-bottom:16px">
+                    <div class="form-section-header">
+                        <span class="section-title">ผู้ปกครองหลัก (ลำดับ 1)</span>
+                        <span class="section-badge">priority 1</span>
+                    </div>
+                    <div class="vs-form-grid">
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">คำนำหน้า</label>
+                                <select id="g1_prefix" class="vs-input-industrial">
+                                    <option value="นาย">นาย</option>
+                                    <option value="นาง">นาง</option>
+                                    <option value="นางสาว">นางสาว</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ชื่อ *</label>
+                                <input type="text" id="g1_fname" class="vs-input-industrial" required>
+                            </div>
+                        </div>
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">นามสกุล *</label>
+                                <input type="text" id="g1_lname" class="vs-input-industrial" required>
+                            </div>
+                        </div>
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ความสัมพันธ์ *</label>
+                                <select id="g1_relation" class="vs-input-industrial" required>
+                                    <option value="father">บิดา</option>
+                                    <option value="mother">มารดา</option>
+                                    <option value="grandfather">ปู่/ตา</option>
+                                    <option value="grandmother">ย่า/ยาย</option>
+                                    <option value="uncle">ลุง/อา</option>
+                                    <option value="aunt">ป้า/น้า</option>
+                                    <option value="sibling">พี่/น้อง</option>
+                                    <option value="legal_guardian">ผู้ปกครองตามกฎหมาย</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">เบอร์โทรหลัก</label>
+                                <input type="tel" id="g1_phone" class="vs-input-industrial" placeholder="0XX-XXX-XXXX">
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label-en">Line ID</label>
+                                <input type="text" id="g1_line" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">อาชีพ</label>
+                                <input type="text" id="g1_occupation" class="vs-input-industrial">
+                            </div>
+                        </div>
+
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">สถานะครอบครัว</label>
+                                <select id="g1_family_status" class="vs-input-industrial">
+                                    <option value="together">อยู่ร่วมกัน</option>
+                                    <option value="separated">แยกกันอยู่</option>
+                                    <option value="divorced">หย่าร้าง</option>
+                                    <option value="deceased">เสียชีวิต</option>
+                                    <option value="unknown">ไม่ทราบ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">รายได้ครอบครัว/เดือน</label>
+                                <select id="g1_income" class="vs-input-industrial">
+                                    <option value="under_3k">ต่ำกว่า 3,000</option>
+                                    <option value="3k_5k">3,000 - 5,000</option>
+                                    <option value="5k_10k">5,000 - 10,000</option>
+                                    <option value="10k_20k">10,000 - 20,000</option>
+                                    <option value="over_20k">มากกว่า 20,000</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">จำนวนพี่น้อง</label>
+                                <input type="number" id="g1_siblings" class="vs-input-industrial" value="0" min="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guardian Priority 2 -->
+                <div class="vs-section-card" style="margin-bottom:16px">
+                    <div class="form-section-header">
+                        <span class="section-title">ผู้ปกครองรอง (ลำดับ 2)</span>
+                        <span class="section-badge">priority 2</span>
+                    </div>
+                    <div class="vs-form-grid">
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">คำนำหน้า</label>
+                                <select id="g2_prefix" class="vs-input-industrial">
+                                    <option value="นาย">นาย</option>
+                                    <option value="นาง">นาง</option>
+                                    <option value="นางสาว">นางสาว</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ชื่อ</label>
+                                <input type="text" id="g2_fname" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">นามสกุล</label>
+                                <input type="text" id="g2_lname" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ความสัมพันธ์</label>
+                                <select id="g2_relation" class="vs-input-industrial">
+                                    <option value="">-- เลือก --</option>
+                                    <option value="father">บิดา</option>
+                                    <option value="mother">มารดา</option>
+                                    <option value="grandfather">ปู่/ตา</option>
+                                    <option value="grandmother">ย่า/ยาย</option>
+                                    <option value="uncle">ลุง/อา</option>
+                                    <option value="aunt">ป้า/น้า</option>
+                                    <option value="sibling">พี่/น้อง</option>
+                                    <option value="legal_guardian">ผู้ปกครองตามกฎหมาย</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">เบอร์โทร</label>
+                                <input type="tel" id="g2_phone" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label-en">Line ID</label>
+                                <input type="text" id="g2_line" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">อาชีพ</label>
+                                <input type="text" id="g2_occupation" class="vs-input-industrial">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guardian Priority 3 (Emergency) -->
+                <div class="vs-section-card" style="margin-bottom:16px">
+                    <div class="form-section-header">
+                        <span class="section-title">ผู้ติดต่อฉุกเฉิน (ลำดับ 3)</span>
+                        <span class="section-badge">emergency</span>
+                    </div>
+                    <div class="vs-form-grid">
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ชื่อ-นามสกุล</label>
+                                <input type="text" id="g3_fullname" class="vs-input-industrial"
+                                    placeholder="เช่น ป้าสมศรี">
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ความสัมพันธ์</label>
+                                <select id="g3_relation" class="vs-input-industrial">
+                                    <option value="">-- เลือก --</option>
+                                    <option value="neighbour">เพื่อนบ้าน</option>
+                                    <option value="friend_parent">แม่เพื่อน</option>
+                                    <option value="driver">วินรับส่ง</option>
+                                    <option value="relative">ญาติ</option>
+                                    <option value="other">อื่นๆ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">เบอร์โทร</label>
+                                <input type="tel" id="g3_phone" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <div class="vs-col-12">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">หมายเหตุ</label>
+                                <input type="text" id="g3_note" class="vs-input-industrial"
+                                    placeholder="เช่น ป้าข้างบ้าน บ้านเลขที่ 12 / วินมอเตอร์ไซค์หน้าโรงเรียน">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-nav">
+                    <button type="button" onclick="goToStep(2)" class="vs-btn vs-btn-outline">
+                        <span>ย้อนกลับ</span>
+                    </button>
+                    <button type="button" onclick="goToStep(4)" class="vs-btn vs-btn-accent">
+                        <span>ถัดไป: ข้อมูลการศึกษา</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ════════════════════════════════════════════
+                 STEP 4: ENROLLMENT → student_profiles
+                 ════════════════════════════════════════════ -->
+            <div id="step4" class="form-tab">
+                <div class="vs-section-card" style="margin-bottom:16px">
+                    <div class="form-section-header">
+                        <span class="section-title">ข้อมูลการลงทะเบียนเรียน</span>
+                        <span class="section-badge">student_profiles</span>
+                    </div>
+                    <div class="vs-form-grid">
+                        <!-- student_code -->
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">รหัสประจำตัวนักเรียน *</label>
+                                <input type="text" id="student_code" class="vs-input-industrial" required
+                                    placeholder="STR-XXXXX">
+                            </div>
+                        </div>
+                        <!-- enrollment_date -->
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">วันที่เข้าเรียน *</label>
+                                <input type="date" id="enrollment_date" class="vs-input-industrial" required>
+                            </div>
+                        </div>
+                        <!-- student_status -->
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">สถานะปัจจุบัน</label>
+                                <select id="student_status" class="vs-input-industrial"
+                                    onchange="toggleTransferSection(this.value)">
+                                    <option value="active">ปกติ</option>
+                                    <option value="transferred_in">ย้ายเข้า</option>
+                                    <option value="PENDING_TRANSFER">รอย้ายออก</option>
+                                    <option value="transferred_out">ย้ายออกแล้ว</option>
+                                    <option value="graduated">จบการศึกษา</option>
+                                    <option value="dropped_out">ออกกลางคัน</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- student_type -->
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ประเภทนักเรียน</label>
+                                <select id="student_type" class="vs-input-industrial">
+                                    <option value="normal">ปกติ</option>
+                                    <option value="disabled">พิการ</option>
+                                    <option value="disadvantaged">ด้อยโอกาส</option>
+                                    <option value="underprivileged">ยากจน</option>
+                                    <option value="stateless">ไร้สัญชาติ</option>
+                                    <option value="ethnic_minority">ชนกลุ่มน้อย</option>
+                                    <option value="child_labor">เด็กแรงงาน</option>
+                                    <option value="orphan">เด็กกำพร้า/ถูกทอดทิ้ง</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- grade -->
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ชั้นปี</label>
+                                <select id="grade" class="vs-input-industrial">
+                                    <option value="p1">ป.1</option>
+                                    <option value="p2">ป.2</option>
+                                    <option value="p3">ป.3</option>
+                                    <option value="p4">ป.4</option>
+                                    <option value="p5">ป.5</option>
+                                    <option value="p6">ป.6</option>
+                                    <option value="m1">ม.1</option>
+                                    <option value="m2">ม.2</option>
+                                    <option value="m3">ม.3</option>
+                                    <option value="m4">ม.4</option>
+                                    <option value="m5">ม.5</option>
+                                    <option value="m6">ม.6</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- class -->
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ห้องเรียน</label>
+                                <input type="text" id="classroom" class="vs-input-industrial" placeholder="เช่น 1/1">
+                            </div>
+                        </div>
+
+                        <!-- previous_school (กรณีย้ายเข้า) -->
+                        <div class="vs-col-8">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">โรงเรียนเดิม (กรณีย้ายเข้า)</label>
+                                <input type="text" id="previous_school" class="vs-input-industrial"
+                                    placeholder="ระบุชื่อโรงเรียนเดิมถ้ามี">
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">จังหวัดโรงเรียนเดิม</label>
+                                <input type="text" id="prev_school_province" class="vs-input-industrial">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scholarship -->
+                <div class="vs-section-card" style="margin-bottom:16px">
+                    <div class="form-section-header">
+                        <span class="section-title">ทุนการศึกษา</span>
+                        <span class="section-badge">scholarship</span>
+                    </div>
+                    <div class="vs-form-grid">
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ชื่อทุน</label>
+                                <input type="text" id="scholarship_type" class="vs-input-industrial"
+                                    placeholder="ไม่มี">
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">แหล่งทุน</label>
+                                <input type="text" id="scholarship_source" class="vs-input-industrial"
+                                    placeholder="เช่น กสศ. / เอกชน">
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">จำนวนทุน (บาท/ปี)</label>
+                                <input type="number" id="scholarship_amount" class="vs-input-industrial"
+                                    placeholder="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transfer Action Section (Teacher Authorize) -->
+                <div id="transfer-action-section" class="vs-section-card"
+                    style="margin-bottom:16px; display:none; border-left: 4px solid var(--vs-warning, #f59e0b);">
+                    <div class="form-section-header">
+                        <span class="section-title"><i class="icon i-arrow-path w-4 h-4 inline-block mr-1"></i>
+                            ดำเนินการย้ายนักเรียน</span>
+                        <span class="section-badge" style="background:rgba(245,158,11,0.2);color:#f59e0b;">teacher
+                            authorize</span>
+                    </div>
+                    <div class="vs-form-grid">
+                        <div class="vs-col-6">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ประเภทการย้าย *</label>
+                                <select id="transfer_type" class="vs-input-industrial">
+                                    <option value="transfer_out">ย้ายออก (ไปโรงเรียนอื่น)</option>
+                                    <option value="move_house">ย้ายที่อยู่ออกนอกเขตบริการ</option>
+                                    <option value="parent_request">ผู้ปกครองขอย้าย</option>
+                                    <option value="other">อื่นๆ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="vs-col-6">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">โรงเรียนปลายทาง</label>
+                                <input type="text" id="transfer_dest_school" class="vs-input-industrial"
+                                    placeholder="ระบุชื่อโรงเรียนที่จะย้ายไป (ถ้าทราบ)">
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">วันที่เริ่มดำเนินการ *</label>
+                                <input type="date" id="transfer_date" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <div class="vs-col-8">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">หมายเหตุ</label>
+                                <input type="text" id="transfer_note" class="vs-input-industrial"
+                                    placeholder="บันทึกเพิ่มเติม เช่น ผู้ปกครองย้ายงาน">
+                            </div>
+                        </div>
+                        <div class="vs-col-12"
+                            style="display:flex; gap:12px; justify-content:flex-end; margin-top:8px;">
+                            <button type="button" onclick="initiateTransfer()" class="vs-btn vs-btn-accent"
+                                style="background:rgba(245,158,11,0.15); color:#f59e0b; border:1px solid rgba(245,158,11,0.3);">
+                                <span><i class="icon i-exclamation-triangle w-4 h-4 inline-block mr-1"></i>
+                                    ยืนยันการย้ายออก</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div
+                        style="margin-top:12px; padding:8px 12px; border-radius:var(--vs-radius); background:rgba(245,158,11,0.05); border:1px solid rgba(245,158,11,0.15);">
+                        <p style="font-size:12px; color:var(--vs-text-muted); line-height:1.6; margin:0;">
+                            <i class="icon i-information-circle w-4 h-4 inline-block mr-1" style="color:#f59e0b;"></i>
+                            เมื่อครูคลิก "ยืนยันการย้ายออก" สถานะจะเปลี่ยนเป็น <strong
+                                style="color:#f59e0b;">PENDING_TRANSFER</strong>
+                            → ระบบจะเริ่มนับเวลา → แจ้ง ผอ. อัตโนมัติ → Escalate ถึง สพป. (60 วัน) → สพฐ. (90 วัน)
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step-nav">
+                    <button type="button" onclick="goToStep(3)" class="vs-btn vs-btn-outline">
+                        <span>ย้อนกลับ</span>
+                    </button>
+                    <button type="button" onclick="goToStep(5)" class="vs-btn vs-btn-accent">
+                        <span>ถัดไป: สุขภาพ</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ════════════════════════════════════════════
+                 STEP 5: HEALTH BASELINE → student_health_records
+                 ════════════════════════════════════════════ -->
+            <div id="step5" class="form-tab">
+                <div class="vs-section-card" style="margin-bottom:16px">
+                    <div class="form-section-header">
+                        <span class="section-title">ข้อมูลสุขภาพเบื้องต้น</span>
+                        <span class="section-badge">health baseline</span>
+                    </div>
+                    <div class="vs-form-grid">
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">น้ำหนัก (กก.)</label>
+                                <input type="number" step="0.1" id="weight" class="vs-input-industrial"
+                                    placeholder="0.0">
+                            </div>
+                        </div>
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ส่วนสูง (ซม.)</label>
+                                <input type="number" id="height" class="vs-input-industrial" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">สายตาซ้าย</label>
+                                <input type="text" id="vision_left" class="vs-input-industrial" placeholder="20/20">
+                            </div>
+                        </div>
+                        <div class="vs-col-3">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">สายตาขวา</label>
+                                <input type="text" id="vision_right" class="vs-input-industrial" placeholder="20/20">
+                            </div>
+                        </div>
+
+                        <div class="vs-col-6">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">โรคประจำตัว</label>
+                                <input type="text" id="chronic_disease" class="vs-input-industrial"
+                                    placeholder="ไม่มี (ระบุถ้ามี)">
+                            </div>
+                        </div>
+                        <div class="vs-col-6">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ยาที่แพ้</label>
+                                <input type="text" id="drug_allergy" class="vs-input-industrial"
+                                    placeholder="ไม่มี (ระบุถ้ามี)">
+                            </div>
+                        </div>
+
+                        <div class="vs-col-6">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">อาหารที่แพ้</label>
+                                <input type="text" id="food_allergy" class="vs-input-industrial"
+                                    placeholder="ไม่มี (ระบุถ้ามี)">
+                            </div>
+                        </div>
+                        <div class="vs-col-6">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ประเภทความพิการ (ถ้ามี)</label>
+                                <input type="text" id="disability_type" class="vs-input-industrial" placeholder="ไม่มี">
+                            </div>
+                        </div>
+
+                        <div class="vs-col-12">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">หมายเหตุเพิ่มเติม</label>
+                                <textarea id="health_notes" class="vs-input-industrial"
+                                    style="min-height:60px; resize:vertical;"
+                                    placeholder="ข้อมูลการดูแลพิเศษ / ความต้องการเฉพาะ"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-nav">
+                    <button type="button" onclick="goToStep(4)" class="vs-btn vs-btn-outline">
+                        <span>ย้อนกลับ</span>
+                    </button>
+                    <button type="button" onclick="submitForm()" class="vs-btn vs-btn-solid">
+                        <span>FINAL SUBMIT</span>
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+        let currentStep = 1;
+
+        function toggleSameAddress(checkbox) {
+            const group = document.getElementById('currentAddressGroup');
+            if (checkbox.checked) {
+                group.style.opacity = '0.3';
+                group.style.pointerEvents = 'none';
+            } else {
+                group.style.opacity = '1';
+                group.style.pointerEvents = 'auto';
+            }
+        }
+
+        function goToStep(step) {
+            document.querySelectorAll('.form-tab').forEach(t => t.classList.remove('active'));
+            const target = document.getElementById(`step${step}`);
+            if (target) target.classList.add('active');
+
+            // Update step indicator
+            const tabs = document.querySelectorAll('.step-tab');
+            tabs.forEach((tab, i) => {
+                const idx = i + 1;
+                tab.classList.remove('active', 'complete');
+                if (idx < step) tab.classList.add('complete');
+                else if (idx === step) tab.classList.add('active');
+            });
+
+            currentStep = step;
+            // Scroll to top of form content
+            document.querySelector('.student-page')?.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function saveDraft() {
+            if (typeof showNotification === 'function') {
+                showNotification('กำลังบันทึกข้อมูลร่าง...', 'info');
+            }
+            setTimeout(() => {
+                if (typeof showNotification === 'function') {
+                    showNotification('บันทึกข้อมูลร่างสำเร็จ', 'success');
+                }
+            }, 800);
+        }
+
+        async function submitForm() {
+            if (typeof showNotification === 'function') {
+                showNotification('กำลังส่งข้อมูลเข้าระบบ...', 'info');
+            }
+            setTimeout(() => {
+                if (typeof showNotification === 'function') {
+                    showNotification('ลงทะเบียนนักเรียนใหม่สำเร็จ', 'success');
+                }
+            }, 1200);
+        }
+
+        // Initialize
+        goToStep(1);
+
+        function toggleTransferSection(status) {
+            const section = document.getElementById('transfer-action-section');
+            if (section) {
+                section.style.display = (status === 'PENDING_TRANSFER' || status === 'transferred_out') ? 'block' : 'none';
+            }
+        }
+
+        function initiateTransfer() {
+            const type = document.getElementById('transfer_type')?.value;
+            const date = document.getElementById('transfer_date')?.value;
+            const dest = document.getElementById('transfer_dest_school')?.value;
+            const note = document.getElementById('transfer_note')?.value;
+
+            if (!date) {
+                alert('กรุณาระบุวันที่เริ่มดำเนินการ');
+                return;
+            }
+
+            // Set status to PENDING_TRANSFER
+            document.getElementById('student_status').value = 'PENDING_TRANSFER';
+
+            const msg = `ยืนยันย้ายนักเรียนออก\nประเภท: ${type}\nวันที่: ${date}${dest ? '\nโรงเรียนปลายทาง: ' + dest : ''}${note ? '\nหมายเหตุ: ' + note : ''}\n\nระบบจะแจ้ง ผอ. อัตโนมัติ`;
+
+            if (confirm(msg)) {
+                if (typeof showNotification === 'function') {
+                    showNotification('ดำเนินการย้ายเรียบร้อย — แจ้ง ผอ. อัตโนมัติ', 'success');
+                }
+                // In production: DataService.updateStudentStatus(studentId, 'PENDING_TRANSFER', { transferDate, type, dest, note })
+                console.log('Transfer initiated:', { type, date, dest, note, status: 'PENDING_TRANSFER' });
+            }
+        }
+    </script>
+</body>
+
+</html>

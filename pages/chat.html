@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="th">
 
 <head>
@@ -21,10 +21,10 @@
             <div id="headerContent" class="flex items-center justify-between w-full">
                 <div class="flex items-center space-x-4">
                     <div id="targetAvatar"
-                        class="w-10 h-10 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] flex items-center justify-center text-sm font-extralight text-[var(--vs-accent)]">
+                        class="w-10 h-10 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] flex items-center justify-center text-[13px] font-light text-[var(--vs-accent)]">
                         --
                     </div>
-                    <div class="flex items-center space-x-2 text-sm font-extralight">
+                    <div class="flex items-center space-x-2 text-[13px] font-light">
                         <h2 id="targetName" class="text-[var(--vs-text-title)]">
                             Loading conversation...
                         </h2>
@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <div class="hidden md:flex items-center space-x-2 mr-4 text-sm font-extralight uppercase Thai-Rule">
+                    <div class="hidden md:flex items-center space-x-2 mr-4 text-[13px] font-light uppercase Thai-Rule">
                         <div class="flex items-center space-x-1.5 text-amber-500 opacity-80">
                             <span class="w-1.5 h-1.5 bg-amber-500 rounded-[3px] animate-pulse"></span>
                             <span>Bridge: JS-TEST-MODE</span>
@@ -59,7 +59,7 @@
                 class="absolute inset-0 bg-[var(--vs-bg-panel)] px-8 flex items-center space-x-4 translate-y-full transition-transform duration-300 z-10">
                 <i class="icon i-search h-5 w-5 text-[var(--vs-accent)]"></i>
                 <input type="text" id="searchInput" placeholder="Search secure message history..."
-                    class="flex-1 bg-transparent border-none outline-none text-sm text-[var(--vs-text-title)] placeholder-[var(--vs-text-muted)] font-extralight" />
+                    class="flex-1 bg-transparent border-none outline-none text-[13px] text-[var(--vs-text-title)] placeholder-[var(--vs-text-muted)] font-light" />
                 <button id="closeSearch" class="text-[var(--vs-text-muted)] hover:text-[var(--vs-accent)] p-2">
                     ✕
                 </button>
@@ -68,17 +68,17 @@
 
         <!-- Personnel Details Flyout -->
         <div id="personnelFlyout"
-            class="hidden absolute top-16 right-6 w-80 bg-[var(--vs-bg-panel)] border border-[var(--vs-border)] shadow-2xl rounded-[var(--vs-radius)] z-[100] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            class="hidden absolute top-16 right-6 w-80 bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]  rounded-[var(--vs-radius)] z-[100] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             <div class="p-6 space-y-6">
                 <!-- Profile Header -->
                 <div class="flex flex-col items-center text-center space-y-3">
                     <div id="flyoutAvatar"
-                        class="w-24 h-24 rounded-[var(--vs-radius)] flex items-center justify-center text-3xl font-extralight border-2 border-[var(--vs-border)] bg-[var(--vs-bg-deep)] text-[var(--vs-accent)]">
+                        class="w-24 h-24 rounded-[var(--vs-radius)] flex items-center justify-center text-3xl font-light border border-[rgba(63,63,70,0.5)] bg-[var(--vs-bg-deep)] text-[var(--vs-accent)]">
                     </div>
                     <div>
-                        <h4 id="flyoutName" class="text-sm font-extralight text-[var(--vs-text-title)]">Personnel Name
+                        <h4 id="flyoutName" class="text-[13px] font-light text-[var(--vs-text-title)]">Personnel Name
                         </h4>
-                        <p id="flyoutRole" class="text-sm text-[var(--vs-accent)] uppercase font-extralight mt-1">
+                        <p id="flyoutRole" class="text-[13px] text-[var(--vs-accent)] uppercase font-light mt-1">
                             Role Title</p>
                     </div>
                 </div>
@@ -86,20 +86,21 @@
                 <!-- Metadata Grid -->
                 <div class="grid grid-cols-2 gap-4 border-t border-[var(--vs-border)] pt-6">
                     <div class="space-y-1">
-                        <div class="text-sm text-[var(--vs-text-muted)] uppercase font-extralight">Organization</div>
-                        <div id="flyoutOrg" class="text-sm text-[var(--vs-text-body)] truncate">ESA District 01</div>
+                        <div class="text-[13px] text-[var(--vs-text-muted)] uppercase font-light">Organization</div>
+                        <div id="flyoutOrg" class="text-[13px] text-[var(--vs-text-body)] truncate">ESA District 01
+                        </div>
                     </div>
                     <div class="space-y-1">
-                        <div class="text-sm text-[var(--vs-text-muted)] uppercase font-extralight">Rank</div>
-                        <div id="flyoutRank" class="text-sm text-[var(--vs-text-body)] uppercase">COMMANDER</div>
+                        <div class="text-[13px] text-[var(--vs-text-muted)] uppercase font-light">Rank</div>
+                        <div id="flyoutRank" class="text-[13px] text-[var(--vs-text-body)] uppercase">COMMANDER</div>
                     </div>
                     <div class="space-y-1">
-                        <div class="text-sm text-[var(--vs-text-muted)] uppercase font-extralight">Location</div>
-                        <div id="flyoutLocation" class="text-sm text-[var(--vs-text-body)]">Wat Map Chalud</div>
+                        <div class="text-[13px] text-[var(--vs-text-muted)] uppercase font-light">Location</div>
+                        <div id="flyoutLocation" class="text-[13px] text-[var(--vs-text-body)]">Wat Map Chalud</div>
                     </div>
                     <div class="space-y-1">
-                        <div class="text-sm text-[var(--vs-text-muted)] uppercase font-extralight">Encryption</div>
-                        <div class="text-sm text-emerald-500 flex items-center">
+                        <div class="text-[13px] text-[var(--vs-text-muted)] uppercase font-light">Encryption</div>
+                        <div class="text-[13px] text-emerald-500 flex items-center">
                             <i class="icon i-shield-check h-3 w-3 mr-1"></i>
                             AES-256
                         </div>
@@ -107,7 +108,7 @@
                 </div>
 
                 <button id="closeFlyout"
-                    class="w-full py-2.5 bg-[var(--vs-bg-deep)] hover:bg-[rgba(var(--vs-border-rgb),0.3)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-muted)] uppercase font-extralight transition-all">
+                    class="w-full py-2.5 bg-[var(--vs-bg-deep)] hover:bg-[rgba(var(--vs-border-rgb),0.3)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-muted)] uppercase font-light transition-all">
                     Dismiss Dossier
                 </button>
             </div>
@@ -119,7 +120,7 @@
         <!-- Secure Banner -->
         <div id="secureBanner" class="text-center py-12 opacity-30">
             <i class="icon i-lock h-12 w-12 mb-3 mx-auto"></i>
-            <p class="text-sm uppercase">End-to-End Encryption Active</p>
+            <p class="text-[13px] uppercase">End-to-End Encryption Active</p>
         </div>
     </div>
 
@@ -129,9 +130,9 @@
             class="w-16 h-16 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] flex items-center justify-center mb-6">
             <i class="icon i-chat h-8 w-8 text-[var(--vs-accent)] opacity-40"></i>
         </div>
-        <h3 class="text-[var(--vs-text-title)] text-lg font-extralight mb-2 uppercase">Select a
+        <h3 class="text-[var(--vs-text-title)] text-lg font-light mb-2 uppercase">Select a
             Conversation</h3>
-        <p class="text-[var(--vs-text-muted)] text-sm max-w-xs font-extralight leading-relaxed uppercase">
+        <p class="text-[var(--vs-text-muted)] text-[13px] max-w-xs font-light leading-relaxed uppercase">
             Choose a contact or group from the sidebar to begin secure communication.
         </p>
     </div>
@@ -146,7 +147,7 @@
             <div class="w-1.5 h-1.5 bg-[var(--vs-accent)] rounded-[3px] animate-bounce" style="animation-delay: 0.4s">
             </div>
         </div>
-        <span class="text-sm text-[var(--vs-text-muted)] uppercase">
+        <span class="text-[13px] text-[var(--vs-text-muted)] uppercase">
             <span id="typingName">Someone</span> is typing...
         </span>
     </div>
@@ -157,23 +158,23 @@
             <!-- Quick Templates -->
             <div id="quickTemplates" class="flex items-center space-x-2 overflow-x-auto pb-1 no-scrollbar pl-[96px]">
                 <button
-                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
+                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
                     รับทราบครับ
                 </button>
                 <button
-                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
+                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
                     ขอบคุณครับ
                 </button>
                 <button
-                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
+                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
                     กรุณารอสักครู่
                 </button>
                 <button
-                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
+                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
                     ดำเนินการแล้ว
                 </button>
                 <button
-                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
+                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
                     ส่งเอกสารแล้ว
                 </button>
             </div>
@@ -195,10 +196,10 @@
 
                 <!-- Text Input -->
                 <textarea id="messageInput" rows="1" placeholder="พิมพ์ข้อความ..."
-                    class="flex-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] px-4 py-3 text-sm text-[var(--vs-text-title)] placeholder-[var(--vs-text-muted)] focus:border-[var(--vs-accent)] focus:outline-none resize-none Thai-Rule min-h-[46px]"></textarea>
+                    class="flex-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] px-4 py-3 text-[13px] text-[var(--vs-text-title)] placeholder-[var(--vs-text-muted)] focus:border-[var(--vs-accent)] focus:outline-none resize-none Thai-Rule min-h-[46px]"></textarea>
 
                 <button id="sendBtn"
-                    class="h-[46px] w-[46px] flex items-center justify-center bg-[var(--vs-accent)] text-[var(--vs-bg-deep)] rounded-[var(--vs-radius)] hover:opacity-90 active:scale-95 transition-all shrink-0 self-end">
+                    class="h-[46px] w-[46px] flex items-center justify-center bg-[rgba(34,211,238,0.1)] text-[var(--vs-accent)] border border-[rgba(34,211,238,0.3)] rounded-[var(--vs-radius)] hover:opacity-90 active:scale-95 transition-all shrink-0 self-end">
                     <i class="icon i-paper-airplane h-5 w-5"></i>
                 </button>
             </div>
@@ -207,7 +208,7 @@
             <div id="emojiPicker"
                 class="hidden p-4 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] w-full max-w-[400px]">
                 <div class="flex items-center justify-between mb-3">
-                    <span class="text-sm text-[var(--vs-text-muted)] uppercase">Select Emoji</span>
+                    <span class="text-[13px] text-[var(--vs-text-muted)] uppercase">Select Emoji</span>
                     <button id="closeEmoji"
                         class="text-[var(--vs-text-muted)] hover:text-[var(--vs-text-title)]">✕</button>
                 </div>
@@ -365,7 +366,7 @@
             </div>
 
             <!-- Status Bar -->
-            <div class="flex items-center justify-between text-sm text-[var(--vs-text-muted)]">
+            <div class="flex items-center justify-between text-[13px] text-[var(--vs-text-muted)]">
                 <span class="flex items-center space-x-1">
                     <span class="w-1.5 h-1.5 bg-emerald-500 rounded-[3px]"></span>
                     <span>Encrypted</span>
@@ -438,7 +439,7 @@
             document.getElementById('targetName').innerText =
                 targetUser?.fullName || targetUser?.name || 'Unknown';
             statusEl.innerText = isBroadcast ? 'Broadcast Channel' : status.text;
-            statusEl.className = `text-sm uppercase leading-none mt-0.5 ${status.class}`;
+            statusEl.className = `text-[13px] uppercase leading-none mt-0.5 ${status.class}`;
 
             const avatar = document.getElementById('targetAvatar');
             const pColor = targetUser?.color || 'id-def';
@@ -462,7 +463,7 @@
 
             if (type === 'system') {
                 bubble.className = 'text-center py-2';
-                bubble.innerHTML = `<span class="text-sm text-[var(--vs-text-muted)] uppercase">${content}</span>`;
+                bubble.innerHTML = `<span class="text-[13px] text-[var(--vs-text-muted)] uppercase">${content}</span>`;
             } else {
                 bubble.className = `flex ${isSelf ? 'justify-end' : 'justify-start'}`;
 
@@ -474,22 +475,22 @@
                             <div class="flex items-center space-x-3 p-3 bg-[var(--vs-bg-deep)] rounded-[var(--vs-radius)] border border-[var(--vs-border)]">
                                 <i class="icon i-document h-8 w-8 text-[var(--vs-accent)]"></i>
                                 <div>
-                                    <div class="text-sm text-[var(--vs-text-title)] font-extralight">${content.name}</div>
-                                    <div class="text-sm text-[var(--vs-text-muted)]">${content.size}</div>
+                                    <div class="text-[13px] text-[var(--vs-text-title)] font-light">${content.name}</div>
+                                    <div class="text-[13px] text-[var(--vs-text-muted)]">${content.size}</div>
                                 </div>
                             </div>
                         `;
                 } else {
-                    innerContent = `<p class="text-sm Thai-Rule">${content}</p>`;
+                    innerContent = `<p class="text-[13px] Thai-Rule">${content}</p>`;
                 }
 
-                const bgColor = isSelf ? 'bg-[var(--vs-accent)] text-[var(--vs-bg-deep)]' : 'bg-[var(--vs-bg-card)] text-[var(--vs-text-title)]';
+                const bgColor = isSelf ? 'bg-[rgba(34,211,238,0.1)] text-[var(--vs-accent)] border border-[rgba(34,211,238,0.3)]' : 'bg-[var(--vs-bg-card)] text-[var(--vs-text-title)]';
 
                 bubble.innerHTML = `
                         <div class="max-w-[70%] ${bgColor} rounded-[var(--vs-radius)] p-3 space-y-1">
                             ${innerContent}
                             <div class="flex items-center justify-end space-x-1 opacity-60">
-                                <span class="text-sm">${time}</span>
+                                <span class="text-[13px]">${time}</span>
                                 ${isSelf ? '<i class="icon i-check h-3 w-3"></i>' : ''}
                             </div>
                         </div>

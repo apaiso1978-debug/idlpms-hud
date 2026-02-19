@@ -55,12 +55,12 @@
             container.innerHTML = `
                 <!-- Header Section -->
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
                         <span class="role-badge role-badge-admin">Admin</span>
-                        <h1 class="text-xl font-extralight text-[var(--vs-text-title)] uppercase">${schoolData.name}</h1>
+                        <h1 class="text-xl font-light text-[var(--vs-text-title)] uppercase">${schoolData.name}</h1>
                     </div>
-                    <div class="flex items-center gap-4">
-                        <div class="text-sm text-[var(--vs-text-muted)] font-extralight">
+                    <div class="flex items-center gap-2">
+                        <div class="text-[13px] text-[var(--vs-text-muted)] font-light">
                             <span class="text-[var(--vs-accent)]">${schoolData.totalStudents}</span> นักเรียน | 
                             <span class="text-[var(--vs-accent)]">${schoolData.totalClasses}</span> ห้องเรียน
                         </div>
@@ -89,16 +89,16 @@
                                 <!-- Summary Stats -->
                                 <div class="grid grid-cols-3 gap-4 mt-4">
                                     <div class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] text-center">
-                                        <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-1">Average</div>
-                                        <div id="stat-avg" class="text-2xl font-extralight text-[var(--vs-accent)]">-</div>
+                                        <div class="text-[13px] text-[var(--vs-text-muted)] uppercase mb-1">Average</div>
+                                        <div id="stat-avg" class="text-2xl font-light text-[var(--vs-accent)]">-</div>
                                     </div>
                                     <div class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] text-center">
-                                        <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-1">Highest</div>
-                                        <div id="stat-max" class="text-2xl font-extralight text-emerald-400">-</div>
+                                        <div class="text-[13px] text-[var(--vs-text-muted)] uppercase mb-1">Highest</div>
+                                        <div id="stat-max" class="text-2xl font-light text-emerald-400">-</div>
                                     </div>
                                     <div class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] text-center">
-                                        <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-1">Lowest</div>
-                                        <div id="stat-min" class="text-2xl font-extralight text-rose-400">-</div>
+                                        <div class="text-[13px] text-[var(--vs-text-muted)] uppercase mb-1">Lowest</div>
+                                        <div id="stat-min" class="text-2xl font-light text-rose-400">-</div>
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +110,7 @@
                         <div class="dna-zone p-4">
                             <div class="dna-zone-header">
                                 <h2 class="dna-zone-title">Classrooms</h2>
-                                <span class="text-sm text-[var(--vs-text-muted)]">${classroomBreakdown.length} ห้อง</span>
+                                <span class="text-[13px] text-[var(--vs-text-muted)]">${classroomBreakdown.length} ห้อง</span>
                             </div>
                             <div class="dna-zone-content flex-col items-stretch gap-2 mt-4 max-h-[450px] overflow-y-auto vs-scrollbar">
                                 ${classroomBreakdown.map(cls => {
@@ -120,10 +120,10 @@
                                     <div class="p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] hover:bg-[var(--vs-bg-card)] cursor-pointer transition-colors group border border-transparent hover:border-[var(--vs-border)]"
                                          onclick="viewClassroom('${cls.id}')">
                                         <div class="flex items-center justify-between mb-2">
-                                            <span class="text-sm text-[var(--vs-text-title)] font-extralight">${cls.name}</span>
-                                            <span class="text-sm font-extralight ${statusColor}">${avgScore}%</span>
+                                            <span class="text-[13px] text-[var(--vs-text-title)] font-light">${cls.name}</span>
+                                            <span class="text-[13px] font-light ${statusColor}">${avgScore}%</span>
                                         </div>
-                                        <div class="flex items-center justify-between text-sm text-[var(--vs-text-muted)]">
+                                        <div class="flex items-center justify-between text-[13px] text-[var(--vs-text-muted)]">
                                             <span class="Thai-Rule">${cls.teacher}</span>
                                             <span>${cls.students} คน</span>
                                         </div>

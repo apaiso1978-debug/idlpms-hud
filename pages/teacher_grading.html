@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>??????????????? | IDLPMS</title>
+    <link rel="stylesheet" href="../assets/css/utilities.css" />
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <script src="../assets/js/data.js"></script>
+</head>
+
+<body class="bg-[var(--vs-bg-deep)] px-6 overflow-x-hidden font-['Sarabun'] antialiased">
+
+    <!-- Header -->
+    <div class="max-w-[1400px] mx-auto space-y-6">
+
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-light text-[var(--vs-text-title)]">???????????????</h1>
+                <p class="text-[13px] font-light text-[var(--vs-text-muted)] Thai-Rule">??????? ?????
+                    ????????????????????????? AI ????????</p>
+            </div>
+            <div class="flex items-center">
+                <div id="stats-pending"
+                    class="px-4 rounded-[3px] bg-[rgba(251,191,36,0.1)] border border-[rgba(251,191,36,0.3)] text-[13px] font-light text-amber-400">
+                    <i class="icon i-clock h-4 w-4 inline-block mr-1"></i> ??????: <span id="count-pending">0</span>
+                </div>
+                <div id="stats-reviewed"
+                    class="px-4 rounded-[3px] bg-[rgba(52,211,153,0.1)] border border-[rgba(52,211,153,0.3)] text-[13px] font-light text-emerald-400">
+                    <i class="icon i-check h-4 w-4 inline-block mr-1"></i> ????????: <span id="count-reviewed">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="flex items-center gap-2 border-b border-[var(--vs-border)] pb-3">
+            <button onclick="TeacherGrading.setFilter('all')" id="filter-all"
+                class="grading-filter active px-4 rounded-[3px] text-[13px] font-light transition-all">???????</button>
+            <button onclick="TeacherGrading.setFilter('pending')" id="filter-pending"
+                class="grading-filter px-4 rounded-[3px] text-[13px] font-light transition-all">??????</button>
+            <button onclick="TeacherGrading.setFilter('reviewed')" id="filter-reviewed"
+                class="grading-filter px-4 rounded-[3px] text-[13px] font-light transition-all">????????</button>
+        </div>
+
+        <!-- Submissions List -->
+        <div id="submissions-list" class="space-y-3">
+            <div class="flex items-center justify-center h-40 opacity-20 Thai-Rule text-[13px]">
+                ???????????????...
+            </div>
+        </div>
+
+        <!-- Review Panel (hidden by default, shown when clicking a submission) -->
+        <div id="review-panel" class="hidden">
+            <!-- Will be populated by JS -->
+        </div>
+
+    </div>
+
+    <style>
+        .grading-filter {
+            color: var(--vs-text-muted);
+            background: transparent;
+        }
+
+        .grading-filter:hover {
+            color: var(--vs-text-body);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .grading-filter.active {
+            color: var(--vs-accent);
+            background: rgba(var(--vs-accent-rgb), 0.1);
+            border: 1px solid rgba(var(--vs-accent-rgb), 0.3);
+        }
+
+        .submission-card {
+            transition: all 0.2s ease;
+        }
+
+        .submission-card:hover {
+            border-color: rgba(var(--vs-accent-rgb), 0.4);
+            background: rgba(var(--vs-accent-rgb), 0.03);
+        }
+
+        .submission-card.active-review {
+            border-color: rgba(var(--vs-accent-rgb), 0.6);
+            background: rgba(var(--vs-accent-rgb), 0.05);
+        }
+    </style>
+
+    <script src="../assets/js/teacher_grading.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Read filter from URL params
+            const params = new URLSearchParams(window.location.search);
+            const filter = params.get('filter') || 'all';
+            TeacherGrading.init(filter);
+        });
+    </script>
+</body>
+
+</html>

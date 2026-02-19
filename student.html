@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>IDLPMS Mobile | Student Shell</title>
+    <link rel="stylesheet" href="assets/css/utilities.css" />
+    <link rel="stylesheet" href="assets/css/theme.css?v=2.5" />
+    <link rel="stylesheet" href="assets/css/notifications.css?v=2.5" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#1c1c1f" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <style>
+        :root {
+            --header-h: 48px;
+            --nav-h: 56px;
+        }
+
+        body {
+            background-color: var(--vs-bg-deep);
+            color: var(--vs-text-body);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+        }
+
+        .mobile-shell {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .mobile-header {
+            height: var(--header-h);
+            background: var(--vs-bg-main);
+            border-bottom: 1px solid var(--vs-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            z-index: 100;
+        }
+
+        .mobile-content {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #mobile-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .mobile-nav {
+            height: var(--nav-h);
+            background: var(--vs-bg-panel);
+            border-top: 1px solid var(--vs-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding-bottom: env(safe-area-inset-bottom);
+            z-index: 100;
+        }
+
+        .nav-item-mobile {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            color: var(--vs-text-muted);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .nav-item-mobile.active {
+            color: var(--vs-accent);
+        }
+
+        .nav-item-mobile .icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .nav-item-mobile span {
+            font-size: 10px;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+
+        .active-indicator {
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 32px;
+            height: 2px;
+            background: var(--vs-accent);
+            border-radius: 0 0 2px 2px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .nav-item-mobile.active .active-indicator {
+            opacity: 1;
+        }
+
+        /* Glass Effect */
+        .vs-glass-mobile {
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            background: rgba(var(--vs-bg-panel-rgb), 0.8) !important;
+        }
+    </style>
+</head>
+
+<body class="Thai-Rule antialiased select-none">
+    <div class="mobile-shell">
+        <!-- Header -->
+        <header class="mobile-header">
+            <div class="flex items-center gap-2">
+                <i class="icon i-academic h-5 w-5 text-[var(--vs-accent)]"></i>
+                <span class="font-light tracking-wider text-[13px]">IDLPMS <span
+                        class="text-[var(--vs-text-muted)] text-[10px]">STUDENT</span></span>
+            </div>
+            <div class="flex items-center">
+                <div id="notif-bell" class="relative cursor-pointer">
+                    <i class="icon i-bell h-5 w-5 text-[var(--vs-text-muted)]"></i>
+                    <div
+                        class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[var(--vs-danger)] rounded-full border border-[var(--vs-bg-main)]">
+                    </div>
+                </div>
+                <div
+                    class="w-8 h-8 rounded-full border border-[var(--vs-border)] bg-[var(--vs-bg-card)] flex items-center justify-center text-[10px] font-light">
+                    ST
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="mobile-content">
+            <iframe id="mobile-frame" src="pages/home.html" title="Student Content"></iframe>
+        </main>
+
+        <!-- Bottom Nav -->
+        <nav class="mobile-nav vs-glass-mobile">
+            <button class="nav-item-mobile active" onclick="switchMobileView('learn')">
+                <div class="active-indicator"></div>
+                <i class="icon i-book"></i>
+                <span>?????</span>
+            </button>
+            <button class="nav-item-mobile" onclick="switchMobileView('dna')">
+                <div class="active-indicator"></div>
+                <i class="icon i-finger-print"></i>
+                <span>DNA</span>
+            </button>
+            <button class="nav-item-mobile" onclick="switchMobileView('schedule')">
+                <div class="active-indicator"></div>
+                <i class="icon i-calendar"></i>
+                <span>?????</span>
+            </button>
+            <button class="nav-item-mobile" onclick="switchMobileView('profile')">
+                <div class="active-indicator"></div>
+                <i class="icon i-user"></i>
+                <span>???</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/management.js"></script>
+    <script src="assets/js/notifications.js"></script>
+    <script>
+        // Initialize Engine
+        if (window.ManagementEngine && window.ManagementEngine.init) {
+            window.ManagementEngine.init();
+            // Force student role for this shell
+            window.ManagementEngine.currentUser = {
+                role: 'STUDENT',
+                gradeLevel: 6,
+                name: 'Student User'
+            };
+        }
+
+        function switchMobileView(view) {
+            const frame = document.getElementById('mobile-frame');
+            const items = document.querySelectorAll('.nav-item-mobile');
+
+            // Remove active class from all
+            items.forEach(item => item.classList.remove('active'));
+
+            let targetPage = 'pages/home.html';
+
+            switch (view) {
+                case 'learn':
+                    targetPage = 'pages/student/learn.html';
+                    break;
+                case 'dna':
+                    targetPage = 'pages/profile.html';
+                    break;
+                case 'schedule':
+                    targetPage = 'pages/schedule.html';
+                    break;
+                case 'profile':
+                    targetPage = 'pages/profile.html';
+                    break;
+            }
+
+            // Update frame
+            frame.src = targetPage;
+
+            // Update UI
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            } else {
+                // Fallback for direct calls
+                const btn = document.querySelector(`.nav-item-mobile[onclick*="${view}"]`);
+                if (btn) btn.classList.add('active');
+            }
+        }
+
+        // Handle iframe height and orientation
+        window.addEventListener('resize', () => {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        });
+    </script>
+</body>
+
+</html>

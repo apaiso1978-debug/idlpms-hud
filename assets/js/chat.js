@@ -247,12 +247,12 @@ window.ChatEngine = {
             html += `
                 <div class="mb-2">
                     <div onclick="window.ChatEngine.toggleGroup('${groupName}')" 
-                         class="flex items-center justify-between px-3 py-2 text-sm uppercase font-extralight text-[var(--vs-text-muted)] hover:text-[var(--vs-text-title)] cursor-pointer group/group-header transition-colors">
+                         class="flex items-center justify-between px-3 py-2 text-[13px] uppercase font-light text-[var(--vs-text-muted)] hover:text-[var(--vs-text-title)] cursor-pointer group/group-header transition-colors">
                         <div class="flex items-center space-x-2">
                             <i id="group-icon-${groupName}" class="icon i-chevron-right h-3 w-3 transition-transform rotate-90 opacity-50"></i>
-                            <span class="font-extralight">${groupName}</span>
+                            <span class="font-light">${groupName}</span>
                         </div>
-                        <span class="bg-[var(--vs-bg-deep)] px-1.5 py-0.5 rounded-[2px] text-sm font-extralight border border-[rgba(var(--vs-border-rgb),0.3)]">${window.formatNumberStandard(members.length)}</span>
+                        <span class="vs-count">${window.formatNumberStandard(members.length)}</span>
                     </div>
                     <div id="group-body-${groupName}" class="space-y-0.5 mt-0.5">
                         ${members.map(p => {
@@ -266,20 +266,20 @@ window.ChatEngine = {
                 return `
                             <div data-user-id="${p.id}" onclick="window.ChatEngine.openChat('${p.id}', ${p.isGroup ? 'true' : 'false'})" 
                                  class="chat-contact-item vs-menu-item flex items-center space-x-3 p-2.5 mx-1 rounded-[3px] cursor-pointer group transition-all">
-                                <div class="w-8 h-8 shrink-0 aspect-square rounded-[3px] flex items-center justify-center text-[11px] font-extralight transition-all"
+                                <div class="w-8 h-8 shrink-0 aspect-square rounded-[3px] flex items-center justify-center text-[13px] font-light transition-all"
                                      style="background: rgba(var(--${p.color || 'id-def'}-rgb), 0.08); border: 1px solid rgba(var(--${p.color || 'id-def'}-rgb), 0.25); color: rgb(var(--${p.color || 'id-def'}-rgb));">
                                     ${p.avatar}
                                 </div>
                                 <div class="flex-1 min-w-0">
-                                    <div class="text-[var(--vs-text-title)] text-sm font-extralight Thai-Rule truncate transition-colors">${p.fullName || p.name}</div>
-                                    <div class="text-sm uppercase text-[var(--vs-text-muted)] truncate font-extralight flex items-center space-x-2">
+                                    <div class="text-[var(--vs-text-title)] text-[13px] font-light Thai-Rule truncate transition-colors">${p.fullName || p.name}</div>
+                                    <div class="text-[13px] uppercase text-[var(--vs-text-muted)] truncate font-light flex items-center space-x-2">
                                         <span>${p.isGroup ? p.type : (p.subject ? p.subject : (p.name || p.role))}</span>
-                                        ${p.isDirectLink ? `<span class="px-1.5 py-0.5 border border-white/20 bg-white/5 text-[var(--vs-accent)] text-[9px] rounded-[var(--vs-radius)] font-extralight">DIRECT_SUPERVISOR</span>` : ''}
+                                        ${p.isDirectLink ? `<span class="px-1.5 py-0.5 border border-white/20 bg-white/5 text-[var(--vs-accent)] text-[9px] rounded-[var(--vs-radius)] font-light">DIRECT_SUPERVISOR</span>` : ''}
                                     </div>
                                 </div>
                                 <div class="flex flex-col items-center space-y-1">
                                     <div class="w-1.5 h-1.5 shrink-0 rounded-[3px] ${statusColor} ${p.status === 'ONLINE' ? 'vs-status-pulse' : ''}"></div>
-                                    <span class="text-sm text-[var(--vs-text-muted)] font-extralight">${p.isGroup ? 'CH' : window.formatNumberStandard(1) + 'm'}</span>
+                                    <span class="text-[13px] text-[var(--vs-text-muted)] font-light">${p.isGroup ? 'CH' : window.formatNumberStandard(1) + 'm'}</span>
                                 </div>
                             </div>
                         `;
@@ -289,7 +289,7 @@ window.ChatEngine = {
             `;
         });
 
-        chatList.innerHTML = html || `<div class="p-6 text-[var(--vs-text-muted)] text-sm uppercase text-center mt-4 font-extralight">No active contacts available.</div>`;
+        chatList.innerHTML = html || `<div class="p-6 text-[var(--vs-text-muted)] text-[13px] uppercase text-center mt-4 font-light">No active contacts available.</div>`;
     },
 
     openChat(userId, isGroup = false) {

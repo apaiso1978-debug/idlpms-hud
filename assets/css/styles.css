@@ -1,9 +1,2 @@
-﻿.i-user-plus {
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20fill%3D%27none%27%20viewBox%3D%270%200%2024%2024%27%20stroke%3D%27black%27%3E%3Cpath%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20stroke-width%3D%271%27%20d%3D%27M18%209v3m0%200v3m0-3h3m-3%200h-3m-2-5a4%204%200%2011-8%200%204%204%200%20018%200zM3%2020a6%206%200%200112%200v1H3v-1z%27%2F%3E%3C%2Fsvg%3E");
-    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20fill%3D%27none%27%20viewBox%3D%270%200%2024%2024%27%20stroke%3D%27black%27%3E%3Cpath%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20stroke-width%3D%271%27%20d%3D%27M18%209v3m0%200v3m0-3h3m-3%200h-3m-2-5a4%204%200%2011-8%200%204%204%200%20018%200zM3%2020a6%206%200%200112%200v1H3v-1z%27%2F%3E%3C%2Fsvg%3E");
-}
-
-.i-user-add {
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20fill%3D%27none%27%20viewBox%3D%270%200%2024%2024%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%3E%3Cpath%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20d%3D%27M18%207.5v3m0%200v3m0-3h3m-3%200h-3m-2.25-4.125a3.375%203.375%200%201%201-6.75%200%203.375%203.375%200%200%201%206.75%200ZM3%2019.235v-.11a6.375%206.375%200%200%201%2012.75%200v.109A12.318%2012.318%200%200%201%209.374%2021c-2.331%200-4.512-.645-6.374-1.766Z%27%20%2F%3E%3C%2Fsvg%3E");
-    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20fill%3D%27none%27%20viewBox%3D%270%200%2024%2024%27%20stroke%3D%27black%27%20stroke-width%3D%271%27%3E%3Cpath%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20d%3D%27M18%207.5v3m0%200v3m0-3h3m-3%200h-3m-2.25-4.125a3.375%203.375%200%201%201-6.75%200%203.375%203.375%200%200%201%206.75%200ZM3%2019.235v-.11a6.375%206.375%200%200%201%2012.75%200v.109A12.318%2012.318%200%200%201%209.374%2021c-2.331%200-4.512-.645-6.374-1.766Z%27%20%2F%3E%3C%2Fsvg%3E");
-}
+﻿/* Legacy icon definitions moved to theme.css with standardized stroke-width: 1.5 */
+/* This file is kept for future specific overrides if necessary, but base icons are now in theme.css */

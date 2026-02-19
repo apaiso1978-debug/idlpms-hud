@@ -1,7 +1,7 @@
 # IDLPMS - Professional HUD Delivery Engine
 # Handles high-performance MIME mapping and UTF-8 integrity
 
-$port = 3333
+$port = 3334
 $url = "http://localhost:$port/"
 $listener = New-Object System.Net.HttpListener
 $listener.Prefixes.Add($url)

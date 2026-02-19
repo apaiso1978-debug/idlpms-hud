@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>กรอกผลสมรรถภาพ | Fitness Input</title>
+    <link rel="stylesheet" href="../assets/css/theme.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../assets/js/data.js"></script>
+    <script src="../src/services/FitnessService.js"></script>
+    <script src="../src/services/FitnessGrading.js"></script>
+    <style>
+        .student-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .student-table th {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--vs-text-muted);
+            padding: 8px 10px;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            background: var(--vs-bg-card);
+            z-index: 2;
+        }
+
+        .student-table th.center {
+            text-align: center;
+        }
+
+        .student-table td {
+            padding: 6px 10px;
+            font-size: 13px;
+            font-weight: 300;
+            vertical-align: middle;
+            border-bottom: 1px solid rgba(63, 63, 70, 0.3);
+        }
+
+        .student-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .student-table tr.saved td {
+            background: rgba(34, 197, 94, 0.03);
+        }
+
+        .fitness-input {
+            width: 80px;
+            padding: 5px 8px;
+            font-size: 13px;
+            font-weight: 300;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(63, 63, 70, 0.5);
+            border-radius: var(--vs-radius);
+            color: var(--vs-text-title);
+            transition: all 0.15s;
+        }
+
+        .fitness-input:focus {
+            outline: none;
+            border-color: var(--sj-pe);
+            background: rgba(var(--sj-pe-rgb), 0.05);
+            box-shadow: 0 0 0 2px rgba(var(--sj-pe-rgb), 0.15);
+        }
+
+        .fitness-input.filled {
+            border-color: rgba(var(--vs-accent-rgb), 0.3);
+        }
+
+        .fitness-input::placeholder {
+            color: rgba(255, 255, 255, 0.15);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: var(--vs-radius);
+            font-size: 10px;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+
+        .status-badge.complete {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            color: var(--vs-success);
+        }
+
+        .status-badge.pending {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--vs-text-muted);
+        }
+
+        .cloud-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 1px 6px;
+            border-radius: var(--vs-radius);
+            font-size: 9px;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+
+        .cloud-badge.synced {
+            background: rgba(96, 165, 250, 0.1);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            color: #60a5fa;
+        }
+
+        .cloud-badge.local-only {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .gender-badge {
+            width: 24px;
+            height: 24px;
+            border-radius: var(--vs-radius);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 300;
+        }
+
+        .gender-m {
+            background: rgba(96, 165, 250, 0.1);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            color: #60a5fa;
+        }
+
+        .gender-f {
+            background: rgba(251, 113, 133, 0.1);
+            border: 1px solid rgba(251, 113, 133, 0.2);
+            color: #fb7185;
+        }
+
+        .table-container {
+            max-height: calc(100vh - 280px);
+            overflow-y: auto;
+            border: 1px solid rgba(63, 63, 70, 0.5);
+            border-radius: var(--vs-radius);
+            background: var(--vs-bg-card);
+        }
+
+        .table-container::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+
+<body class="p-6 Thai-Rule bg-transparent">
+
+    <!-- ══════════════════════════════════════════
+         HEADER
+         ══════════════════════════════════════════ -->
+    <div class="mb-5">
+        <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-3">
+                <button onclick="goBack()"
+                    class="p-2 rounded-[3px] border border-[var(--vs-border)] hover:bg-white/5 transition-all"
+                    title="กลับ">
+                    <i class="icon i-arrow-left h-4 w-4"></i>
+                </button>
+                <div>
+                    <h1 class="text-[15px] font-light text-[var(--vs-text-title)]">
+                        บันทึกผลสมรรถภาพทางกาย — <span id="class-label" style="color: var(--sj-pe);"></span>
+                    </h1>
+                    <div class="text-[13px] text-[var(--vs-text-muted)]">
+                        กรอกผลทดสอบรายนักเรียน · ข้อมูลบันทึกอัตโนมัติ
+                        <span id="cloud-status" class="cloud-badge local-only ml-2">LOCAL</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <!-- Progress -->
+                <div
+                    class="flex items-center gap-2 px-3 py-1.5 rounded-[var(--vs-radius)] border border-[var(--vs-border)] bg-white/5">
+                    <span id="progress-text" class="text-[13px] font-light text-[var(--vs-text-muted)]">0/0</span>
+                    <div class="vs-progress-track" style="width: 80px;">
+                        <div id="progress-bar" class="vs-progress-fill" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <!-- Submit -->
+                <button id="btn-submit" onclick="submitResults()" disabled
+                    class="flex items-center gap-2 px-4 py-2 rounded-[3px] text-[13px] font-bold transition-all disabled:opacity-30 disabled:grayscale"
+                    style="background: var(--sj-pe); color: var(--vs-bg-deep);">
+                    <i class="icon i-check-circle h-4 w-4"></i>
+                    SUBMIT งาน
+                </button>
+            </div>
+        </div>
+
+        <!-- 3 Test Types Legend -->
+        <div class="flex items-center gap-4 flex-wrap">
+            <div
+                class="flex items-center gap-1.5 px-3 py-1 rounded-[var(--vs-radius)] border border-[rgba(var(--sj-pe-rgb),0.15)] bg-[rgba(var(--sj-pe-rgb),0.05)]">
+                <span class="text-[15px]">🧘</span>
+                <span class="text-[13px] font-light text-[var(--vs-text-title)]">นั่งงอตัว</span>
+                <span class="text-[10px] text-[var(--vs-text-muted)] uppercase">(cm)</span>
+            </div>
+            <div
+                class="flex items-center gap-1.5 px-3 py-1 rounded-[var(--vs-radius)] border border-[rgba(var(--sj-pe-rgb),0.15)] bg-[rgba(var(--sj-pe-rgb),0.05)]">
+                <span class="text-[15px]">💪</span>
+                <span class="text-[13px] font-light text-[var(--vs-text-title)]">ดันพื้น 30 วินาที</span>
+                <span class="text-[10px] text-[var(--vs-text-muted)] uppercase">(ครั้ง)</span>
+            </div>
+            <div
+                class="flex items-center gap-1.5 px-3 py-1 rounded-[var(--vs-radius)] border border-[rgba(var(--sj-pe-rgb),0.15)] bg-[rgba(var(--sj-pe-rgb),0.05)]">
+                <span class="text-[15px]">🏃</span>
+                <span class="text-[13px] font-light text-[var(--vs-text-title)]">ยืนก้าวขึ้นลง 3 นาที</span>
+                <span class="text-[10px] text-[var(--vs-text-muted)] uppercase">(ครั้ง/นาที)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         STUDENT TABLE
+         ══════════════════════════════════════════ -->
+    <div class="table-container">
+        <table class="student-table">
+            <thead>
+                <tr>
+                    <th style="width:40px;">ลำดับ</th>
+                    <th style="width:28px;"></th>
+                    <th>ชื่อ-นามสกุล</th>
+                    <th class="center">🧘 นั่งงอตัว<br><span style="font-weight:300; font-size:9px;">cm</span></th>
+                    <th class="center">💪 ดันพื้น<br><span style="font-weight:300; font-size:9px;">ครั้ง/30s</span>
+                    </th>
+                    <th class="center">🏃 ก้าวขึ้นลง<br><span style="font-weight:300; font-size:9px;">ครั้ง/นาที</span>
+                    </th>
+                    <th class="center" style="width:120px;">เกณฑ์</th>
+                    <th class="center" style="width:70px;">สถานะ</th>
+                </tr>
+            </thead>
+            <tbody id="student-body">
+                <!-- Populated by JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // ══════════════════════════════════════════
+        // BUILD STUDENT LIST FROM IDLPMS_DATA (insforge)
+        // ══════════════════════════════════════════
+
+        const params = new URLSearchParams(window.location.search);
+        const currentClassId = params.get('class') || 'ป.1/1';
+
+        function getStudents() {
+            if (typeof IDLPMS_DATA === 'undefined' || !IDLPMS_DATA.users) return [];
+
+            const students = [];
+            Object.entries(IDLPMS_DATA.users).forEach(([id, u]) => {
+                if (u.role === 'STUDENT' && u.classId === currentClassId && u.schoolId === 'SCH_MABLUD') {
+                    // Detect gender from fullName prefix
+                    const name = u.fullName || '';
+                    let gender = 'M';
+                    if (name.includes('เด็กหญิง') || name.includes('ด.ญ.') || name.startsWith('นางสาว')) {
+                        gender = 'F';
+                    }
+
+                    // Calculate age from birthDate or estimate from class
+                    let age = 10;
+                    if (u.birthDate && typeof FitnessGrading !== 'undefined') {
+                        age = FitnessGrading.calcAge(u.birthDate);
+                    } else if (typeof FitnessGrading !== 'undefined') {
+                        age = FitnessGrading.estimateAgeFromClass(currentClassId);
+                    }
+
+                    students.push({
+                        id: id,
+                        name: u.fullName,
+                        gender: gender,
+                        age: age,
+                        citizenId: u.citizenId || '',
+                        studentCode: u.insforgeStudentCode || '',
+                    });
+                }
+            });
+
+            // Sort by name
+            students.sort((a, b) => a.name.localeCompare(b.name, 'th'));
+            return students;
+        }
+
+        const STUDENTS = getStudents();
+
+        // ── Helpers ──
+        function getResults() {
+            if (typeof FitnessService !== 'undefined') {
+                return FitnessService.getLocalResults();
+            }
+            try { return JSON.parse(localStorage.getItem('fitness_results_v1') || '{}'); }
+            catch (e) { return {}; }
+        }
+
+        // ── Render Table ──
+        function renderTable() {
+            const results = getResults();
+            const tbody = document.getElementById('student-body');
+
+            document.getElementById('class-label').textContent = currentClassId;
+
+            if (STUDENTS.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-8 text-[var(--vs-text-muted)]">
+                            <p class="text-[13px]">ไม่พบนักเรียนในชั้น ${currentClassId}</p>
+                            <p class="text-[11px] mt-1 opacity-50">ตรวจสอบข้อมูลใน IDLPMS_DATA.users</p>
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            tbody.innerHTML = STUDENTS.map((stu, idx) => {
+                const data = results[stu.id] || {};
+                const hasSitReach = data.sitReach !== undefined && data.sitReach !== '';
+                const hasPushUp = data.pushUp !== undefined && data.pushUp !== '';
+                const hasStepUp = data.stepUp !== undefined && data.stepUp !== '';
+                const isComplete = hasSitReach && hasPushUp && hasStepUp;
+
+                return `
+                    <tr class="${isComplete ? 'saved' : ''}" data-student-id="${stu.id}">
+                        <td class="text-[var(--vs-text-muted)] text-center">${idx + 1}</td>
+                        <td>
+                            <span class="gender-badge ${stu.gender === 'M' ? 'gender-m' : 'gender-f'}">
+                                ${stu.gender === 'M' ? 'ช' : 'ญ'}
+                            </span>
+                        </td>
+                        <td class="text-[var(--vs-text-title)] Thai-Rule">${stu.name}</td>
+                        <td class="text-center">
+                            <input type="number" step="0.1" min="0" max="50"
+                                class="fitness-input ${hasSitReach ? 'filled' : ''}"
+                                id="sit_${stu.id}" 
+                                value="${data.sitReach ?? ''}"
+                                placeholder="—"
+                                onchange="saveField('${stu.id}', 'sitReach', this.value)"
+                                onfocus="this.select()">
+                        </td>
+                        <td class="text-center">
+                            <input type="number" min="0" max="100"
+                                class="fitness-input ${hasPushUp ? 'filled' : ''}"
+                                id="push_${stu.id}"
+                                value="${data.pushUp ?? ''}"
+                                placeholder="—"
+                                onchange="saveField('${stu.id}', 'pushUp', this.value)"
+                                onfocus="this.select()">
+                        </td>
+                        <td class="text-center">
+                            <input type="number" min="0" max="200"
+                                class="fitness-input ${hasStepUp ? 'filled' : ''}"
+                                id="step_${stu.id}"
+                                value="${data.stepUp ?? ''}"
+                                placeholder="—"
+                                onchange="saveField('${stu.id}', 'stepUp', this.value)"
+                                onfocus="this.select()">
+                        </td>
+                        <td class="text-center" id="grade_${stu.id}">
+                            ${isComplete && typeof FitnessGrading !== 'undefined'
+                        ? (() => {
+                            const grades = FitnessGrading.gradeAll(data, stu.age, stu.gender);
+                            return grades.overall ? FitnessGrading.levelBadge(grades.overall.level) : '';
+                        })()
+                        : '<span style="font-size:10px;color:var(--vs-text-muted);">—</span>'}
+                        </td>
+                        <td class="text-center">
+                            ${isComplete
+                        ? '<span class="status-badge complete"><i class="icon i-check h-3 w-3"></i> ครบ</span>'
+                        : '<span class="status-badge pending">รอกรอก</span>'}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            updateProgress();
+        }
+
+        // ── Save Single Field (dual-write) ──
+        async function saveField(studentId, field, value) {
+            const results = getResults();
+            if (!results[studentId]) {
+                results[studentId] = { classId: currentClassId };
+            }
+
+            if (value === '' || value === null) {
+                delete results[studentId][field];
+            } else {
+                results[studentId][field] = parseFloat(value);
+            }
+
+            results[studentId].testedAt = new Date().toISOString();
+            results[studentId].testedBy = 'CURRENT_TEACHER';
+
+            // 1. Save locally via FitnessService (always works)
+            if (typeof FitnessService !== 'undefined') {
+                FitnessService.saveLocalResult(studentId, results[studentId]);
+            } else {
+                localStorage.setItem('fitness_results_v1', JSON.stringify(results));
+            }
+
+            // Update input styling
+            const input = document.getElementById(
+                field === 'sitReach' ? `sit_${studentId}` :
+                    field === 'pushUp' ? `push_${studentId}` : `step_${studentId}`
+            );
+            if (input) {
+                input.classList.toggle('filled', value !== '' && value !== null);
+            }
+
+            // Update row status
+            const data = results[studentId] || {};
+            const isComplete = data.sitReach !== undefined && data.pushUp !== undefined && data.stepUp !== undefined;
+            const row = document.querySelector(`tr[data-student-id="${studentId}"]`);
+            if (row) {
+                row.classList.toggle('saved', isComplete);
+                const statusCell = row.querySelector('td:last-child');
+                if (statusCell) {
+                    statusCell.innerHTML = isComplete
+                        ? '<span class="status-badge complete"><i class="icon i-check h-3 w-3"></i> ครบ</span>'
+                        : '<span class="status-badge pending">รอกรอก</span>';
+                }
+            }
+
+            // Compute grade when complete
+            let gradeData = {};
+            if (isComplete && typeof FitnessGrading !== 'undefined') {
+                const stu = STUDENTS.find(s => s.id === studentId);
+                if (stu) {
+                    const grades = FitnessGrading.gradeAll(data, stu.age, stu.gender);
+                    gradeData = {
+                        sitReachLevel: grades.sitReach ? grades.sitReach.level : '',
+                        pushUpLevel: grades.pushUp ? grades.pushUp.level : '',
+                        stepUpLevel: grades.stepUp ? grades.stepUp.level : '',
+                        overallLevel: grades.overall ? grades.overall.level : '',
+                    };
+
+                    // Update grade cell
+                    const gradeCell = document.getElementById(`grade_${studentId}`);
+                    if (gradeCell && grades.overall) {
+                        gradeCell.innerHTML = FitnessGrading.levelBadge(grades.overall.level);
+                    }
+                }
+            } else {
+                const gradeCell = document.getElementById(`grade_${studentId}`);
+                if (gradeCell) {
+                    gradeCell.innerHTML = '<span style="font-size:10px;color:var(--vs-text-muted);">—</span>';
+                }
+            }
+
+            updateProgress();
+
+            // 2. If all 3 fields complete → dual-write to cloud (async, non-blocking)
+            if (isComplete && typeof FitnessService !== 'undefined') {
+                try {
+                    const result = await FitnessService.save(studentId, { ...data, ...gradeData }, {
+                        classId: currentClassId,
+                        recordedBy: 'CURRENT_TEACHER',
+                        schoolId: 'SCH_MABLUD',
+                    });
+                    if (result.cloud) {
+                        updateCloudStatus(true);
+                    }
+                } catch (e) {
+                    console.warn('[fitness_input] Cloud save failed:', e);
+                }
+            }
+        }
+
+        // ── Cloud Status Indicator ──
+        function updateCloudStatus(synced) {
+            const el = document.getElementById('cloud-status');
+            if (!el) return;
+            if (synced) {
+                el.className = 'cloud-badge synced ml-2';
+                el.textContent = '☁ CLOUD SYNCED';
+            } else {
+                el.className = 'cloud-badge local-only ml-2';
+                el.textContent = 'LOCAL';
+            }
+        }
+
+        // ── Progress ──
+        function updateProgress() {
+            const results = getResults();
+            let complete = 0;
+
+            STUDENTS.forEach(stu => {
+                const d = results[stu.id];
+                if (d && d.sitReach !== undefined && d.pushUp !== undefined && d.stepUp !== undefined) {
+                    complete++;
+                }
+            });
+
+            const total = STUDENTS.length;
+            const percent = total > 0 ? Math.round((complete / total) * 100) : 0;
+
+            document.getElementById('progress-text').textContent = `${complete}/${total} คน`;
+            const bar = document.getElementById('progress-bar');
+            bar.style.width = `${percent}%`;
+
+            if (complete === total && total > 0) {
+                bar.classList.add('vs-progress-fill-success');
+                bar.style.background = '';
+            } else {
+                bar.classList.remove('vs-progress-fill-success');
+                bar.style.background = 'var(--sj-pe)';
+            }
+
+            // Enable/disable submit
+            const btn = document.getElementById('btn-submit');
+            btn.disabled = !(complete === total && total > 0);
+        }
+
+        // ── Submit ──
+        async function submitResults() {
+            if (!confirm(`ยืนยันส่งผลทดสอบสมรรถภาพ ชั้น ${currentClassId} ?\n\nเมื่อส่งแล้วจะไม่สามารถแก้ไขได้`)) return;
+
+            // Batch cloud save for any records not yet synced
+            if (typeof FitnessService !== 'undefined') {
+                const results = getResults();
+                let syncCount = 0;
+                for (const stu of STUDENTS) {
+                    const d = results[stu.id];
+                    if (d && d.sitReach !== undefined) {
+                        try {
+                            const r = await FitnessService.save(stu.id, d, {
+                                classId: currentClassId,
+                                recordedBy: 'CURRENT_TEACHER',
+                                schoolId: 'SCH_MABLUD',
+                            });
+                            if (r.cloud) syncCount++;
+                        } catch (e) { /* continue */ }
+                    }
+                }
+                console.log(`[fitness_input] Submit: ${syncCount}/${STUDENTS.length} synced to cloud`);
+            }
+
+            try {
+                if (parent.window.HUD_NOTIFY) {
+                    parent.window.HUD_NOTIFY.toast('SUBMIT_SUCCESS', `ส่งผลทดสอบสมรรถภาพ ชั้น ${currentClassId} เรียบร้อย`, 'success');
+                }
+            } catch (e) { /* safe */ }
+
+            goBack();
+        }
+
+        // ── Navigation ──
+        function goBack() {
+            window.location.href = 'fitness_test.html';
+        }
+
+        // ── Init ──
+        renderTable();
+    </script>
+</body>
+
+</html>

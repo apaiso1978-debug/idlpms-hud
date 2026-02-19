@@ -80,9 +80,9 @@ class DNABarChart {
             labelText.setAttribute('x', labelWidth);
             labelText.setAttribute('y', y + barHeight / 2 + 4);
             labelText.setAttribute('text-anchor', 'end');
-            labelText.setAttribute('fill', 'var(--vs-text-body)');
-            labelText.setAttribute('font-size', '12');
-            labelText.setAttribute('font-weight', '300');
+            labelText.setAttribute('fill', 'var(--vs-text-title)');
+            labelText.setAttribute('font-size', '14');
+            labelText.setAttribute('font-weight', '200');
             labelText.textContent = dim;
             this.svg.appendChild(labelText);
 
@@ -93,7 +93,7 @@ class DNABarChart {
             trackRect.setAttribute('width', barWidth);
             trackRect.setAttribute('height', barHeight);
             trackRect.setAttribute('rx', '3');
-            trackRect.setAttribute('fill', 'rgba(var(--vs-border-rgb), 0.5)'); // Zinc-700/50% (Standard Border)
+            trackRect.setAttribute('fill', 'var(--vs-bg-deep)'); // Zinc-850 Floor
             this.svg.appendChild(trackRect);
 
             // Filled bar
@@ -104,7 +104,7 @@ class DNABarChart {
             fillRect.setAttribute('height', barHeight);
             fillRect.setAttribute('rx', '3');
             fillRect.setAttribute('fill', colors[i]);
-            fillRect.setAttribute('opacity', '0.8');
+            fillRect.setAttribute('opacity', '1.0');
             fillRect.style.transition = 'width 0.5s ease-out';
             this.svg.appendChild(fillRect);
 
@@ -116,10 +116,10 @@ class DNABarChart {
                 benchLine.setAttribute('y1', y - 2);
                 benchLine.setAttribute('x2', benchmarkX);
                 benchLine.setAttribute('y2', y + barHeight + 2);
-                benchLine.setAttribute('stroke', 'var(--vs-text-muted)');
+                benchLine.setAttribute('stroke', 'var(--vs-text-body)');
                 benchLine.setAttribute('stroke-width', '1');
                 benchLine.setAttribute('stroke-dasharray', '3 2');
-                benchLine.setAttribute('opacity', '0.6');
+                benchLine.setAttribute('opacity', '0.4');
                 this.svg.appendChild(benchLine);
             }
 
@@ -152,7 +152,7 @@ class DNABarChart {
             legendLine.setAttribute('y1', legendY);
             legendLine.setAttribute('x2', labelWidth + padding + 20);
             legendLine.setAttribute('y2', legendY);
-            legendLine.setAttribute('stroke', 'var(--vs-text-muted)');
+            legendLine.setAttribute('stroke', 'var(--vs-text-body)');
             legendLine.setAttribute('stroke-width', '1');
             legendLine.setAttribute('stroke-dasharray', '3 2');
             this.svg.appendChild(legendLine);
@@ -161,8 +161,8 @@ class DNABarChart {
             legendText.setAttribute('x', labelWidth + padding + 26);
             legendText.setAttribute('y', legendY + 4);
             legendText.setAttribute('fill', 'var(--vs-text-muted)');
-            legendText.setAttribute('font-size', '10');
-            legendText.setAttribute('font-weight', '300');
+            legendText.setAttribute('font-size', '14');
+            legendText.setAttribute('font-weight', '200');
             legendText.textContent = `Benchmark (${benchmarkValue}%)`;
             this.svg.appendChild(legendText);
         }

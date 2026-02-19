@@ -142,15 +142,15 @@
 
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
                         <div>
-                            <div class="flex items-center gap-3 mb-2">
-                                <span class="hud-badge-micro px-2 py-0.5 rounded-[var(--vs-radius)] font-extralight hud-border-cyan hud-bg-cyan" style="color: var(--vs-accent)">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="hud-badge-micro px-2 py-0.5 rounded-[var(--vs-radius)] font-light hud-border-cyan hud-bg-cyan" style="color: var(--vs-accent)">
                                     ACTIVE MISSION
                                 </span>
-                                <span class="text-sm text-[var(--vs-text-muted)] font-extralight uppercase">
+                                <span class="text-[13px] text-[var(--vs-text-muted)] font-light uppercase">
                                     User Identity: ${userGradeStr}${userClassStr}
                                 </span>
                                 ${mismatch ? `
-                                    <span class="px-2 py-0.5 rounded-[var(--vs-radius)] text-[10px] bg-rose-500/20 border border-rose-500/50 text-rose-400 font-bold uppercase animate-pulse">
+                                    <span class="px-2 py-0.5 rounded-[var(--vs-radius)] text-[13px] bg-rose-500/20 border border-rose-500/50 text-rose-400 font-light uppercase animate-pulse">
                                         Grade Mismatch detected
                                     </span>
                                 ` : ''}
@@ -158,15 +158,15 @@
                             <h1 class="vs-title-thai-hero text-[var(--vs-text-title)] Thai-Rule">
                                 ${subject.name}
                             </h1>
-                            <div class="flex items-center gap-4">
-                                <p class="text-sm text-white/40 font-bold uppercase leading-none">National Curriculum Standard Code: ${subjectId}</p>
+                            <div class="flex items-center gap-2">
+                                <p class="text-[13px] text-white/40 font-light uppercase leading-none">National Curriculum Standard Code: ${subjectId}</p>
                                 <span class="h-3 w-[1px] bg-[var(--vs-border)] opacity-50"></span>
-                                <p class="text-sm text-white/60 font-bold uppercase">Target: Grade ${contentGrade || '??'}</p>
+                                <p class="text-[13px] text-white/60 font-light uppercase">Target: Grade ${contentGrade || '??'}</p>
                             </div>
                         </div>
 
                         <div class="flex flex-col items-end">
-                            <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-2">Mastery Status</div>
+                            <div class="text-[13px] text-[var(--vs-text-muted)] uppercase mb-2">Mastery Status</div>
                             <div class="text-4xl font-black text-[var(--vs-accent)] uppercase">
                                 Module ${(currentLessonIndex + 1).toString().padStart(2, '0')}
                                 <span class="text-lg opacity-30 text-[var(--vs-text-title)]">/20</span>
@@ -217,8 +217,8 @@
                         <!-- DNA Activity Timeline (Global Time Tracking Proof) -->
                         <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]" id="timeline-section-card">
                             <div class="flex justify-between items-center mb-6">
-                                <h2 class="text-sm font-extralight text-[var(--vs-text-muted)] uppercase">Neural Learning Trace</h2>
-                                <span class="text-[10px] text-[var(--vs-accent)] font-bold uppercase animate-pulse">Live Feed</span>
+                                <h2 class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase">Neural Learning Trace</h2>
+                                <span class="text-[13px] text-[var(--vs-accent)] font-light uppercase animate-pulse">Live Feed</span>
                             </div>
                             
                             <div id="dna-timeline-content" class="space-y-4">
@@ -227,7 +227,7 @@
                         </div>
 
                         <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)] vs-scrollbar pb-20">
-                            <h2 class="text-sm font-extralight text-[var(--vs-text-muted)] uppercase mb-6">Mastery Curriculum Matrix</h2>
+                            <h2 class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase mb-6">Mastery Curriculum Matrix</h2>
                             <div class="space-y-8" data-admin-action="Curriculum Structure Audit">
                                 ${subject.units
                     ? subject.units
@@ -240,8 +240,8 @@
 
                             return `
                                     <div class="relative">
-                                        <div class="flex items-center gap-4 mb-4 pl-4">
-                                            <h3 class="text-sm font-extralight text-[var(--vs-accent)] uppercase Thai-Rule opacity-70">
+                                        <div class="flex items-center gap-2 mb-4 pl-4">
+                                            <h3 class="text-[13px] font-light text-[var(--vs-accent)] uppercase Thai-Rule opacity-70">
                                                 ${u.name}
                                             </h3>
                                             <div class="h-[1px] flex-1 bg-[var(--vs-border)] opacity-20"></div>
@@ -251,7 +251,7 @@
                                             ${u.lessons.map((l, li) => {
                                 const globalIdx = unitStartIndex + li;
                                 return `
-                                                    <div class="flex items-center gap-3 p-3 rounded-[3px] bg-[rgba(var(--vs-bg-card-rgb),0.3)] border border-[var(--vs-border)] hover:bg-[rgba(var(--vs-accent-rgb),0.05)] hover:border-[rgba(var(--vs-accent-rgb),0.3)] group cursor-pointer transition-all"
+                                                    <div class="flex items-center gap-2 p-3 rounded-[3px] bg-[rgba(var(--vs-bg-card-rgb),0.3)] border border-[var(--vs-border)] hover:bg-[rgba(var(--vs-accent-rgb),0.05)] hover:border-[rgba(var(--vs-accent-rgb),0.3)] group cursor-pointer transition-all"
                                                          onclick="try { parent.ManagementEngine.changeLesson(${globalIdx}); parent.ManagementEngine.startMission(); } catch(e) { location.href='learning_flow.html'; }">
                                                         <!-- Unified Matrix Milestone Node -->
                                                         <div class="vs-milestone-node 
@@ -261,8 +261,8 @@
                                                             ${(globalIdx + 1).toString().padStart(2, '0')}
                                                         </div>
                                                         <div class="flex-1 min-w-0">
-                                                            <div class="text-sm font-extralight text-[var(--vs-text-title)] Thai-Rule truncate group-hover:text-white transition-colors">${l.name}</div>
-                                                            <div class="text-[10px] text-[var(--vs-text-muted)] uppercase font-extralight">Mastery Protocol Active</div>
+                                                            <div class="text-[13px] font-light text-[var(--vs-text-title)] Thai-Rule truncate group-hover:text-white transition-colors">${l.name}</div>
+                                                            <div class="text-[13px] text-[var(--vs-text-muted)] uppercase font-light">Mastery Protocol Active</div>
                                                         </div>
                                                         <i class="icon i-play h-4 w-4 opacity-0 group-hover:opacity-100 text-[var(--vs-accent)] transition-all"></i>
                                                     </div>
@@ -273,7 +273,7 @@
                                 `;
                         })
                         .join('')
-                    : '<p class="text-sm text-[var(--vs-text-muted)] opacity-40 text-center py-10">Curriculum units pending synchronization...</p>'
+                    : '<p class="text-[13px] text-[var(--vs-text-muted)] opacity-40 text-center py-10">Curriculum units pending synchronization...</p>'
                 }
                             </div>
                         </div>
@@ -305,23 +305,23 @@
                                 </div>
                             </div>
 
-                                <p class="text-[11px] text-[var(--vs-text-muted)] font-extralight Thai-Rule leading-relaxed opacity-50">
+                                <p class="text-[13px] text-[var(--vs-text-muted)] font-light Thai-Rule leading-relaxed opacity-50">
                                     * ระบบใช้หลักการ <span class="text-[var(--vs-accent)]">Neural Decay</span> ป้องกันการสะสมคะแนนซ้ำซ้อน และประมวลผลผ่าน <span class="text-[var(--vs-accent)]">5-Axis KPA+ Matrix</span> เพื่อความโปร่งใสสูงสุด
                                 </p>
                         </div>
                         <!-- Launch Control -->
-                        <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-accent)] group relative overflow-hidden cursor-pointer active:scale-95 transition-all"
+                        <div class="p-6 rounded-[var(--vs-radius)] bg-[rgba(34,211,238,0.1)] border border-[rgba(34,211,238,0.3)] group relative overflow-hidden cursor-pointer active:scale-95 transition-all hover:bg-[rgba(34,211,238,0.15)]"
                              onclick="try { parent.ManagementEngine.startMission(); } catch(e) { location.href='learning_flow.html'; }">
-                            <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                            <div class="relative z-10 text-zinc-900 text-center">
-                                <div class="px-3 py-0.5 rounded-[var(--vs-radius)] border border-[rgba(0,0,0,0.2)] bg-[rgba(0,0,0,0.1)] mb-2 inline-block">
-                                    <span class="text-sm font-extralight text-zinc-900 uppercase">Execution Protocol</span>
+                            <div class="absolute inset-0 bg-[rgba(34,211,238,0.05)] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div class="relative z-10 text-[var(--vs-accent)] text-center">
+                                <div class="px-3 py-0.5 rounded-[var(--vs-radius)] border border-[rgba(34,211,238,0.25)] bg-[rgba(34,211,238,0.08)] mb-2 inline-block">
+                                    <span class="text-[13px] font-light text-[var(--vs-accent)] uppercase">Execution Protocol</span>
                                 </div>
-                                <div class="text-2xl font-extralight uppercase flex items-center justify-center gap-2">
+                                <div class="text-2xl font-light uppercase flex items-center justify-center gap-2">
                                     <i class="icon i-play h-6 w-6"></i>
                                     Resume Mission
                                 </div>
-                                <div id="launch-status" class="text-sm font-extralight mt-2 opacity-60 uppercase Thai-Rule">
+                                <div id="launch-status" class="text-[13px] font-light mt-2 opacity-60 uppercase Thai-Rule">
                                     กำลังเริ่ม: บทที่ ${currentLessonIndex + 1} ขั้นที่ ${currentStep}
                                 </div>
                             </div>
@@ -329,13 +329,13 @@
 
                         <!-- Secondary Support Section -->
             <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
-                <h2 class="text-sm font-extralight text-[var(--vs-text-muted)] uppercase mb-4">Support Repository</h2>
+                <h2 class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase mb-4">Support Repository</h2>
                 <div class="space-y-3">
-                    <div class="flex items-center justify-between text-sm group cursor-pointer hover:text-[var(--vs-accent)] transition-colors">
+                    <div class="flex items-center justify-between text-[13px] group cursor-pointer hover:text-[var(--vs-accent)] transition-colors">
                         <span class="Thai-Rule text-[var(--vs-text-body)]">คู่มือการเรียนฉบับย่อ</span>
                         <i class="icon i-document h-4 w-4 opacity-30 group-hover:opacity-100"></i>
                     </div>
-                    <div class="flex items-center justify-between text-sm group cursor-pointer hover:text-[var(--vs-accent)] transition-colors">
+                    <div class="flex items-center justify-between text-[13px] group cursor-pointer hover:text-[var(--vs-accent)] transition-colors">
                         <span class="Thai-Rule text-[var(--vs-text-body)]">คลังข้อสอบเก่า (Level 6)</span>
                         <i class="icon i-folder h-4 w-4 opacity-30 group-hover:opacity-100"></i>
                     </div>
@@ -386,8 +386,8 @@
                     return `
                         <div class="space-y-1">
                             <div class="flex justify-between items-center">
-                                <span class="text-sm text-[var(--vs-text-muted)] font-extralight uppercase">${label}</span>
-                                <span class="text-sm font-extralight" style="color: ${colorVar}">${val}%</span>
+                                <span class="text-[13px] text-[var(--vs-text-muted)] font-light uppercase">${label}</span>
+                                <span class="text-[13px] font-light" style="color: ${colorVar}">${val}%</span>
                             </div>
                             <div class="vs-progress-track">
                                 <div class="vs-progress-fill opacity-80" style="width: ${val}%; background-color: ${colorVar}"></div>
@@ -441,7 +441,7 @@
             const latest = allSignals.slice(0, 5);
 
             if (latest.length === 0) {
-                timelineContainer.innerHTML = `<div class="text-center py-6 text-[var(--vs-text-muted)] font-extralight text-sm uppercase">No neural signals detected in current session</div>`;
+                timelineContainer.innerHTML = `<div class="text-center py-6 text-[var(--vs-text-muted)] font-light text-[13px] uppercase">No neural signals detected in current session</div>`;
                 return;
             }
 
@@ -452,10 +452,10 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <div class="flex justify-between items-center">
-                            <span class="text-sm font-light text-[var(--vs-text-title)]">${s.dim} Matrix: <span class="text-[var(--vs-accent)]">+${s.value}%</span></span>
-                            <span class="text-[10px] text-[var(--vs-text-muted)] font-mono">${s.time}</span>
+                            <span class="text-[13px] font-light text-[var(--vs-text-title)]">${s.dim} Matrix: <span class="text-[var(--vs-accent)]">+${s.value}%</span></span>
+                            <span class="text-[13px] text-[var(--vs-text-muted)] font-mono">${s.time}</span>
                         </div>
-                        <div class="text-[11px] text-[var(--vs-text-muted)] font-extralight truncate Thai-Rule opacity-60">${s.action}</div>
+                        <div class="text-[13px] text-[var(--vs-text-muted)] font-light truncate Thai-Rule opacity-60">${s.action}</div>
                     </div>
                 </div>
             `).join('');

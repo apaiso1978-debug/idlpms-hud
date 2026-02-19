@@ -18,33 +18,33 @@
 
         <!-- Header -->
         <div class="flex items-center justify-between">
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2">
                 <span class="hud-badge-micro border-[#c084fc]/30 text-[#c084fc]">Domain 2</span>
-                <h1 class="text-xl font-extralight text-[var(--vs-text-title)] uppercase">
+                <h1 class="text-xl font-light text-[var(--vs-text-title)] uppercase">
                     งานส่งเสริมและสนับสนุนฯ — Support Activities</h1>
             </div>
         </div>
 
         <!-- Description -->
         <div class="dna-zone p-4 border-[#c084fc]/15">
-            <p class="text-sm text-[var(--vs-text-muted)]">
+            <p class="text-[13px] text-[var(--vs-text-muted)]">
                 PLC, การวิจัยในชั้นเรียน, กิจกรรมสนับสนุนอื่นๆ — ครูเห็น นักเรียนไม่เห็น (นับชั่วโมง กคศ.)
             </p>
-            <p class="text-sm text-[var(--vs-text-muted)] mt-1 opacity-45">ครูเท่านั้น</p>
+            <p class="text-[13px] text-[var(--vs-text-muted)] mt-1 opacity-45">ครูเท่านั้น</p>
         </div>
 
         <!-- Activity List -->
         <div class="dna-zone p-6 border-[#c084fc]/15 bg-[rgba(var(--vs-bg-deep-rgb),0.2)]">
-            <div class="flex items-center gap-3 mb-4">
+            <div class="flex items-center gap-2 mb-4">
                 <span class="hud-badge-micro border-[#c084fc]/30 text-[#c084fc]">Activities</span>
-                <h2 class="text-lg font-extralight text-[var(--vs-text-title)] uppercase">
+                <h2 class="text-lg font-light text-[var(--vs-text-title)] uppercase">
                     รายการกิจกรรมสนับสนุน</h2>
             </div>
             <div id="d2-activity-list" class="space-y-2">
                 <!-- Populated by renderDomain2Panel() -->
             </div>
             <button onclick="addDomain2Activity()"
-                class="mt-4 flex items-center gap-1 px-6 py-2.5 text-sm text-[#c084fc] border border-[#c084fc]/20 rounded-[var(--vs-radius)] hover:bg-[#c084fc]/10 transition-all">
+                class="mt-4 flex items-center gap-1 px-6 py-2.5 text-[13px] text-[#c084fc] border border-[#c084fc]/20 rounded-[var(--vs-radius)] hover:bg-[#c084fc]/10 transition-all">
                 <span>+ เพิ่มกิจกรรม</span>
             </button>
         </div>
@@ -85,25 +85,25 @@
             if (!container) return;
             const activities = loadDomainInputs(2) || getDefaultDomain2();
 
-            let html = `<div class="grid grid-cols-[minmax(0,1fr)_100px_160px_72px_36px] gap-3 text-sm text-[var(--vs-text-muted)] uppercase pb-1 border-b border-[rgba(63,63,70,0.5)]">
+            let html = `<div class="grid grid-cols-[minmax(0,1fr)_100px_160px_72px_36px] gap-3 text-[13px] text-[var(--vs-text-muted)] uppercase pb-1 border-b border-[rgba(63,63,70,0.5)]">
                 <span>กิจกรรม</span><span class="text-center">วัน</span><span class="text-center">คาบ</span><span class="text-center">ชม./สป.</span><span></span>
             </div>`;
 
             activities.forEach((a, idx) => {
                 html += `<div class="grid grid-cols-[minmax(0,1fr)_100px_160px_72px_36px] gap-3 items-center py-2 border-b border-[rgba(63,63,70,0.1)]" data-idx="${idx}">
                     <input type="text" value="${a.name}" onchange="updateD2Activity(${idx}, 'name', this.value)"
-                        class="bg-[rgba(255,255,255,0.03)] text-sm text-[var(--vs-text-body)] border border-[rgba(255,255,255,0.1)] rounded-[var(--vs-radius)] focus:border-[#c084fc]/50 outline-none px-3 py-2" />
+                        class="bg-[rgba(255,255,255,0.03)] text-[13px] text-[var(--vs-text-body)] border border-[rgba(255,255,255,0.1)] rounded-[var(--vs-radius)] focus:border-[#c084fc]/50 outline-none px-3 py-2" />
                     <select onchange="updateD2Activity(${idx}, 'day', parseInt(this.value))"
-                        class="bg-[var(--vs-bg-deep)] text-sm text-[var(--vs-text-body)] border border-[rgba(var(--vs-border-rgb),0.3)] rounded-[var(--vs-radius)] px-3 py-2 outline-none text-center">
+                        class="bg-[var(--vs-bg-deep)] text-[13px] text-[var(--vs-text-body)] border border-[rgba(var(--vs-border-rgb),0.3)] rounded-[var(--vs-radius)] px-3 py-2 outline-none text-center">
                         ${[1, 2, 3, 4, 5].map(d => `<option value="${d}" ${a.day === d ? 'selected' : ''}>${DAY_LABELS[d]}</option>`).join('')}
                     </select>
                     <select onchange="updateD2Activity(${idx}, 'period', parseInt(this.value))"
-                        class="bg-[var(--vs-bg-deep)] text-sm text-[var(--vs-text-body)] border border-[rgba(var(--vs-border-rgb),0.3)] rounded-[var(--vs-radius)] px-3 py-2 outline-none text-center">
+                        class="bg-[var(--vs-bg-deep)] text-[13px] text-[var(--vs-text-body)] border border-[rgba(var(--vs-border-rgb),0.3)] rounded-[var(--vs-radius)] px-3 py-2 outline-none text-center">
                         ${[7, 8].map(p => `<option value="${p}" ${a.period === p ? 'selected' : ''}>คาบ ${p === 7 ? '6' : '7'}</option>`).join('')}
                     </select>
                     <input type="number" value="${a.hoursPerWeek || 1}" min="0.5" max="3" step="0.5" onchange="updateD2Activity(${idx}, 'hoursPerWeek', parseFloat(this.value))"
-                        class="bg-[var(--vs-bg-deep)] text-sm text-[var(--vs-text-body)] border border-[rgba(var(--vs-border-rgb),0.3)] rounded-[var(--vs-radius)] px-3 py-2 outline-none text-center w-full [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" />
-                    <button onclick="removeD2Activity(${idx})" class="text-[var(--vs-danger)] hover:bg-[rgba(var(--vs-danger-rgb),0.1)] rounded-[var(--vs-radius)] p-1 text-sm">✕</button>
+                        class="bg-[var(--vs-bg-deep)] text-[13px] text-[var(--vs-text-body)] border border-[rgba(var(--vs-border-rgb),0.3)] rounded-[var(--vs-radius)] px-3 py-2 outline-none text-center w-full [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" />
+                    <button onclick="removeD2Activity(${idx})" class="text-[var(--vs-danger)] hover:bg-[rgba(var(--vs-danger-rgb),0.1)] rounded-[var(--vs-radius)] p-1 text-[13px]">✕</button>
                 </div>`;
             });
             container.innerHTML = html;

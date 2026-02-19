@@ -13,7 +13,7 @@
 # ============================================================================
 
 param(
-    [Parameter(Position=0)]
+    [Parameter(Position = 0)]
     [ValidateSet("all", "thai", "design", "zinc", "unity", "encoding", "report", "fix")]
     [string]$Mode = "all",
 
@@ -24,7 +24,7 @@ param(
     [switch]$Fix,
 
     [Parameter()]
-    [switch]$Verbose,
+    [switch]$AuditVerbose,
 
     [Parameter()]
     [switch]$Report,
@@ -39,37 +39,37 @@ param(
 
 $Script:Config = @{
     # Iron Rules Configuration
-    IronRules = @{
-        MinThaiSize = 14          # Minimum Thai text size (px) - text-sm
+    IronRules             = @{
+        MinThaiSize    = 14          # Minimum Thai text size (px) - text-sm
         MinEnglishSize = 12       # Minimum English text size (px) - text-xs
-        CornerRadius = 3          # Standard border-radius (px)
-        HeaderHeight = 48         # Standard header height (px)
-        BorderWidth = 1           # Standard border width (px)
-        BorderOpacity = 50        # Standard border opacity (%)
+        CornerRadius   = 3          # Standard border-radius (px)
+        HeaderHeight   = 48         # Standard header height (px)
+        BorderWidth    = 1           # Standard border width (px)
+        BorderOpacity  = 50        # Standard border opacity (%)
     }
 
     # Zinc Elevation System (Allowed values)
-    ZincPalette = @{
-        Allowed = @("zinc-850", "zinc-800", "zinc-750", "zinc-700", "zinc-600", "zinc-500",
-                    "zinc-400", "zinc-300", "zinc-200", "zinc-100", "zinc-50")
-        Forbidden = @("zinc-900", "zinc-950")  # Total Dark Purge
+    ZincPalette           = @{
+        Allowed        = @("zinc-850", "zinc-800", "zinc-750", "zinc-700", "zinc-600", "zinc-500",
+            "zinc-400", "zinc-300", "zinc-200", "zinc-100", "zinc-50")
+        Forbidden      = @("zinc-900", "zinc-950")  # Total Dark Purge
         DeepestAllowed = "zinc-850"
     }
 
     # Forbidden Patterns
-    ForbiddenPatterns = @{
-        Italic = @("italic", "font-style:\s*italic", "font-italic")
+    ForbiddenPatterns     = @{
+        Italic        = @("italic", "font-style:\s*italic", "font-italic")
         LetterSpacing = @("letter-spacing", "tracking-")
-        LargeRadius = @("rounded-lg", "rounded-xl", "rounded-2xl", "rounded-full", "rounded-3xl")
-        DarkZinc = @("zinc-900", "zinc-950", "bg-zinc-900", "bg-zinc-950", "text-zinc-900", "text-zinc-950")
+        LargeRadius   = @("rounded-lg", "rounded-xl", "rounded-2xl", "rounded-full", "rounded-3xl")
+        DarkZinc      = @("zinc-900", "zinc-950", "bg-zinc-900", "bg-zinc-950", "text-zinc-900", "text-zinc-950")
     }
 
     # File Patterns
-    FilePatterns = @{
+    FilePatterns          = @{
         HTML = "*.html"
-        CSS = "*.css"
-        JS = "*.js"
-        All = @("*.html", "*.css", "*.js")
+        CSS  = "*.css"
+        JS   = "*.js"
+        All  = @("*.html", "*.css", "*.js")
     }
 
     # Thai Text Patterns (for small text detection)
@@ -140,7 +140,7 @@ function Get-ProjectFiles {
     $files = @()
     foreach ($pattern in $Patterns) {
         $found = Get-ChildItem -Path $BasePath -Filter $pattern -Recurse -File -ErrorAction SilentlyContinue |
-                 Where-Object { $_.FullName -notmatch "node_modules|\.git|\.agent" }
+        Where-Object { $_.FullName -notmatch "node_modules|\.git|\.agent" }
         $files += $found
     }
     return $files | Sort-Object -Property FullName -Unique
@@ -155,15 +155,15 @@ function Get-TextSizeFromClass {
     param([string]$Class)
 
     $sizeMap = @{
-        "text-xs" = 12
-        "text-sm" = 14
+        "text-xs"   = 12
+        "text-sm"   = 14
         "text-base" = 16
-        "text-lg" = 18
-        "text-xl" = 20
-        "text-2xl" = 24
-        "text-3xl" = 30
-        "text-4xl" = 36
-        "text-5xl" = 48
+        "text-lg"   = 18
+        "text-xl"   = 20
+        "text-2xl"  = 24
+        "text-3xl"  = 30
+        "text-4xl"  = 36
+        "text-5xl"  = 48
     }
 
     if ($sizeMap.ContainsKey($Class)) {
@@ -188,10 +188,10 @@ function Invoke-ThaiTypographyAudit {
     Write-AuditSection "Thai Typography Audit (Iron Rule #4)"
 
     $results = @{
-        Passed = 0
-        Failed = 0
+        Passed   = 0
+        Failed   = 0
         Warnings = 0
-        Issues = @()
+        Issues   = @()
     }
 
     $files = Get-ProjectFiles -BasePath $BasePath -Patterns @("*.html", "*.js")
@@ -214,9 +214,9 @@ function Invoke-ThaiTypographyAudit {
                 if ($line -match $pattern) {
                     $results.Failed++
                     $results.Issues += @{
-                        File = $file.Name
-                        Line = $lineNum
-                        Issue = "Thai text with small size class: $($Matches[0])"
+                        File    = $file.Name
+                        Line    = $lineNum
+                        Issue   = "Thai text with small size class: $($Matches[0])"
                         Content = $line.Trim().Substring(0, [Math]::Min(80, $line.Trim().Length))
                     }
                     Write-AuditResult -Status "FAIL" -Message "Thai text too small" -File $file.Name -Line $lineNum
@@ -245,10 +245,10 @@ function Invoke-ZincPaletteAudit {
     Write-AuditSection "Zinc Color Palette Audit (Iron Rule #2)"
 
     $results = @{
-        Passed = 0
-        Failed = 0
+        Passed   = 0
+        Failed   = 0
         Warnings = 0
-        Issues = @()
+        Issues   = @()
     }
 
     $files = Get-ProjectFiles -BasePath $BasePath -Patterns @("*.html", "*.css", "*.js")
@@ -265,8 +265,8 @@ function Invoke-ZincPaletteAudit {
                 if ($line -match $forbidden) {
                     $results.Failed++
                     $results.Issues += @{
-                        File = $file.Name
-                        Line = $lineNum
+                        File  = $file.Name
+                        Line  = $lineNum
                         Issue = "Forbidden zinc color: $forbidden (Total Dark Purge)"
                     }
                     Write-AuditResult -Status "FAIL" -Message "Forbidden color: $forbidden" -File $file.Name -Line $lineNum
@@ -289,10 +289,10 @@ function Invoke-DesignStandardsAudit {
     Write-AuditSection "Design Standards Audit (Iron Rules)"
 
     $results = @{
-        Passed = 0
-        Failed = 0
+        Passed   = 0
+        Failed   = 0
         Warnings = 0
-        Issues = @()
+        Issues   = @()
     }
 
     $files = Get-ProjectFiles -BasePath $BasePath -Patterns @("*.html", "*.css", "*.js")
@@ -347,10 +347,10 @@ function Invoke-UnityAudit {
     Write-AuditSection "Unity & Consistency Audit"
 
     $results = @{
-        Passed = 0
-        Failed = 0
+        Passed   = 0
+        Failed   = 0
         Warnings = 0
-        Issues = @()
+        Issues   = @()
     }
 
     $files = Get-ProjectFiles -BasePath $BasePath -Patterns @("*.html")
@@ -390,10 +390,10 @@ function Invoke-EncodingAudit {
     Write-AuditSection "File Encoding Audit (UTF-8)"
 
     $results = @{
-        Passed = 0
-        Failed = 0
+        Passed   = 0
+        Failed   = 0
         Warnings = 0
-        Issues = @()
+        Issues   = @()
     }
 
     $files = Get-ProjectFiles -BasePath $BasePath -Patterns @("*.html", "*.css", "*.js")
@@ -415,12 +415,14 @@ function Invoke-EncodingAudit {
                 $content = Get-Content -Path $file.FullName -Raw -Encoding UTF8
                 if ($content -match 'charset=["'']?UTF-8["'']?' -or $content -match 'charset=["'']?utf-8["'']?') {
                     $results.Passed++
-                } else {
+                }
+                else {
                     $results.Warnings++
                     Write-AuditResult -Status "WARN" -Message "Missing charset=UTF-8 declaration" -File $file.Name
                 }
             }
-        } catch {
+        }
+        catch {
             $results.Failed++
             Write-AuditResult -Status "FAIL" -Message "Cannot read file: $_" -File $file.Name
         }
@@ -436,10 +438,10 @@ function Invoke-PlaceholderAudit {
     Write-AuditSection "Placeholder Content Audit"
 
     $results = @{
-        Passed = 0
-        Failed = 0
+        Passed   = 0
+        Failed   = 0
         Warnings = 0
-        Issues = @()
+        Issues   = @()
     }
 
     $placeholders = @(
@@ -592,10 +594,10 @@ function Main {
     Write-Host ""
 
     $allResults = @{
-        Thai = @{ Passed = 0; Failed = 0; Warnings = 0; Issues = @() }
-        Zinc = @{ Passed = 0; Failed = 0; Warnings = 0; Issues = @() }
-        Design = @{ Passed = 0; Failed = 0; Warnings = 0; Issues = @() }
-        Unity = @{ Passed = 0; Failed = 0; Warnings = 0; Issues = @() }
+        Thai     = @{ Passed = 0; Failed = 0; Warnings = 0; Issues = @() }
+        Zinc     = @{ Passed = 0; Failed = 0; Warnings = 0; Issues = @() }
+        Design   = @{ Passed = 0; Failed = 0; Warnings = 0; Issues = @() }
+        Unity    = @{ Passed = 0; Failed = 0; Warnings = 0; Issues = @() }
         Encoding = @{ Passed = 0; Failed = 0; Warnings = 0; Issues = @() }
     }
 
@@ -658,9 +660,11 @@ function Main {
 
     if ($totalFailed -eq 0 -and $totalWarnings -eq 0) {
         Write-Host "  Status: ALL CHECKS PASSED" -ForegroundColor Green
-    } elseif ($totalFailed -eq 0) {
+    }
+    elseif ($totalFailed -eq 0) {
         Write-Host "  Status: PASSED WITH WARNINGS ($totalWarnings)" -ForegroundColor Yellow
-    } else {
+    }
+    else {
         Write-Host "  Status: FAILED ($totalFailed issues, $totalWarnings warnings)" -ForegroundColor Red
     }
 

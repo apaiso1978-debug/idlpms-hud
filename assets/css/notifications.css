@@ -57,19 +57,19 @@
 }
 
 .vs-toast-title {
-    font-size: 10px;
+    font-size: 13px;
     text-transform: uppercase;
-    font-weight: 200;
+    font-weight: 300;
     /* Standardized to Weight 200 */
     color: var(--vs-accent);
 }
 
 .vs-toast-text {
     font-size: 13px;
-    font-weight: 200;
+    font-weight: 300;
     /* Standardized to Weight 200 */
     color: var(--vs-text-body);
-    line-height: 1.4;
+    line-height: 1;
 }
 
 .vs-toast.danger {

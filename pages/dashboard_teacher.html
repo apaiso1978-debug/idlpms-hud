@@ -67,12 +67,12 @@
             container.innerHTML = `
                 <!-- Header Section -->
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
                         <span class="role-badge role-badge-teacher">Teacher</span>
-                        <h1 class="text-xl font-extralight text-[var(--vs-text-title)] uppercase">Mission Control</h1>
+                        <h1 class="text-xl font-light text-[var(--vs-text-title)] uppercase">Mission Control</h1>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="text-sm text-[var(--vs-text-muted)] font-extralight">${user.fullName || 'ครูตัวอย่าง'}</span>
+                        <span class="text-[13px] text-[var(--vs-text-muted)] font-light">${user.fullName || 'ครูตัวอย่าง'}</span>
                     </div>
                 </div>
                 
@@ -113,17 +113,17 @@
                         <div class="dna-zone p-4">
                             <div class="dna-zone-header">
                                 <h2 class="dna-zone-title">Students</h2>
-                                <span class="text-sm text-[var(--vs-text-muted)]">${classroomStudents.length} คน</span>
+                                <span class="text-[13px] text-[var(--vs-text-muted)]">${classroomStudents.length} คน</span>
                             </div>
                             <div class="dna-zone-content flex-col items-stretch gap-2 mt-4 max-h-[400px] overflow-y-auto vs-scrollbar">
                                 ${classroomStudents.map((s, i) => `
                                     <div class="flex items-center justify-between p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] hover:bg-[var(--vs-bg-card)] cursor-pointer transition-colors group ${selectedStudent?.id === s.id ? 'border border-[var(--vs-accent)]' : 'border border-transparent'}"
                                          onclick="selectStudent('${s.id}')">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-8 h-8 rounded-[3px] bg-[var(--vs-bg-panel)] flex items-center justify-center text-sm font-extralight text-[var(--vs-text-muted)]">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-8 h-8 rounded-[3px] bg-[var(--vs-bg-panel)] flex items-center justify-center text-[13px] font-light text-[var(--vs-text-muted)]">
                                                 ${i + 1}
                                             </div>
-                                            <span class="text-sm text-[var(--vs-text-body)] font-extralight Thai-Rule">${s.name}</span>
+                                            <span class="text-[13px] text-[var(--vs-text-body)] font-light Thai-Rule">${s.name}</span>
                                         </div>
                                         <i class="icon i-chevron-right w-4 h-4 opacity-0 group-hover:opacity-100 text-[var(--vs-accent)] transition-opacity"></i>
                                     </div>
@@ -154,8 +154,8 @@
                                 <!-- Selected Student Info (Individual View) -->
                                 <div id="student-info" class="hidden w-full p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
                                     <div class="flex items-center justify-between">
-                                        <span class="text-sm text-[var(--vs-text-muted)] font-extralight uppercase">Selected Student</span>
-                                        <span id="selected-student-name" class="text-sm text-[var(--vs-text-title)] font-extralight Thai-Rule">-</span>
+                                        <span class="text-[13px] text-[var(--vs-text-muted)] font-light uppercase">Selected Student</span>
+                                        <span id="selected-student-name" class="text-[13px] text-[var(--vs-text-title)] font-light Thai-Rule">-</span>
                                     </div>
                                 </div>
 
@@ -177,7 +177,7 @@
                         <div class="flex items-center gap-2">
                             <h2 class="dna-zone-title">Teaching Schedule</h2>
                         </div>
-                        <span class="text-sm text-[var(--vs-text-muted)]">Academic Year 2568</span>
+                        <span class="text-[13px] text-[var(--vs-text-muted)]">Academic Year 2568</span>
                     </div>
                     
                     <!-- Schedule Grid Container -->
@@ -226,8 +226,8 @@
                 const colors = ['var(--dna-k)', 'var(--dna-p)', 'var(--dna-a)', 'var(--dna-e)', 'var(--dna-d)'];
                 classSummary.innerHTML = ['K', 'P', 'A', 'E', 'D'].map((dim, i) => `
                     <div class="p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] text-center">
-                        <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-1">${dim}</div>
-                        <div class="text-lg font-extralight" style="color: ${colors[i]}">${averages[dim.toLowerCase()] || 0}%</div>
+                        <div class="text-[13px] text-[var(--vs-text-muted)] uppercase mb-1">${dim}</div>
+                        <div class="text-lg font-light" style="color: ${colors[i]}">${averages[dim.toLowerCase()] || 0}%</div>
                     </div>
                 `).join('');
 
@@ -248,7 +248,7 @@
                 } else {
                     container.innerHTML = `
                         <div class="flex items-center justify-center h-full">
-                            <p class="text-sm text-[var(--vs-text-muted)] opacity-50 Thai-Rule">กรุณาเลือกนักเรียนจากรายการด้านซ้าย</p>
+                            <p class="text-[13px] text-[var(--vs-text-muted)] opacity-50 Thai-Rule">กรุณาเลือกนักเรียนจากรายการด้านซ้าย</p>
                         </div>
                     `;
                 }

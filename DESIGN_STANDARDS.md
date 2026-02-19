@@ -26,26 +26,32 @@
 *   **100% Heroicons:** ใช้ Heroicons ผ่าน CSS Mask เท่านั้น
 *   **0% Unicode/Emoji:** ห้ามใช้ตัวอักษรพิเศษหรือ Emoji แทนไอคอน
 *   **Sizing:** 
-    *   Activity Bar: 24px (h-6 w-6)
+    *   Activity Bar: 16px (h-4 w-4) — Compact, สอดคล้องกับ Sidebar Nav
     *   Sidebar Nav: 16px (h-4 w-4)
     *   Small Details: 12-14px
+*   **Activity Bar Compact:** Width 36px, Item Height 36px
 
 ## 4. Typography & Linguistic Rules
-*   **Font:** Sarabun (Weight 200/300 เป็น Base, 500 เป็น Bold)
+*   **Font:** Sarabun — รองรับ Thai + Latin ใน font face เดียว เหมาะกับบริบทราชการไทย
+*   **Weight Baseline:** `font-weight: 300` (Light) — เหตุผล: ที่ 200 (ExtraLight) ตัว Latin บางกว่า Thai มากเกินไปทางสายตา การใช้ 300 ทำให้ทั้งสอง script ดู visual weight ใล่เลี่ยกัน
 *   **Linguistic Discipline (Mandatory):**
-    *   **ทุกภาษา (Primary):** มาตรฐานเดียวที่ **14px** (`text-sm`) เท่านั้น
-    *   **ทุกภาษา (Secondary/Muted):** มาตรฐานเดียวที่ **14px** (`text-sm`) แต่ลดความสว่างเหลือ **45%**
+    *   **ทุกภาษา (Primary):** มาตรฐานเดียวที่ **13px** เท่านั้น (VS Code / Cursor standard — HUD dense)
+    *   **ทุกภาษา (Secondary/Muted):** 13px เช่นกัน แต่ลดความสว่างเหลือ **45%** (`rgba(255,255,255,0.45)`)
+*   **Line Height:** `1.4` (VS Code standard — tighter, code-editor-like)
 *   **Hierarchy Standard:**
     *   **Hero / Page Titles:** 24px - 36px (`text-2xl` - `text-4xl`)
-    *   **Panel Headers / Section Headers:** 14px (`text-sm`)
-    *   **Primary/Secondary Body:** 14px (`text-sm`)
+    *   **Panel Headers / Section Headers:** 13px
+    *   **Primary/Secondary Body:** 13px
+*   **Exception (Intentional):** `student_input.css` ใช้ 16px สำหรับ Thai body text — เพื่อ readability ของนักเรียน ป.1-6 เท่านั้น
 *   **Corner Radius:** 3px (Razor-sharp) คงที่ทั่วทั้งระบบ
 
 > [!IMPORTANT]
-> **Typography Iron Law #1 (The 14px Purge):**
-> *   **Primary Text:** ต้องเป็น 14px (`text-sm`) 100% ทั่วทั้งระบบ
-> *   **Submenu / Secondary:** ต้องเป็น 14px (`text-sm`) 100% แต่ใช้ความสว่าง **45%** (`rgba(255, 255, 255, 0.45)`)
-> *   **Banned:** ห้ามใช้ขนาด **16px** (`text-base`) สำหรับข้อความโดยเด็ดขาด เพื่อความคมชัดสูงสุดของ HUD
+> **Typography Iron Law #1 (The 13px Standard):**
+> *   **Primary Text:** ต้องเป็น **13px** 100% ทั่วทั้งระบบ HUD
+> *   **font-weight:** ต้องเป็น **300** ทุกกรณี (ยกเว้น `.hud-badge-micro` ที่ใช้ 400)
+> *   **line-height:** ต้องเป็น **1.4** ทุกกรณี
+> *   **Submenu / Secondary:** 13px เช่นกัน แต่ opacity **45%**
+> *   **Banned:** ห้ามใช้ขนาด 16px ในทุก context ยกเว้น `student_input.css` โดยเด็ดขาด
 
 ## 5. นโยบาย Zero Letter-Spacing (No Tracking)
 *   **Iron Rule:** ห้ามใช้ `letter-spacing` หรือ Tailwind `tracking-*` ทุกกรณี
@@ -57,7 +63,7 @@
 *   **Dimmed = Secondary:** ข้อมูลประกอบต้องจางลง (Zinc 400/500)
 *   **Shadowless Elevation:** ใช้ความต่างของความสว่างพื้นหลัง (Zinc 800 vs 900) แทนการใช้เงา
 
-## 6. ระบบสีสาระการเรียนรู้ (Subject Semantic Palette)
+## 7. ระบบสีสาระการเรียนรู้ (Subject Semantic Palette)
 *   สำหรับการเรียนรู้แบบอัตโนมัติ (Automated Learning) เราจะใช้ชุดสีตามกลุ่มสาระการเรียนรู้เพื่อสร้าง **Visual Anchor** ให้นักเรียน:
     *   **ภาษาไทย:** `--sj-thai` (#fb7185 - Rose) - รากวัฒนธรรมและการสื่อสาร
     *   **คณิตศาสตร์:** `--sj-math` (#fbbf24 - Amber) - พลังแห่งการคำนวณและความตื่นตัว
@@ -70,18 +76,18 @@
     *   **อังกฤษ/ต่างประเทศ:** `--sj-eng` (#818cf8 - Indigo) - การสื่อสารสากล
 *   **Application Rule:** ห้ามใช้สีเหล่านี้เพื่อความสวยงามเพียงอย่างเดียว (Decorative Purge) ต้องใช้เพื่อระบุตัวตนของวิชาเสมอ โดยใช้ค่าความโปร่งแสง (**Opacity**) ที่ **20%** สำหรับพื้นหลัง และ **30-50%** สำหรับเส้นขอบ
 
-## 7. สีเชิงสัญลักษณ์ (Semantic Color Integrity)
+## 8. สีเชิงสัญลักษณ์ (Semantic Color Integrity)
 *   **Focus:** สีพื้นฐานระบบ (System Defaults)
 *   **Cyan:** Action / Selection / **Science Interface**
 *   **Emerald:** Success / Online / **Productivity Skills**
 *   **Rose/Red:** Danger / Error / **Thai Literacy Context**
 *   **Rule:** ห้ามใช้สีเหล่านี้ทับซ้อนกับความหมายของระบบสาระฯ หากไม่ได้ส่งผลต่อระบบแจ้งเตือน
 
-## 8. การตอบสนองระดับไมโคร (Micro-interaction)
+## 9. การตอบสนองระดับไมโคร (Micro-interaction)
 *   **Interactive Feedback:** ทุกจุดที่คลิกได้ต้องมีการเปลี่ยนแปลง (Hover/Active states)
 *   **Consistent Cursor:** ใช้ `cursor-pointer` สำหรับองค์ประกอบที่โต้ตอบได้เท่านั้น
 
-## 9. ระบบตาราง 4 พิกเซล (4-Pixel Grid System)
+## 10. ระบบตาราง 4 พิกเซล (4-Pixel Grid System)
 *   **Mathematical Unity:** ระยะห่าง (Padding/Margin) ทั้งหมดต้องหารด้วย 4 ลงตัว (4, 8, 12, 16, 24, 32, 48)
 
 ### 9.1 Spacing Scale (Approved Values Only)
@@ -127,27 +133,27 @@
 > Any arbitrary pixel value like `p-[13px]`, `gap-[19px]`, or `m-[27px]`
 > Mixing `space-x` and `gap` in the same flex container
 
-## 10. CSS-First Policy (Clean Code Integrity)
+## 11. CSS-First Policy (Clean Code Integrity)
 *   **หลีกเลี่ยง Inline Styles:** ห้ามใช้ `style="..."` ยกเว้นกรณี Dynamic จริงๆ
 *   **Maintainability:** การแก้ไขดีไซน์ต้องทำผ่าน CSS Class กลางใน `styles.css` เพื่อให้ส่งผลกระทบทั้งระบบ
 
-## 11. นโยบาย Zero Italic (No Slant)
+## 12. นโยบาย Zero Italic (No Slant)
 *   **Iron Rule:** ห้ามใช้ตัวเอียง (`italic`, `font-style: italic`) ทุกกรณี 100%
 *   **Visual Sharpness:** ข้อความต้องตั้งตรงและคมชัด เพื่อรักษาความนิ่งและระดับของ UI ระดับโปร
 *   **Enforcement:** ระบบ Audit จะทำการ Block ทุกไฟล์ที่มีการใช้ตัวเอียง
 
-## 12. นโยบายความสม่ำเสมอของเส้น (Global Line Unity)
+## 13. นโยบายความสม่ำเสมอของเส้น (Global Line Unity)
 *   **Iron Rule:** ทุกเส้น (Borders, HR, Dividers) ต้องมีขนาด **1px** และใช้ค่าความโปร่งแสง (**Opacity**) ที่ **50%** เสมอ
 *   **Color Standard:** ใช้ `Zinc-700` ผสมค่าความโปร่งแสงเช่น `border-zinc-700/50` หรือ `rgba(63, 63, 70, 0.5)`
 *   **Consistency:** ห้ามใช้เส้นที่หนากว่า 1px หรือทึบแสง (Solid 100%) เพื่อให้ UI ดูเบา คมชัด และไม่หนาเตอะจนเกินไป
 
-## 13. นโยบายมุมโค้ง 3px (Strict 3px Corners)
+## 14. นโยบายมุมโค้ง 3px (Strict 3px Corners)
 *   **Iron Rule:** ทุก Element (Cards, Buttons, Inputs, Panels) ต้องมีค่า **Border-Radius** เท่ากับ **3px** เท่านั้น
 *   **Aesthetic:** เพื่อรักษาลุค "Razor-Sharp HUD" ที่ดูคมแต่ไม่แข็งกร้าวจนเกินไป
 *   **Consistency:** ห้ามใช้ `rounded-lg`, `rounded-xl` หรือ `rounded-full` โดยเด็ดขาด
 *   **Implementation:** ใช้ Utility class `rounded-[3px]` หรือตั้งค่าผ่าน CSS Variable `--vs-radius: 3px;`
 
-## 14. นโยบาย Zero Phantom Class (Class Must Exist)
+## 15. นโยบาย Zero Phantom Class (Class Must Exist)
 *   **Iron Rule:** ห้ามใช้ CSS Class ใน HTML ที่ไม่ได้ถูก **define** ไว้ใน CSS (`theme.css`, `styles.css`, `submenu.css` ฯลฯ) หรือไม่ใช่ Tailwind Utility Class
 *   **เหตุผล:** เมื่อใช้ Class ที่ไม่มีอยู่จริง (Phantom Class) เบราว์เซอร์จะ **fallback เป็น default** — ซึ่งใน Dark Theme หมายความว่าจะเห็น **พื้นขาว, ขอบเทา, ฟอนต์ผิด** ทันที
 *   **ก่อนใช้ Custom Class:** ตรวจสอบว่า Class นั้นมีอยู่ใน CSS จริง ถ้าไม่มีให้เลือก:
@@ -157,32 +163,33 @@
 *   **ตัวอย่างที่ผิด:** `class="setup-input"` (ไม่มี define ใน CSS ใดๆ → fallback ขาว)
 *   **ตัวอย่างที่ถูก:** `class="vs-setup-input"` (define อยู่ใน `theme.css`)
 
-## 15. นโยบาย Native Control Override (No Browser Defaults)
+## 16. นโยบาย Native Control Override (No Browser Defaults)
 *   **Iron Rule:** ทุก Native Form Control (`<input>`, `<select>`, `<textarea>`, `<button>`) ต้องถูก **override styling** ให้ตรงกับ Dark Theme เสมอ ห้ามปล่อยให้เบราว์เซอร์แสดง Default สีขาว
 *   **Nuanced Reset (Safety Net):**
-    *   **Inputs & Fields:** ต้องมี `background: rgba(255, 255, 255, 0.03)` และ `border: 1px solid rgba(255, 255, 255, 0.1)` เพื่อป้องกัน Block ขาว
+    *   **Inputs & Fields:** ต้องใช้รูปแบบ **"Sunken Inset"** — พื้นหลัง `background: var(--vs-bg-deep)` (Canvas Floor) เพื่อให้ Input **บุ๋มลึก** กว่าพื้นผิว Panel ที่อยู่รอบข้าง ห้ามใช้ `rgba(255,255,255,0.03)` เดี่ยวๆ โดยไม่มีบริบท
     *   **Buttons:** ต้อง Reset เป็น `background: transparent` และ `border: none` เพื่อรักษาดีไซน์เมนู/รายการที่สะอาดตา (ห้ามใส่กรอบ Default ให้ปุ่มทั่วไป)
 *   **Number Input:** ต้องซ่อน spinner buttons ด้วย `-webkit-appearance: none` (ใช้ class `vs-setup-input` ที่มี override ไว้แล้ว)
 *   **Select Dropdown:** ต้อง style arrow indicator ให้เป็นสีที่เข้ากับ Dark Theme
 *   **Checkbox / Radio:** ต้องใช้ Custom Styling หรือ Tailwind Forms Plugin — ห้ามใช้ Default Browser
-*   **Required Properties สำหรับ Inputs:**
-    *   `background: rgba(255, 255, 255, 0.03)` — พื้นโปร่งแสง (เฉพาะ Field)
-    *   `border: 1px solid rgba(255, 255, 255, 0.1)` — ขอบ subtle (เฉพาะ Field)
+*   **Required Properties สำหรับ Inputs (Sunken Inset Rule):**
+    *   `background: var(--vs-bg-deep)` — **Canvas Floor** ทำให้ Input บุ๋มลงจาก Panel (Iron Rule)
+    *   `border: none` — ไม่มีขอบ (ใช้ depth contrast แทน)
     *   `color: var(--vs-text-body)` — ตัวอักษรอ่านได้
     *   `border-radius: var(--vs-radius)` — มุมโค้ง 3px
     *   `padding: 8px 12px` (`py-2 px-3`) — ตาม §9.3 Input Field Padding
     *   `min-height: 36px` — ป้องกัน input บีบอัด
     *   `outline: none` — ไม่มี outline default
+    *   `font-size: 13px; font-weight: 300` — ตาม §4 Typography
 
 ---
 > [!IMPORTANT]
 > กฏเหล่านี้คือกฏที่ห้ามละเมิด (Iron Rules) เพื่อรักษาความรู้สึกพรีเมียมของระบบ IDLPMS
-## 10. HUD Content Layout (Smart Ceiling)
+## 17. HUD Content Layout (Smart Ceiling)
 *   **Documentation & Content:** ใช้ `max-w-[1600px]` เพื่อจำกัดระยะสายตา (Readability) ในหน้าจอขนาดใหญ่
 *   **Alignment:** จัดวางชิดซ้าย (Left Aligned) เสมอ เพื่อรักษา Unity กับ Sidebar (ห้ามใช้ `mx-auto` ในหน้าที่มี Sidebar)
 *   **Dashboard:** ปล่อย Full Fluid (100% Width) เพื่อข้อมูลที่หนาแน่น
 
-## 15. DNA Radar HUD (Unity 6 Standard)
+## 18. DNA Radar HUD (Unity 6 Standard)
 *กฎการออกแบบกราฟ "ใยแมงมุม" สำหรับการแสดงผล Intelligence DNA ทุก Role*
 
 ### 15.1 Structural Elements
@@ -202,7 +209,7 @@
 > [!IMPORTANT]
 > **Unity Core Mandate:** ทุก Role (Student, Teacher, Admin, Parent) ต้องใช้โครงสร้าง 6 แกนเดียวกันเพื่อความเป็นหนึ่งเดียวของระบบ
 
-## 16. Unified DNA Layout Architecture (Phase 1)
+## 19. Unified DNA Layout Architecture (Phase 1)
 *กฎการจัดวาง DNA Zone ในตำแหน่งเดียวกันสำหรับทุก Role*
 
 ### 16.1 DNA Zone Container (`.dna-zone`)

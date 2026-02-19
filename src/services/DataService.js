@@ -20,7 +20,20 @@ const DataServiceConfig = {
     // InsForge settings (local/cloud)
     insforge: {
         baseUrl: 'https://3tcdq2dd.ap-southeast.insforge.app',
-        apiKey: 'ik_e9ac09dcf4f6732689dd5558fe889c0a'
+        apiKey: 'ik_e9ac09dcf4f6732689dd5558fe889c0a',
+        adminEmail: 'Apaiso1978@gmail.com',
+        adminPassword: 'Yuri@04032526'
+    },
+
+    // Transfer Escalation Rules (Unity: applies to ALL roles)
+    transferEscalation: {
+        thresholds: [
+            { days: 30, level: 'SCHOOL', status: 'AT_RISK', icon: 'i-exclamation-triangle', notify: ['SCHOOL_DIR'] },
+            { days: 60, level: 'ESA', status: 'CRITICAL', icon: 'i-x-circle', notify: ['SCHOOL_DIR', 'ESA_DIR'] },
+            { days: 90, level: 'OBEC', status: 'DROPOUT', icon: 'i-bell-alert', notify: ['SCHOOL_DIR', 'ESA_DIR', 'OBEC'] },
+        ],
+        checkIntervalHours: 24,  // ตรวจทุก 24 ชม.
+        initialStatus: 'PENDING_TRANSFER',
     },
 
     // Apps Script endpoints (for future use)
@@ -95,6 +108,9 @@ class AbstractDataService {
     // ----- Utility -----
     async healthCheck() { throw new Error('Method not implemented'); }
     async sync() { throw new Error('Method not implemented'); }
+
+    // ----- Delegation Operations (DMDP) -----
+    async getDelegations(personId, schoolId) { throw new Error('Method not implemented'); }
 }
 
 // ============================================================================
@@ -451,6 +467,94 @@ class LocalDataService extends AbstractDataService {
         // Local mode doesn't need sync
         console.log('[LocalDataService] Sync not required for local mode');
         return { synced: false, reason: 'local_mode' };
+    }
+
+    // ----- Delegation Operations (DMDP) -----
+
+    /**
+     * Get delegations for a teacher (mock data)
+     * Returns capabilities that have been delegated by the director
+     */
+    async getDelegations(personId, schoolId) {
+        this._ensureInitialized();
+
+        // Mock delegation data: ผอ. มอบหมายงานให้ครู
+        const mockDelegations = [
+            // WAT MAP CHALUD dataset — ผอ.บุญเรือง มอบหมายให้ครูวรชัย (Developer/Admin)
+            {
+                id: 'DEL_001',
+                delegator_id: 'DIR_MABLUD',         // ผอ.บุญเรือง ถ้ำมณี
+                delegatee_id: 'TEA_WORACHAI',        // ครูวรชัย อภัยโส (Developer/Admin/Founder)
+                school_id: 'SCH_MABLUD',
+                capability_key: 'ADMIN_STUDENT_MGMT',
+                note: 'มอบหมายให้ดูแลข้อมูลนักเรียนและระบบทั้งหมด',
+                created_at: '2025-06-01T00:00:00Z'
+            },
+            // Original dataset (hud.html switchRole uses these IDs)
+            {
+                id: 'DEL_002',
+                delegator_id: 'DIR_001',
+                delegatee_id: 'TEA_001',
+                school_id: 'SCH_001',
+                capability_key: 'ADMIN_STUDENT_MGMT',
+                note: 'มอบหมายให้ดูแลข้อมูลนักเรียนทั้งหมด',
+                created_at: '2025-06-01T00:00:00Z'
+            }
+        ];
+
+        // Filter by personId and schoolId
+        return mockDelegations.filter(
+            d => d.delegatee_id === personId && d.school_id === schoolId
+        );
+    }
+
+    /**
+     * Transfer Timeout Escalation — Auto-notification ตามลำดับขั้น
+     * Unity: ใช้กับทุก Role (นักเรียน, ครู, ผอ.)
+     * Flow: PENDING_TRANSFER → AT_RISK (30d) → CRITICAL (60d) → DROPOUT (90d)
+     * Notifications: School → ESA → OBEC (auto-escalate)
+     */
+    getTransferAlerts(schoolId) {
+        this._ensureInitialized();
+        const users = window.IDLPMS_DATA?.users || {};
+        const rules = DataServiceConfig.transferEscalation.thresholds;
+        const today = new Date();
+        const alerts = [];
+
+        for (const [uid, user] of Object.entries(users)) {
+            if (user.status !== 'PENDING_TRANSFER' || !user.transferDate) continue;
+            if (schoolId && user.schoolId !== schoolId) continue;
+
+            // Parse Thai Buddhist year date (2568-11-07 → 2025-11-07)
+            const parts = user.transferDate.split('-');
+            const gregYear = parseInt(parts[0]) - 543;
+            const transferDate = new Date(`${gregYear}-${parts[1]}-${parts[2]}`);
+            const daysElapsed = Math.floor((today - transferDate) / (1000 * 60 * 60 * 24));
+
+            // Find highest matching threshold
+            let matchedRule = null;
+            for (const rule of rules) {
+                if (daysElapsed >= rule.days) matchedRule = rule;
+            }
+
+            if (matchedRule) {
+                alerts.push({
+                    userId: uid,
+                    fullName: user.fullName,
+                    role: user.role,
+                    classId: user.classId || null,
+                    schoolId: user.schoolId,
+                    transferDate: user.transferDate,
+                    daysElapsed,
+                    alertLevel: matchedRule.level,
+                    alertStatus: matchedRule.status,
+                    icon: matchedRule.icon,
+                    notifyTargets: matchedRule.notify,
+                });
+            }
+        }
+
+        return alerts.sort((a, b) => b.daysElapsed - a.daysElapsed);
     }
 }
 

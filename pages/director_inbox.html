@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>กล่องรออนุมัติ | IDLPMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <link rel="stylesheet" href="../assets/css/notifications.css" />
+    <script src="../assets/js/data.js"></script>
+    <script src="../src/services/DataService.js"></script>
+    <script src="../src/services/AuthService.js"></script>
+    <script src="../assets/js/notifications.js"></script>
+    <script src="../assets/js/delegation_panel.js"></script>
+</head>
+
+<body
+    class="p-6 bg-transparent text-[var(--vs-text-body)] font-light Thai-Rule overflow-y-auto vs-scrollbar font-['Sarabun']">
+    <div class="max-w-[1600px] space-y-6">
+
+        <!-- ① HEADER BAR -->
+        <header class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div
+                    class="w-12 h-12 rounded-[3px] bg-[rgba(var(--vs-accent-rgb),0.1)] flex items-center justify-center">
+                    <i class="icon i-inbox w-6 h-6 text-[var(--vs-accent)]"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl text-[var(--vs-text-title)] font-light Thai-Rule">กล่องรออนุมัติ</h1>
+                    <p class="text-[13px] text-[var(--vs-text-muted)] Thai-Rule">
+                        เอกสารและคำร้องที่รอการลงนามจากผู้อำนวยการ</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span
+                    class="hud-badge-micro bg-[rgba(var(--vs-accent-rgb),0.15)] text-[var(--vs-accent)] px-2 py-0.5 rounded-[3px] uppercase text-[10px] font-light">
+                    DIRECTOR ONLY
+                </span>
+            </div>
+        </header>
+
+        <!-- ② MAIN GRID: 8 col + 4 col -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+            <!-- WORKSPACE (col-8) -->
+            <div class="lg:col-span-9 space-y-4">
+                <div class="dna-zone p-6 min-h-[500px]">
+                    <div class="dna-zone-header mb-6">
+                        <h2 class="dna-zone-title Thai-Rule">รายการรออนุมัติ</h2>
+                        <span id="pending-count" class="hud-badge-micro">0 รายการ</span>
+                    </div>
+
+                    <!-- Pending Items -->
+                    <div id="inbox-items" class="space-y-3">
+                        <!-- Mock pending items -->
+                        <div
+                            class="flex items-center gap-2 p-4 bg-[var(--vs-bg-deep)] rounded-[3px] group hover:bg-[rgba(var(--vs-accent-rgb),0.05)] transition-all">
+                            <div
+                                class="w-10 h-10 bg-[rgba(var(--vs-warning-rgb),0.1)] rounded-[3px] flex items-center justify-center flex-shrink-0">
+                                <i class="icon i-document w-5 h-5 text-[var(--vs-warning)]"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-[13px] text-[var(--vs-text-title)] font-light Thai-Rule truncate">
+                                    แผนการจัดการเรียนรู้ วิชาคณิตศาสตร์ ป.6</p>
+                                <p class="text-[13px] text-[var(--vs-text-muted)] Thai-Rule">ครูวรชัย อภัยโส · ส่งเมื่อ
+                                    18 ก.พ. 2568</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button
+                                    class="px-3 py-1.5 bg-[rgba(var(--vs-success-rgb),0.1)] text-[var(--vs-success)] rounded-[3px] text-[13px] font-light hover:bg-[rgba(var(--vs-success-rgb),0.2)] transition-all">
+                                    <i class="icon i-check w-3 h-3 inline-block mr-1"></i>อนุมัติ
+                                </button>
+                                <button
+                                    class="px-3 py-1.5 bg-[rgba(var(--vs-danger-rgb),0.1)] text-[var(--vs-danger)] rounded-[3px] text-[13px] font-light hover:bg-[rgba(var(--vs-danger-rgb),0.2)] transition-all">
+                                    ส่งกลับ
+                                </button>
+                            </div>
+                        </div>
+
+                        <div
+                            class="flex items-center gap-2 p-4 bg-[var(--vs-bg-deep)] rounded-[3px] group hover:bg-[rgba(var(--vs-accent-rgb),0.05)] transition-all">
+                            <div
+                                class="w-10 h-10 bg-[rgba(var(--vs-accent-rgb),0.1)] rounded-[3px] flex items-center justify-center flex-shrink-0">
+                                <i class="icon i-users w-5 h-5 text-[var(--vs-accent)]"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-[13px] text-[var(--vs-text-title)] font-light Thai-Rule truncate">
+                                    คำร้องขอย้ายสถานศึกษา — ด.ช. สมชาย รักเรียน</p>
+                                <p class="text-[13px] text-[var(--vs-text-muted)] Thai-Rule">ครูประจำชั้น ป.4/1 ·
+                                    ส่งเมื่อ 17 ก.พ. 2568</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button
+                                    class="px-3 py-1.5 bg-[rgba(var(--vs-success-rgb),0.1)] text-[var(--vs-success)] rounded-[3px] text-[13px] font-light hover:bg-[rgba(var(--vs-success-rgb),0.2)] transition-all">
+                                    <i class="icon i-check w-3 h-3 inline-block mr-1"></i>อนุมัติ
+                                </button>
+                                <button
+                                    class="px-3 py-1.5 bg-[rgba(var(--vs-danger-rgb),0.1)] text-[var(--vs-danger)] rounded-[3px] text-[13px] font-light hover:bg-[rgba(var(--vs-danger-rgb),0.2)] transition-all">
+                                    ส่งกลับ
+                                </button>
+                            </div>
+                        </div>
+
+                        <div
+                            class="flex items-center gap-2 p-4 bg-[var(--vs-bg-deep)] rounded-[3px] group hover:bg-[rgba(var(--vs-accent-rgb),0.05)] transition-all">
+                            <div
+                                class="w-10 h-10 bg-[rgba(var(--vs-success-rgb),0.1)] rounded-[3px] flex items-center justify-center flex-shrink-0">
+                                <i class="icon i-chart w-5 h-5 text-[var(--vs-success)]"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-[13px] text-[var(--vs-text-title)] font-light Thai-Rule truncate">รายงาน
+                                    SAR ภาคเรียนที่ 1/2568</p>
+                                <p class="text-[13px] text-[var(--vs-text-muted)] Thai-Rule">ฝ่ายวิชาการ · ส่งเมื่อ 15
+                                    ก.พ. 2568</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button
+                                    class="px-3 py-1.5 bg-[rgba(var(--vs-success-rgb),0.1)] text-[var(--vs-success)] rounded-[3px] text-[13px] font-light hover:bg-[rgba(var(--vs-success-rgb),0.2)] transition-all">
+                                    <i class="icon i-check w-3 h-3 inline-block mr-1"></i>อนุมัติ
+                                </button>
+                                <button
+                                    class="px-3 py-1.5 bg-[rgba(var(--vs-danger-rgb),0.1)] text-[var(--vs-danger)] rounded-[3px] text-[13px] font-light hover:bg-[rgba(var(--vs-danger-rgb),0.2)] transition-all">
+                                    ส่งกลับ
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ③ DELEGATION PANEL (col-4) -->
+            <div class="lg:col-span-3" id="delegation-panel"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Count items
+            const items = document.querySelectorAll('#inbox-items > div');
+            const countEl = document.getElementById('pending-count');
+            if (countEl) countEl.textContent = `${items.length} รายการ`;
+
+            // Render Delegation Panel
+            if (window.DelegationPanel) {
+                DelegationPanel.render('delegation-panel', {
+                    moduleId: 'DIR_INBOX',
+                    moduleTitle: 'กล่องรออนุมัติ',
+                    moduleIcon: 'i-inbox'
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

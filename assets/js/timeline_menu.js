@@ -83,7 +83,7 @@ window.TimelineMenu = {
                 <div class="timeline-node"></div>
                 <i class="icon ${item.icon || 'i-chevron-right'}"></i>
                 <span>${item.name}</span>
-                ${item.badge ? `<span class="vs-badge ml-auto">${window.formatNumberStandard(item.badge)}</span>` : ''}
+                ${item.badge ? `<span class="vs-count">${window.formatNumberStandard(item.badge)}</span>` : ''}
                 ${lockBadge}
             </button>
         `;
@@ -210,6 +210,14 @@ window.TimelineMenu = {
             const mainFrame = document.getElementById('main-frame');
             if (mainFrame) {
                 mainFrame.src = 'pages/auto_schedule.html?v=' + Date.now();
+            }
+        },
+
+        // Student Affairs: Physical Fitness Test
+        'fitness-test': function (e) {
+            const mainFrame = document.getElementById('main-frame');
+            if (mainFrame) {
+                mainFrame.src = 'pages/fitness_test.html';
             }
         },
 

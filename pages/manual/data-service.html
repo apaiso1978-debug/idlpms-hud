@@ -18,33 +18,33 @@
             <div>
                 <div class="flex items-center gap-3 mb-2">
                     <span
-                        class="hud-badge-micro px-2 py-0.5 rounded-[3px] font-extralight border border-[var(--vs-border)] bg-[var(--vs-bg-card)] text-[var(--vs-text-title)]">
+                        class="hud-badge-micro px-2 py-0.5 rounded-[3px] font-light border border-[var(--vs-border)] bg-[var(--vs-bg-card)] text-[var(--vs-text-title)]">
                         CHAPTER 10
                     </span>
-                    <span class="text-sm text-[var(--vs-text-muted)] uppercase">System Manual</span>
+                    <span class="text-[13px] text-[var(--vs-text-muted)] uppercase">System Manual</span>
                 </div>
-                <h1 class="text-3xl font-extralight text-[var(--vs-text-title)]">
+                <h1 class="text-3xl font-light text-[var(--vs-text-title)]">
                     DataService & API Layer
                 </h1>
-                <p class="text-sm text-[var(--vs-text-body)] mt-2 max-w-2xl">
+                <p class="text-[13px] text-[var(--vs-text-body)] mt-2 max-w-2xl">
                     สถาปัตยกรรมการจัดการข้อมูลแบบ Abstract Layer ที่รองรับทั้งการทำงานแบบ Local และ Google Apps Script
                 </p>
             </div>
             <div class="text-right">
-                <div class="text-sm text-[var(--vs-text-muted)]">Version</div>
-                <div class="text-2xl font-extralight text-[var(--vs-accent)]">2.0.0</div>
+                <div class="text-[13px] text-[var(--vs-text-muted)]">Version</div>
+                <div class="text-2xl font-light text-[var(--vs-accent)]">2.0.0</div>
             </div>
         </div>
 
         <!-- Overview Section -->
         <section class="space-y-6">
-            <h2 class="text-xl font-extralight text-[var(--vs-text-title)] flex items-center gap-4">
+            <h2 class="text-xl font-light text-[var(--vs-text-title)] flex items-center gap-4">
                 <div class="h-6 w-[1.5px] bg-[var(--vs-accent)] shadow-[0_0_8px_var(--vs-accent)]"></div>
                 ภาพรวม DataService
             </h2>
 
             <div class="p-6 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
-                <p class="text-sm text-[var(--vs-text-body)] leading-relaxed mb-6">
+                <p class="text-[13px] text-[var(--vs-text-body)] leading-relaxed mb-6">
                     <strong class="text-[var(--vs-text-title)]">DataService</strong> คือ Abstract Layer
                     ที่ทำหน้าที่เป็นตัวกลางระหว่าง UI กับแหล่งข้อมูล ออกแบบให้สามารถสลับระหว่าง
                     <span class="text-[var(--vs-accent)]">Local Mode</span> (ใช้ data.js) และ
@@ -56,7 +56,7 @@
                 <div class="p-6 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
                     <div class="text-center mb-6">
                         <div
-                            class="inline-block px-4 py-2 rounded-[3px] bg-[var(--vs-accent)] text-[var(--vs-bg-deep)] font-extralight text-sm">
+                            class="inline-block px-4 py-2 rounded-[3px] bg-[var(--vs-accent)] text-[var(--vs-bg-deep)] font-light text-[13px]">
                             UI COMPONENTS
                         </div>
                     </div>
@@ -67,7 +67,7 @@
 
                     <div class="text-center mb-4">
                         <div
-                            class="inline-block px-6 py-3 rounded-[3px] bg-amber-500/20 border border-amber-500/30 text-amber-400 font-extralight">
+                            class="inline-block px-6 py-3 rounded-[3px] bg-amber-500/20 border border-amber-500/30 text-amber-400 font-light">
                             DataServiceFactory.getInstance()
                         </div>
                     </div>
@@ -83,12 +83,12 @@
                     <div class="flex justify-center gap-8">
                         <div class="p-4 rounded-[3px] text-center"
                             style="background-color: rgba(var(--vs-accent-rgb), 0.2); border: 1px solid rgba(var(--vs-accent-rgb), 0.3)">
-                            <div class="text-sm font-extralight text-[var(--vs-accent)] mb-1">LocalDataService</div>
-                            <div class="text-sm text-[var(--vs-text-muted)]">data.js (Static)</div>
+                            <div class="text-[13px] font-light text-[var(--vs-accent)] mb-1">LocalDataService</div>
+                            <div class="text-[13px] text-[var(--vs-text-muted)]">data.js (Static)</div>
                         </div>
                         <div class="p-4 rounded-[3px] bg-emerald-500/20 border border-emerald-500/30 text-center">
-                            <div class="text-sm font-extralight text-emerald-400 mb-1">AppsScriptDataService</div>
-                            <div class="text-sm text-[var(--vs-text-muted)]">Google Sheets (API)</div>
+                            <div class="text-[13px] font-light text-emerald-400 mb-1">AppsScriptDataService</div>
+                            <div class="text-[13px] text-[var(--vs-text-muted)]">Google Sheets (API)</div>
                         </div>
                     </div>
                 </div>
@@ -97,7 +97,7 @@
 
         <!-- Design Principles -->
         <section class="space-y-6">
-            <h2 class="text-xl font-extralight text-[var(--vs-text-title)] flex items-center gap-4">
+            <h2 class="text-xl font-light text-[var(--vs-text-title)] flex items-center gap-4">
                 <div class="h-6 w-[1.5px] bg-[var(--vs-accent)] shadow-[0_0_8px_var(--vs-accent)]"></div>
                 หลักการออกแบบ
             </h2>
@@ -107,10 +107,10 @@
                 <div class="p-5 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
                     <div
                         class="w-10 h-10 rounded-[3px] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] flex items-center justify-center mb-4">
-                        <span class="text-lg font-extralight text-[var(--vs-accent)]">1</span>
+                        <span class="text-lg font-light text-[var(--vs-accent)]">1</span>
                     </div>
-                    <h3 class="text-sm font-extralight text-[var(--vs-text-title)] mb-2">Abstraction</h3>
-                    <p class="text-sm text-[var(--vs-text-muted)]">
+                    <h3 class="text-[13px] font-light text-[var(--vs-text-title)] mb-2">Abstraction</h3>
+                    <p class="text-[13px] text-[var(--vs-text-muted)]">
                         UI ไม่จำเป็นต้องรู้ว่าข้อมูลมาจากไหน เรียกใช้ผ่าน interface เดียวกัน
                     </p>
                 </div>
@@ -119,10 +119,10 @@
                 <div class="p-5 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
                     <div
                         class="w-10 h-10 rounded-[3px] hud-bg-emerald hud-border-emerald flex items-center justify-center mb-4">
-                        <span class="text-lg font-extralight text-emerald-400">2</span>
+                        <span class="text-lg font-light text-emerald-400">2</span>
                     </div>
-                    <h3 class="text-sm font-extralight text-[var(--vs-text-title)] mb-2">Singleton</h3>
-                    <p class="text-sm text-[var(--vs-text-muted)]">
+                    <h3 class="text-[13px] font-light text-[var(--vs-text-title)] mb-2">Singleton</h3>
+                    <p class="text-[13px] text-[var(--vs-text-muted)]">
                         ใช้ Factory Pattern สร้าง instance เดียวตลอด session เพื่อประสิทธิภาพ
                     </p>
                 </div>
@@ -131,10 +131,10 @@
                 <div class="p-5 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
                     <div
                         class="w-10 h-10 rounded-[3px] hud-bg-amber hud-border-amber flex items-center justify-center mb-4">
-                        <span class="text-lg font-extralight text-amber-400">3</span>
+                        <span class="text-lg font-light text-amber-400">3</span>
                     </div>
-                    <h3 class="text-sm font-extralight text-[var(--vs-text-title)] mb-2">Async/Await</h3>
-                    <p class="text-sm text-[var(--vs-text-muted)]">
+                    <h3 class="text-[13px] font-light text-[var(--vs-text-title)] mb-2">Async/Await</h3>
+                    <p class="text-[13px] text-[var(--vs-text-muted)]">
                         ทุก method เป็น async รองรับทั้ง local (sync) และ API (async) โดยธรรมชาติ
                     </p>
                 </div>
@@ -143,10 +143,10 @@
                 <div class="p-5 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
                     <div
                         class="w-10 h-10 rounded-[3px] hud-bg-rose hud-border-rose flex items-center justify-center mb-4">
-                        <span class="text-lg font-extralight text-rose-400">4</span>
+                        <span class="text-lg font-light text-rose-400">4</span>
                     </div>
-                    <h3 class="text-sm font-extralight text-[var(--vs-text-title)] mb-2">Fail-Safe</h3>
-                    <p class="text-sm text-[var(--vs-text-muted)]">
+                    <h3 class="text-[13px] font-light text-[var(--vs-text-title)] mb-2">Fail-Safe</h3>
+                    <p class="text-[13px] text-[var(--vs-text-muted)]">
                         มี retry logic และ fallback mechanism ในทุก operation
                     </p>
                 </div>
@@ -155,7 +155,7 @@
 
         <!-- API Reference -->
         <section class="space-y-6">
-            <h2 class="text-xl font-extralight text-[var(--vs-text-title)] flex items-center gap-4">
+            <h2 class="text-xl font-light text-[var(--vs-text-title)] flex items-center gap-4">
                 <div class="h-6 w-[1.5px] bg-[var(--vs-accent)] shadow-[0_0_8px_var(--vs-accent)]"></div>
                 API Reference
             </h2>
@@ -163,7 +163,7 @@
             <div class="p-6 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
                 <!-- User Operations -->
                 <div class="mb-8">
-                    <h3 class="text-sm font-extralight text-[var(--vs-accent)] mb-4 flex items-center gap-2">
+                    <h3 class="text-[13px] font-light text-[var(--vs-accent)] mb-4 flex items-center gap-2">
                         <i class="icon i-user h-4 w-4"></i>
                         User Operations
                     </h3>
@@ -171,11 +171,11 @@
                     <div class="space-y-3">
                         <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
                             <div class="flex items-start justify-between mb-2">
-                                <code class="text-sm text-emerald-400">getUser(userId)</code>
+                                <code class="text-[13px] text-emerald-400">getUser(userId)</code>
                                 <span class="hud-badge-micro">READ</span>
                             </div>
-                            <p class="text-sm text-[var(--vs-text-muted)]">ดึงข้อมูลผู้ใช้จาก ID รวม roleConfig</p>
-                            <div class="mt-2 text-sm">
+                            <p class="text-[13px] text-[var(--vs-text-muted)]">ดึงข้อมูลผู้ใช้จาก ID รวม roleConfig</p>
+                            <div class="mt-2 text-[13px]">
                                 <span class="text-[var(--vs-text-muted)]">Returns:</span>
                                 <code class="text-amber-400">Promise&lt;User | null&gt;</code>
                             </div>
@@ -183,11 +183,11 @@
 
                         <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
                             <div class="flex items-start justify-between mb-2">
-                                <code class="text-sm text-emerald-400">getUsersByRole(role)</code>
+                                <code class="text-[13px] text-emerald-400">getUsersByRole(role)</code>
                                 <span class="hud-badge-micro">READ</span>
                             </div>
-                            <p class="text-sm text-[var(--vs-text-muted)]">ดึงรายชื่อผู้ใช้ทั้งหมดตาม role</p>
-                            <div class="mt-2 text-sm">
+                            <p class="text-[13px] text-[var(--vs-text-muted)]">ดึงรายชื่อผู้ใช้ทั้งหมดตาม role</p>
+                            <div class="mt-2 text-[13px]">
                                 <span class="text-[var(--vs-text-muted)]">Returns:</span>
                                 <code class="text-amber-400">Promise&lt;User[]&gt;</code>
                             </div>
@@ -195,11 +195,11 @@
 
                         <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
                             <div class="flex items-start justify-between mb-2">
-                                <code class="text-sm text-emerald-400">getUsersBySchool(schoolId)</code>
+                                <code class="text-[13px] text-emerald-400">getUsersBySchool(schoolId)</code>
                                 <span class="hud-badge-micro">READ</span>
                             </div>
-                            <p class="text-sm text-[var(--vs-text-muted)]">ดึงรายชื่อผู้ใช้ทั้งหมดในโรงเรียน</p>
-                            <div class="mt-2 text-sm">
+                            <p class="text-[13px] text-[var(--vs-text-muted)]">ดึงรายชื่อผู้ใช้ทั้งหมดในโรงเรียน</p>
+                            <div class="mt-2 text-[13px]">
                                 <span class="text-zinc-500">Returns:</span>
                                 <code class="text-amber-400">Promise&lt;User[]&gt;</code>
                             </div>
@@ -207,12 +207,12 @@
 
                         <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
                             <div class="flex items-start justify-between mb-2">
-                                <code class="text-sm text-emerald-400">getUsersByESA(esaId)</code>
+                                <code class="text-[13px] text-emerald-400">getUsersByESA(esaId)</code>
                                 <span class="hud-badge-micro">READ</span>
                             </div>
-                            <p class="text-sm text-[var(--vs-text-muted)]">ดึงรายชื่อผู้ใช้ทั้งหมดในเขตพื้นที่การศึกษา
+                            <p class="text-[13px] text-[var(--vs-text-muted)]">ดึงรายชื่อผู้ใช้ทั้งหมดในเขตพื้นที่การศึกษา
                             </p>
-                            <div class="mt-2 text-sm">
+                            <div class="mt-2 text-[13px]">
                                 <span class="text-zinc-500">Returns:</span>
                                 <code class="text-amber-400">Promise&lt;User[]&gt;</code>
                             </div>
@@ -220,11 +220,11 @@
 
                         <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
                             <div class="flex items-start justify-between mb-2">
-                                <code class="text-sm text-rose-400">updateUser(userId, data)</code>
+                                <code class="text-[13px] text-rose-400">updateUser(userId, data)</code>
                                 <span class="hud-badge-micro text-rose-400">WRITE</span>
                             </div>
-                            <p class="text-sm text-[var(--vs-text-muted)]">อัพเดทข้อมูลผู้ใช้ (merge กับข้อมูลเดิม)</p>
-                            <div class="mt-2 text-sm">
+                            <p class="text-[13px] text-[var(--vs-text-muted)]">อัพเดทข้อมูลผู้ใช้ (merge กับข้อมูลเดิม)</p>
+                            <div class="mt-2 text-[13px]">
                                 <span class="text-zinc-500">Returns:</span>
                                 <code class="text-amber-400">Promise&lt;User&gt;</code>
                             </div>
@@ -234,7 +234,7 @@
 
                 <!-- School Operations -->
                 <div class="mb-8">
-                    <h3 class="text-sm font-extralight text-[var(--vs-accent)] mb-4 flex items-center gap-2">
+                    <h3 class="text-[13px] font-light text-[var(--vs-accent)] mb-4 flex items-center gap-2">
                         <i class="icon i-building h-4 w-4"></i>
                         School Operations
                     </h3>
@@ -242,25 +242,25 @@
                     <div class="space-y-3">
                         <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
                             <div class="flex items-start justify-between mb-2">
-                                <code class="text-sm text-emerald-400">getSchool(schoolId)</code>
+                                <code class="text-[13px] text-emerald-400">getSchool(schoolId)</code>
                                 <span class="hud-badge-micro">READ</span>
                             </div>
-                            <p class="text-sm text-[var(--vs-text-muted)]">ดึงข้อมูลโรงเรียนจาก ID</p>
+                            <p class="text-[13px] text-[var(--vs-text-muted)]">ดึงข้อมูลโรงเรียนจาก ID</p>
                         </div>
 
                         <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
                             <div class="flex items-start justify-between mb-2">
-                                <code class="text-sm text-emerald-400">getSchoolsByESA(esaId)</code>
+                                <code class="text-[13px] text-emerald-400">getSchoolsByESA(esaId)</code>
                                 <span class="hud-badge-micro">READ</span>
                             </div>
-                            <p class="text-sm text-[var(--vs-text-muted)]">ดึงรายชื่อโรงเรียนทั้งหมดในเขตพื้นที่</p>
+                            <p class="text-[13px] text-[var(--vs-text-muted)]">ดึงรายชื่อโรงเรียนทั้งหมดในเขตพื้นที่</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Curriculum Operations -->
                 <div class="mb-8">
-                    <h3 class="text-sm font-extralight text-[var(--vs-accent)] mb-4 flex items-center gap-2">
+                    <h3 class="text-[13px] font-light text-[var(--vs-accent)] mb-4 flex items-center gap-2">
                         <i class="icon i-book h-4 w-4"></i>
                         Curriculum Operations
                     </h3>
@@ -268,33 +268,33 @@
                     <div class="space-y-3">
                         <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
                             <div class="flex items-start justify-between mb-2">
-                                <code class="text-sm text-emerald-400">getSubject(subjectId)</code>
+                                <code class="text-[13px] text-emerald-400">getSubject(subjectId)</code>
                                 <span class="hud-badge-micro">READ</span>
                             </div>
-                            <p class="text-sm text-[var(--vs-text-muted)]">ดึงข้อมูลวิชาจาก ID (รวมสี และ units)</p>
+                            <p class="text-[13px] text-[var(--vs-text-muted)]">ดึงข้อมูลวิชาจาก ID (รวมสี และ units)</p>
                         </div>
 
                         <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
                             <div class="flex items-start justify-between mb-2">
-                                <code class="text-sm text-emerald-400">getAllSubjects()</code>
+                                <code class="text-[13px] text-emerald-400">getAllSubjects()</code>
                                 <span class="hud-badge-micro">READ</span>
                             </div>
-                            <p class="text-sm text-[var(--vs-text-muted)]">ดึงรายชื่อวิชาทั้งหมดในระบบ</p>
+                            <p class="text-[13px] text-[var(--vs-text-muted)]">ดึงรายชื่อวิชาทั้งหมดในระบบ</p>
                         </div>
 
                         <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
                             <div class="flex items-start justify-between mb-2">
-                                <code class="text-sm text-emerald-400">getSubjectUnits(subjectId)</code>
+                                <code class="text-[13px] text-emerald-400">getSubjectUnits(subjectId)</code>
                                 <span class="hud-badge-micro">READ</span>
                             </div>
-                            <p class="text-sm text-[var(--vs-text-muted)]">ดึงรายการหน่วยการเรียนรู้ของวิชา</p>
+                            <p class="text-[13px] text-[var(--vs-text-muted)]">ดึงรายการหน่วยการเรียนรู้ของวิชา</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Statistics Operations -->
                 <div>
-                    <h3 class="text-sm font-extralight text-[var(--vs-accent)] mb-4 flex items-center gap-2">
+                    <h3 class="text-[13px] font-light text-[var(--vs-accent)] mb-4 flex items-center gap-2">
                         <i class="icon i-chart h-4 w-4"></i>
                         Statistics Operations
                     </h3>
@@ -302,28 +302,28 @@
                     <div class="space-y-3">
                         <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
                             <div class="flex items-start justify-between mb-2">
-                                <code class="text-sm text-emerald-400">getGlobalStats()</code>
+                                <code class="text-[13px] text-emerald-400">getGlobalStats()</code>
                                 <span class="hud-badge-micro">READ</span>
                             </div>
-                            <p class="text-sm text-[var(--vs-text-muted)]">ดึงสถิติภาพรวมทั้งระบบ (จำนวนนักเรียน,
+                            <p class="text-[13px] text-[var(--vs-text-muted)]">ดึงสถิติภาพรวมทั้งระบบ (จำนวนนักเรียน,
                                 โรงเรียน, ผู้ใช้งาน)</p>
                         </div>
 
                         <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
                             <div class="flex items-start justify-between mb-2">
-                                <code class="text-sm text-emerald-400">getSchoolStats(schoolId)</code>
+                                <code class="text-[13px] text-emerald-400">getSchoolStats(schoolId)</code>
                                 <span class="hud-badge-micro">READ</span>
                             </div>
-                            <p class="text-sm text-[var(--vs-text-muted)]">ดึงสถิติระดับโรงเรียน (การเข้าเรียน,
+                            <p class="text-[13px] text-[var(--vs-text-muted)]">ดึงสถิติระดับโรงเรียน (การเข้าเรียน,
                                 เกรดค้างส่ง)</p>
                         </div>
 
                         <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
                             <div class="flex items-start justify-between mb-2">
-                                <code class="text-sm text-emerald-400">getESAStats(esaId)</code>
+                                <code class="text-[13px] text-emerald-400">getESAStats(esaId)</code>
                                 <span class="hud-badge-micro text-[var(--vs-text-muted)]">READ</span>
                             </div>
-                            <p class="text-sm text-[var(--vs-text-muted)]">ดึงสถิติระดับเขตพื้นที่การศึกษา</p>
+                            <p class="text-[13px] text-[var(--vs-text-muted)]">ดึงสถิติระดับเขตพื้นที่การศึกษา</p>
                         </div>
                     </div>
                 </div>
@@ -332,7 +332,7 @@
 
         <!-- Usage Examples -->
         <section class="space-y-6">
-            <h2 class="text-xl font-extralight text-[var(--vs-text-title)] flex items-center gap-4">
+            <h2 class="text-xl font-light text-[var(--vs-text-title)] flex items-center gap-4">
                 <div class="h-6 w-[1.5px] bg-[var(--vs-accent)] shadow-[0_0_8px_var(--vs-accent)]"></div>
                 ตัวอย่างการใช้งาน
             </h2>
@@ -340,11 +340,11 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- Basic Usage -->
                 <div class="p-6 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
-                    <h3 class="text-sm font-extralight text-[var(--vs-text-title)] mb-4">Basic Usage</h3>
+                    <h3 class="text-[13px] font-light text-[var(--vs-text-title)] mb-4">Basic Usage</h3>
                     <div
                         class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] overflow-x-auto">
                         <pre
-                            class="text-sm text-[var(--vs-text-body)]"><code><span class="text-[var(--vs-text-muted)]">// Get DataService instance</span>
+                            class="text-[13px] text-[var(--vs-text-body)]"><code><span class="text-[var(--vs-text-muted)]">// Get DataService instance</span>
 <span class="text-rose-400">const</span> service = <span class="text-amber-400">await</span> DataServiceFactory.<span class="text-emerald-400">getInstance</span>();
 
 <span class="text-[var(--vs-text-muted)]">// Get current user</span>
@@ -359,10 +359,10 @@ console.<span class="text-emerald-400">log</span>(user.fullName); <span class="t
 
                 <!-- With Error Handling -->
                 <div class="p-6 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
-                    <h3 class="text-sm font-extralight text-[var(--vs-text-title)] mb-4">With Error Handling</h3>
+                    <h3 class="text-[13px] font-light text-[var(--vs-text-title)] mb-4">With Error Handling</h3>
                     <div
                         class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] overflow-x-auto">
-                        <pre class="text-sm text-[var(--vs-text-body)]"><code><span class="text-rose-400">async function</span> <span class="text-emerald-400">loadUserData</span>(userId) {
+                        <pre class="text-[13px] text-[var(--vs-text-body)]"><code><span class="text-rose-400">async function</span> <span class="text-emerald-400">loadUserData</span>(userId) {
   <span class="text-rose-400">try</span> {
     <span class="text-rose-400">const</span> service = <span class="text-amber-400">await</span> <span class="text-emerald-400">getDataService</span>();
     <span class="text-rose-400">const</span> user = <span class="text-amber-400">await</span> service.<span class="text-emerald-400">getUser</span>(userId);
@@ -384,7 +384,7 @@ console.<span class="text-emerald-400">log</span>(user.fullName); <span class="t
 
         <!-- Mode Switching -->
         <section class="space-y-6">
-            <h2 class="text-xl font-extralight text-[var(--vs-text-title)] flex items-center gap-4">
+            <h2 class="text-xl font-light text-[var(--vs-text-title)] flex items-center gap-4">
                 <div class="h-6 w-[1.5px] bg-[var(--vs-accent)] shadow-[0_0_8px_var(--vs-accent)]"></div>
                 การสลับ Mode
             </h2>
@@ -395,14 +395,14 @@ console.<span class="text-emerald-400">log</span>(user.fullName); <span class="t
                     <div class="p-5 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
                         <div class="flex items-center gap-3 mb-4">
                             <div class="w-3 h-3 rounded-[3px] bg-[var(--vs-accent)]"></div>
-                            <h3 class="text-sm font-extralight text-[var(--vs-text-title)]">Local Mode</h3>
+                            <h3 class="text-[13px] font-light text-[var(--vs-text-title)]">Local Mode</h3>
                             <span class="hud-badge-micro text-emerald-400">DEFAULT</span>
                         </div>
-                        <p class="text-sm text-[var(--vs-text-muted)] mb-4">
+                        <p class="text-[13px] text-[var(--vs-text-muted)] mb-4">
                             ใช้ข้อมูลจาก <code class="text-[var(--vs-accent)]">data.js</code> สำหรับการพัฒนาและทดสอบ
                         </p>
                         <div class="p-3 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
-                            <code class="text-sm text-[var(--vs-text-body)]">
+                            <code class="text-[13px] text-[var(--vs-text-body)]">
                                 DataServiceConfig.mode = <span class="text-[var(--vs-accent)]">'local'</span>;
                             </code>
                         </div>
@@ -412,12 +412,12 @@ console.<span class="text-emerald-400">log</span>(user.fullName); <span class="t
                     <div class="p-5 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
                         <div class="flex items-center gap-3 mb-4">
                             <div class="w-3 h-3 rounded-[3px] bg-emerald-500"></div>
-                            <h3 class="text-sm font-extralight text-[var(--vs-text-title)]">Apps Script Mode</h3>
+                            <h3 class="text-[13px] font-light text-[var(--vs-text-title)]">Apps Script Mode</h3>
                             <span class="hud-badge-micro text-amber-400">PRODUCTION</span>
                         </div>
-                        <p class="text-sm text-[var(--vs-text-muted)] mb-4">
+                        <p class="text-[13px] text-[var(--vs-text-muted)] mb-4">
                             ใช้ Google Apps Script + Sheets สำหรับ production พร้อม sharding
                         </p>
                         <div class="p-3 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
-                            <code class="text-sm text-[var(--vs-text-body)]">
+                            <code class="text-[13px] text-[var(--vs-text-body)]">
                                 DataServiceConfig.mode =

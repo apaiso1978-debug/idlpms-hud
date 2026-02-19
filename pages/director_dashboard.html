@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Director Command Center | IDLPMS</title>
+    <link rel="stylesheet" href="../../assets/css/theme.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../../assets/js/LeaveService.js"></script>
+    <style>
+        .kpi-card {
+            background: var(--vs-bg-card);
+            border: 1px solid rgba(63,63,70,0.5);
+            border-radius: var(--vs-radius);
+            padding: 12px;
+            transition: all 0.2s;
+        }
+
+        .kpi-card:hover {
+            border-color: var(--vs-accent);
+            background: rgba(var(--vs-accent-rgb), 0.05);
+        }
+    </style>
+</head>
+
+<body class="p-6 Thai-Rule bg-transparent">
+    <!-- SCHOOL HEALTH INDICATORS -->
+    <div class="mb-8">
+        <h2 class="text-[13px] text-[var(--vs-text-muted)] uppercase mb-4 flex items-center gap-2">
+            <div class="w-1.5 h-4 bg-[var(--vs-accent)]"></div>
+            School Health Indicators (Real-time)
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="kpi-card">
+                <div class="text-[13px] text-[var(--vs-text-muted)] uppercase">นักเรียนที่มาเรียนวันนี้</div>
+                <div class="text-2xl font-light text-[var(--vs-success)] mt-1">98.2%</div>
+                <div class="text-[13px] text-[var(--vs-text-muted)] mt-1">↑ 1.2% จากสัปดาห์ก่อน</div>
+            </div>
+            <div class="kpi-card">
+                <div class="text-[13px] text-[var(--vs-text-muted)] uppercase">ภาระงานครู (ในเกณฑ์)</div>
+                <div class="text-2xl font-light text-[var(--vs-warning)] mt-1">10 / 12</div>
+                <div class="text-[13px] text-[var(--vs-text-muted)] mt-1">ครู 2 คน ภาระงานต่ำกว่าเกณฑ์</div>
+            </div>
+            <div class="kpi-card">
+                <div class="text-[13px] text-[var(--vs-text-muted)] uppercase">ความก้าวหน้าหลักสูตร</div>
+                <div class="text-2xl font-light text-[var(--vs-accent)] mt-1">84%</div>
+                <div class="text-[13px] text-[var(--vs-text-muted)] mt-1">คาดการณ์สิ้นสุดตามกำหนด</div>
+            </div>
+            <div class="kpi-card">
+                <div class="text-[13px] text-[var(--vs-text-muted)] uppercase">คะแนน QA (Internal)</div>
+                <div class="text-2xl font-light text-white mt-1">A+</div>
+                <div class="text-[13px] text-[var(--vs-text-muted)] mt-1">ประเมินล่าสุด: 15 ก.พ. 68</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMMAND CENTER GRID -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- INBOX SECTION -->
+        <div class="space-y-4">
+            <h3
+                class="text-[13px] font-light text-white border-b border-[var(--vs-border)] pb-2 flex items-center gap-2">
+                <i class="icon i-inbox h-4 w-4"></i>
+                กล่องรออนุมัติ (Pending Operations)
+            </h3>
+            <div class="space-y-2">
+                <div
+                    class="vs-glass border border-[rgba(255,255,255,0.05)] p-3 flex items-center justify-between rounded-[3px]">
+                    <div class="flex items-center gap-2">
+                        <div class="p-2 bg-[rgba(34,211,238,0.1)] text-[var(--vs-accent)] rounded"><i
+                                class="icon i-clipboard-document-list w-5 h-5"></i></div>
+                        <div>
+                            <div class="text-[13px] font-light">อนุมัติหลักสูตรสถานศึกษา ปรับปรุง 2568</div>
+                            <div class="text-[13px] text-[var(--vs-text-muted)]">ส่งโดย: หัวหน้าวิชาการ • 2 ชม. ที่แล้ว
+                            </div>
+                        </div>
+                    </div>
+                    <button
+                        class="px-3 py-1 bg-[rgba(34,211,238,0.1)] text-[var(--vs-accent)] border border-[rgba(34,211,238,0.3)] text-[13px] font-light rounded-[2px] uppercase">REVIEW</button>
+                </div>
+                <div
+                    class="vs-glass border border-[rgba(255,255,255,0.05)] p-3 flex items-center justify-between rounded-[3px]">
+                    <div class="flex items-center gap-2">
+                        <div class="p-2 bg-[rgba(234,179,8,0.1)] text-[var(--vs-warning)] rounded"><i
+                                class="icon i-pencil-square w-5 h-5"></i></div>
+                        <div>
+                            <div class="text-[13px] font-light">ลงนามใบสำคัญรับเงินทุนการศึกษา</div>
+                            <div class="text-[13px] text-[var(--vs-text-muted)]">ส่งโดย: ฝ่ายงบประมาณ • 4 ชม. ที่แล้ว
+                            </div>
+                        </div>
+                    </div>
+                    <button
+                        class="px-3 py-1 bg-[rgba(34,211,238,0.1)] text-[var(--vs-accent)] border border-[rgba(34,211,238,0.3)] text-[13px] font-light rounded-[2px] uppercase">REVIEW</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALERTS SECTION -->
+        <div class="space-y-4">
+            <h3
+                class="text-[13px] font-light text-white border-b border-[var(--vs-border)] pb-2 flex items-center gap-2">
+                <i class="icon i-bell h-4 w-4"></i>
+                แจ้งเตือนด่วน (Critical Alerts)
+            </h3>
+            <div class="space-y-2">
+                <div class="bg-red-500/10 border border-red-500/30 p-3 flex items-start gap-2 rounded-[3px]">
+                    <div class="mt-1 text-red-400"><i class="icon i-exclamation-circle w-5 h-5"></i></div>
+                    <div>
+                        <div class="text-[13px] font-light text-red-200">นักเรียนขาดเรียนติดต่อกัน > 30 วัน (2 ราย)
+                        </div>
+                        <div class="text-[13px] text-red-300/60 uppercase">ACTION:
+                            ต้องดำเนินการส่งหนังสือแจ้งเตือนผู้ปกครอง</div>
+                    </div>
+                </div>
+                <div class="bg-yellow-500/10 border border-yellow-500/30 p-3 flex items-start gap-2 rounded-[3px]">
+                    <div class="mt-1 text-yellow-400"><i class="icon i-exclamation-triangle w-5 h-5"></i></div>
+                    <div>
+                        <div class="text-[13px] font-light text-yellow-200">เกณฑ์ภาระงานครูต่ำกว่า 20 ชม./สัปดาห์ (3
+                            ราย)</div>
+                        <div class="text-[13px] text-yellow-300/60 uppercase">ACTION: แนะนำให้ปรับตารางสอนเพื่อรองรับ
+                            ว21</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ATTENDANCE / LEAVE OVERVIEW -->
+    <div class="mt-8">
+        <h3
+            class="text-[13px] font-light text-white border-b border-[var(--vs-border)] pb-2 mb-4 flex items-center gap-2">
+            <i class="icon i-users h-4 w-4"></i>
+            ภาพรวมบุคลากรวันนี้ (Personnel Overview)
+        </h3>
+        <div id="dashboard-att-overview">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+
+    <!-- RECENT ACTIVITY -->
+    <div class="mt-8">
+        <h3 class="text-[13px] font-light text-white border-b border-[var(--vs-border)] pb-2 mb-4">กิจกรรมล่าสุด (Recent
+            Activity)</h3>
+        <div class="space-y-2 opacity-60">
+            <div class="text-[13px] flex items-center gap-2">
+                <span class="text-[var(--vs-text-muted)]">15:42</span>
+                <span class="text-[var(--vs-accent)]">SUCCESS:</span>
+                <span>มอบหมายภาระงานครูครบถ้วน 100% ประจำดือนกุมภาพันธ์</span>
+            </div>
+            <div class="text-[13px] flex items-center gap-2">
+                <span class="text-[var(--vs-text-muted)]">14:15</span>
+                <span class="text-[var(--vs-success)]">SYNC:</span>
+                <span>เชื่อมต่อข้อมูล Learning DNA จากกระทรวงศึกษาธิการเรียบร้อย</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof LeaveService === 'undefined') return;
+            LeaveService.init();
+            renderDashboardOverview();
+        });
+
+        function renderDashboardOverview() {
+            const totals = LeaveService.getAttendanceTotals();
+            const att = LeaveService.getAttendanceSummary();
+            const pending = LeaveService.getPendingCount();
+            const allQO = LeaveService.getAllQuickOuts();
+            const currentlyOut = allQO.filter(r => r.status === 'OUT');
+
+            const container = document.getElementById('dashboard-att-overview');
+            const groupLabels = {
+                TEACHER: { name: 'ข้าราชการครู', color: 'var(--vs-accent)' },
+                CONTRACT: { name: 'ครูอัตราจ้าง', color: 'var(--vs-warning)' },
+                GOV_EMPLOYEE: { name: 'พนักงานราชการ', color: 'var(--vs-success)' },
+                SUPPORT: { name: 'ลูกจ้าง/ภารโรง', color: '#a78bfa' }
+            };
+
+            let html = `
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
+                <div class="text-center p-3 rounded-[3px] bg-[rgba(255,255,255,0.03)]">
+                    <div class="text-lg font-light text-[var(--vs-accent)]">${totals.total}</div>
+                    <div class="text-[13px] text-[var(--vs-text-muted)] uppercase">ทั้งหมด</div>
+                </div>
+                <div class="text-center p-3 rounded-[3px] bg-[rgba(255,255,255,0.03)]">
+                    <div class="text-lg font-light text-[var(--vs-success)]">${totals.present}</div>
+                    <div class="text-[13px] text-[var(--vs-text-muted)] uppercase">มาปฏิบัติงาน</div>
+                </div>
+                <div class="text-center p-3 rounded-[3px] bg-[rgba(255,255,255,0.03)]">
+                    <div class="text-lg font-light text-[var(--vs-warning)]">${totals.leave}</div>
+                    <div class="text-[13px] text-[var(--vs-text-muted)] uppercase">ลา</div>
+                </div>
+                <div class="text-center p-3 rounded-[3px] bg-[rgba(255,255,255,0.03)]">
+                    <div class="text-lg font-light text-[var(--vs-danger)]">${totals.absent}</div>
+                    <div class="text-[13px] text-[var(--vs-text-muted)] uppercase">ขาด</div>
+                </div>
+                <div class="text-center p-3 rounded-[3px] bg-[rgba(255,255,255,0.03)]">
+                    <div class="text-lg font-light text-orange-400">${totals.late}</div>
+                    <div class="text-[13px] text-[var(--vs-text-muted)] uppercase">มาสาย</div>
+                </div>
+            </div>`;
+
+            // Per-group bars
+            html += '<div class="space-y-2 mb-4">';
+            for (const [code, group] of Object.entries(att.summary)) {
+                const label = groupLabels[code] || { name: code, color: 'var(--vs-accent)' };
+                const presentPct = group.total > 0 ? Math.round((group.present / group.total) * 100) : 0;
+                html += `
+                <div class="flex items-center gap-2">
+                    <div class="w-28 text-[13px]" style="color: ${label.color}">${label.name}</div>
+                    <div class="flex-1 h-1.5 rounded bg-[rgba(255,255,255,0.05)]">
+                        <div class="h-full rounded" style="width: ${presentPct}%; background: ${label.color}"></div>
+                    </div>
+                    <div class="text-[13px] text-[var(--vs-text-muted)] w-24 text-right">${group.present}/${group.total} มา</div>
+                </div>`;
+            }
+            html += '</div>';
+
+            // Quick status cards
+            html += `
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="vs-glass border border-[rgba(255,255,255,0.05)] p-3 rounded-[3px] flex items-center gap-2">
+                    <div class="p-2 bg-[rgba(234,179,8,0.1)] rounded">
+                        <i class="icon i-document-text w-5 h-5" style="background-color: var(--vs-warning)"></i>
+                    </div>
+                    <div>
+                        <div class="text-[13px] font-light text-white">ใบลารออนุมัติ</div>
+                        <div class="text-[13px] text-[var(--vs-warning)] font-light">${pending} รายการ</div>
+                    </div>
+                </div>
+                <div class="vs-glass border border-[rgba(255,255,255,0.05)] p-3 rounded-[3px] flex items-center gap-2">
+                    <div class="p-2 bg-[rgba(34,197,94,0.1)] rounded">
+                        <i class="icon i-lightning w-5 h-5" style="background-color: var(--vs-success)"></i>
+                    </div>
+                    <div>
+                        <div class="text-[13px] font-light text-white">ออกธุระอยู่ขณะนี้</div>
+                        <div class="text-[13px] text-[var(--vs-success)] font-light">${currentlyOut.length} คน</div>
+                    </div>
+                </div>
+            </div>`;
+
+            container.innerHTML = html;
+        }
+    </script>
+</body>
+
+</html>

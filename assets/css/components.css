@@ -1,0 +1,449 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * COMPONENTS.CSS — Iron Rules Compliant UI Components
+ * Single source of truth for reusable UI patterns.
+ * Import AFTER theme.css: <link rel="stylesheet" href="/assets/css/components.css">
+ * 
+ * Every class here is pre-audited against SKILL.md Iron Rules:
+ *   ✅ 13px / font-weight: 300 / rounded: 3px / border: 1px 50%
+ *   ✅ Neon style (translucent bg + glow border)
+ *   ✅ Sunken inset inputs (bg-deep + no border)
+ *   ✅ No solid fills, no font-bold, no rounded-full (>8px)
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── BASE TYPOGRAPHY ──────────────────────────────────────────────────── */
+
+.text-body {
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.4;
+    color: var(--vs-text-body);
+}
+
+.text-title {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--vs-text-title);
+}
+
+.text-muted {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--vs-text-muted);
+}
+
+.text-section-header {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--vs-text-muted);
+    text-transform: uppercase;
+}
+
+/* ─── NEON BUTTONS ─────────────────────────────────────────────────────── */
+/* Usage: <button class="neon-btn neon-btn-primary">Label</button>        */
+
+.neon-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 300;
+    border-radius: var(--vs-radius);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid;
+    outline: none;
+}
+
+.neon-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Primary (Cyan) */
+.neon-btn-primary {
+    background: rgba(var(--vs-accent-rgb), 0.1);
+    color: var(--vs-accent);
+    border-color: rgba(var(--vs-accent-rgb), 0.3);
+}
+
+.neon-btn-primary:hover:not(:disabled) {
+    background: rgba(var(--vs-accent-rgb), 0.15);
+    border-color: rgba(var(--vs-accent-rgb), 0.5);
+    box-shadow: 0 0 8px rgba(var(--vs-accent-rgb), 0.1);
+}
+
+/* Success (Green) */
+.neon-btn-success {
+    background: rgba(var(--vs-success-rgb), 0.1);
+    color: var(--vs-success);
+    border-color: rgba(var(--vs-success-rgb), 0.3);
+}
+
+.neon-btn-success:hover:not(:disabled) {
+    background: rgba(var(--vs-success-rgb), 0.15);
+    border-color: rgba(var(--vs-success-rgb), 0.5);
+    box-shadow: 0 0 8px rgba(var(--vs-success-rgb), 0.1);
+}
+
+/* Danger (Red) */
+.neon-btn-danger {
+    background: rgba(var(--vs-danger-rgb), 0.1);
+    color: var(--vs-danger);
+    border-color: rgba(var(--vs-danger-rgb), 0.3);
+}
+
+.neon-btn-danger:hover:not(:disabled) {
+    background: rgba(var(--vs-danger-rgb), 0.15);
+    border-color: rgba(var(--vs-danger-rgb), 0.5);
+    box-shadow: 0 0 8px rgba(var(--vs-danger-rgb), 0.1);
+}
+
+/* Warning (Yellow) */
+.neon-btn-warning {
+    background: rgba(var(--vs-warning-rgb), 0.1);
+    color: var(--vs-warning);
+    border-color: rgba(var(--vs-warning-rgb), 0.3);
+}
+
+.neon-btn-warning:hover:not(:disabled) {
+    background: rgba(var(--vs-warning-rgb), 0.15);
+    border-color: rgba(var(--vs-warning-rgb), 0.5);
+    box-shadow: 0 0 8px rgba(var(--vs-warning-rgb), 0.1);
+}
+
+/* Ghost (Muted outline only) */
+.neon-btn-ghost {
+    background: transparent;
+    color: var(--vs-text-muted);
+    border-color: rgba(var(--vs-border-rgb), 0.5);
+}
+
+.neon-btn-ghost:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--vs-text-body);
+    border-color: rgba(var(--vs-border-rgb), 0.8);
+}
+
+/* Small variant */
+.neon-btn-sm {
+    padding: 4px 12px;
+    font-size: 13px;
+}
+
+/* ─── FORM INPUT (SUNKEN INSET) ────────────────────────────────────────── */
+/* Usage: <input class="form-input" placeholder="...">                     */
+
+.form-input {
+    width: 100%;
+    background: var(--vs-bg-deep);
+    border: none;
+    border-radius: var(--vs-radius);
+    padding: 8px 12px;
+    min-height: 36px;
+    color: var(--vs-text-title);
+    font-size: 13px;
+    font-weight: 300;
+    font-family: inherit;
+    outline: none;
+    transition: box-shadow 0.2s ease;
+}
+
+.form-input:focus {
+    box-shadow: 0 0 0 1px var(--vs-accent);
+}
+
+.form-input::placeholder {
+    color: var(--vs-text-muted);
+    font-weight: 300;
+}
+
+/* Textarea variant */
+textarea.form-input {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* Select variant */
+select.form-input {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='rgba(255,255,255,0.45)' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+}
+
+/* ─── CARDS ────────────────────────────────────────────────────────────── */
+/* Usage: <div class="vs-card">...</div>                                   */
+
+.vs-card {
+    background: var(--vs-bg-card);
+    border: 1px solid rgba(var(--vs-border-rgb), 0.5);
+    border-radius: var(--vs-radius);
+    padding: 16px;
+}
+
+.vs-card-highlight {
+    background: var(--vs-bg-card);
+    border: 1px solid rgba(var(--vs-warning-rgb), 0.2);
+    border-radius: var(--vs-radius);
+    padding: 16px;
+    box-shadow: 0 0 12px rgba(var(--vs-warning-rgb), 0.05);
+}
+
+.vs-card-deep {
+    background: var(--vs-bg-deep);
+    border: 1px solid rgba(var(--vs-border-rgb), 0.5);
+    border-radius: var(--vs-radius);
+    padding: 16px;
+}
+
+/* ─── STATUS BADGE ─────────────────────────────────────────────────────── */
+/* Usage: <span class="neon-badge neon-badge-success">Active</span>        */
+
+.neon-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 1px 8px;
+    font-size: 13px;
+    font-weight: 300;
+    border-radius: var(--vs-radius);
+    border: 1px solid;
+}
+
+.neon-badge-primary {
+    background: rgba(var(--vs-accent-rgb), 0.1);
+    color: var(--vs-accent);
+    border-color: rgba(var(--vs-accent-rgb), 0.3);
+}
+
+.neon-badge-success {
+    background: rgba(var(--vs-success-rgb), 0.1);
+    color: var(--vs-success);
+    border-color: rgba(var(--vs-success-rgb), 0.3);
+}
+
+.neon-badge-warning {
+    background: rgba(var(--vs-warning-rgb), 0.15);
+    color: var(--vs-warning);
+    border-color: rgba(var(--vs-warning-rgb), 0.3);
+}
+
+.neon-badge-danger {
+    background: rgba(var(--vs-danger-rgb), 0.1);
+    color: var(--vs-danger);
+    border-color: rgba(var(--vs-danger-rgb), 0.3);
+}
+
+/* Count badge (small number indicator) */
+.neon-badge-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    padding: 0 6px;
+    height: 20px;
+    font-size: 13px;
+    font-weight: 300;
+    border-radius: var(--vs-radius);
+    background: rgba(var(--vs-warning-rgb), 0.15);
+    color: var(--vs-warning);
+}
+
+/* ─── TAB BAR ──────────────────────────────────────────────────────────── */
+/* Usage:                                                                   */
+/* <div class="vs-tabs">                                                    */
+/*   <button class="vs-tab active">Tab 1</button>                          */
+/*   <button class="vs-tab">Tab 2</button>                                 */
+/* </div>                                                                   */
+
+.vs-tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid rgba(var(--vs-border-rgb), 0.5);
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.vs-tab {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--vs-text-muted);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.vs-tab:hover {
+    color: var(--vs-text-body);
+}
+
+.vs-tab.active {
+    color: var(--vs-accent);
+    border-bottom-color: var(--vs-accent);
+}
+
+/* ─── PROGRESS BAR ─────────────────────────────────────────────────────── */
+/* Usage:                                                                   */
+/* <div class="vs-progress">                                                */
+/*   <div class="vs-progress-fill" style="width: 60%"></div>               */
+/* </div>                                                                   */
+
+.vs-progress {
+    width: 100%;
+    height: 3px;
+    background: var(--vs-bg-deep);
+    border-radius: var(--vs-radius);
+    overflow: hidden;
+}
+
+.vs-progress-fill {
+    height: 100%;
+    border-radius: var(--vs-radius);
+    background: var(--vs-accent);
+    transition: width 0.3s ease;
+}
+
+.vs-progress-fill-success {
+    background: var(--vs-success);
+}
+
+.vs-progress-fill-warning {
+    background: var(--vs-warning);
+}
+
+.vs-progress-fill-danger {
+    background: var(--vs-danger);
+}
+
+/* ─── AVATAR ───────────────────────────────────────────────────────────── */
+/* Usage: <div class="vs-avatar" style="--avatar-color: var(--vs-accent)">A</div> */
+
+.vs-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--vs-radius);
+    font-size: 13px;
+    font-weight: 300;
+    background: rgba(var(--vs-accent-rgb), 0.1);
+    color: var(--vs-accent);
+}
+
+.vs-avatar-sm {
+    width: 32px;
+    height: 32px;
+}
+
+/* ─── STATUS DOT (≤8px — rounded-full ALLOWED) ────────────────────────── */
+/* Usage: <span class="vs-dot vs-dot-success"></span>                      */
+
+.vs-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.vs-dot-success {
+    background: var(--vs-success);
+}
+
+.vs-dot-warning {
+    background: var(--vs-warning);
+}
+
+.vs-dot-danger {
+    background: var(--vs-danger);
+}
+
+.vs-dot-accent {
+    background: var(--vs-accent);
+}
+
+.vs-dot-pulse {
+    animation: dotPulse 2s infinite;
+}
+
+@keyframes dotPulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+}
+
+/* ─── DIVIDER ──────────────────────────────────────────────────────────── */
+
+.vs-divider {
+    border: none;
+    border-top: 1px solid rgba(var(--vs-border-rgb), 0.5);
+    margin: 16px 0;
+}
+
+/* ─── MODAL OVERLAY ────────────────────────────────────────────────────── */
+
+.vs-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.vs-modal {
+    background: var(--vs-bg-card);
+    border: 1px solid rgba(var(--vs-border-rgb), 0.5);
+    border-radius: var(--vs-radius);
+    padding: 24px;
+    max-width: 480px;
+    width: 100%;
+}
+
+/* ─── ICON + TEXT ROW ──────────────────────────────────────────────────── */
+/* Enforces gap-2 (8px) between icons and text                             */
+/* Usage: <div class="vs-icon-text"><i class="icon..."></i> Label</div>    */
+
+.vs-icon-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 300;
+}
+
+.vs-icon-text-start {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 300;
+}
+
+/* ─── HISTORY / LIST ROW ───────────────────────────────────────────────── */
+
+.vs-list-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(var(--vs-border-rgb), 0.5);
+    font-size: 13px;
+    font-weight: 300;
+}
+
+.vs-list-row:last-child {
+    border-bottom: none;
+}

@@ -23,7 +23,7 @@
     </style>
 </head>
 
-<body class="p-6 bg-[var(--vs-bg-main)] text-[var(--vs-text-body)] font-extralight Thai-Rule">
+<body class="p-6 bg-[var(--vs-bg-main)] text-[var(--vs-text-body)] font-light Thai-Rule">
     <div class="max-w-4xl mx-auto space-y-6">
         <!-- Header -->
         <header class="flex items-center justify-between mb-8">
@@ -33,9 +33,9 @@
                     <i class="icon i-office w-6 h-6 text-[var(--vs-accent)]"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl text-[var(--vs-text-title)] font-extralight Thai-Rule">
+                    <h1 class="text-xl text-[var(--vs-text-title)] font-light Thai-Rule">
                         ตั้งค่าข้อมูลพื้นฐานสถานศึกษา</h1>
-                    <p class="text-sm text-[var(--vs-text-muted)] Thai-Rule">กำหนดโครงสร้างเวลา การจัดการชั้นเรียน
+                    <p class="text-[13px] text-[var(--vs-text-muted)] Thai-Rule">กำหนดโครงสร้างเวลา การจัดการชั้นเรียน
                         และข้อมูลผู้บริหาร</p>
                 </div>
             </div>
@@ -51,19 +51,19 @@
             <div class="vs-section-card space-y-4">
                 <div class="flex items-center space-x-2 text-[var(--vs-accent)] mb-2">
                     <i class="icon i-office w-4 h-4"></i>
-                    <span class="text-sm uppercase font-bold">School Profile</span>
+                    <span class="text-[13px] uppercase font-light">School Profile</span>
                 </div>
                 <div>
-                    <label class="text-sm text-[var(--vs-text-muted)] uppercase block mb-1">ชื่อโรงเรียน</label>
+                    <label class="text-[13px] text-[var(--vs-text-muted)] uppercase block mb-1">ชื่อโรงเรียน</label>
                     <input type="text" id="school-name" class="vs-setup-input Thai-Rule" placeholder="ระบุชื่อโรงเรียน">
                 </div>
                 <div>
-                    <label class="text-sm text-[var(--vs-text-muted)] uppercase block mb-1">สังกัดเขตพื้นที่
+                    <label class="text-[13px] text-[var(--vs-text-muted)] uppercase block mb-1">สังกัดเขตพื้นที่
                         (ESA)</label>
                     <input type="text" id="school-esa" class="vs-setup-input Thai-Rule" placeholder="เช่น สพป. เขต 1">
                 </div>
                 <div>
-                    <label class="text-sm text-[var(--vs-text-muted)] uppercase block mb-1">ชื่อผู้อำนวยการ</label>
+                    <label class="text-[13px] text-[var(--vs-text-muted)] uppercase block mb-1">ชื่อผู้อำนวยการ</label>
                     <input type="text" id="school-director" class="vs-setup-input Thai-Rule"
                         placeholder="ชื่อ-นามสกุล ผอ.">
                 </div>
@@ -73,21 +73,21 @@
             <div class="vs-section-card space-y-4">
                 <div class="flex items-center space-x-2 text-[var(--vs-accent)] mb-2">
                     <i class="icon i-calendar w-4 h-4"></i>
-                    <span class="text-sm uppercase font-bold">Schedule Structure</span>
+                    <span class="text-[13px] uppercase font-light">Schedule Structure</span>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="text-sm text-[var(--vs-text-muted)] uppercase block mb-1">จำนวนวัน/สัปดาห์</label>
+                        <label class="text-[13px] text-[var(--vs-text-muted)] uppercase block mb-1">จำนวนวัน/สัปดาห์</label>
                         <input type="number" id="days-per-week" class="vs-setup-input text-center" value="5" min="1"
                             max="7">
                     </div>
                     <div>
-                        <label class="text-sm text-[var(--vs-text-muted)] uppercase block mb-1">จำนวนคาบ/วัน</label>
+                        <label class="text-[13px] text-[var(--vs-text-muted)] uppercase block mb-1">จำนวนคาบ/วัน</label>
                         <input type="number" id="periods-per-day" class="vs-setup-input text-center" value="8" min="4"
                             max="12">
                     </div>
                     <div>
-                        <label class="text-sm text-[var(--vs-text-muted)] uppercase block mb-1">คาบพักกลางวัน
+                        <label class="text-[13px] text-[var(--vs-text-muted)] uppercase block mb-1">คาบพักกลางวัน
                             (ลำดับที่)</label>
                         <input type="number" id="lunch-period" class="vs-setup-input text-center" value="4" min="1"
                             max="8">
@@ -99,12 +99,12 @@
             <div class="vs-section-card md:col-span-2 space-y-4">
                 <div class="flex items-center space-x-2 text-[var(--vs-accent)] mb-2">
                     <i class="icon i-users w-4 h-4"></i>
-                    <span class="text-sm uppercase font-bold">Grade Enrollment & Classes</span>
+                    <span class="text-[13px] uppercase font-light">Grade Enrollment & Classes</span>
                 </div>
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4" id="classes-grid">
                     <!-- Grade Inputs injected here -->
                 </div>
-                <p class="text-[10px] text-[var(--vs-text-muted)] italic">* ระบุจำนวนห้องเรียนในแต่ละสายชั้น
+                <p class="text-[13px] text-[var(--vs-text-muted)] ">* ระบุจำนวนห้องเรียนในแต่ละสายชั้น
                     ระบบจะสร้างรหัสห้องให้อัตโนมัติ (เช่น 1/1, 1/2...)</p>
             </div>
         </div>
@@ -159,10 +159,10 @@
             for (let i = 1; i <= 6; i++) {
                 html += `
                     <div class="bg-[var(--vs-bg-panel)] p-3 rounded border border-[var(--vs-border)]">
-                        <label class="text-[10px] text-[var(--vs-accent)] uppercase block mb-1">ชั้นประถมศึกษาปีที่ ${i}</label>
+                        <label class="text-[13px] text-[var(--vs-accent)] uppercase block mb-1">ชั้นประถมศึกษาปีที่ ${i}</label>
                         <div class="flex items-center space-x-2">
-                            <input type="number" id="grade-${i}-sections" class="vs-setup-input text-center text-sm" value="0" min="0" max="10">
-                            <span class="text-[10px] opacity-40">ห้อง</span>
+                            <input type="number" id="grade-${i}-sections" class="vs-setup-input text-center text-[13px]" value="0" min="0" max="10">
+                            <span class="text-[13px] opacity-40">ห้อง</span>
                         </div>
                     </div>
                 `;

@@ -161,8 +161,8 @@ function populateBasicTab(user) {
 
     metricsGrid.innerHTML = metrics.map(m => `
         <div class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
-            <div class="text-sm text-[var(--vs-text-muted)] uppercase mb-2">${m.label}</div>
-            <div class="text-2xl font-extralight text-[var(--vs-text-title)]">${m.value}</div>
+            <div class="text-[13px] text-[var(--vs-text-muted)] uppercase mb-2">${m.label}</div>
+            <div class="text-2xl font-light text-[var(--vs-text-title)]">${m.value}</div>
         </div>
     `).join('');
 }
@@ -190,7 +190,7 @@ function renderTimeline(container, entries) {
         container.innerHTML = `
             <div class="passport-empty">
                 <i class="icon i-clipboard-check h-8 w-8"></i>
-                <div class="text-sm font-extralight mt-2">No workflow entries yet</div>
+                <div class="text-[13px] font-light mt-2">No workflow entries yet</div>
             </div>`;
         return;
     }

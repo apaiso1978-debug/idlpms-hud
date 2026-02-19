@@ -31,6 +31,8 @@
     <script src="src/engines/QuizEngine.js"></script>
     <script src="src/engines/SecurityEngine.js"></script>
 
+    <script src="assets/js/task_system.js"></script>
+    <script src="assets/js/delegation_panel.js"></script>
     <script src="assets/js/app.js?v=3.1"></script>
 </head>
 
@@ -74,7 +76,7 @@
         <aside id="side-panel" class="vs-side-bar relative overflow-hidden">
             <!-- Explorer View -->
             <div id="panel-explorer" class="vs-sidebar-panel flex flex-col h-full">
-                <div class="vs-panel-header uppercase font-extralight text-[var(--vs-text-muted)] Thai-Rule">
+                <div class="vs-panel-header uppercase font-light text-[var(--vs-text-muted)] Thai-Rule">
                     <span>ระบบติดตามข้อมูลสถานศึกษา</span>
                     <i class="icon i-dots h-3 w-3"></i>
                 </div>
@@ -82,28 +84,28 @@
                 <!-- Standardized Universal Dash Icon -->
                 <div class="px-1 py-1 space-y-1">
                     <button
-                        class="nav-item w-full text-left px-[18px] py-1.5 rounded-[var(--vs-radius)] transition-all hud-bg-cyan text-[var(--vs-accent)] font-extralight hud-border-cyan text-sm group active"
+                        class="nav-item w-full text-left px-[18px] py-1.5 rounded-[var(--vs-radius)] transition-all hud-bg-cyan text-[var(--vs-accent)] font-light hud-border-cyan text-[13px] group active"
                         data-page="pages/home.html" data-name="Dashboard Overview">
                         <i
                             class="icon i-squares h-4 w-4 inline-block mr-2 group-hover:scale-110 transition-transform"></i>
                         <span class="text-white group-hover:text-white">แดชบอร์ดภาพรวม</span>
                     </button>
                     <button
-                        class="nav-item w-full text-left px-[18px] py-1.5 rounded-[var(--vs-radius)] transition-all text-[var(--vs-text-title)] font-extralight text-sm group"
+                        class="nav-item w-full text-left px-[18px] py-1.5 rounded-[var(--vs-radius)] transition-all text-[var(--vs-text-title)] font-light text-[13px] group"
                         data-page="pages/schedule.html" data-name="Class Schedule">
                         <i
                             class="icon i-calendar h-4 w-4 inline-block mr-2 group-hover:scale-110 transition-transform"></i>
                         <span>ตารางปฏิบัติการ</span>
                     </button>
                     <button
-                        class="nav-item w-full text-left px-[18px] py-1.5 rounded-[var(--vs-radius)] transition-all text-[var(--vs-text-title)] font-extralight text-sm group"
+                        class="nav-item w-full text-left px-[18px] py-1.5 rounded-[var(--vs-radius)] transition-all text-[var(--vs-text-title)] font-light text-[13px] group"
                         data-page="pages/dashboard_admin.html" data-name="Admin Dashboard">
                         <i
                             class="icon i-chart h-4 w-4 inline-block mr-2 group-hover:scale-110 transition-transform"></i>
                         <span>Dashboard ผู้บริหาร</span>
                     </button>
                     <button
-                        class="nav-item w-full text-left px-[18px] py-1.5 rounded-[var(--vs-radius)] transition-all text-[var(--vs-text-title)] font-extralight text-sm group"
+                        class="nav-item w-full text-left px-[18px] py-1.5 rounded-[var(--vs-radius)] transition-all text-[var(--vs-text-title)] font-light text-[13px] group"
                         data-page="pages/subject_cards.html" data-name="Subject Matrix">
                         <i class="icon i-book h-4 w-4 inline-block mr-2 group-hover:scale-110 transition-transform"></i>
                         <span>กลุ่มสาระการเรียนรู้</span>
@@ -118,7 +120,7 @@
             </div>
 
             <div id="panel-manual" class="vs-sidebar-panel flex flex-col h-full hidden">
-                <div class="vs-panel-header text-sm uppercase font-extralight text-[var(--vs-text-title)] Thai-Rule">
+                <div class="vs-panel-header text-[13px] uppercase font-light text-[var(--vs-text-title)] Thai-Rule">
                     <span>คู่มือการใช้งานระบบ</span>
                     <i class="icon i-dots h-3 w-3"></i>
                 </div>
@@ -128,74 +130,74 @@
                         class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-body)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)] active"
                         data-page="pages/manual/vision.html" data-name="1. Vision / Strategy">
                         <i class="icon i-eye h-4 w-4"></i>
-                        <span class="text-sm">1. VISION / STRATEGY</span>
+                        <span class="text-[13px]">1. VISION / STRATEGY</span>
                     </button>
                     <button
                         class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-title)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)]"
                         data-page="pages/manual/roles.html" data-name="2. Roles / Users">
                         <i class="icon i-users h-4 w-4"></i>
-                        <span class="text-sm">2. ROLES / USERS</span>
+                        <span class="text-[13px]">2. ROLES / USERS</span>
                     </button>
                     <button
                         class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-title)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)]"
                         data-page="pages/manual/communication.html" data-name="3. Communications">
                         <i class="icon i-chat h-4 w-4"></i>
-                        <span class="text-sm">3. COMMUNICATIONS</span>
+                        <span class="text-[13px]">3. COMMUNICATIONS</span>
                     </button>
                     <button
                         class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-title)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)]"
                         data-page="pages/manual/learning.html" data-name="4. Learning">
                         <i class="icon i-lightning h-4 w-4"></i>
-                        <span class="text-sm">4. LEARNING ENGINE</span>
+                        <span class="text-[13px]">4. LEARNING ENGINE</span>
                     </button>
                     <button
                         class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-title)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)]"
                         data-page="pages/manual/database.html" data-name="5. Database">
                         <i class="icon i-database h-4 w-4"></i>
-                        <span class="text-sm">5. DATABASE SCHEMA</span>
+                        <span class="text-[13px]">5. DATABASE SCHEMA</span>
                     </button>
                     <button
                         class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-title)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)]"
                         data-page="pages/manual/architecture.html" data-name="6. Architecture">
                         <i class="icon i-cube h-4 w-4"></i>
-                        <span class="text-sm">6. ARCHITECTURE</span>
+                        <span class="text-[13px]">6. ARCHITECTURE</span>
                     </button>
                     <button
                         class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-title)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)]"
                         data-page="pages/manual/files.html" data-name="7. Files">
                         <i class="icon i-folder h-4 w-4"></i>
-                        <span class="text-sm">7. FILE REPOSITORY</span>
+                        <span class="text-[13px]">7. FILE REPOSITORY</span>
                     </button>
                     <button
                         class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-title)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)]"
                         data-page="pages/manual/design.html" data-name="8. Design">
                         <i class="icon i-eye h-4 w-4"></i>
-                        <span class="text-sm">8. DESIGN STANDARDS</span>
+                        <span class="text-[13px]">8. DESIGN STANDARDS</span>
                     </button>
                     <button
                         class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-title)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)]"
                         data-page="pages/manual/offline.html" data-name="9. Offline & PWA">
                         <i class="icon i-shield h-4 w-4"></i>
-                        <span class="text-sm">9. OFFLINE & PWA</span>
+                        <span class="text-[13px]">9. OFFLINE & PWA</span>
                     </button>
                     <button
                         class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-title)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)]"
                         data-page="pages/manual/data-service.html" data-name="10. DataService">
                         <i class="icon i-database h-4 w-4"></i>
-                        <span class="text-sm">10. DATA SERVICE & API</span>
+                        <span class="text-[13px]">10. DATA SERVICE & API</span>
                     </button>
                     <button
                         class="nav-item vs-menu-item w-full px-[18px] py-2 text-[var(--vs-text-title)] transition-all flex items-center space-x-3 rounded-[var(--vs-radius)]"
                         data-page="pages/manual/infrastructure.html" data-name="11. Infrastructure">
                         <i class="icon i-brand-github h-4 w-4"></i>
-                        <span class="text-sm">11. INFRASTRUCTURE & CD</span>
+                        <span class="text-[13px]">11. INFRASTRUCTURE & CD</span>
                     </button>
                 </nav>
             </div>
 
             <!-- Management / Mission Control Panel -->
             <div id="panel-manage" class="vs-sidebar-panel flex flex-col h-full hidden">
-                <div class="vs-panel-header uppercase font-extralight text-[var(--vs-text-muted)] Thai-Rule">
+                <div class="vs-panel-header uppercase font-light text-[var(--vs-text-muted)] Thai-Rule">
                     <span>หน้าจัดการและปฏิบัติงาน</span>
                     <i class="icon i-dots h-3 w-3"></i>
                 </div>
@@ -206,78 +208,78 @@
 
             <!-- Chat View -->
             <div id="panel-chat" class="vs-sidebar-panel flex flex-col h-full hidden">
-                <div class="vs-panel-header text-sm uppercase font-extralight text-[var(--vs-text-title)] Thai-Rule">
+                <div class="vs-panel-header text-[13px] uppercase font-light text-[var(--vs-text-title)] Thai-Rule">
                     <span>ข้อความส่วนตัว</span>
                     <i class="icon i-dots h-3 w-3"></i>
                 </div>
                 <div class="flex-1 overflow-y-auto px-1 py-1 space-y-1" id="chatList">
                     <!-- Dynamic Chat List -->
-                    <div class="p-3 text-[var(--vs-text-muted)] text-sm uppercase Thai-Rule">
+                    <div class="p-3 text-[var(--vs-text-muted)] text-[13px] uppercase Thai-Rule">
                         กำลังเริ่มระบบการสื่อสาร...
                     </div>
                 </div>
             </div>
 
             <div id="panel-search" class="vs-sidebar-panel flex flex-col h-full hidden">
-                <div class="vs-panel-header text-sm uppercase font-extralight text-[var(--vs-text-title)] Thai-Rule">
+                <div class="vs-panel-header text-[13px] uppercase font-light text-[var(--vs-text-title)] Thai-Rule">
                     <span>ค้นหาข้อมูล</span>
                     <i class="icon i-search h-3 w-3"></i>
                 </div>
                 <div class="p-4">
                     <input type="text" placeholder="ค้นหาเมนูหรือข้อมูล..."
-                        class="w-full bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] px-4 py-2 text-sm text-[var(--vs-text-body)] focus:outline-none focus:border-[var(--vs-accent)] Thai-Rule" />
+                        class="w-full bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] px-4 py-2 text-[13px] text-[var(--vs-text-body)] focus:outline-none focus:border-[var(--vs-accent)] Thai-Rule" />
                 </div>
             </div>
 
             <div id="panel-settings" class="vs-sidebar-panel flex flex-col h-full hidden">
-                <div class="vs-panel-header text-sm uppercase font-extralight text-[var(--vs-text-title)] Thai-Rule">
+                <div class="vs-panel-header text-[13px] uppercase font-light text-[var(--vs-text-title)] Thai-Rule">
                     <span>การตั้งค่าและการสลับตัวตน</span>
                     <i class="icon i-dots h-3 w-3"></i>
                 </div>
                 <div class="p-4 space-y-4">
-                    <div class="text-sm text-[var(--vs-text-muted)] uppercase font-extralight Thai-Rule">
+                    <div class="text-[13px] text-[var(--vs-text-muted)] uppercase font-light Thai-Rule">
                         สลับตัวตนในการใช้ระบบ
                     </div>
                     <div class="space-y-1.5" id="role-switcher-list">
                         <!-- Role Buttons -->
                         <button onclick="switchRole('MOE_001')"
-                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] transition-all flex items-center justify-between group">
+                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] transition-all flex items-center justify-between group">
                             <span>ท่านรัฐมนตรี (MOE)</span>
                             <i
                                 class="icon i-globe h-3 w-3 opacity-0 group-hover:opacity-100 text-[var(--vs-accent)]"></i>
                         </button>
                         <button onclick="switchRole('OBEC_001')"
-                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] transition-all flex items-center justify-between group">
+                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] transition-all flex items-center justify-between group">
                             <span>ท่านเลขาฯ สพฐ. (OBEC)</span>
                             <i
                                 class="icon i-library h-3 w-3 opacity-0 group-hover:opacity-100 text-[var(--vs-accent)]"></i>
                         </button>
                         <button onclick="switchRole('ESA_DIR_001')"
-                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] transition-all flex items-center justify-between group">
+                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] transition-all flex items-center justify-between group">
                             <span>ดร.สมเกียรติ (ผอ.เขต 1)</span>
                             <i
                                 class="icon i-building h-3 w-3 opacity-0 group-hover:opacity-100 text-[var(--vs-accent)]"></i>
                         </button>
                         <button onclick="switchRole('SCH_DIR_001')"
-                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] transition-all flex items-center justify-between group">
+                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] transition-all flex items-center justify-between group">
                             <span>ผอ.ปรีชา (ผอ.โรงเรียน)</span>
                             <i
                                 class="icon i-office h-3 w-3 opacity-0 group-hover:opacity-100 text-[var(--vs-accent)]"></i>
                         </button>
                         <button onclick="switchRole('TEA_001')"
-                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] transition-all flex items-center justify-between group">
+                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] transition-all flex items-center justify-between group">
                             <span>ครูสายบัว (ครูประจำชั้น)</span>
                             <i
                                 class="icon i-academic h-3 w-3 opacity-0 group-hover:opacity-100 text-[var(--vs-accent)]"></i>
                         </button>
                         <button onclick="switchRole('STU_001')"
-                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] transition-all flex items-center justify-between group font-extralight">
+                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] transition-all flex items-center justify-between group font-light">
                             <span>อัครพล (นักเรียน 6/1)</span>
                             <i
                                 class="icon i-user h-3 w-3 opacity-0 group-hover:opacity-100 text-[var(--vs-accent)]"></i>
                         </button>
                         <button onclick="switchRole('PAR_001')"
-                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-sm text-[var(--vs-text-body)] transition-all flex items-center justify-between group">
+                            class="w-full vs-menu-item text-left px-[18px] py-2 rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] transition-all flex items-center justify-between group">
                             <span>นายสมพล (ผู้ปกครอง)</span>
                             <i
                                 class="icon i-users h-3 w-3 opacity-0 group-hover:opacity-100 text-[var(--vs-accent)]"></i>
@@ -285,44 +287,47 @@
                     </div>
 
                     <div class="pt-4 border-t border-[var(--vs-border)]">
-                        <div class="text-sm text-[var(--vs-text-muted)] uppercase font-extralight Thai-Rule mb-2">
+                        <div class="text-[13px] text-[var(--vs-text-muted)] uppercase font-light Thai-Rule mb-2">
                             การแสดงผลของระบบ
                         </div>
                         <div
-                            class="flex items-center justify-between text-sm text-[var(--vs-text-body)] font-extralight Thai-Rule">
+                            class="flex items-center justify-between text-[13px] text-[var(--vs-text-body)] font-light Thai-Rule">
                             <span>โทนสีของระบบ</span>
                             <span
-                                class="text-[var(--vs-accent)] font-extralight text-sm uppercase">มาตรวัดศูนย์กลาง</span>
+                                class="text-[var(--vs-accent)] font-light text-[13px] uppercase">มาตรวัดศูนย์กลาง</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- User Profile (Bottom) -->
-            <div class="nav-item vs-menu-item mt-auto border-t border-[var(--vs-border)] px-[18px] py-4 bg-[var(--vs-bg-card)] cursor-pointer transition-all"
+            <div class="nav-item vs-menu-item mt-auto border-t border-[var(--vs-border)] px-4 py-4 bg-[var(--vs-bg-card)] cursor-pointer transition-all"
                 data-page="pages/profile.html" data-name="User Profile">
-                <div class="flex items-center space-x-3">
-                    <div id="pfp"
-                        class="w-10 h-10 rounded-full flex items-center justify-center font-extralight text-[var(--vs-text-muted)] text-sm border border-[var(--vs-border)] bg-[rgba(var(--vs-bg-card-rgb),0.3)]">
-                        --
-                    </div>
-                    <div class="flex-1 overflow-hidden">
-                        <div id="uName" class="font-extralight text-[var(--vs-text-title)] truncate Thai-Rule mb-0.5">
-                            กำลังเตรียมระบบ...
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3 min-w-0 flex-1">
+                        <div id="pfp"
+                            class="w-8 h-8 rounded-[var(--vs-radius)] flex items-center justify-center text-[13px] font-light text-[var(--vs-text-muted)] border border-[var(--vs-border)] bg-[rgba(var(--vs-bg-card-rgb),0.3)] flex-shrink-0">
+                            --
                         </div>
-                        <div id="uRole"
-                            class="font-extralight uppercase text-[var(--vs-text-muted)] opacity-50 Thai-Rule">
-                            รอยืนยันตัวตน
+                        <div class="min-w-0">
+                            <div id="uName"
+                                class="text-[13px] font-light text-[var(--vs-text-title)] truncate leading-[1.4]">
+                                กำลังเตรียมระบบ...
+                            </div>
+                            <div id="uRole"
+                                class="text-[13px] font-light uppercase text-[var(--vs-text-muted)] opacity-[0.45] leading-[1.4]">
+                                รอยืนยันตัวตน
+                            </div>
                         </div>
                     </div>
                     <button id="logoutBtn"
-                        class="p-2 hover:bg-[var(--vs-bg-main)] rounded-[var(--vs-radius)] transition-colors group"
+                        class="p-2 hover:bg-[var(--vs-bg-main)] rounded-[var(--vs-radius)] transition-colors group flex-shrink-0"
                         title="Logout" onclick="
                                 logout();
                                 event.stopPropagation();
                             ">
                         <i
-                            class="icon i-logout h-5 w-5 text-[var(--vs-text-muted)] group-hover:text-[var(--vs-danger)]"></i>
+                            class="icon i-logout h-4 w-4 text-[var(--vs-text-muted)] group-hover:text-[var(--vs-danger)]"></i>
                     </button>
                 </div>
             </div>
@@ -334,10 +339,10 @@
             <header
                 class="h-12 bg-[var(--vs-bg-main)] border-b border-[var(--vs-border)] flex items-center justify-between px-8">
                 <div class="flex items-center space-x-1 Thai-Rule">
-                    <span class="text-[var(--vs-text-muted)] uppercase text-sm font-extralight">โครงสร้างระบบ</span>
+                    <span class="text-[var(--vs-text-muted)] uppercase text-[13px] font-light">โครงสร้างระบบ</span>
                     <span class="text-[var(--vs-text-muted)]">/</span>
                     <span id="header-page-name"
-                        class="text-[var(--vs-text-title)] font-extralight text-sm">แดชบอร์ดภาพรวม</span>
+                        class="text-[var(--vs-text-title)] font-light text-[13px]">แดชบอร์ดภาพรวม</span>
                 </div>
             </header>
 
@@ -346,23 +351,23 @@
             </div>
 
             <div id="vs-status-bar"
-                class="h-6 bg-[var(--vs-bg-main)] border-t border-[var(--vs-border)] flex items-center justify-between px-6 text-sm uppercase text-[var(--vs-text-muted)] font-extralight">
+                class="h-6 bg-[var(--vs-bg-main)] border-t border-[var(--vs-border)] flex items-center justify-between px-6 text-[13px] uppercase text-[var(--vs-text-muted)] font-light">
                 <div class="flex items-center space-x-4">
                     <div id="status-connection" class="flex items-center space-x-1">
                         <div class="w-2 h-2 rounded-[var(--vs-radius)] bg-zinc-600 transition-colors"></div>
-                        <span class="font-extralight Thai-Rule">กำลังเชื่อมต่อ...</span>
+                        <span class="font-light Thai-Rule">กำลังเชื่อมต่อ...</span>
                     </div>
-                    <span class="font-extralight">UTF-8</span>
-                    <span class="font-extralight Thai-Rule">แบบอักษร สารบรรณ</span>
+                    <span class="font-light">UTF-8</span>
+                    <span class="font-light Thai-Rule">แบบอักษร สารบรรณ</span>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <span class="font-extralight" style="
+                    <span class="font-light" style="
                                 color: rgba(var(--vs-text-muted-rgb, 113, 113, 122), 0.5);
                             ">IDLPMS.HUD.V1</span>
                     <div id="status-role-badge" class="flex items-center space-x-1"
                         style="color: rgba(var(--vs-text-muted-rgb, 113, 113, 122), 0.5)">
                         <i class="icon i-user h-3 w-3"></i>
-                        <span class="font-extralight Thai-Rule text-[10px]">ระดับสิทธิ: ข้อมูลพื้นฐาน</span>
+                        <span class="font-light Thai-Rule text-[10px]">ระดับสิทธิ: ข้อมูลพื้นฐาน</span>
                     </div>
                 </div>
             </div>

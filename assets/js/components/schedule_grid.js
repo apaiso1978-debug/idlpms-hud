@@ -179,7 +179,7 @@ class TeacherScheduleGrid {
                             onclick="window.scheduleGrid.setMode('principal')" disabled>
                         <i class="icon i-building w-4 h-4"></i>
                         Principal-Assigned
-                        <span class="text-[10px] opacity-50 ml-1">(Soon)</span>
+                        <span class="text-[13px] opacity-50 ml-1">(Soon)</span>
                     </button>
                 </div>` : ''}
                 
@@ -191,7 +191,7 @@ class TeacherScheduleGrid {
                 </div>
             </div>` : `
             <div class="schedule-palette" style="padding: 8px 12px; opacity: 0.5;">
-                <span class="text-sm font-extralight uppercase text-[var(--vs-text-muted)]"><i class="icon i-lock w-3 h-3 inline-block mr-1"></i>Principal-Assigned Schedule (Read-Only)</span>
+                <span class="text-[13px] font-light uppercase text-[var(--vs-text-muted)]"><i class="icon i-lock w-3 h-3 inline-block mr-1"></i>Principal-Assigned Schedule (Read-Only)</span>
             </div>`}
                 
                 <!-- Schedule Grid -->
@@ -239,7 +239,7 @@ class TeacherScheduleGrid {
                 <div class="schedule-card-subtitle pointer-events-none" style="color: rgb(${meta.rgb}); opacity: 0.7">${card.nameEN}</div>
                 <div class="flex justify-between items-center gap-2 pointer-events-none mt-0">
                     <span style="color: rgb(${meta.rgb})" class="font-bold text-[13px]">${card.grade}/${card.room}</span>
-                    <span class="schedule-card-code text-[12px] opacity-80">${card.code}</span>
+                    <span class="schedule-card-code text-[13px] opacity-80">${card.code}</span>
                 </div>
             </div>
         `;
@@ -247,7 +247,7 @@ class TeacherScheduleGrid {
 
     renderPaletteItems() {
         if (this.subjectBank.length === 0) {
-            return `<div class="text-[10px] text-[var(--vs-text-muted)] italic opacity-50">ไม่พบการ์ดวิชาในคลัง กรุณาสร้างที่เมนู "สร้างการ์ดวิชา"</div>`;
+            return `<div class="text-[13px] text-[var(--vs-text-muted)] italic opacity-50">ไม่พบการ์ดวิชาในคลัง กรุณาสร้างที่เมนู "สร้างการ์ดวิชา"</div>`;
         }
 
         return this.subjectBank.map(card => {
@@ -282,7 +282,7 @@ class TeacherScheduleGrid {
                 if (slot.isLunch) {
                     // Only render the Lunch label for the first day (Monday) and use grid-row span
                     if (dayIndex === 0) {
-                        html += `<div class="schedule-cell schedule-lunch-cell" style="grid-row: span 5; grid-column: ${colIndex}; writing-mode: vertical-lr; transform: rotate(180deg); display: flex; align-items: center; justify-content: center; background: rgba(var(--vs-accent-rgb), 0.08); color: var(--vs-accent); font-weight: 200; font-size: 14px; border: 1px solid var(--vs-border);">LUNCH พักรับประทานอาหาร</div>`;
+                        html += `<div class="schedule-cell schedule-lunch-cell" style="grid-row: span 5; grid-column: ${colIndex}; writing-mode: vertical-lr; transform: rotate(180deg); display: flex; align-items: center; justify-content: center; background: rgba(var(--vs-accent-rgb), 0.08); color: var(--vs-accent); font-weight: 300; font-size: 13px; border: 1px solid var(--vs-border);">LUNCH พักรับประทานอาหาร</div>`;
                     }
                 } else {
                     const cardId = this.schedule[day.id]?.[slot.id];

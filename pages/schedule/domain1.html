@@ -19,27 +19,27 @@
 
         <!-- Header -->
         <div class="flex items-center justify-between">
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2">
                 <span class="hud-badge-micro border-[#60a5fa]/30 text-[#60a5fa]">Domain 1</span>
-                <h1 class="text-xl font-extralight text-[var(--vs-text-title)] uppercase">
+                <h1 class="text-xl font-light text-[var(--vs-text-title)] uppercase">
                     ชั่วโมงตามตารางสอน — Teaching Schedule</h1>
             </div>
         </div>
 
         <!-- Description -->
         <div class="dna-zone p-4 border-[#60a5fa]/15">
-            <p class="text-sm text-[var(--vs-text-muted)]">
+            <p class="text-[13px] text-[var(--vs-text-muted)]">
                 วิชาพื้นฐาน วิชาเสริม และกิจกรรมพัฒนาผู้เรียน (ลูกเสือ ชุมนุม แนะแนว RILS)
                 — ข้อมูลนี้อ่านจากฐานข้อมูลรายวิชาของโรงเรียน (Read-only)
             </p>
-            <p class="text-sm text-[var(--vs-text-muted)] mt-1 opacity-45">ทั้งนักเรียนและครูเห็น</p>
+            <p class="text-[13px] text-[var(--vs-text-muted)] mt-1 opacity-45">ทั้งนักเรียนและครูเห็น</p>
         </div>
 
         <!-- Subject Matrix Table -->
         <div class="dna-zone p-6 border-[#60a5fa]/15 bg-[rgba(var(--vs-bg-deep-rgb),0.2)]">
-            <div class="flex items-center gap-3 mb-4">
+            <div class="flex items-center gap-2 mb-4">
                 <span class="hud-badge-micro border-[#60a5fa]/30 text-[#60a5fa]">Matrix</span>
-                <h2 class="text-lg font-extralight text-[var(--vs-text-title)] uppercase">
+                <h2 class="text-lg font-light text-[var(--vs-text-title)] uppercase">
                     ตารางรายวิชา × ชั้นเรียน</h2>
             </div>
             <div id="d1-subject-matrix" class="overflow-x-auto">
@@ -57,12 +57,12 @@
 
             const subjects = Object.values(IDLPMS_DATA.subjects).filter(s => s.periodsPerWeek && Object.keys(s.periodsPerWeek).length > 0);
 
-            let html = `<table class="w-full text-sm">
+            let html = `<table class="w-full text-[13px]">
                 <thead>
                     <tr class="border-b border-[rgba(63,63,70,0.5)]">
-                        <th class="text-left p-2 text-[var(--vs-text-muted)] font-extralight uppercase">วิชา</th>
-                        <th class="text-center p-2 text-[var(--vs-text-muted)] font-extralight">ประเภท</th>
-                        ${GRADE_LEVELS.map(g => `<th class="text-center p-2 text-[var(--vs-text-muted)] font-extralight">${g}</th>`).join('')}
+                        <th class="text-left p-2 text-[var(--vs-text-muted)] font-light uppercase">วิชา</th>
+                        <th class="text-center p-2 text-[var(--vs-text-muted)] font-light">ประเภท</th>
+                        ${GRADE_LEVELS.map(g => `<th class="text-center p-2 text-[var(--vs-text-muted)] font-light">${g}</th>`).join('')}
                     </tr>
                 </thead>
                 <tbody>`;
@@ -85,10 +85,10 @@
 
             // Total row
             html += `<tr class="border-t border-[rgba(34,211,238,0.25)]">
-                <td class="p-2 text-[var(--vs-accent)] font-semibold" colspan="2">รวมคาบ/สัปดาห์</td>`;
+                <td class="p-2 text-[var(--vs-accent)] font-light" colspan="2">รวมคาบ/สัปดาห์</td>`;
             GRADE_LEVELS.forEach(g => {
                 const total = subjects.reduce((sum, s) => sum + (s.periodsPerWeek?.[g] || 0), 0);
-                html += `<td class="text-center p-2 text-[var(--vs-accent)] font-semibold">${total}</td>`;
+                html += `<td class="text-center p-2 text-[var(--vs-accent)] font-light">${total}</td>`;
             });
             html += `</tr></tbody></table>`;
             container.innerHTML = html;

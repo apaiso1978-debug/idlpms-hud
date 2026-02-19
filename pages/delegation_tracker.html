@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ติดตามภาระงานมอบหมาย | IDLPMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <link rel="stylesheet" href="../assets/css/notifications.css" />
+    <script src="../assets/js/data.js"></script>
+    <script src="../src/services/DataService.js"></script>
+    <script src="../src/services/AuthService.js"></script>
+    <script src="../assets/js/notifications.js"></script>
+    <script src="../assets/js/delegation_panel.js"></script>
+</head>
+
+<body
+    class="p-6 bg-transparent text-[var(--vs-text-body)] font-light Thai-Rule overflow-y-auto vs-scrollbar font-['Sarabun']">
+    <div class="max-w-[1600px] space-y-6">
+
+        <!-- ① HEADER BAR -->
+        <header class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div
+                    class="w-12 h-12 rounded-[3px] bg-[rgba(var(--vs-accent-rgb),0.1)] flex items-center justify-center">
+                    <i class="icon i-clipboard w-6 h-6 text-[var(--vs-accent)]"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl text-[var(--vs-text-title)] font-light Thai-Rule">ติดตามภาระงานมอบหมาย</h1>
+                    <p class="text-[13px] text-[var(--vs-text-muted)] Thai-Rule">ภาพรวมงานที่มอบหมายให้ครูทั้งหมด
+                        พร้อมสถานะและระดับภาระงานแต่ละคน</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span
+                    class="hud-badge-micro bg-[rgba(var(--vs-accent-rgb),0.15)] text-[var(--vs-accent)] px-2 py-0.5 rounded-[3px] uppercase text-[10px] font-light">
+                    DIRECTOR ONLY
+                </span>
+            </div>
+        </header>
+
+        <!-- ② MAIN CONTENT — Full width for tracker -->
+        <div class="space-y-6">
+
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="dna-zone p-4 text-center">
+                    <div class="text-2xl font-light text-[var(--vs-accent)]" id="stat-total">0</div>
+                    <div class="text-[13px] text-[var(--vs-text-muted)] uppercase mt-1">งานทั้งหมด</div>
+                </div>
+                <div class="dna-zone p-4 text-center">
+                    <div class="text-2xl font-light text-[var(--vs-warning)]" id="stat-pending">0</div>
+                    <div class="text-[13px] text-[var(--vs-text-muted)] uppercase mt-1">รอดำเนินการ</div>
+                </div>
+                <div class="dna-zone p-4 text-center">
+                    <div class="text-2xl font-light text-[var(--vs-accent)]" id="stat-progress">0</div>
+                    <div class="text-[13px] text-[var(--vs-text-muted)] uppercase mt-1">กำลังดำเนินการ</div>
+                </div>
+                <div class="dna-zone p-4 text-center">
+                    <div class="text-2xl font-light text-[var(--vs-success)]" id="stat-done">0</div>
+                    <div class="text-[13px] text-[var(--vs-text-muted)] uppercase mt-1">เสร็จสิ้น</div>
+                </div>
+            </div>
+
+            <!-- Teacher Workload Overview -->
+            <div class="dna-zone p-6">
+                <div class="dna-zone-header mb-6">
+                    <h2 class="dna-zone-title Thai-Rule">ภาระงานครูแต่ละคน</h2>
+                </div>
+                <div id="teacher-workload-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Full Delegation Log -->
+            <div class="dna-zone p-6">
+                <div class="dna-zone-header mb-6">
+                    <h2 class="dna-zone-title Thai-Rule">บันทึกการมอบหมายทั้งหมด</h2>
+                    <span id="log-count" class="hud-badge-micro">0 รายการ</span>
+                </div>
+                <div id="delegation-log" class="space-y-2">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!window.DelegationPanel) return;
+
+            const all = DelegationPanel.getAllDelegations();
+
+            // Stats
+            document.getElementById('stat-total').textContent = all.length;
+            document.getElementById('stat-pending').textContent = all.filter(d => d.status === 'PENDING').length;
+            document.getElementById('stat-progress').textContent = all.filter(d => d.status === 'IN_PROGRESS').length;
+            document.getElementById('stat-done').textContent = all.filter(d => d.status === 'COMPLETED' || d.status === 'CLOSED').length;
+            document.getElementById('log-count').textContent = `${all.length} รายการ`;
+
+            // Teacher Workload Grid
+            const teacherMap = {};
+            all.forEach(d => {
+                if (!teacherMap[d.teacherId]) {
+                    teacherMap[d.teacherId] = { name: d.teacherName || d.teacherId, tasks: [] };
+                }
+                teacherMap[d.teacherId].tasks.push(d);
+            });
+
+            // Also load teachers from DataService
+            try {
+                if (window.DataServiceFactory) {
+                    const ds = await DataServiceFactory.getInstance();
+                    const currentUser = JSON.parse(localStorage.getItem('CURRENT_USER') || '{}');
+                    const users = await ds.getUsersBySchool(currentUser.schoolId || 'SCH_MABLUD');
+                    const teachers = users.filter(u => u.role === 'TEACHER');
+                    teachers.forEach(t => {
+                        if (!teacherMap[t.id]) {
+                            teacherMap[t.id] = { name: t.fullName || t.id, tasks: [] };
+                        } else {
+                            teacherMap[t.id].name = t.fullName || teacherMap[t.id].name;
+                        }
+                    });
+                }
+            } catch (e) { /* ignore */ }
+
+            const grid = document.getElementById('teacher-workload-grid');
+            if (grid) {
+                const entries = Object.entries(teacherMap);
+                if (entries.length === 0) {
+                    grid.innerHTML = `
+                        <div class="col-span-full text-center py-8 text-[var(--vs-text-muted)]">
+                            <i class="icon i-users w-8 h-8 opacity-30 mx-auto block mb-2"></i>
+                            <p class="text-[13px] Thai-Rule font-light">ยังไม่มีข้อมูลการมอบหมาย</p>
+                        </div>`;
+                } else {
+                    grid.innerHTML = entries.map(([id, data]) => {
+                        const active = data.tasks.filter(t => t.status !== 'CLOSED' && t.status !== 'COMPLETED').length;
+                        const wl = DelegationPanel.getWorkloadColor(active);
+                        return `
+                            <div class="p-4 bg-[var(--vs-bg-deep)] rounded-[3px] flex items-center gap-2">
+                                <div class="w-10 h-10 rounded-[3px] bg-[rgba(var(--vs-accent-rgb),0.1)] flex items-center justify-center flex-shrink-0">
+                                    <span class="text-lg">${wl.icon}</span>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-[13px] text-[var(--vs-text-title)] font-light Thai-Rule truncate">${data.name}</p>
+                                    <p class="text-[13px] text-[var(--vs-text-muted)]">${wl.label} · ${active} งานค้าง / ${data.tasks.length} ทั้งหมด</p>
+                                </div>
+                                <span class="text-[16px] font-light" style="color:${wl.color}">${active}</span>
+                            </div>`;
+                    }).join('');
+                }
+            }
+
+            // Delegation Log
+            const logEl = document.getElementById('delegation-log');
+            if (logEl) {
+                const sorted = [...all].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                if (sorted.length === 0) {
+                    logEl.innerHTML = `
+                        <div class="text-center py-8 text-[var(--vs-text-muted)]">
+                            <i class="icon i-clipboard w-8 h-8 opacity-30 mx-auto block mb-2"></i>
+                            <p class="text-[13px] Thai-Rule font-light">ยังไม่มีบันทึกการมอบหมาย</p>
+                            <p class="text-[13px] mt-1">เริ่มมอบหมายงานจากหน้าต่างๆ ได้เลย</p>
+                        </div>`;
+                } else {
+                    const statusMap = {
+                        'PENDING': { label: 'รอดำเนินการ', color: 'var(--vs-warning)' },
+                        'IN_PROGRESS': { label: 'กำลังดำเนินการ', color: 'var(--vs-accent)' },
+                        'COMPLETED': { label: 'เสร็จสิ้น', color: 'var(--vs-success)' },
+                        'CLOSED': { label: 'ปิดแล้ว', color: 'var(--vs-text-muted)' },
+                    };
+                    logEl.innerHTML = sorted.map(d => {
+                        const st = statusMap[d.status] || statusMap['PENDING'];
+                        const date = new Date(d.createdAt);
+                        const dateStr = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear() + 543}`;
+                        return `
+                            <div class="flex items-center gap-2 p-3 bg-[var(--vs-bg-deep)] rounded-[3px]">
+                                <div class="w-2 h-2 rounded-[3px] flex-shrink-0" style="background:${st.color}"></div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-[13px] text-[var(--vs-text-title)] font-light Thai-Rule truncate">${d.moduleTitle}</p>
+                                    <p class="text-[13px] text-[var(--vs-text-muted)] Thai-Rule">${d.teacherName || d.teacherId} · ${dateStr}</p>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-[13px] font-light px-2 py-0.5 rounded-[3px]" style="color:${st.color}; background: color-mix(in srgb, ${st.color} 10%, transparent)">${st.label}</span>
+                                </div>
+                                ${d.deadline ? `<span class="text-[13px] text-[var(--vs-text-muted)] inline-flex items-center gap-1"><i class="icon i-calendar w-3.5 h-3.5"></i> ${d.deadline}</span>` : ''}
+                            </div>`;
+                    }).join('');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

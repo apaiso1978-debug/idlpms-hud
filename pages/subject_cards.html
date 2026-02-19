@@ -96,7 +96,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
 
             <!-- Left Column: Creator Panel (Sticky) -->
-            <div class="lg:col-span-4 sticky top-6 space-y-6">
+            <div class="lg:col-span-3 sticky top-6 space-y-6">
                 <div class="dna-zone p-6">
                     <div class="dna-zone-header mb-4">
                         <h2 class="dna-zone-title">แผงควบคุมการสร้างการ์ด</h2>
@@ -107,11 +107,11 @@
                     <div
                         class="flex p-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] mb-6">
                         <button onclick="setMode('POLICY')" id="btn-mode-policy"
-                            class="flex-1 py-1.5 text-sm uppercase rounded-[3px] transition-all bg-[var(--vs-accent)] text-zinc-900 font-extralight">Policy</button>
+                            class="flex-1 py-1.5 text-[13px] uppercase rounded-[3px] transition-all bg-[rgba(34,211,238,0.1)] text-[var(--vs-accent)] border border-[rgba(34,211,238,0.3)] font-light">Policy</button>
                         <button onclick="setMode('AUTO')" id="btn-mode-auto"
-                            class="flex-1 py-1.5 text-sm uppercase rounded-[3px] transition-all text-[var(--vs-text-muted)] hover:text-[var(--vs-text-title)]">Auto</button>
+                            class="flex-1 py-1.5 text-[13px] uppercase rounded-[3px] transition-all text-[var(--vs-text-muted)] hover:text-[var(--vs-text-title)]">Auto</button>
                         <button onclick="setMode('MANUAL')" id="btn-mode-manual"
-                            class="flex-1 py-1.5 text-sm uppercase rounded-[3px] transition-all text-[var(--vs-text-muted)] hover:text-[var(--vs-text-title)]">Manual</button>
+                            class="flex-1 py-1.5 text-[13px] uppercase rounded-[3px] transition-all text-[var(--vs-text-muted)] hover:text-[var(--vs-text-title)]">Manual</button>
                     </div>
 
                     <!-- Policy Panel (Assignments from Director) -->
@@ -122,9 +122,9 @@
                                 class="w-12 h-12 bg-[rgba(var(--vs-accent-rgb),0.1)] rounded-[3px] flex items-center justify-center mb-4">
                                 <i class="icon i-shield-check w-6 h-6 text-[var(--vs-accent)]"></i>
                             </div>
-                            <p class="text-[10px] text-[var(--vs-accent)] uppercase mb-2 font-extralight">
+                            <p class="text-[13px] text-[var(--vs-accent)] uppercase mb-2 font-light">
                                 Assigned by Director</p>
-                            <p class="text-sm text-[var(--vs-text-muted)] Thai-Rule max-w-xs">
+                            <p class="text-[13px] text-[var(--vs-text-muted)] Thai-Rule max-w-xs">
                                 ตารางสอนถูกกำหนดโดยฝ่ายบริหารโรงเรียน
                                 คุณไม่สามารถแก้ไขหรือสร้างรายวิชาเองได้ในหมวดหมู่นี้</p>
                         </div>
@@ -136,7 +136,7 @@
 
                     <form id="card-form" onsubmit="handleSave(event)" class="space-y-4">
                         <div class="space-y-1">
-                            <label class="text-sm text-[var(--vs-text-muted)] font-extralight Thai-Rule">ชื่อวิชา
+                            <label class="text-[13px] text-[var(--vs-text-muted)] font-light Thai-Rule">ชื่อวิชา
                                 (ภาษาไทย)</label>
 
                             <!-- Auto Mode Custom Dropdown -->
@@ -180,20 +180,20 @@
 
                             <!-- Manual Mode Input (Hidden by Default) -->
                             <input type="text" id="input-nameTH-manual" name="nameTH" placeholder="เช่น คณิตศาสตร์"
-                                class="hidden w-full bg-[var(--vs-bg-deep)] border-none rounded-[var(--vs-radius)] p-3 text-sm text-[var(--vs-text-body)] focus:border-none outline-none transition-colors Thai-Rule">
+                                class="hidden w-full bg-[var(--vs-bg-deep)] border-none rounded-[var(--vs-radius)] p-3 text-[13px] text-[var(--vs-text-body)] focus:border-none outline-none transition-colors Thai-Rule">
                         </div>
 
                         <div class="space-y-1">
-                            <label class="text-sm text-[var(--vs-text-muted)] uppercase font-extralight">Subject Name
+                            <label class="text-[13px] text-[var(--vs-text-muted)] uppercase font-light">Subject Name
                                 (English)</label>
                             <input type="text" id="input-nameEN" name="nameEN" required placeholder="e.g. Mathematics"
-                                class="w-full bg-[var(--vs-bg-deep)] border-none rounded-[var(--vs-radius)] p-3 text-sm text-[var(--vs-text-body)] focus:border-none outline-none transition-colors">
+                                class="w-full bg-[var(--vs-bg-deep)] border-none rounded-[var(--vs-radius)] p-3 text-[13px] text-[var(--vs-text-body)] focus:border-none outline-none transition-colors">
                         </div>
 
                         <div class="grid grid-cols-3 gap-3">
                             <div class="space-y-1">
                                 <label
-                                    class="text-sm text-[var(--vs-text-muted)] font-extralight Thai-Rule">ระดับชั้น</label>
+                                    class="text-[13px] text-[var(--vs-text-muted)] font-light Thai-Rule">ระดับชั้น</label>
                                 <div id="dropdown-grade" class="vs-dropdown">
                                     <input type="hidden" id="input-grade" name="grade" value="ป.6" required>
                                     <button type="button" class="vs-dropdown-trigger"
@@ -227,8 +227,7 @@
                                 </div>
                             </div>
                             <div class="space-y-1">
-                                <label
-                                    class="text-sm text-[var(--vs-text-muted)] font-extralight Thai-Rule">ห้อง</label>
+                                <label class="text-[13px] text-[var(--vs-text-muted)] font-light Thai-Rule">ห้อง</label>
                                 <div id="dropdown-room" class="vs-dropdown">
                                     <input type="hidden" name="room" value="1" required>
                                     <button type="button" class="vs-dropdown-trigger"
@@ -263,15 +262,15 @@
                             </div>
                             <div class="space-y-1">
                                 <label
-                                    class="text-sm text-[var(--vs-text-muted)] font-extralight Thai-Rule">รหัสวิชา</label>
+                                    class="text-[13px] text-[var(--vs-text-muted)] font-light Thai-Rule">รหัสวิชา</label>
                                 <input type="text" id="input-code" name="code" required placeholder="ค16101"
-                                    class="w-full bg-[var(--vs-bg-deep)] border-none rounded-[var(--vs-radius)] p-3 text-sm text-[var(--vs-text-body)] focus:border-none outline-none transition-colors uppercase">
+                                    class="w-full bg-[var(--vs-bg-deep)] border-none rounded-[var(--vs-radius)] p-3 text-[13px] text-[var(--vs-text-body)] focus:border-none outline-none transition-colors uppercase">
                             </div>
                         </div>
 
                         <div class="space-y-1">
                             <label
-                                class="text-sm text-[var(--vs-text-muted)] font-extralight Thai-Rule">หมวดหมู่วิชา</label>
+                                class="text-[13px] text-[var(--vs-text-muted)] font-light Thai-Rule">หมวดหมู่วิชา</label>
                             <div id="dropdown-type" class="vs-dropdown Thai-Rule">
                                 <input type="hidden" id="input-type" name="subjectType" value="MATH" required>
                                 <button type="button" class="vs-dropdown-trigger"
@@ -309,9 +308,9 @@
 
                         <div class="pt-4">
                             <button type="submit"
-                                class="w-full px-4 py-3 bg-[var(--vs-accent)] text-[#000] rounded-[var(--vs-radius)] hover:brightness-110 transition-colors text-sm uppercase font-extralight flex items-center justify-center gap-2">
+                                class="w-full px-4 py-3 bg-[rgba(34,211,238,0.1)] text-[var(--vs-accent)] border border-[rgba(34,211,238,0.3)] rounded-[var(--vs-radius)] hover:bg-[rgba(34,211,238,0.15)] transition-colors text-[13px] uppercase font-light flex items-center justify-center gap-2">
                                 <i class="icon i-plus w-4 h-4"></i>
-                                <span class="text-sm font-extralight Thai-Rule">บันทึกการ์ดวิชา</span>
+                                <span class="text-[13px] font-light Thai-Rule">บันทึกการ์ดวิชา</span>
                             </button>
                         </div>
                     </form>
@@ -319,7 +318,7 @@
             </div>
 
             <!-- Right Column: Subject Bank -->
-            <div class="lg:col-span-8">
+            <div class="lg:col-span-9">
                 <div class="dna-zone p-6 h-full min-h-[600px]">
                     <div class="dna-zone-header mb-6">
                         <h2 class="dna-zone-title">คลังการ์ดวิชาสอน</h2>
@@ -337,10 +336,10 @@
                             class="w-16 h-16 bg-[rgba(var(--vs-accent-rgb),0.1)] rounded-[3px] flex items-center justify-center mb-6 mx-auto">
                             <i class="icon i-shield-check w-8 h-8 text-[var(--vs-accent)]"></i>
                         </div>
-                        <h3 class="text-lg font-extralight text-[var(--vs-text-title)] Thai-Rule mb-2">
+                        <h3 class="text-lg font-light text-[var(--vs-text-title)] Thai-Rule mb-2">
                             ตารางสอนโดยผู้อำนวยการ
                         </h3>
-                        <p class="text-sm text-[var(--vs-text-muted)] max-w-md mx-auto uppercase leading-relaxed">
+                        <p class="text-[13px] text-[var(--vs-text-muted)] max-w-md mx-auto uppercase leading-relaxed">
                             Your teaching schedule is managed and assigned by the school director.
                             Please review your schedule grid for details.
                         </p>
@@ -350,8 +349,8 @@
                     <div id="empty-state"
                         class="hidden flex-col items-center justify-center py-20 opacity-30 text-center">
                         <i class="icon i-document-plus w-12 h-12 mb-4"></i>
-                        <p class="text-sm uppercase font-extralight">ยังไม่มีการ์ดวิชาในคลัง</p>
-                        <p class="text-[10px] mt-2 text-[var(--vs-text-muted)] Thai-Rule">
+                        <p class="text-[13px] uppercase font-light">ยังไม่มีการ์ดวิชาในคลัง</p>
+                        <p class="text-[13px] mt-2 text-[var(--vs-text-muted)] Thai-Rule">
                             ใช้แผงควบคุมด้านซ้ายเพื่อสร้างการ์ดวิชาสอนของคุณ</p>
                     </div>
                 </div>
@@ -513,17 +512,17 @@
                          style="--vs-neon-rgb: ${meta.rgb}; width: 100% !important; padding: 12px; cursor: default; display: block;">
                         
                         <div class="flex justify-between items-start mb-1">
-                            <span class="schedule-card-title Thai-Rule text-[15px] font-extralight" style="color: rgb(${meta.rgb})">${card.nameTH}</span>
+                            <span class="schedule-card-title Thai-Rule text-[15px] font-light" style="color: rgb(${meta.rgb})">${card.nameTH}</span>
                             <button onclick="deleteCard('${card.id}')" class="p-1 text-[var(--vs-text-muted)] hover:text-[var(--vs-danger)] transition-colors">
                                 <i class="icon i-trash w-4 h-4"></i>
                             </button>
                         </div>
 
-                        <div class="schedule-card-subtitle uppercase text-[10px] mb-2 opacity-80" style="color: rgb(${meta.rgb})">${card.nameEN}</div>
+                        <div class="schedule-card-subtitle uppercase text-[13px] mb-2 opacity-80" style="color: rgb(${meta.rgb})">${card.nameEN}</div>
                         
                         <div class="flex justify-between items-center gap-2 mt-2 pt-2 border-t border-white/5">
-                            <span class="font-extralight text-[13px]" style="color: rgb(${meta.rgb})">${card.grade}/${card.room}</span>
-                            <span class="schedule-card-code text-[12px] opacity-90">${card.code}</span>
+                            <span class="font-light text-[13px]" style="color: rgb(${meta.rgb})">${card.grade}/${card.room}</span>
+                            <span class="schedule-card-code text-[13px] opacity-90">${card.code}</span>
                         </div>
                     </div>
                 `}).join('');
@@ -543,8 +542,8 @@
             const btnAuto = document.getElementById('btn-mode-auto');
             const btnManual = document.getElementById('btn-mode-manual');
 
-            const activeClass = 'flex-1 py-1.5 text-sm uppercase rounded-[3px] transition-all bg-[var(--vs-accent)] text-[var(--vs-bg-deep)] font-extralight';
-            const inactiveClass = 'flex-1 py-1.5 text-sm uppercase rounded-[3px] transition-all text-[var(--vs-text-muted)] hover:text-[var(--vs-text-title)]';
+            const activeClass = 'flex-1 py-1.5 text-[13px] uppercase rounded-[3px] transition-all bg-[rgba(34,211,238,0.1)] text-[var(--vs-accent)] border border-[rgba(34,211,238,0.3)] font-light';
+            const inactiveClass = 'flex-1 py-1.5 text-[13px] uppercase rounded-[3px] transition-all text-[var(--vs-text-muted)] hover:text-[var(--vs-text-title)]';
 
             if (btnPolicy) btnPolicy.className = isPolicy ? activeClass : inactiveClass;
             if (btnAuto) btnAuto.className = isAuto ? activeClass : inactiveClass;

@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="th">
 
 <head>
@@ -29,7 +29,7 @@
             <div class="w-16 h-16 vs-login-card vs-logo-glow flex items-center justify-center mx-auto mb-6">
                 <i class="icon i-academic h-8 w-8 text-[var(--vs-accent)]"></i>
             </div>
-            <h1 class="text-3xl font-extralight text-[var(--vs-text-title)]">
+            <h1 class="text-3xl font-light text-[var(--vs-text-title)]">
                 IDLPMS <span class="font-normal text-[var(--vs-accent)]">HUD</span>
             </h1>
             <div class="vs-divider-text max-w-[300px] mx-auto opacity-60">
@@ -60,7 +60,7 @@
                     </div>
                 </div>
                 <button type="submit"
-                    class="w-full bg-[var(--vs-accent)] text-zinc-900 text-sm font-extralight py-3.5 rounded-[var(--vs-radius)] hover:brightness-110 transition-all active:scale-[0.98] uppercase Thai-Rule">
+                    class="w-full bg-[var(--vs-accent)] text-zinc-900 text-[13px] font-light py-3.5 rounded-[var(--vs-radius)] hover:brightness-110 transition-all active:scale-[0.98] uppercase Thai-Rule">
                     พิสูจน์ตัวตนเข้าใช้งานระบบ
                 </button>
             </form>
@@ -87,7 +87,7 @@
                             class="icon i-user h-5 w-5 text-[var(--id-stu)] opacity-40 group-hover:opacity-100 transition-opacity"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-[var(--vs-text-title)] font-extralight">Student</span>
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-[var(--vs-text-title)] font-light">Student</span>
                 </button>
 
                 <button onclick="quickSelect('PAR_HS_001')" class="vs-persona-card group">
@@ -96,25 +96,25 @@
                             class="icon i-users h-5 w-5 text-[var(--id-parent)] opacity-40 group-hover:opacity-100 transition-opacity"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-[var(--vs-text-title)] font-extralight">Parent</span>
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-[var(--vs-text-title)] font-light">Parent</span>
                 </button>
 
-                <button onclick="quickSelect('TEA_020')" class="vs-persona-card group">
+                <button onclick="quickSelect('TEA_WORACHAI')" class="vs-persona-card group">
                     <div class="vs-persona-icon-container">
                         <i
                             class="icon i-academic h-5 w-5 text-[var(--vs-accent)] opacity-40 group-hover:opacity-100 transition-opacity"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-[var(--vs-text-title)] font-extralight">Teacher</span>
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-[var(--vs-text-title)] font-light">Teacher</span>
                 </button>
 
-                <button onclick="quickSelect('SCH_DIR_001')" class="vs-persona-card group">
+                <button onclick="quickSelect('DIR_MABLUD')" class="vs-persona-card group">
                     <div class="vs-persona-icon-container">
                         <i
                             class="icon i-office h-5 w-5 text-[var(--id-dir)] opacity-40 group-hover:opacity-100 transition-opacity"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-[var(--vs-text-title)] font-extralight">Director</span>
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-[var(--vs-text-title)] font-light">Director</span>
                 </button>
 
                 <button onclick="quickSelect('ESA_DIR_001')" class="vs-persona-card group">
@@ -123,7 +123,7 @@
                             class="icon i-building h-5 w-5 text-[var(--id-esa)] opacity-40 group-hover:opacity-100 transition-opacity"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-[var(--vs-text-title)] font-extralight">ESA
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-[var(--vs-text-title)] font-light">ESA
                         Dir</span>
                 </button>
 
@@ -133,7 +133,7 @@
                             class="icon i-library h-5 w-5 text-[var(--id-obec)] opacity-40 group-hover:opacity-100 transition-opacity"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-[var(--vs-text-title)] font-extralight">OBEC
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-[var(--vs-text-title)] font-light">OBEC
                         HQ</span>
                 </button>
 
@@ -143,37 +143,49 @@
                             class="icon i-globe h-5 w-5 text-[var(--id-moe)] opacity-40 group-hover:opacity-100 transition-opacity"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-[var(--vs-text-title)] font-extralight">MOE
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-[var(--vs-text-title)] font-light">MOE
                         HQ</span>
                 </button>
             </div>
 
-            <!-- Wat Map Chalud — Full School Access -->
+            <!-- โรงเรียนวัดมาบชลูด — Real School Data from InsForge -->
             <div class="vs-divider-text my-8">
                 <div class="vs-divider-line"></div>
-                <span class="vs-divider-label">โรงเรียนวัดมาบชลูด — Quick Access (18 + 1)</span>
+                <span class="vs-divider-label">โรงเรียนวัดมาบชลูด — Quick Access (17 + 13)</span>
                 <div class="vs-divider-line"></div>
             </div>
 
-            <!-- Director + 17 Teachers Grid -->
+            <!-- ผอ. + ครูวรชัย + 15 ครูประจำชั้น -->
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-4">
+                <!-- ═══ ผู้อำนวยการ ═══ -->
                 <button onclick="quickSelect('DIR_MABLUD')"
                     class="vs-persona-card border-yellow-500/20 group hover:border-yellow-500/50 py-3">
                     <div class="vs-persona-icon-container border-yellow-500/10"><i
                             class="icon i-office h-4 w-4 text-yellow-500/50 group-hover:text-yellow-500 transition-colors"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-yellow-500 Thai-Rule font-extralight">ผอ.วรชัย<br><span
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-yellow-500 Thai-Rule font-light">ผอ.บุญเรือง<br><span
                             class="opacity-50">ผู้อำนวยการ</span></span>
                 </button>
+                <!-- ═══ ครูพิเศษ / Developer / Founder ═══ -->
+                <button onclick="quickSelect('TEA_WORACHAI')"
+                    class="vs-persona-card border-cyan-500/20 group hover:border-cyan-500/50 py-3">
+                    <div class="vs-persona-icon-container border-cyan-500/10"><i
+                            class="icon i-terminal h-4 w-4 text-cyan-500/50 group-hover:text-cyan-500 transition-colors"></i>
+                    </div>
+                    <span
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-cyan-500 Thai-Rule font-light">ครูวรชัย<br><span
+                            class="opacity-50">FOUNDER</span></span>
+                </button>
+                <!-- ═══ ครูประจำชั้น (15 คน) ═══ -->
                 <button onclick="quickSelect('TEA_M_01')"
                     class="vs-persona-card border-emerald-500/20 group hover:border-emerald-500/50 py-3">
                     <div class="vs-persona-icon-container border-emerald-500/10"><i
                             class="icon i-academic h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-extralight">ครูสายบัว<br><span
-                            class="opacity-50">ป.1/1</span></span>
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-light">ครูนิติพร<br><span
+                            class="opacity-50">อ.2</span></span>
                 </button>
                 <button onclick="quickSelect('TEA_M_02')"
                     class="vs-persona-card border-emerald-500/20 group hover:border-emerald-500/50 py-3">
@@ -181,8 +193,8 @@
                             class="icon i-academic h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-extralight">ครูเก่งกาจ<br><span
-                            class="opacity-50">ป.1/2</span></span>
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-light">ครูสุภาภรณ์<br><span
+                            class="opacity-50">อ.3</span></span>
                 </button>
                 <button onclick="quickSelect('TEA_M_03')"
                     class="vs-persona-card border-emerald-500/20 group hover:border-emerald-500/50 py-3">
@@ -190,8 +202,8 @@
                             class="icon i-academic h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-extralight">ครูวิชิต<br><span
-                            class="opacity-50">ป.2/1</span></span>
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-light">ครูรัตนาวลี<br><span
+                            class="opacity-50">ป.1/1</span></span>
                 </button>
                 <button onclick="quickSelect('TEA_M_04')"
                     class="vs-persona-card border-emerald-500/20 group hover:border-emerald-500/50 py-3">
@@ -199,8 +211,8 @@
                             class="icon i-academic h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-extralight">ครูมานี<br><span
-                            class="opacity-50">ป.2/2</span></span>
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-light">ครูริศรา<br><span
+                            class="opacity-50">ป.1/2</span></span>
                 </button>
                 <button onclick="quickSelect('TEA_M_05')"
                     class="vs-persona-card border-emerald-500/20 group hover:border-emerald-500/50 py-3">
@@ -208,8 +220,8 @@
                             class="icon i-academic h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-extralight">ครูอารี<br><span
-                            class="opacity-50">ป.3/1</span></span>
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-light">ครูวาสนา<br><span
+                            class="opacity-50">ป.2/1</span></span>
                 </button>
                 <button onclick="quickSelect('TEA_M_06')"
                     class="vs-persona-card border-emerald-500/20 group hover:border-emerald-500/50 py-3">
@@ -217,8 +229,8 @@
                             class="icon i-academic h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-extralight">ครูปราณี<br><span
-                            class="opacity-50">ป.3/2</span></span>
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-light">ครูพิมพร<br><span
+                            class="opacity-50">ป.2/2</span></span>
                 </button>
                 <button onclick="quickSelect('TEA_M_07')"
                     class="vs-persona-card border-emerald-500/20 group hover:border-emerald-500/50 py-3">
@@ -226,17 +238,17 @@
                             class="icon i-academic h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-extralight">ครูธงไชย<br><span
-                            class="opacity-50">ป.4/1</span></span>
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-light">ครูเจนจิรา<br><span
+                            class="opacity-50">ป.3</span></span>
                 </button>
                 <button onclick="quickSelect('TEA_M_08')"
-                    class="vs-persona-card border-teal-500/20 group hover:border-teal-500/50 py-3">
-                    <div class="vs-persona-icon-container border-teal-500/10"><i
-                            class="icon i-academic h-4 w-4 text-teal-500/50 group-hover:text-teal-500 transition-colors"></i>
+                    class="vs-persona-card border-emerald-500/20 group hover:border-emerald-500/50 py-3">
+                    <div class="vs-persona-icon-container border-emerald-500/10"><i
+                            class="icon i-academic h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-teal-500 Thai-Rule font-extralight">ครูนารี<br><span
-                            class="opacity-50">สังคม</span></span>
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-light">ครูสุนิษา<br><span
+                            class="opacity-50">ป.3</span></span>
                 </button>
                 <button onclick="quickSelect('TEA_M_09')"
                     class="vs-persona-card border-emerald-500/20 group hover:border-emerald-500/50 py-3">
@@ -244,8 +256,8 @@
                             class="icon i-academic h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-extralight">ครูสมชาย<br><span
-                            class="opacity-50">ป.5/1</span></span>
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-light">ครูณัฐนนท์<br><span
+                            class="opacity-50">ป.4/1</span></span>
                 </button>
                 <button onclick="quickSelect('TEA_M_10')"
                     class="vs-persona-card border-emerald-500/20 group hover:border-emerald-500/50 py-3">
@@ -253,8 +265,8 @@
                             class="icon i-academic h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-extralight">ครูสมหญิง<br><span
-                            class="opacity-50">ป.5/2</span></span>
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-light">ครูวิชุดา<br><span
+                            class="opacity-50">ป.4/2</span></span>
                 </button>
                 <button onclick="quickSelect('TEA_M_11')"
                     class="vs-persona-card border-emerald-500/20 group hover:border-emerald-500/50 py-3">
@@ -262,136 +274,179 @@
                             class="icon i-academic h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-extralight">ครูวิไล<br><span
-                            class="opacity-50">ป.6/1</span></span>
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-light">ครูธิติพงศ์<br><span
+                            class="opacity-50">ป.4/2</span></span>
                 </button>
                 <button onclick="quickSelect('TEA_M_12')"
-                    class="vs-persona-card border-teal-500/20 group hover:border-teal-500/50 py-3">
-                    <div class="vs-persona-icon-container border-teal-500/10"><i
-                            class="icon i-academic h-4 w-4 text-teal-500/50 group-hover:text-teal-500 transition-colors"></i>
+                    class="vs-persona-card border-emerald-500/20 group hover:border-emerald-500/50 py-3">
+                    <div class="vs-persona-icon-container border-emerald-500/10"><i
+                            class="icon i-academic h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-teal-500 Thai-Rule font-extralight">ครูสมพร<br><span
-                            class="opacity-50">สังคม</span></span>
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-light">ครูภานุวัฒน์<br><span
+                            class="opacity-50">ป.5/1</span></span>
                 </button>
                 <button onclick="quickSelect('TEA_M_13')"
-                    class="vs-persona-card border-teal-500/20 group hover:border-teal-500/50 py-3">
-                    <div class="vs-persona-icon-container border-teal-500/10"><i
-                            class="icon i-academic h-4 w-4 text-teal-500/50 group-hover:text-teal-500 transition-colors"></i>
+                    class="vs-persona-card border-emerald-500/20 group hover:border-emerald-500/50 py-3">
+                    <div class="vs-persona-icon-container border-emerald-500/10"><i
+                            class="icon i-academic h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-teal-500 Thai-Rule font-extralight">ครูประภา<br><span
-                            class="opacity-50">พลศึกษา</span></span>
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-light">ครูยุทธนา<br><span
+                            class="opacity-50">ป.5/2</span></span>
                 </button>
                 <button onclick="quickSelect('TEA_M_14')"
-                    class="vs-persona-card border-teal-500/20 group hover:border-teal-500/50 py-3">
-                    <div class="vs-persona-icon-container border-teal-500/10"><i
-                            class="icon i-academic h-4 w-4 text-teal-500/50 group-hover:text-teal-500 transition-colors"></i>
+                    class="vs-persona-card border-emerald-500/20 group hover:border-emerald-500/50 py-3">
+                    <div class="vs-persona-icon-container border-emerald-500/10"><i
+                            class="icon i-academic h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-teal-500 Thai-Rule font-extralight">ครูจรูญ<br><span
-                            class="opacity-50">ศิลปะ</span></span>
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-light">ครูวุฒิไกร<br><span
+                            class="opacity-50">ป.6/1</span></span>
                 </button>
                 <button onclick="quickSelect('TEA_M_15')"
-                    class="vs-persona-card border-teal-500/20 group hover:border-teal-500/50 py-3">
-                    <div class="vs-persona-icon-container border-teal-500/10"><i
-                            class="icon i-academic h-4 w-4 text-teal-500/50 group-hover:text-teal-500 transition-colors"></i>
+                    class="vs-persona-card border-emerald-500/20 group hover:border-emerald-500/50 py-3">
+                    <div class="vs-persona-icon-container border-emerald-500/10"><i
+                            class="icon i-academic h-4 w-4 text-emerald-500/50 group-hover:text-emerald-500 transition-colors"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-teal-500 Thai-Rule font-extralight">ครูอำไพ<br><span
-                            class="opacity-50">อังกฤษ</span></span>
-                </button>
-                <button onclick="quickSelect('TEA_M_16')"
-                    class="vs-persona-card border-teal-500/20 group hover:border-teal-500/50 py-3">
-                    <div class="vs-persona-icon-container border-teal-500/10"><i
-                            class="icon i-academic h-4 w-4 text-teal-500/50 group-hover:text-teal-500 transition-colors"></i>
-                    </div>
-                    <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-teal-500 Thai-Rule font-extralight">ครูยอดชาย<br><span
-                            class="opacity-50">สังคม</span></span>
-                </button>
-                <button onclick="quickSelect('TEA_M_17')"
-                    class="vs-persona-card border-teal-500/20 group hover:border-teal-500/50 py-3">
-                    <div class="vs-persona-icon-container border-teal-500/10"><i
-                            class="icon i-academic h-4 w-4 text-teal-500/50 group-hover:text-teal-500 transition-colors"></i>
-                    </div>
-                    <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-teal-500 Thai-Rule font-extralight">ครูบุญรอด<br><span
-                            class="opacity-50">การงาน</span></span>
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-emerald-500 Thai-Rule font-light">ครูแพรวพรรณ<br><span
+                            class="opacity-50">ป.6/2</span></span>
                 </button>
             </div>
 
-            <!-- Student -->
-            <div class="grid grid-cols-1 gap-3">
+            <!-- Sub-divider: นักเรียน -->
+            <div class="vs-divider-text my-4">
+                <div class="vs-divider-line"></div>
+                <span class="vs-divider-label text-sky-500/60">นักเรียนตัวอย่าง — ทุกชั้นทุกห้อง (13 คน)</span>
+                <div class="vs-divider-line"></div>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                 <button onclick="quickSelect('STU_M_001')"
-                    class="vs-persona-card border-sky-500/20 group hover:border-sky-500/50 flex-row gap-3 py-3">
-                    <div class="vs-persona-icon-container border-sky-500/10 shrink-0">
-                        <i class="icon i-user h-5 w-5 text-sky-500/50 group-hover:text-sky-500 transition-colors"></i>
+                    class="vs-persona-card border-sky-500/20 group hover:border-sky-500/50 py-3">
+                    <div class="vs-persona-icon-container border-sky-500/10"><i
+                            class="icon i-user h-4 w-4 text-sky-500/50 group-hover:text-sky-500 transition-colors"></i>
                     </div>
                     <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-sky-500 Thai-Rule font-extralight">น้องดา
-                        มีใจ — นักเรียน ป.1/1</span>
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-sky-500 Thai-Rule font-light">น้องกิตติพงษ์<br><span
+                            class="opacity-50">อ.2</span></span>
+                </button>
+                <button onclick="quickSelect('STU_M_031')"
+                    class="vs-persona-card border-sky-500/20 group hover:border-sky-500/50 py-3">
+                    <div class="vs-persona-icon-container border-sky-500/10"><i
+                            class="icon i-user h-4 w-4 text-sky-500/50 group-hover:text-sky-500 transition-colors"></i>
+                    </div>
+                    <span
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-sky-500 Thai-Rule font-light">น้องณัฐสุพัฒน์<br><span
+                            class="opacity-50">อ.3</span></span>
+                </button>
+                <button onclick="quickSelect('STU_M_058')"
+                    class="vs-persona-card border-sky-500/20 group hover:border-sky-500/50 py-3">
+                    <div class="vs-persona-icon-container border-sky-500/10"><i
+                            class="icon i-user h-4 w-4 text-sky-500/50 group-hover:text-sky-500 transition-colors"></i>
+                    </div>
+                    <span
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-sky-500 Thai-Rule font-light">น้องณัฐกร<br><span
+                            class="opacity-50">ป.1/1</span></span>
+                </button>
+                <button onclick="quickSelect('STU_M_076')"
+                    class="vs-persona-card border-sky-500/20 group hover:border-sky-500/50 py-3">
+                    <div class="vs-persona-icon-container border-sky-500/10"><i
+                            class="icon i-user h-4 w-4 text-sky-500/50 group-hover:text-sky-500 transition-colors"></i>
+                    </div>
+                    <span
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-sky-500 Thai-Rule font-light">น้องเตวินน์<br><span
+                            class="opacity-50">ป.1/2</span></span>
+                </button>
+                <button onclick="quickSelect('STU_M_092')"
+                    class="vs-persona-card border-sky-500/20 group hover:border-sky-500/50 py-3">
+                    <div class="vs-persona-icon-container border-sky-500/10"><i
+                            class="icon i-user h-4 w-4 text-sky-500/50 group-hover:text-sky-500 transition-colors"></i>
+                    </div>
+                    <span
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-sky-500 Thai-Rule font-light">น้องกิตติกร<br><span
+                            class="opacity-50">ป.2/1</span></span>
+                </button>
+                <button onclick="quickSelect('STU_M_112')"
+                    class="vs-persona-card border-sky-500/20 group hover:border-sky-500/50 py-3">
+                    <div class="vs-persona-icon-container border-sky-500/10"><i
+                            class="icon i-user h-4 w-4 text-sky-500/50 group-hover:text-sky-500 transition-colors"></i>
+                    </div>
+                    <span
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-sky-500 Thai-Rule font-light">น้องวรนาคร<br><span
+                            class="opacity-50">ป.2/2</span></span>
+                </button>
+                <button onclick="quickSelect('STU_M_134')"
+                    class="vs-persona-card border-sky-500/20 group hover:border-sky-500/50 py-3">
+                    <div class="vs-persona-icon-container border-sky-500/10"><i
+                            class="icon i-user h-4 w-4 text-sky-500/50 group-hover:text-sky-500 transition-colors"></i>
+                    </div>
+                    <span
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-sky-500 Thai-Rule font-light">น้องติณณภพ<br><span
+                            class="opacity-50">ป.3</span></span>
+                </button>
+                <button onclick="quickSelect('STU_M_163')"
+                    class="vs-persona-card border-sky-500/20 group hover:border-sky-500/50 py-3">
+                    <div class="vs-persona-icon-container border-sky-500/10"><i
+                            class="icon i-user h-4 w-4 text-sky-500/50 group-hover:text-sky-500 transition-colors"></i>
+                    </div>
+                    <span
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-sky-500 Thai-Rule font-light">น้องภิญญดา<br><span
+                            class="opacity-50">ป.4/1</span></span>
+                </button>
+                <button onclick="quickSelect('STU_M_187')"
+                    class="vs-persona-card border-sky-500/20 group hover:border-sky-500/50 py-3">
+                    <div class="vs-persona-icon-container border-sky-500/10"><i
+                            class="icon i-user h-4 w-4 text-sky-500/50 group-hover:text-sky-500 transition-colors"></i>
+                    </div>
+                    <span
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-sky-500 Thai-Rule font-light">น้องภูมิสิทธิ์<br><span
+                            class="opacity-50">ป.4/2</span></span>
+                </button>
+                <button onclick="quickSelect('STU_M_213')"
+                    class="vs-persona-card border-sky-500/20 group hover:border-sky-500/50 py-3">
+                    <div class="vs-persona-icon-container border-sky-500/10"><i
+                            class="icon i-user h-4 w-4 text-sky-500/50 group-hover:text-sky-500 transition-colors"></i>
+                    </div>
+                    <span
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-sky-500 Thai-Rule font-light">น้องวิทยาธร<br><span
+                            class="opacity-50">ป.5/1</span></span>
+                </button>
+                <button onclick="quickSelect('STU_M_239')"
+                    class="vs-persona-card border-sky-500/20 group hover:border-sky-500/50 py-3">
+                    <div class="vs-persona-icon-container border-sky-500/10"><i
+                            class="icon i-user h-4 w-4 text-sky-500/50 group-hover:text-sky-500 transition-colors"></i>
+                    </div>
+                    <span
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-sky-500 Thai-Rule font-light">น้องอนุชิต<br><span
+                            class="opacity-50">ป.5/2</span></span>
+                </button>
+                <button onclick="quickSelect('STU_M_263')"
+                    class="vs-persona-card border-sky-500/20 group hover:border-sky-500/50 py-3">
+                    <div class="vs-persona-icon-container border-sky-500/10"><i
+                            class="icon i-user h-4 w-4 text-sky-500/50 group-hover:text-sky-500 transition-colors"></i>
+                    </div>
+                    <span
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-sky-500 Thai-Rule font-light">น้องณัฐภัทร<br><span
+                            class="opacity-50">ป.6/1</span></span>
+                </button>
+                <button onclick="quickSelect('STU_M_290')"
+                    class="vs-persona-card border-sky-500/20 group hover:border-sky-500/50 py-3">
+                    <div class="vs-persona-icon-container border-sky-500/10"><i
+                            class="icon i-user h-4 w-4 text-sky-500/50 group-hover:text-sky-500 transition-colors"></i>
+                    </div>
+                    <span
+                        class="text-[13px] text-[var(--vs-text-muted)] group-hover:text-sky-500 Thai-Rule font-light">น้องกิตติคุณ<br><span
+                            class="opacity-50">ป.6/2</span></span>
                 </button>
             </div>
         </div>
 
-        <!-- Grade Level Quick Access -->
-        <div class="mt-8 w-full max-w-5xl px-4 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            <div class="vs-divider-text mb-6">
-                <div class="vs-divider-line"></div>
-                <span class="vs-divider-label">Quick Student Access (ป.1-6)</span>
-                <div class="vs-divider-line"></div>
-            </div>
 
-            <div class="grid grid-cols-3 sm:grid-cols-6 gap-3">
-                <button onclick="quickSelect('STU_G1')" class="vs-persona-card py-4 group">
-                    <div
-                        class="w-8 h-8 rounded-[3px] vs-login-card flex items-center justify-center text-sm font-extralight text-[var(--vs-accent)]">
-                        1</div>
-                    <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-[var(--vs-text-title)] Thai-Rule font-extralight">ป.1</span>
-                </button>
-                <button onclick="quickSelect('STU_G2')" class="vs-persona-card py-4 group">
-                    <div
-                        class="w-8 h-8 rounded-[3px] vs-login-card flex items-center justify-center text-sm font-extralight text-[var(--vs-accent)]">
-                        2</div>
-                    <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-[var(--vs-text-title)] Thai-Rule font-extralight">ป.2</span>
-                </button>
-                <button onclick="quickSelect('STU_G3')" class="vs-persona-card py-4 group">
-                    <div
-                        class="w-8 h-8 rounded-[3px] vs-login-card flex items-center justify-center text-sm font-extralight text-[var(--vs-accent)]">
-                        3</div>
-                    <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-[var(--vs-text-title)] Thai-Rule font-extralight">ป.3</span>
-                </button>
-                <button onclick="quickSelect('STU_G4')" class="vs-persona-card py-4 group">
-                    <div
-                        class="w-8 h-8 rounded-[3px] vs-login-card flex items-center justify-center text-sm font-extralight text-[var(--vs-accent)]">
-                        4</div>
-                    <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-[var(--vs-text-title)] Thai-Rule font-extralight">ป.4</span>
-                </button>
-                <button onclick="quickSelect('STU_G5')" class="vs-persona-card py-4 group">
-                    <div
-                        class="w-8 h-8 rounded-[3px] vs-login-card flex items-center justify-center text-sm font-extralight text-[var(--vs-accent)]">
-                        5</div>
-                    <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-[var(--vs-text-title)] Thai-Rule font-extralight">ป.5</span>
-                </button>
-                <button onclick="quickSelect('STU_G6')" class="vs-persona-card py-4 group">
-                    <div
-                        class="w-8 h-8 rounded-[3px] vs-login-card flex items-center justify-center text-sm font-extralight text-[var(--vs-accent)]">
-                        6</div>
-                    <span
-                        class="text-sm text-[var(--vs-text-muted)] group-hover:text-[var(--vs-text-title)] Thai-Rule font-extralight">ป.6</span>
-                </button>
-            </div>
-        </div>
 
         <!-- Footer -->
         <footer class="mt-16 text-center opacity-40">
-            <p class="text-sm font-extralight uppercase text-[var(--vs-text-muted)]">
+            <p class="text-[13px] font-light uppercase text-[var(--vs-text-muted)]">
                 IDLPMS v2.0 • Unified Protocol • Confidential Property of MOE
             </p>
         </footer>

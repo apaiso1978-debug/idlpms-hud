@@ -60,79 +60,212 @@ class InsForgeDataService extends AbstractDataService {
         return await response.json();
     }
 
-    // ----- User Operations -----
+    // ----- Person-First Operations (Unity Schema v1.0) -----
 
-    async getUser(userId) {
+    async getPerson(personId) {
         try {
-            // userId could be email or UUID. 
-            // Note: Cloud API query params might differ from PostgREST (eq.)
-            // Assuming standard param key=value for simplified cloud API
-            const users = await this._call('Users', { query: `email=${userId}` });
-            return users.length > 0 ? users[0] : null;
+            // personId can be ID Number or UUID
+            const query = personId.includes('-') ? `id=${personId}` : `id_number=${personId}`;
+            const persons = await this._call('persons', { query });
+            return persons.length > 0 ? persons[0] : null;
         } catch (e) {
-            console.error('[InsForgeDataService] getUser failed:', e);
+            console.error('[InsForgeDataService] getPerson failed:', e);
             return null;
         }
     }
 
-    async getUsersByRole(role) {
-        return await this._call('Users', { query: `role=${role}` });
+    async getPersonWithRoles(personId) {
+        try {
+            const person = await this.getPerson(personId);
+            if (!person) return null;
+
+            const roles = await this._call('role_profiles', { query: `person_id=${person.id}&is_active=true` });
+            return { ...person, roles };
+        } catch (e) {
+            return null;
+        }
     }
 
-    async getUsersBySchool(schoolId) {
-        return await this._call('Users', { query: `schoolId=${schoolId}` });
+    async createPerson(personData, creatorId) {
+        return await this._call('persons', {
+            method: 'POST',
+            body: { ...personData, created_by: creatorId }
+        });
     }
 
-    async updateUser(userId, data) {
-        // Find by email first to get ID for PATCH
-        const user = await this.getUser(userId);
-        if (!user) throw new Error('User not found');
-
-        const results = await this._call(`Users/${user.id}`, {
+    async updatePerson(personId, data) {
+        return await this._call(`persons/${personId}`, {
             method: 'PATCH',
             body: data
         });
-        return results;
     }
 
-    // ----- School Operations -----
+    // ----- Role Profile Operations (Tab 2 Source) -----
+
+    async getActiveRole(personId, schoolId) {
+        const query = `person_id=${personId}&school_id=${schoolId}&is_active=true`;
+        const profiles = await this._call('role_profiles', { query });
+        return profiles.length > 0 ? profiles[0] : null;
+    }
+
+    async updateRoleData(profileId, extendedData, updaterId) {
+        return await this._call(`role_profiles/${profileId}`, {
+            method: 'PATCH',
+            body: { extended_data: extended_data, updated_at: new Date().toISOString() }
+        });
+    }
+
+    // ----- Organization & Hierarchy Operations -----
+
+    async getOrganization(orgId) {
+        const orgs = await this._call('organizations', { query: `id=${orgId}` });
+        return orgs.length > 0 ? orgs[0] : null;
+    }
+
+    async getOrgHierarchy(parentId) {
+        return await this._call('organizations', { query: `parent_id=${parentId}` });
+    }
+
+    async getGroups(orgId, type = 'CLASS') {
+        const query = `org_id=${orgId}&group_type=${type}&is_active=true`;
+        return await this._call('groups', { query });
+    }
+
+    // ----- Compatibility Layer (Deprecating Users/Schools) -----
+
+    async getUser(userId) {
+        console.warn('[InsForgeDataService] getUser is deprecated. Use getPerson.');
+        return await this.getPerson(userId);
+    }
 
     async getSchool(schoolId) {
+        console.warn('[InsForgeDataService] getSchool is deprecated. Use getOrganization.');
+        return await this.getOrganization(schoolId);
+    }
+
+    // ----- Phase 4: Work Passport & Intelligence DNA (Tab 4) -----
+
+    async getIntelligenceHistory(personId, days = 30) {
+        // Fetch last 30 days of snapshots
+        const query = `person_id=${personId}&order=timestamp.desc&limit=100`;
+        return await this._call('intelligence_snapshots', { query });
+    }
+
+    async addIntelligenceSnapshot(personId, kpaed, creatorId, source = {}) {
+        const body = {
+            person_id: personId,
+            axis_k: kpaed.k || 0,
+            axis_p: kpaed.p || 0,
+            axis_a: kpaed.a || 0,
+            axis_e: kpaed.e || 0,
+            axis_d: kpaed.d || 0,
+            source_type: source.type || 'direct',
+            source_id: source.id || null,
+            description: source.description || '',
+            created_by: creatorId,
+            timestamp: new Date().toISOString()
+        };
+        return await this._call('intelligence_snapshots', { method: 'POST', body });
+    }
+
+    async getWorkPassport(personId) {
         try {
-            const schools = await this._call('Schools', { query: `id=${schoolId}` });
-            return schools.length > 0 ? schools[0] : null;
+            const [credentials, history] = await Promise.all([
+                this._call('person_credentials', { query: `person_id=${personId}` }),
+                this.getIntelligenceHistory(personId, 7) // Last 7 days for quick summary
+            ]);
+
+            return {
+                credentials,
+                dna_summary: history.length > 0 ? history[0] : null, // Latest snapshot
+                dna_history: history
+            };
         } catch (e) {
+            console.error('[InsForgeDataService] getWorkPassport failed:', e);
             return null;
         }
     }
 
-    async getSchoolsByESA(esaId) {
-        return await this._call('Schools', { query: `districtId=${esaId}` });
+    async addCredential(personId, credentialData, creatorId) {
+        return await this._call('person_credentials', {
+            method: 'POST',
+            body: { ...credentialData, person_id: personId, created_by: creatorId }
+        });
     }
 
-    // ----- Curriculum Operations -----
+    // ----- Phase 6: Delegated Administrative Authority (DMDP) -----
 
-    async getSubject(subjectId) {
-        try {
-            const subjects = await this._call('Subjects', { query: `id=${subjectId}` });
-            return subjects.length > 0 ? subjects[0] : null;
-        } catch (e) {
-            return null;
-        }
+    async getDelegations(personId, schoolId) {
+        const query = `delegatee_id=${personId}&school_id=${schoolId}&is_active=true`;
+        return await this._call('role_delegations', { query });
     }
 
-    async getAllSubjects() {
-        return await this._call('Subjects');
+    async getSchoolDelegations(schoolId) {
+        const query = `school_id=${schoolId}&is_active=true`;
+        return await this._call('role_delegations', { query });
     }
 
-    async getSubjectUnits(subjectId) {
-        return await this._call('LearningUnits', { query: `subjectId=${subjectId}` });
+    async addDelegation(delegatorId, delegateeId, schoolId, capabilityKey, note = '') {
+        return await this._call('role_delegations', {
+            method: 'POST',
+            body: {
+                delegator_id: delegatorId,
+                delegatee_id: delegateeId,
+                school_id: schoolId,
+                capability_key: capabilityKey,
+                assignment_note: note,
+                is_active: true
+            }
+        });
+    }
+
+    async removeDelegation(delegationId) {
+        return await this._call(`role_delegations/${delegationId}`, {
+            method: 'PATCH',
+            body: { is_active: false, updated_at: new Date().toISOString() }
+        });
+    }
+
+    // ----- Phase 7: Physical Fitness Test Records -----
+
+    async saveFitnessRecord(personId, schoolId, classId, data, recordedBy) {
+        return await this._call('student_fitness_records', {
+            method: 'POST',
+            body: {
+                person_id: personId,
+                school_id: schoolId,
+                academic_year: data.academicYear || 2568,
+                semester: data.semester || 1,
+                record_date: new Date().toISOString().split('T')[0],
+                class_id: classId,
+                sit_reach_cm: Number(data.sitReach) || 0,
+                push_up_count: Number(data.pushUp) || 0,
+                step_up_count: Number(data.stepUp) || 0,
+                sit_reach_level: data.sitReachLevel || '',
+                push_up_level: data.pushUpLevel || '',
+                step_up_level: data.stepUpLevel || '',
+                overall_level: data.overallLevel || '',
+                recorded_by: recordedBy,
+                notes: data.notes || '',
+            }
+        });
+    }
+
+    async getFitnessRecords(schoolId, academicYear = 2568) {
+        const query = `school_id=${schoolId}&academic_year=${academicYear}`;
+        return await this._call('student_fitness_records', { query });
+    }
+
+    async getFitnessRecordsByClass(classId, academicYear = 2568) {
+        const query = `class_id=${encodeURIComponent(classId)}&academic_year=${academicYear}`;
+        return await this._call('student_fitness_records', { query });
     }
 
     async healthCheck() {
         return {
             status: this._initialized ? 'healthy' : 'uninitialized',
             mode: 'insforge-cloud',
+            schema: 'master-unity-v1.2',
             timestamp: Date.now()
         };
     }
