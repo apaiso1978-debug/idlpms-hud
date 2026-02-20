@@ -10,6 +10,18 @@ window.HUD_NOTIFY = {
         if (!this.container) {
             this.container = document.createElement('div');
             this.container.id = 'vs-toast-container';
+            // Inline styles to guarantee position even without CSS
+            Object.assign(this.container.style, {
+                position: 'fixed',
+                top: '64px',
+                right: '16px',
+                zIndex: '9999',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-end',
+                gap: '10px',
+                pointerEvents: 'none'
+            });
             document.body.appendChild(this.container);
             console.warn('[HUD_NOTIFY] Auto-created vs-toast-container');
         }
