@@ -183,7 +183,7 @@
 
         <!-- ROW 1: CRITICAL RESOURCES (AI & DB) -->
         <!-- InsForge AI Calls -->
-        <div class="telemetry-widget col-span-12 md:col-span-6 lg:col-span-4" id="insforge-widget">
+        <div class="telemetry-widget col-span-12 md:col-span-6 lg:col-span-3" id="insforge-widget">
             <div class="widget-title-area">
                 <div class="widget-title">
                     <i class="icon i-cpu w-4 h-4 bg-[var(--vs-accent)]"></i>
@@ -220,7 +220,7 @@
         </div>
 
         <!-- Database Rows Sync Usage -->
-        <div class="telemetry-widget col-span-12 md:col-span-6 lg:col-span-4">
+        <div class="telemetry-widget col-span-12 md:col-span-6 lg:col-span-3">
             <div class="widget-title-area">
                 <div class="widget-title">
                     <i class="icon i-database w-4 h-4 bg-[var(--id-obec)]"></i>
@@ -248,7 +248,7 @@
         </div>
 
         <!-- Netlify Bandwidth -->
-        <div class="telemetry-widget col-span-12 md:col-span-6 lg:col-span-4" id="netlify-widget">
+        <div class="telemetry-widget col-span-12 md:col-span-6 lg:col-span-3" id="netlify-widget">
             <div class="widget-title-area">
                 <div class="widget-title">
                     <i class="icon i-globe w-4 h-4 bg-[var(--id-esa)]"></i>
@@ -275,6 +275,39 @@
                 </div>
                 <div class="flex justify-between mt-1 text-[var(--vs-text-muted)] opacity-60 text-[13px]">
                     <span>Traffic mostly from PWA Caching</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Netlify Build Minutes -->
+        <div class="telemetry-widget col-span-12 md:col-span-6 lg:col-span-3" id="netlify-build-widget">
+            <div class="widget-title-area">
+                <div class="widget-title">
+                    <i class="icon i-cpu w-4 h-4 bg-[var(--id-obec)]"></i>
+                    Build Minutes
+                </div>
+                <div id="netlify-build-status-badge"
+                    class="neon-badge-success px-2 py-0.5 rounded-[3px] text-[13px] flex items-center gap-1.5">
+                    <span id="netlify-build-status-dot"
+                        class="w-1.5 h-1.5 rounded-[50%] bg-[var(--vs-success)] block"></span>
+                    <span id="netlify-build-status-text">Active</span>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-end mt-2">
+                <div>
+                    <div class="metric-value" id="netlify-build-val">--</div>
+                    <div class="metric-sub" id="netlify-build-limit">/ -- Min Included</div>
+                </div>
+                <div class="text-[var(--vs-success)] text-[13px]" id="netlify-build-pct">Safe</div>
+            </div>
+
+            <div>
+                <div class="telemetry-bar-bg">
+                    <div id="netlify-build-bar" class="telemetry-bar-fill fill-success" style="width: 0%;"></div>
+                </div>
+                <div class="flex flex-col mt-1 text-[var(--vs-text-muted)] opacity-60 text-[13px] line-clamp-1">
+                    <span id="netlify-build-reset">Resets on: --</span>
                 </div>
             </div>
         </div>
@@ -450,7 +483,50 @@
                 console.error('Error updating Netlify UI:', error);
             }
 
-            // --- 3. Fetch & Update GitHub Events ---
+            // --- 3. Fetch & Update Netlify Build Minutes ---
+            try {
+                const buildData = await metricsSvc.getNetlifyBuildStats();
+                const minutes = buildData.minutes || { current: 0, included_minutes: 300 };
+                const usedMins = minutes.current || 0;
+                const limitMins = minutes.included_minutes || 300;
+                const buildPercentage = Math.round((usedMins / limitMins) * 100) || 0;
+
+                const endDate = new Date(minutes.period_end_date || new Date());
+                const resetStr = minutes.period_end_date ? endDate.toLocaleDateString() : 'Unknown';
+
+                document.getElementById('netlify-build-val').textContent = `${usedMins}`;
+                document.getElementById('netlify-build-limit').textContent = `/ ${limitMins} Min Included`;
+                document.getElementById('netlify-build-bar').style.width = `${Math.min(buildPercentage, 100)}%`;
+                document.getElementById('netlify-build-reset').textContent = `Resets on: ${resetStr}`;
+                document.getElementById('netlify-build-pct').textContent = `${buildPercentage}%`;
+
+                // Color logic based on usage
+                const buildClass = buildPercentage >= 90 ? 'fill-danger' : (buildPercentage >= 80 ? 'fill-warning' : 'fill-success');
+                document.getElementById('netlify-build-bar').className = `telemetry-bar-fill ${buildClass}`;
+
+                if (buildPercentage >= 90) {
+                    document.getElementById('netlify-build-widget').style.boxShadow = '0 0 10px rgba(239, 68, 68, 0.4)';
+                    document.getElementById('netlify-build-widget').style.borderColor = 'var(--vs-danger)';
+                    document.getElementById('netlify-build-status-badge').className = 'neon-badge-danger px-2 py-0.5 rounded-[3px] text-[13px] flex items-center gap-1.5';
+                    document.getElementById('netlify-build-status-dot').className = 'w-1.5 h-1.5 rounded-[50%] bg-[var(--vs-danger)] block';
+                    document.getElementById('netlify-build-status-text').textContent = 'Critical';
+
+                    const msg = `CRITICAL: Netlify Build Minutes at ${buildPercentage}% of quota (${usedMins}/${limitMins}). Builds may be paused soon.`;
+                    addAlert(msg, 'danger');
+                    metricsSvc.dispatchWebhookAlert('netlify-builds', buildPercentage, msg);
+                } else if (buildPercentage >= 80) {
+                    document.getElementById('netlify-build-widget').style.borderColor = 'var(--vs-warning)';
+                    document.getElementById('netlify-build-status-badge').className = 'neon-badge-warning px-2 py-0.5 rounded-[3px] text-[13px] flex items-center gap-1.5';
+                    document.getElementById('netlify-build-status-dot').className = 'w-1.5 h-1.5 rounded-[50%] bg-[var(--vs-warning)] block';
+                    document.getElementById('netlify-build-status-text').textContent = 'Warning';
+                    addAlert(`WARNING: Netlify Build Minutes at ${buildPercentage}% of quota.`, 'warning');
+                }
+
+            } catch (error) {
+                console.error('Error updating Netlify Build Minutes UI:', error);
+            }
+
+            // --- 4. Fetch & Update GitHub Events ---
             try {
                 const gitEvents = await metricsSvc.getGithubSysEvents();
                 const eventsContainer = document.getElementById('github-events-container');

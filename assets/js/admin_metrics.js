@@ -195,6 +195,39 @@ class AdminMetricsService {
     }
 
     /**
+     * Fetch Netlify Build Minutes (Account/Team Level)
+     */
+    async getNetlifyBuildStats(teamSlug = 'apaiso1978') {
+        if (!this.config.netlify.token) {
+            return this._mockNetlifyBuildData();
+        }
+
+        try {
+            const response = await fetch(`https://api.netlify.com/api/v1/${teamSlug}/builds/status`, {
+                headers: {
+                    'Authorization': `Bearer ${this.config.netlify.token}`
+                }
+            });
+
+            if (!response.ok) throw new Error('Failed to fetch Netlify build stats');
+            return await response.json();
+        } catch (error) {
+            console.error('[AdminMetrics] Netlify Build API Error:', error);
+            return this._mockNetlifyBuildData();
+        }
+    }
+
+    _mockNetlifyBuildData() {
+        return {
+            minutes: {
+                current: 298,
+                included_minutes: 300,
+                period_end_date: "2026-03-15T00:00:00.000-07:00"
+            }
+        };
+    }
+
+    /**
      * 3. GitHub Telemetry (Recent Commits)
      */
     async getGithubSysEvents() {
