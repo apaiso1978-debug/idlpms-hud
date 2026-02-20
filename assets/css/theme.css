@@ -769,6 +769,17 @@ select option:hover {
     mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20fill%3D%27none%27%20viewBox%3D%270%200%2024%2024%27%20stroke%3D%27black%27%3E%3Cpath%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20stroke-width%3D%272%27%20d%3D%27M9%205l7%207-7%207%27%2F%3E%3C%2Fsvg%3E")
 }
 
+/* Delegation Panel Icons */
+.i-command-line {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20fill%3D%27none%27%20viewBox%3D%270%200%2024%2024%27%20stroke-width%3D%271.5%27%20stroke%3D%27currentColor%27%3E%3Cpath%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20d%3D%27m6.75%207.5%203%202.25-3%202.25m4.5%200h3m-9%208.25h13.5A2.25%202.25%200%200021%2018V6a2.25%202.25%200%2000-2.25-2.25H5.25A2.25%202.25%200%20003%206v12a2.25%202.25%200%20002.25%202.25z%27%2F%3E%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20fill%3D%27none%27%20viewBox%3D%270%200%2024%2024%27%20stroke-width%3D%271.5%27%20stroke%3D%27currentColor%27%3E%3Cpath%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20d%3D%27m6.75%207.5%203%202.25-3%202.25m4.5%200h3m-9%208.25h13.5A2.25%202.25%200%200021%2018V6a2.25%202.25%200%2000-2.25-2.25H5.25A2.25%202.25%200%20003%206v12a2.25%202.25%200%20002.25%202.25z%27%2F%3E%3C%2Fsvg%3E")
+}
+
+.i-paper-airplane {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20fill%3D%27none%27%20viewBox%3D%270%200%2024%2024%27%20stroke-width%3D%271.5%27%20stroke%3D%27currentColor%27%3E%3Cpath%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20d%3D%27M6%2012%203.269%203.125A59.769%2059.769%200%200121.485%2012%2059.768%2059.768%200%20013.27%2020.875L5.999%2012Zm0%200h7.5%27%2F%3E%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20fill%3D%27none%27%20viewBox%3D%270%200%2024%2024%27%20stroke-width%3D%271.5%27%20stroke%3D%27currentColor%27%3E%3Cpath%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20d%3D%27M6%2012%203.269%203.125A59.769%2059.769%200%200121.485%2012%2059.768%2059.768%200%20013.27%2020.875L5.999%2012Zm0%200h7.5%27%2F%3E%3C%2Fsvg%3E")
+}
+
 
 /* View Toggle Component */
 .view-toggle {
