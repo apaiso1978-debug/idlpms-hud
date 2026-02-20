@@ -337,22 +337,24 @@
         <!-- Main Content Canvas -->
         <main class="vs-content bg-[var(--vs-bg-main)]">
             <!-- Universal Header (800-Baseline Aligned) -->
-            <header
-                class="h-12 bg-[var(--vs-bg-main)] border-b border-[var(--vs-border)] flex items-center justify-between px-8">
-                <div class="flex items-center space-x-1 Thai-Rule">
+            <header class="h-12 bg-[var(--vs-bg-main)] border-b border-[var(--vs-border)] flex items-center">
+                <div class="flex-1 flex items-center space-x-1 Thai-Rule px-8">
                     <span class="text-[var(--vs-text-muted)] uppercase text-[13px] font-light">โครงสร้างระบบ</span>
                     <span class="text-[var(--vs-text-muted)]">/</span>
                     <span id="header-page-name"
                         class="text-[var(--vs-text-title)] font-light text-[13px]">แดชบอร์ดภาพรวม</span>
                 </div>
-                <!-- Delegation Toggle -->
-                <button id="deleg-toggle-btn" onclick="toggleDelegation()" style="display:flex;align-items:center;gap:6px;padding:4px 12px;border-radius:3px;
-                           font-size:13px;font-weight:300;cursor:pointer;transition:all 0.2s;
-                           background:rgba(34,211,238,0.1);color:var(--vs-accent);
-                           border:1px solid rgba(34,211,238,0.3);">
-                    <i class="icon i-command-line" style="width:14px;height:14px;"></i>
-                    <span class="Thai-Rule">มอบหมายงาน</span>
-                </button>
+                <!-- Delegation Toggle — fixed right zone aligned with sidebar -->
+                <div id="deleg-header-zone" style="width:320px;display:flex;justify-content:center;flex-shrink:0;
+                         border-left:1px solid var(--vs-border);">
+                    <button id="deleg-toggle-btn" onclick="toggleDelegation()" style="display:flex;align-items:center;gap:6px;padding:4px 12px;border-radius:3px;
+                               font-size:13px;font-weight:300;cursor:pointer;transition:all 0.2s;
+                               background:rgba(34,211,238,0.1);color:var(--vs-accent);
+                               border:1px solid rgba(34,211,238,0.3);">
+                        <i class="icon i-command-line" style="width:14px;height:14px;"></i>
+                        <span class="Thai-Rule">มอบหมายงาน</span>
+                    </button>
+                </div>
             </header>
 
             <div style="flex:1;display:flex;overflow:hidden;">
