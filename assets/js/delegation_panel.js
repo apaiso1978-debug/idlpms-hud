@@ -333,8 +333,17 @@ const DelegationPanel = {
                 const dataService = await DataServiceFactory.getInstance();
                 const currentUser = JSON.parse(localStorage.getItem('CURRENT_USER') || '{}');
                 const schoolId = currentUser.schoolId || 'SCH_MABLUD';
+                console.log('[DelegationPanel] Loading teachers for school:', schoolId, 'mode:', dataService._mode);
                 const allUsers = await dataService.getUsersBySchool(schoolId);
+                console.log('[DelegationPanel] Found users:', allUsers.length);
                 const teachers = allUsers.filter(u => u.role === 'TEACHER');
+                console.log('[DelegationPanel] Filtered teachers:', teachers.length);
+
+                if (teachers.length === 0) {
+                    console.warn('[DelegationPanel] No teachers from DataService, using local data.js fallback');
+                    this._loadFallbackTeachers(select);
+                    return;
+                }
 
                 teachers.forEach(t => {
                     const workload = this.getWorkload(t.id);
@@ -345,15 +354,47 @@ const DelegationPanel = {
                     opt.dataset.name = t.fullName || t.id;
                     select.appendChild(opt);
                 });
+            } else {
+                console.warn('[DelegationPanel] DataServiceFactory not available, using fallback');
+                this._loadFallbackTeachers(select);
             }
         } catch (e) {
-            console.warn('[DelegationPanel] Could not load teachers:', e);
-            // Fallback: add a placeholder
-            const opt = document.createElement('option');
-            opt.value = 'TEA_WORACHAI';
-            opt.textContent = '▸ ครูวรชัย อภัยโส (ภาระ: 0)';
-            opt.dataset.name = 'ครูวรชัย อภัยโส';
-            select.appendChild(opt);
+            console.warn('[DelegationPanel] Could not load teachers:', e.message);
+            this._loadFallbackTeachers(select);
+        }
+    },
+
+    // ── Fallback: load teachers from local data.js ──
+    _loadFallbackTeachers(select) {
+        // Try reading from global data.js (window.IDLPMS_DATA)
+        const localData = window.IDLPMS_DATA || {};
+        const users = localData.users || {};
+        const teachers = Object.entries(users).filter(([, u]) => u.role === 'TEACHER');
+
+        if (teachers.length > 0) {
+            teachers.forEach(([id, t]) => {
+                const workload = this.getWorkload(id);
+                const wl = this.getWorkloadColor(workload);
+                const opt = document.createElement('option');
+                opt.value = id;
+                opt.textContent = `${wl.icon} ${t.fullName || id} (ภาระ: ${workload})`;
+                opt.dataset.name = t.fullName || id;
+                select.appendChild(opt);
+            });
+        } else {
+            // Last-resort hardcoded fallback
+            const fallback = [
+                { id: 'TEA_WORACHAI', name: 'นายวรชัย อภัยโส' },
+                { id: 'TEA_SIRIRAT', name: 'นางสิริรัตน์ สงค์กา' },
+                { id: 'TEA_SUPICHA', name: 'นางสาวสุพิชา สมจิตร' }
+            ];
+            fallback.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t.id;
+                opt.textContent = `▸ ${t.name} (ภาระ: 0)`;
+                opt.dataset.name = t.name;
+                select.appendChild(opt);
+            });
         }
     },
 
