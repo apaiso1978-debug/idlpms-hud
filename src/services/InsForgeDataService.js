@@ -238,6 +238,49 @@ class InsForgeDataService extends AbstractDataService {
         });
     }
 
+    // ----- Delegation Panel v3.0 Support -----
+
+    /**
+     * Get all users (persons with role_profiles) for a school.
+     * Used by DelegationPanel to populate teacher dropdown.
+     */
+    async getUsersBySchool(schoolId) {
+        try {
+            const query = `school_id=${this._mapToUUID(schoolId)}`;
+            const profiles = await this._call('role_profiles', { query });
+            // Map to uniform format expected by DelegationPanel
+            return (profiles || []).map(p => ({
+                id: p.person_id,
+                personId: p.person_id,
+                fullName: p.full_name || p.person_id,
+                role: (p.role_type || '').toUpperCase(),
+                homeroomClass: p.homeroom_class || '',
+                schoolId: p.school_id
+            }));
+        } catch (e) {
+            console.warn('[InsForgeDataService] getUsersBySchool failed:', e.message);
+            throw e;
+        }
+    }
+
+    /**
+     * Get delegations created by a specific director.
+     * DISPATCHED view in DelegationPanel.
+     */
+    async getDelegationsByDirector(directorId, schoolId) {
+        const query = `delegator_id=${this._mapToUUID(directorId)}&school_id=${this._mapToUUID(schoolId)}&is_active=true`;
+        return await this._call('role_delegations', { query });
+    }
+
+    /**
+     * Get delegations assigned to a specific person.
+     * INBOX view in DelegationPanel.
+     */
+    async getInboxDelegations(personId) {
+        const query = `delegatee_id=${this._mapToUUID(personId)}&is_active=true`;
+        return await this._call('role_delegations', { query });
+    }
+
     // ----- Phase 7: Physical Fitness Test Records -----
 
     async saveFitnessRecord(personId, schoolId, classId, data, recordedBy) {

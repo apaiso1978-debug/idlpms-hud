@@ -170,11 +170,13 @@ const DelegationPanel = {
             const dataService = await this._getDataService();
             if (dataService && typeof dataService.addDelegation === 'function') {
                 const currentUser = this._getCurrentUser();
+                // InsForge signature: addDelegation(delegatorId, delegateeId, schoolId, capabilityKey, note)
                 await dataService.addDelegation(
-                    delegation.assignee,
-                    delegation.moduleId,
-                    delegation.moduleTitle,
-                    currentUser.id || 'DIR_MABLUD'
+                    currentUser.id || 'DIR_MABLUD',   // delegatorId (director)
+                    delegation.assignee,                // delegateeId (teacher)
+                    delegation.schoolId || currentUser.schoolId || 'SCH_MABLUD',
+                    delegation.moduleId,                // capabilityKey
+                    delegation.moduleTitle              // note
                 );
                 console.log('[DelegationPanel] Synced to backend');
                 return true;
