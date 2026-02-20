@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>System Telemetry - IDLPMS</title>
+
+    <!-- Tailwind CSS (via CDN for development, controlled via theme.css in prod) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Core Stylesheets -->
+    <link rel="stylesheet" href="../../assets/css/theme.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+
+    <!-- Global App Context & Data -->
+    <script src="../../assets/js/data.js"></script>
+
+    <style>
+        /* 
+         * Admin Dashboard Specific Overrides
+         * Strictly adhering to Razor-Sharp Design Guard Rules 
+         */
+        body {
+            background-color: var(--vs-bg-deep);
+            color: var(--vs-text-body);
+            overflow: hidden;
+            /* Prevent body scroll, let content scroll */
+        }
+
+        /* Rule 1: 48px Vertical Rule for Header */
+        .admin-header {
+            height: 48px;
+            background-color: var(--vs-bg-panel);
+            border-bottom: 1px solid var(--vs-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            box-shadow: 0 1px 0 var(--vs-border-highlight) inset;
+        }
+
+        /* 3px Precision Progress Bars */
+        .telemetry-bar-bg {
+            height: 3px;
+            background: rgba(255, 255, 255, 0.08);
+            /* Rule 8 */
+            border-radius: var(--vs-radius);
+            width: 100%;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .telemetry-bar-fill {
+            height: 100%;
+            border-radius: var(--vs-radius);
+            transition: width 1s ease-out;
+        }
+
+        /* Specific Color Fills (No Tailwind Arbitrary Variants for stable rendering) */
+        .fill-accent {
+            background-color: var(--vs-accent);
+        }
+
+        .fill-warning {
+            background-color: var(--vs-warning);
+        }
+
+        .fill-danger {
+            background-color: var(--vs-danger);
+        }
+
+        .fill-success {
+            background-color: var(--vs-success);
+        }
+
+        .fill-moe {
+            background-color: var(--id-moe);
+        }
+
+        .fill-obec {
+            background-color: var(--id-obec);
+        }
+
+        /* Widget Card (Rule 2: Zinc 750, Rule 4: 3px Radius, Rule 5 & Groove System) */
+        .telemetry-widget {
+            background: var(--vs-bg-card);
+            border: 1px solid var(--vs-border);
+            border-radius: var(--vs-radius);
+            padding: 16px;
+            /* Groove effect handled implicitly by components.css or manual shadow */
+            box-shadow: 0 1px 0 var(--vs-border-highlight) inset;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            /* Rule 14 Grid Spacing */
+        }
+
+        .widget-title-area {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .widget-title {
+            color: var(--vs-text-title);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: normal;
+            /* Rule 10: Zero letter-spacing */
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            /* Rule 16: Section Header Gap (2) */
+        }
+
+        /* Main Grid Layout */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 16px;
+            /* Rule 14 */
+            padding: 16px;
+            height: calc(100vh - 48px);
+            overflow-y: auto;
+            align-content: start;
+        }
+
+        /* Metric Highlights */
+        .metric-value {
+            font-size: 24px;
+            color: var(--vs-text-title);
+            font-weight: 300;
+            line-height: 1;
+        }
+
+        .metric-sub {
+            color: var(--vs-text-muted);
+            font-size: 13px;
+            font-weight: 300;
+        }
+
+        .log-row {
+            padding: 8px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Admin Header (Rule 1: 48px Height) -->
+    <header class="admin-header">
+        <div class="flex items-center gap-2">
+            <!-- Icon mask class -->
+            <i class="icon i-cpu w-4 h-4 text-[length:16px] bg-[var(--vs-accent)]"
+                style="mask-size: 16px; -webkit-mask-size: 16px;"></i>
+            <h1 class="text-[var(--vs-text-title)] uppercase text-[13px] font-light m-0">System Telemetry & Resource
+                Center</h1>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <span class="text-[var(--vs-text-muted)] text-[13px]">Last Sync: Just now</span>
+            <!-- Settings Button -->
+            <button onclick="openSettingsModal()"
+                class="neon-btn-warning px-3 py-1 flex items-center gap-1.5 rounded-[3px] text-[13px] ml-2">
+                <i class="icon i-cog w-3 h-3 bg-current" style="mask-size: 12px; -webkit-mask-size: 12px;"></i>
+                Settings
+            </button>
+            <!-- Refresh Button (Neon Style Rule 6) -->
+            <button class="neon-btn-accent px-3 py-1 flex items-center gap-1.5 rounded-[3px] text-[13px] ml-2">
+                <i class="icon i-arrow-path w-3 h-3 bg-current" style="mask-size: 12px; -webkit-mask-size: 12px;"></i>
+                Force Refresh
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="admin-grid">
+
+        <!-- Dynamic Admin Alerts Container -->
+        <div id="admin-alerts-container" class="col-span-12 flex flex-col gap-2 mb-2"></div>
+
+        <!-- ROW 1: CRITICAL RESOURCES (AI & DB) -->
+        <!-- InsForge AI Calls -->
+        <div class="telemetry-widget col-span-12 md:col-span-6 lg:col-span-4" id="insforge-widget">
+            <div class="widget-title-area">
+                <div class="widget-title">
+                    <i class="icon i-cpu w-4 h-4 bg-[var(--vs-accent)]"></i>
+                    InsForge AI Calls
+                </div>
+                <!-- Status Badge -->
+                <div id="insforge-status-badge"
+                    class="neon-badge-success px-2 py-0.5 rounded-[3px] text-[13px] flex items-center gap-1.5">
+                    <span id="insforge-status-dot"
+                        class="w-1.5 h-1.5 rounded-[50%] bg-[var(--vs-success)] block"></span>
+                    <span id="insforge-status-text">Healthy</span>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-end mt-2">
+                <div>
+                    <div class="metric-value" id="insforge-calls-val">--</div>
+                    <div class="metric-sub" id="insforge-calls-limit">/ -- limit (Quota)</div>
+                </div>
+                <div class="text-[var(--vs-accent)] text-[13px]" id="insforge-calls-pct">--%</div>
+            </div>
+
+            <div>
+                <div class="telemetry-bar-bg">
+                    <!-- Dynamic width via inline style, color via class -->
+                    <div id="insforge-calls-bar" class="telemetry-bar-fill fill-accent" style="width: 0%;"></div>
+                </div>
+                <div class="flex justify-between mt-1 text-[var(--vs-text-muted)] opacity-60 text-[13px]">
+                    <span>Resets in: 12 days</span>
+                    <span>Cost: ~$10.50 est. <span id="ai-per-call"
+                            class="ml-1 text-[var(--vs-warning)] font-medium"></span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Database Rows Sync Usage -->
+        <div class="telemetry-widget col-span-12 md:col-span-6 lg:col-span-4">
+            <div class="widget-title-area">
+                <div class="widget-title">
+                    <i class="icon i-database w-4 h-4 bg-[var(--id-obec)]"></i>
+                    Sync Transactions (DB)
+                </div>
+            </div>
+
+            <div class="flex justify-between items-end mt-2">
+                <div>
+                    <div class="metric-value" id="insforge-db-writes">--</div>
+                    <div class="metric-sub">Reads / Writes (Monthly)</div>
+                </div>
+                <!-- Warning color indicates high usage -->
+                <div class="text-[var(--vs-warning)] text-[13px]">&#8593; 15% from last week</div>
+            </div>
+
+            <div>
+                <div class="telemetry-bar-bg">
+                    <div class="telemetry-bar-fill fill-warning" style="width: 65%;"></div>
+                </div>
+                <div class="flex justify-between mt-1 text-[var(--vs-text-muted)] opacity-60 text-[13px]">
+                    <span>Avg: 4K per day</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Netlify Bandwidth -->
+        <div class="telemetry-widget col-span-12 md:col-span-6 lg:col-span-4" id="netlify-widget">
+            <div class="widget-title-area">
+                <div class="widget-title">
+                    <i class="icon i-globe w-4 h-4 bg-[var(--id-esa)]"></i>
+                    Netlify Bandwidth
+                </div>
+                <div id="netlify-status-badge"
+                    class="neon-badge-success px-2 py-0.5 rounded-[3px] text-[13px] flex items-center gap-1.5">
+                    <span id="netlify-status-dot" class="w-1.5 h-1.5 rounded-[50%] bg-[var(--vs-success)] block"></span>
+                    <span id="netlify-status-text">Online</span>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-end mt-2">
+                <div>
+                    <div class="metric-value" id="netlify-bw-val">-- GB</div>
+                    <div class="metric-sub" id="netlify-bw-limit">/ -- GB Included</div>
+                </div>
+                <div class="text-[var(--vs-success)] text-[13px]">Safe</div>
+            </div>
+
+            <div>
+                <div class="telemetry-bar-bg">
+                    <div id="netlify-bw-bar" class="telemetry-bar-fill fill-success" style="width: 0%;"></div>
+                </div>
+                <div class="flex justify-between mt-1 text-[var(--vs-text-muted)] opacity-60 text-[13px]">
+                    <span>Traffic mostly from PWA Caching</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ROW 2: DETAILED METRICS -->
+
+        <!-- Activity Logs / System Events -->
+        <div class="telemetry-widget col-span-12 lg:col-span-8">
+            <div
+                class="widget-title border-b border-[var(--vs-border)] pb-2 mb-2 w-full groove flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <i class="icon i-clock w-4 h-4 bg-[var(--vs-text-muted)]"></i>
+                    Latest System Events
+                </div>
+                <a href="logs.html"
+                    class="text-[12px] text-[var(--vs-accent)] hover:underline flex items-center gap-1 opacity-80 decoration-[var(--vs-accent)]">
+                    View All Logs <i class="icon i-arrow-right w-3 h-3 bg-current relative top-[-1px]"></i>
+                </a>
+            </div>
+
+            <div id="github-events-container" class="flex flex-col flex-1 overflow-y-auto pr-2"
+                style="max-height: 200px;">
+                <!-- Content will be injected by JS -->
+                <div class="text-[var(--vs-text-muted)] text-[13px] text-center mt-4">Loading events...</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions / Toggles -->
+        <div class="telemetry-widget col-span-12 lg:col-span-4">
+            <div class="widget-title border-b border-[var(--vs-border)] pb-2 mb-2 w-full groove">
+                <i class="icon i-cog w-4 h-4 bg-[var(--vs-text-muted)]"></i>
+                Master Controls
+            </div>
+
+            <div class="flex flex-col gap-4 mt-2">
+
+                <!-- Toggle 1 -->
+                <div
+                    class="flex items-center justify-between p-2 rounded-[3px] bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)]">
+                    <div>
+                        <div class="text-[var(--vs-text-title)] text-[13px]">MasteryAI Processing</div>
+                        <div class="text-[var(--vs-text-muted)] text-[13px]">Halt all AI calls globally</div>
+                    </div>
+                    <!-- Reusing vs-toggle from theme.css -->
+                    <button class="vs-toggle active" style="width: 32px; height: 16px;"></button>
+                </div>
+
+                <!-- Toggle 2 -->
+                <div
+                    class="flex items-center justify-between p-2 rounded-[3px] bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)]">
+                    <div>
+                        <div class="text-[var(--vs-text-title)] text-[13px]">Background Sync Queue</div>
+                        <div class="text-[var(--vs-text-muted)] text-[13px]">Pause client-to-server syncs</div>
+                    </div>
+                    <button class="vs-toggle active" style="width: 32px; height: 16px;"></button>
+                </div>
+
+                <button class="neon-btn-danger w-full py-2 mt-2 rounded-[3px] flex items-center justify-center gap-2">
+                    <i class="icon i-exclamation-triangle w-4 h-4 bg-current"></i>
+                    Initiate System Purge (Cache)
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Admin Metrics Logic -->
+    <script src="../../assets/js/admin_metrics.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('[Admin Dashboard] Initializing Telemetry Interface...');
+
+            // Check if service exists
+            if (typeof window.AdminMetricsService === 'undefined') {
+                console.error('[Admin Dashboard] AdminMetricsService not loaded!');
+                return;
+            }
+
+            const metricsSvc = window.AdminMetricsService;
+            const alertsContainer = document.getElementById('admin-alerts-container');
+
+            function addAlert(message, type = 'danger') {
+                const icon = type === 'danger' ? 'i-lightning' : 'i-clock';
+                // Using an inline style for background to ensure transparency without complex tailwind configurations
+                const bgColors = {
+                    danger: 'rgba(239, 68, 68, 0.1)',
+                    warning: 'rgba(234, 179, 8, 0.1)'
+                };
+                const html = `
+                    <div class="p-3 rounded-[var(--vs-radius)] border border-[var(--vs-${type})] flex items-center gap-3" style="background-color: ${bgColors[type]}">
+                        <i class="icon ${icon} w-5 h-5 bg-[var(--vs-${type})] shrink-0" style="animation: pulse 2s infinite;"></i>
+                        <span class="text-[var(--vs-${type})] font-medium text-[13px]">${message}</span>
+                    </div>
+                `;
+                alertsContainer.insertAdjacentHTML('beforeend', html);
+            }
+
+            // --- 1. Fetch & Update InsForge Data ---
+            try {
+                const insforgeData = await metricsSvc.getInsForgeStats();
+                const aiPercentage = Math.round((insforgeData.ai_calls_used / insforgeData.ai_calls_limit) * 100) || 0;
+                const perCallPct = ((1 / insforgeData.ai_calls_limit) * 100).toFixed(4);
+
+                document.getElementById('insforge-calls-val').textContent = insforgeData.ai_calls_used.toLocaleString();
+                document.getElementById('insforge-calls-limit').textContent = `/ ${insforgeData.ai_calls_limit.toLocaleString()} limit (Quota)`;
+                document.getElementById('insforge-calls-pct').textContent = `${aiPercentage}%`;
+                document.getElementById('insforge-calls-bar').style.width = `${aiPercentage}%`;
+                document.getElementById('ai-per-call').textContent = `(1 Call = ${perCallPct}%)`;
+
+                // Color logic based on usage
+                const barClass = aiPercentage >= 90 ? 'fill-danger' : (aiPercentage >= 80 ? 'fill-warning' : 'fill-accent');
+                document.getElementById('insforge-calls-bar').className = `telemetry-bar-fill ${barClass}`;
+
+                // Widget-level alert
+                if (aiPercentage >= 90) {
+                    document.getElementById('insforge-widget').style.boxShadow = '0 0 10px rgba(239, 68, 68, 0.4)';
+                    document.getElementById('insforge-widget').style.borderColor = 'var(--vs-danger)';
+                    document.getElementById('insforge-status-badge').className = 'neon-badge-danger px-2 py-0.5 rounded-[3px] text-[13px] flex items-center gap-1.5';
+                    document.getElementById('insforge-status-dot').className = 'w-1.5 h-1.5 rounded-[50%] bg-[var(--vs-danger)] block';
+                    document.getElementById('insforge-status-text').textContent = 'Critical';
+                    const alertMsg = `CRITICAL: InsForge AI Calls at ${aiPercentage}% of monthly quota. Consider halting AI processing.`;
+                    addAlert(alertMsg, 'danger');
+                    metricsSvc.dispatchWebhookAlert('insforge-api', aiPercentage, alertMsg);
+                } else if (aiPercentage >= 80) {
+                    document.getElementById('insforge-widget').style.borderColor = 'var(--vs-warning)';
+                    document.getElementById('insforge-status-badge').className = 'neon-badge-warning px-2 py-0.5 rounded-[3px] text-[13px] flex items-center gap-1.5';
+                    document.getElementById('insforge-status-dot').className = 'w-1.5 h-1.5 rounded-[50%] bg-[var(--vs-warning)] block';
+                    document.getElementById('insforge-status-text').textContent = 'Warning';
+                    addAlert(`WARNING: InsForge AI Calls at ${aiPercentage}% of monthly quota.`, 'warning');
+                }
+
+                document.getElementById('insforge-db-writes').textContent = (insforgeData.db_rows_written || 0).toLocaleString();
+
+            } catch (error) {
+                console.error('Error updating InsForge UI:', error);
+            }
+
+            // --- 2. Fetch & Update Netlify Data ---
+            try {
+                const netlifyData = await metricsSvc.getNetlifyStats();
+                const bwUsedGB = (netlifyData.bandwidth_used_bytes / (1024 ** 3)).toFixed(1);
+                const bwLimitGB = (netlifyData.bandwidth_limit_bytes / (1024 ** 3)).toFixed(0);
+                const bwPercentage = Math.round((netlifyData.bandwidth_used_bytes / netlifyData.bandwidth_limit_bytes) * 100) || 0;
+
+                document.getElementById('netlify-bw-val').textContent = `${bwUsedGB} GB`;
+                document.getElementById('netlify-bw-limit').textContent = `/ ${bwLimitGB} GB Included`;
+                document.getElementById('netlify-bw-bar').style.width = `${bwPercentage}%`;
+
+                // Color logic based on usage
+                const bwClass = bwPercentage >= 90 ? 'fill-danger' : (bwPercentage >= 80 ? 'fill-warning' : 'fill-success');
+                document.getElementById('netlify-bw-bar').className = `telemetry-bar-fill ${bwClass}`;
+
+                // Widget-level alert
+                if (bwPercentage >= 90) {
+                    document.getElementById('netlify-widget').style.boxShadow = '0 0 10px rgba(239, 68, 68, 0.4)';
+                    document.getElementById('netlify-widget').style.borderColor = 'var(--vs-danger)';
+                    document.getElementById('netlify-status-badge').className = 'neon-badge-danger px-2 py-0.5 rounded-[3px] text-[13px] flex items-center gap-1.5';
+                    document.getElementById('netlify-status-dot').className = 'w-1.5 h-1.5 rounded-[50%] bg-[var(--vs-danger)] block';
+                    document.getElementById('netlify-status-text').textContent = 'Critical';
+                    const bwMsg = `CRITICAL: Netlify Bandwidth at ${bwPercentage}% of monthly quota.`;
+                    addAlert(bwMsg, 'danger');
+                    metricsSvc.dispatchWebhookAlert('netlify-bandwidth', bwPercentage, bwMsg);
+                } else if (bwPercentage >= 80) {
+                    document.getElementById('netlify-widget').style.borderColor = 'var(--vs-warning)';
+                    document.getElementById('netlify-status-badge').className = 'neon-badge-warning px-2 py-0.5 rounded-[3px] text-[13px] flex items-center gap-1.5';
+                    document.getElementById('netlify-status-dot').className = 'w-1.5 h-1.5 rounded-[50%] bg-[var(--vs-warning)] block';
+                    document.getElementById('netlify-status-text').textContent = 'Warning';
+                    addAlert(`WARNING: Netlify Bandwidth at ${bwPercentage}% of monthly quota.`, 'warning');
+                }
+
+            } catch (error) {
+                console.error('Error updating Netlify UI:', error);
+            }
+
+            // --- 3. Fetch & Update GitHub Events ---
+            try {
+                const gitEvents = await metricsSvc.getGithubSysEvents();
+                const eventsContainer = document.getElementById('github-events-container');
+
+                if (gitEvents && gitEvents.length > 0) {
+                    // Clear existing mock data
+                    eventsContainer.innerHTML = '';
+
+                    gitEvents.forEach(event => {
+                        const dateObj = new Date(event.date);
+                        const timeStr = dateObj.toLocaleDateString() === new Date().toLocaleDateString() ?
+                            dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) :
+                            dateObj.toLocaleDateString();
+
+                        const html = `
+                             <div class="log-row border-b border-[var(--vs-border)] groove flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-[50%] bg-[var(--id-parent)]"></span>
+                                    <span class="text-[var(--vs-text-body)] max-w-md truncate" title="${event.message}">
+                                        Git: ${event.message} <span class="text-[var(--vs-text-muted)] opacity-60">- ${event.author}</span>
+                                    </span>
+                                </div>
+                                <span class="text-[var(--vs-text-muted)] shrink-0">${timeStr}</span>
+                            </div>
+                        `;
+                        eventsContainer.insertAdjacentHTML('beforeend', html);
+                    });
+                }
+            } catch (error) {
+                console.error('Error updating GitHub UI:', error);
+            }
+        });
+    </script>
+
+    <!-- Telemetry Settings Modal -->
+    <div id="telemetry-settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden"
+        style="background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(4px);">
+        <div
+            class="bg-[var(--vs-panel)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] w-full max-w-lg shadow-[0_0_20px_rgba(0,0,0,0.5)] flex flex-col">
+
+            <!-- Modal Header -->
+            <div class="p-4 border-b border-[var(--vs-border)] flex items-center justify-between">
+                <h2 class="text-[var(--vs-text-title)] text-[15px] flex items-center gap-2 m-0 uppercase font-light">
+                    <i class="icon i-cog w-4 h-4 bg-[var(--vs-accent)]"></i> Telemetry Configuration
+                </h2>
+                <button onclick="closeSettingsModal()"
+                    class="text-[var(--vs-text-muted)] hover:text-[var(--vs-text-body)] transition-colors">
+                    <i class="icon i-x-mark w-5 h-5 bg-current"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-4 flex flex-col gap-4 overflow-y-auto" style="max-height: 70vh;">
+                <div
+                    class="text-[13px] text-[var(--vs-text-muted)] mb-2 p-3 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-[3px]">
+                    <i class="icon i-shield-check w-4 h-4 bg-[var(--vs-success)] inline-block mr-1 align-sub"></i>
+                    Credentials are saved securely in your browser's local storage and are never sent to our servers
+                    except directly to the respective APIs.
+                </div>
+
+                <!-- InsForge Section -->
+                <div class="flex flex-col gap-1">
+                    <label class="text-[13px] text-[var(--vs-text-body)] font-medium flex items-center gap-1">
+                        <i class="icon i-cpu w-3 h-3 bg-[var(--vs-text-muted)]"></i> InsForge API Key
+                    </label>
+                    <input type="password" id="cfg-insforge-key"
+                        class="w-full bg-[var(--vs-bg)] border border-[var(--vs-border)] rounded-[3px] p-2 text-[13px] text-[var(--vs-text-body)] focus:border-[var(--vs-accent)] focus:outline-none transition-colors placeholder:opacity-30"
+                        placeholder="ik_...">
+                </div>
+
+                <!-- Netlify Section -->
+                <div class="flex flex-col gap-1 mt-2">
+                    <label class="text-[13px] text-[var(--vs-text-body)] font-medium flex items-center gap-1">
+                        <i class="icon i-globe w-3 h-3 bg-[var(--vs-text-muted)]"></i> Netlify Personal Access Token
+                    </label>
+                    <input type="password" id="cfg-netlify-token"
+                        class="w-full bg-[var(--vs-bg)] border border-[var(--vs-border)] rounded-[3px] p-2 text-[13px] text-[var(--vs-text-body)] focus:border-[var(--vs-accent)] focus:outline-none transition-colors placeholder:opacity-30"
+                        placeholder="fp_...">
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label class="text-[13px] text-[var(--vs-text-body)] font-medium flex items-center gap-1">
+                        Netlify Site ID
+                    </label>
+                    <input type="text" id="cfg-netlify-site"
+                        class="w-full bg-[var(--vs-bg)] border border-[var(--vs-border)] rounded-[3px] p-2 text-[13px] text-[var(--vs-text-body)] focus:border-[var(--vs-accent)] focus:outline-none transition-colors placeholder:opacity-30"
+                        placeholder="00000000-0000-0000-0000-000000000000">
+                </div>
+
+                <!-- Webhook Section -->
+                <div class="flex flex-col gap-1 mt-2">
+                    <label class="text-[13px] text-[var(--vs-text-body)] font-medium flex items-center gap-1">
+                        <i class="icon i-bell w-3 h-3 bg-[var(--vs-text-muted)]"></i> Alert Webhook URL
+                        (Discord/Slack/Custom)
+                    </label>
+                    <input type="url" id="cfg-webhook-url"
+                        class="w-full bg-[var(--vs-bg)] border border-[var(--vs-border)] rounded-[3px] p-2 text-[13px] text-[var(--vs-text-body)] focus:border-[var(--vs-warning)] focus:outline-none transition-colors placeholder:opacity-30"
+                        placeholder="https://discord.com/api/webhooks/...">
+                    <span class="text-[11px] text-[var(--vs-text-muted)] opacity-60">Used to send alerts when quotas
+                        exceed 90%.</span>
+                </div>
+
+                <!-- LINE Messaging API Section -->
+                <div class="flex flex-col gap-1 mt-2">
+                    <label class="text-[13px] text-[var(--vs-text-body)] font-medium flex items-center gap-1">
+                        <i class="icon i-chat-bubble-left-right w-3 h-3 bg-[var(--vs-success)]"></i> LINE Channel Access
+                        Token
+                    </label>
+                    <input type="password" id="cfg-line-channel"
+                        class="w-full bg-[var(--vs-bg)] border border-[var(--vs-border)] rounded-[3px] p-2 text-[13px] text-[var(--vs-text-body)] focus:border-[var(--vs-success)] focus:outline-none transition-colors placeholder:opacity-30"
+                        placeholder="Long-lived Channel Access Token...">
+                </div>
+                <div class="flex flex-col gap-1">
+                    <label class="text-[13px] text-[var(--vs-text-body)] font-medium flex items-center gap-1">
+                        LINE Target User ID / Group ID
+                    </label>
+                    <input type="text" id="cfg-line-target"
+                        class="w-full bg-[var(--vs-bg)] border border-[var(--vs-border)] rounded-[3px] p-2 text-[13px] text-[var(--vs-text-body)] focus:border-[var(--vs-success)] focus:outline-none transition-colors placeholder:opacity-30"
+                        placeholder="U00000000000000000000000000000000">
+                    <span class="text-[11px] text-[var(--vs-text-muted)] opacity-60">The ID of the user or group to
+                        receive the Push Messages.</span>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div
+                class="p-4 border-t border-[var(--vs-border)] flex items-center justify-end gap-3 bg-[rgba(0,0,0,0.2)]">
+                <button onclick="closeSettingsModal()"
+                    class="px-4 py-1.5 text-[13px] text-[var(--vs-text-muted)] hover:text-[var(--vs-text-body)] transition-colors">Cancel</button>
+                <button onclick="saveSettingsModal()"
+                    class="neon-btn-accent px-4 py-1.5 rounded-[3px] text-[13px] flex items-center gap-2">
+                    <i class="icon i-check w-3 h-3 bg-current"></i> Save Configuration
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Settings Modal Logic
+        function openSettingsModal() {
+            const modal = document.getElementById('telemetry-settings-modal');
+            const configStr = localStorage.getItem('idlpms_admin_config');
+            if (configStr) {
+                try {
+                    const cfg = JSON.parse(configStr);
+                    document.getElementById('cfg-insforge-key').value = cfg.insforgeKey || '';
+                    document.getElementById('cfg-netlify-token').value = cfg.netlifyToken || '';
+                    document.getElementById('cfg-netlify-site').value = cfg.netlifySiteId || '';
+                    document.getElementById('cfg-webhook-url').value = cfg.webhookUrl || '';
+                    document.getElementById('cfg-line-channel').value = cfg.lineChannelToken || '';
+                    document.getElementById('cfg-line-target').value = cfg.lineTargetId || '';
+                } catch (e) { }
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function closeSettingsModal() {
+            document.getElementById('telemetry-settings-modal').classList.add('hidden');
+        }
+
+        function saveSettingsModal() {
+            const cfg = {
+                insforgeKey: document.getElementById('cfg-insforge-key').value.trim(),
+                netlifyToken: document.getElementById('cfg-netlify-token').value.trim(),
+                netlifySiteId: document.getElementById('cfg-netlify-site').value.trim(),
+                webhookUrl: document.getElementById('cfg-webhook-url').value.trim(),
+                lineChannelToken: document.getElementById('cfg-line-channel').value.trim(),
+                lineTargetId: document.getElementById('cfg-line-target').value.trim(),
+            };
+            localStorage.setItem('idlpms_admin_config', JSON.stringify(cfg));
+            closeSettingsModal();
+            // Force refresh of the data
+            if (window.AdminMetricsService) {
+                window.AdminMetricsService.loadConfig(); // Will implement this method
+                location.reload();
+            }
+        }
+    </script>
+
+</body>
+
+</html>
