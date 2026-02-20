@@ -368,9 +368,6 @@ const DelegationPanel = {
 
     _renderViewTabs() {
         const dispActive = this._viewTab === 'DISPATCHED';
-        const style = (active) => active
-            ? 'color:var(--vs-accent);border-bottom:2px solid var(--vs-accent);'
-            : 'color:var(--vs-text-muted);border-bottom:2px solid transparent;';
 
         const allDel = this.getAllDelegations();
         const user = this._getCurrentUser();
@@ -378,15 +375,11 @@ const DelegationPanel = {
         const inbox = allDel.filter(d => d.assignee === (user.id || 'DIR_MABLUD'));
 
         return `
-            <div style="display:flex;border-bottom:1px solid var(--vs-border);">
-                <button class="deleg-view-tab" data-tab="DISPATCHED"
-                    style="flex:1;padding:8px 0;font-size:13px;font-weight:300;cursor:pointer;
-                           background:transparent;border:none;transition:all 0.2s;${style(dispActive)}">
+            <div class="vs-tab-bar" style="margin:0 12px;">
+                <button class="vs-tab-bar-btn deleg-view-tab${dispActive ? ' active' : ''}" data-tab="DISPATCHED">
                     งานที่ส่ง (${dispatched.length})
                 </button>
-                <button class="deleg-view-tab" data-tab="INBOX"
-                    style="flex:1;padding:8px 0;font-size:13px;font-weight:300;cursor:pointer;
-                           background:transparent;border:none;transition:all 0.2s;${style(!dispActive)}">
+                <button class="vs-tab-bar-btn deleg-view-tab${!dispActive ? ' active' : ''}" data-tab="INBOX">
                     งานที่ได้รับ (${inbox.length})
                 </button>
             </div>`;
