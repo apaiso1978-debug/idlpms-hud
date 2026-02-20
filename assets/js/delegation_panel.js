@@ -271,8 +271,6 @@ const DelegationPanel = {
     _renderHeader() {
         const isSys = this._mode === 'SYSTEM';
         const title = isSys ? 'งานระบบ' : 'ภารกิจพิเศษ';
-        const knobX = isSys ? '2px' : '22px';
-        const knobColor = isSys ? 'var(--vs-accent)' : '#f59e0b';
 
         return `
             <div style="height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;
@@ -281,20 +279,7 @@ const DelegationPanel = {
                     <i class="icon i-command-line" style="width:16px;height:16px;color:var(--vs-accent);"></i>
                     <span style="color:var(--vs-text-title);text-transform:uppercase;font-size:13px;font-weight:300;">${title}</span>
                 </div>
-                <div style="display:flex;align-items:center;gap:8px;">
-                    <span style="font-size:13px;font-weight:300;color:${isSys ? 'var(--vs-accent)' : 'var(--vs-text-muted)'};opacity:${isSys ? '1' : '0.5'};">SYS</span>
-                    <button class="deleg-toggle-btn" data-mode="${isSys ? 'ADHOC' : 'SYSTEM'}"
-                        style="position:relative;width:42px;height:22px;border-radius:11px;border:none;cursor:pointer;
-                               background:var(--vs-bg-deep);
-                               box-shadow:inset 0 1px 3px rgba(0,0,0,0.4), inset 0 0 1px rgba(0,0,0,0.3);
-                               transition:all 0.25s ease;outline:none;padding:0;">
-                        <span style="position:absolute;top:3px;left:${knobX};width:16px;height:16px;border-radius:50%;
-                                     background:${knobColor};
-                                     box-shadow:0 0 6px ${knobColor}, 0 1px 2px rgba(0,0,0,0.3);
-                                     transition:all 0.25s ease;"></span>
-                    </button>
-                    <span style="font-size:13px;font-weight:300;color:${!isSys ? '#f59e0b' : 'var(--vs-text-muted)'};opacity:${!isSys ? '1' : '0.5'};">ADH</span>
-                </div>
+                <button class="vs-toggle deleg-toggle-btn${isSys ? '' : ' active'}" data-mode="${isSys ? 'ADHOC' : 'SYSTEM'}"></button>
             </div>`;
     },
 
