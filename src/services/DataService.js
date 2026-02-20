@@ -998,7 +998,7 @@ class DataServiceFactory {
                 service = new AppsScriptDataService();
                 break;
             case 'insforge':
-                if (typeof InsForgeDataService === 'undefined') {
+                if (!window.InsForgeDataService) {
                     console.warn('[DataServiceFactory] InsForgeDataService not loaded, falling back to local mode');
                     service = new LocalDataService();
                     service._mode = 'local';
