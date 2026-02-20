@@ -259,7 +259,6 @@ const DelegationPanel = {
         container.innerHTML = `
             <div class="deleg-v3" style="display:flex;flex-direction:column;height:100%;font-size:13px;font-weight:300;">
                 ${this._renderHeader()}
-                ${this._renderToggle()}
                 ${isDirector ? this._renderAssignForm(ctx) : ''}
                 ${this._renderViewTabs()}
                 ${this._renderDelegationList()}
@@ -270,42 +269,31 @@ const DelegationPanel = {
     },
 
     _renderHeader() {
+        const isSys = this._mode === 'SYSTEM';
+        const title = isSys ? 'งานระบบ' : 'ภารกิจพิเศษ';
+        const nextMode = isSys ? 'ADHOC' : 'SYSTEM';
+        const nextLabel = isSys ? 'พิเศษ' : 'ระบบ';
+
         return `
             <div style="height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;
                         background:var(--vs-bg-panel);border-bottom:1px solid var(--vs-border);">
                 <div style="display:flex;align-items:center;gap:8px;">
                     <i class="icon i-command-line" style="width:16px;height:16px;color:var(--vs-accent);"></i>
-                    <span style="color:var(--vs-text-muted);text-transform:uppercase;font-size:13px;font-weight:300;">Mission Control</span>
+                    <span style="color:var(--vs-text-title);text-transform:uppercase;font-size:13px;font-weight:300;">${title}</span>
                 </div>
-                <span class="neon-badge-accent" style="font-size:13px;font-weight:300;padding:2px 8px;">
-                    ${this._mode === 'SYSTEM' ? 'SYS' : 'ADH'}
-                </span>
-            </div>`;
-    },
-
-    _renderToggle() {
-        const sysActive = this._mode === 'SYSTEM';
-        const adhActive = this._mode === 'ADHOC';
-
-        // Neon toggle style
-        const activeStyle = (active) => active
-            ? 'background:rgba(34,211,238,0.1);color:var(--vs-accent);border:1px solid rgba(34,211,238,0.3);'
-            : 'background:transparent;color:var(--vs-text-muted);border:1px solid transparent;';
-
-        return `
-            <div style="display:flex;gap:4px;padding:8px 12px;">
-                <button class="deleg-toggle-btn" data-mode="SYSTEM"
-                    style="flex:1;padding:6px 0;border-radius:3px;font-size:13px;font-weight:300;cursor:pointer;
-                           transition:all 0.2s;${activeStyle(sysActive)}">
-                    งานระบบ
-                </button>
-                <button class="deleg-toggle-btn" data-mode="ADHOC"
-                    style="flex:1;padding:6px 0;border-radius:3px;font-size:13px;font-weight:300;cursor:pointer;
-                           transition:all 0.2s;${activeStyle(adhActive)}">
-                    ภารกิจพิเศษ
+                <button class="deleg-toggle-btn" data-mode="${nextMode}"
+                    style="display:flex;align-items:center;gap:4px;padding:3px 10px;border-radius:3px;
+                           font-size:13px;font-weight:300;cursor:pointer;transition:all 0.2s;
+                           background:rgba(34,211,238,0.08);color:var(--vs-accent);
+                           border:1px solid rgba(34,211,238,0.2);">
+                    <i class="icon i-chevron-right" style="width:10px;height:10px;transform:rotate(${isSys ? '0' : '180'}deg);transition:transform 0.2s;"></i>
+                    ${nextLabel}
                 </button>
             </div>`;
     },
+
+    // Legacy toggle (deprecated — now integrated into header)
+    _renderToggle() { return ''; },
 
     _renderAssignForm(ctx) {
         const teacherOptions = this._teachers.map(t => {
