@@ -334,43 +334,45 @@
             </div>
         </aside>
 
-        <!-- Main Content Canvas -->
-        <main class="vs-content bg-[var(--vs-bg-main)]">
-            <!-- Universal Header (800-Baseline Aligned) -->
-            <header class="h-12 bg-[var(--vs-bg-main)] border-b border-[var(--vs-border)] flex items-center">
-                <div class="flex-1 flex items-center space-x-1 Thai-Rule px-8">
+        <!-- Main Content Canvas (CSS Grid: 2-column layout) -->
+        <main class="vs-content bg-[var(--vs-bg-main)]"
+            style="display:grid;grid-template-columns:1fr;grid-template-rows:48px 1fr auto;">
+
+            <!-- Universal Header -->
+            <header
+                class="bg-[var(--vs-bg-main)] border-b border-[var(--vs-border)] flex items-center justify-between px-8"
+                style="grid-column:1;grid-row:1;">
+                <div class="flex items-center space-x-1 Thai-Rule">
                     <span class="text-[var(--vs-text-muted)] uppercase text-[13px] font-light">โครงสร้างระบบ</span>
                     <span class="text-[var(--vs-text-muted)]">/</span>
                     <span id="header-page-name"
                         class="text-[var(--vs-text-title)] font-light text-[13px]">แดชบอร์ดภาพรวม</span>
                 </div>
-                <!-- Delegation Toggle — fixed right zone aligned with sidebar -->
-                <div id="deleg-header-zone" style="width:320px;display:flex;justify-content:center;flex-shrink:0;
-                         border-left:1px solid var(--vs-border);">
-                    <button id="deleg-toggle-btn" onclick="toggleDelegation()" style="display:flex;align-items:center;gap:6px;padding:4px 12px;border-radius:3px;
-                               font-size:13px;font-weight:300;cursor:pointer;transition:all 0.2s;
-                               background:rgba(34,211,238,0.1);color:var(--vs-accent);
-                               border:1px solid rgba(34,211,238,0.3);">
-                        <i class="icon i-command-line" style="width:14px;height:14px;"></i>
-                        <span class="Thai-Rule">มอบหมายงาน</span>
-                    </button>
-                </div>
+                <button id="deleg-toggle-btn" onclick="toggleDelegation()" style="display:flex;align-items:center;gap:6px;padding:4px 12px;border-radius:3px;
+                           font-size:13px;font-weight:300;cursor:pointer;transition:all 0.2s;
+                           background:rgba(34,211,238,0.1);color:var(--vs-accent);
+                           border:1px solid rgba(34,211,238,0.3);">
+                    <i class="icon i-command-line" style="width:14px;height:14px;"></i>
+                    <span class="Thai-Rule">มอบหมายงาน</span>
+                </button>
             </header>
 
-            <div style="flex:1;display:flex;overflow:hidden;">
-                <div class="vs-iframe-container" style="flex:1;">
-                    <iframe id="main-frame" src="pages/home.html" title="Workspace Content"></iframe>
-                </div>
-                <!-- Delegation Sidebar (Shell-layer, persistent) -->
-                <aside id="delegation-sidebar" style="width:320px;display:none;flex-direction:column;
-                           background:var(--vs-bg-panel);
-                           border-left:1px solid var(--vs-border);
-                           overflow:hidden;flex-shrink:0;">
-                    <!-- Rendered by DelegationPanel.render() -->
-                </aside>
+            <!-- Content Area -->
+            <div class="vs-iframe-container" style="grid-column:1;grid-row:2;overflow:hidden;">
+                <iframe id="main-frame" src="pages/home.html" title="Workspace Content"></iframe>
             </div>
 
-            <div id="vs-status-bar"
+            <!-- Delegation Sidebar (full-height right column) -->
+            <aside id="delegation-sidebar" style="grid-column:2;grid-row:1/-1;
+                       width:320px;display:none;flex-direction:column;
+                       background:var(--vs-bg-panel);
+                       border-left:1px solid var(--vs-border);
+                       overflow:hidden;">
+                <!-- Rendered by DelegationPanel.render() -->
+            </aside>
+
+            <!-- Status Bar -->
+            <div id="vs-status-bar" style="grid-column:1;grid-row:3;"
                 class="h-6 bg-[var(--vs-bg-main)] border-t border-[var(--vs-border)] flex items-center justify-between px-6 text-[13px] uppercase text-[var(--vs-text-muted)] font-light">
                 <div class="flex items-center space-x-4">
                     <div id="status-connection" class="flex items-center space-x-1">

@@ -565,6 +565,10 @@ const DelegationPanel = {
         sidebar.style.display = this._isOpen ? 'flex' : 'none';
         if (this._isOpen) this.render();
 
+        // Update grid columns on parent <main>
+        const main = sidebar.closest('main');
+        if (main) main.style.gridTemplateColumns = this._isOpen ? '1fr auto' : '1fr';
+
         // Toggle button state
         const btn = document.getElementById('deleg-toggle-btn');
         if (btn) btn.classList.toggle('active', this._isOpen);
@@ -574,14 +578,22 @@ const DelegationPanel = {
         this._mode = mode;
         this._isOpen = true;
         const sidebar = document.getElementById('delegation-sidebar');
-        if (sidebar) sidebar.style.display = 'flex';
+        if (sidebar) {
+            sidebar.style.display = 'flex';
+            const main = sidebar.closest('main');
+            if (main) main.style.gridTemplateColumns = '1fr auto';
+        }
         this.render();
     },
 
     close() {
         this._isOpen = false;
         const sidebar = document.getElementById('delegation-sidebar');
-        if (sidebar) sidebar.style.display = 'none';
+        if (sidebar) {
+            sidebar.style.display = 'none';
+            const main = sidebar.closest('main');
+            if (main) main.style.gridTemplateColumns = '1fr';
+        }
     },
 
     // ═══════════════════════════════════════════
