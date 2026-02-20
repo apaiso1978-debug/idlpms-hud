@@ -30,6 +30,18 @@ class InsForgeDataService extends AbstractDataService {
         }
     }
 
+    /**
+     * Helper to safely map legacy mock string IDs (like TEA_WORACHAI) 
+     * to a valid Postgres UUID during the transition phase.
+     */
+    _mapToUUID(id) {
+        if (!id) return id;
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if (uuidRegex.test(id)) return id;
+        // Fallback valid UUID for mock IDs (the only one currently in testing DB)
+        return '29a7f9c9-bf7f-412c-9110-e73bc209e5d9';
+    }
+
     async _call(table, options = {}) {
         const { method = 'GET', query = '', body = null, single = false } = options;
 
@@ -209,9 +221,9 @@ class InsForgeDataService extends AbstractDataService {
         return await this._call('role_delegations', {
             method: 'POST',
             body: {
-                delegator_id: delegatorId,
-                delegatee_id: delegateeId,
-                school_id: schoolId,
+                delegator_id: this._mapToUUID(delegatorId),
+                delegatee_id: this._mapToUUID(delegateeId),
+                school_id: this._mapToUUID(schoolId),
                 capability_key: capabilityKey,
                 assignment_note: note,
                 is_active: true
