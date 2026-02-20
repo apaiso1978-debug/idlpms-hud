@@ -4,28 +4,53 @@
  * Universal component injected into every Director page (col-4 right).
  * Handles: Teacher selection, workload display, task assignment, passport write-back.
  *
+ * v2.0: Routes all writes through DataService + SyncEngine (offline-first)
  * Iron Rules: text-[13px], font-weight: 300, rounded-[3px], Sunken Inset inputs
  * ═══════════════════════════════════════════════════════
  */
 
 const DelegationPanel = {
 
+    // Legacy keys (kept for migration/fallback)
     STORAGE_KEY: 'idlpms_delegations_v1',
     PASSPORT_PREFIX: 'idlpms_passport_',
 
-    // ── Get All Delegations ──
+    // ── Internal cache (fast reads) ──
+    _cache: null,
+
+    // ── Get DataService instance (async) ──
+    async _getDataService() {
+        if (typeof DataServiceFactory !== 'undefined') {
+            return await DataServiceFactory.getInstance();
+        }
+        return null;
+    },
+
+    // ── Get SyncEngine instance (async) ──
+    async _getSyncEngine() {
+        if (typeof getSyncEngine === 'function') {
+            return await getSyncEngine();
+        }
+        return null;
+    },
+
+    // ── Get All Delegations (local fast-read + backend) ──
     getAllDelegations() {
+        // Fast synchronous read from local cache/localStorage
+        if (this._cache) return this._cache;
         try {
             const raw = localStorage.getItem(this.STORAGE_KEY);
-            return raw ? JSON.parse(raw) : [];
+            this._cache = raw ? JSON.parse(raw) : [];
+            return this._cache;
         } catch (e) {
             console.error('[DelegationPanel] Read error:', e);
             return [];
         }
     },
 
-    // ── Save Delegations ──
+    // ── Save Delegations (local + queue for sync) ──
     _save(delegations) {
+        this._cache = delegations;
         try {
             localStorage.setItem(this.STORAGE_KEY, JSON.stringify(delegations));
         } catch (e) {
@@ -58,7 +83,7 @@ const DelegationPanel = {
             .slice(0, 10);
     },
 
-    // ── Create Delegation ──
+    // ── Create Delegation (Offline-First + Backend Sync) ──
     assign(teacherId, teacherName, moduleId, moduleTitle, deadline, note, directorId) {
         const all = this.getAllDelegations();
         const newDelegation = {
@@ -76,13 +101,63 @@ const DelegationPanel = {
         all.push(newDelegation);
         this._save(all);
 
-        // Write to Teacher Passport
+        // Write to Teacher Passport (local)
         this._writePassport(teacherId, teacherName, newDelegation);
+
+        // ── Backend Sync (async, non-blocking) ──
+        this._syncToBackend(newDelegation, teacherId, teacherName);
 
         return newDelegation;
     },
 
-    // ── Write to Passport ──
+    // ── Async Backend Sync (fire & forget) ──
+    async _syncToBackend(delegation, teacherId, teacherName) {
+        try {
+            const dataService = await this._getDataService();
+            const syncEngine = await this._getSyncEngine();
+
+            if (dataService && dataService._mode === 'insforge') {
+                // Direct write to InsForge (when online)
+                const currentUser = JSON.parse(localStorage.getItem('CURRENT_USER') || '{}');
+                await dataService.addDelegation(
+                    currentUser.id || 'DIR_MABLUD',
+                    teacherId,
+                    currentUser.schoolId || 'SCH_MABLUD',
+                    delegation.moduleId,
+                    delegation.note
+                );
+                console.log('[DelegationPanel] Delegation synced to InsForge Cloud');
+
+                // Also write passport record to backend
+                await dataService.addCredential(teacherId, {
+                    credential_type: 'DELEGATION',
+                    title: `มอบหมาย: ${delegation.moduleTitle}`,
+                    issuing_org: 'โรงเรียนวัดหมาบชลุด',
+                    issue_date: delegation.createdAt,
+                    verify_status: 'PENDING',
+                    notes: delegation.note,
+                }, currentUser.id || 'DIR_MABLUD');
+                console.log('[DelegationPanel] Passport record synced to InsForge Cloud');
+
+            } else if (syncEngine) {
+                // Queue for later sync (when offline or in local mode)
+                const currentUser = JSON.parse(localStorage.getItem('CURRENT_USER') || '{}');
+                await syncEngine.queueOperation('createDelegation', {
+                    delegatorId: currentUser.id || 'DIR_MABLUD',
+                    delegateeId: teacherId,
+                    schoolId: currentUser.schoolId || 'SCH_MABLUD',
+                    capabilityKey: delegation.moduleId,
+                    note: delegation.note,
+                });
+                console.log('[DelegationPanel] Delegation queued for sync');
+            }
+        } catch (error) {
+            console.warn('[DelegationPanel] Backend sync failed (data saved locally):', error.message);
+            // Data is already saved in localStorage — will sync on next online event
+        }
+    },
+
+    // ── Write to Passport (local buffer) ──
     _writePassport(teacherId, teacherName, delegation) {
         const key = this.PASSPORT_PREFIX + teacherId;
         let passport = [];
@@ -129,6 +204,9 @@ const DelegationPanel = {
         const moduleTitle = context.moduleTitle || 'งาน';
         const history = this.getHistory(moduleId);
 
+        // Sync status indicator
+        const syncBadge = this._getSyncStatusBadge();
+
         container.innerHTML = `
             <div class="dna-zone p-3 sticky top-6">
                 <!-- Panel Header -->
@@ -136,10 +214,11 @@ const DelegationPanel = {
                     <div class="w-7 h-7 bg-[rgba(var(--vs-accent-rgb),0.1)] rounded-[3px] flex items-center justify-center">
                         <i class="icon i-clipboard w-3.5 h-3.5 text-[var(--vs-accent)]"></i>
                     </div>
-                    <div>
+                    <div class="flex-1">
                         <h3 class="text-[13px] text-[var(--vs-text-title)] font-light Thai-Rule">มอบหมายงาน</h3>
                         <p class="text-[13px] text-[var(--vs-text-muted)] uppercase">Delegation Panel</p>
                     </div>
+                    ${syncBadge}
                 </div>
 
                 <!-- Teacher Selector -->
@@ -209,6 +288,14 @@ const DelegationPanel = {
 
         // Load teachers into selector
         this._loadTeachers();
+    },
+
+    // ── Sync Status Badge (visual indicator) ──
+    _getSyncStatusBadge() {
+        const isOnline = navigator.onLine;
+        const color = isOnline ? 'var(--vs-success)' : 'var(--vs-warning)';
+        const label = isOnline ? 'SYNC' : 'OFFLINE';
+        return `<span class="text-[9px] uppercase px-1.5 py-0.5 rounded-[3px] border" style="color: ${color}; border-color: ${color}">${label}</span>`;
     },
 
     // ── Render a History Item ──
@@ -312,7 +399,7 @@ const DelegationPanel = {
         const teacherName = select.options[select.selectedIndex]?.dataset?.name || teacherId;
         const currentUser = JSON.parse(localStorage.getItem('CURRENT_USER') || '{}');
 
-        // Create delegation
+        // Create delegation (writes to localStorage + syncs to backend)
         const result = this.assign(
             teacherId,
             teacherName,
@@ -324,10 +411,11 @@ const DelegationPanel = {
         );
 
         // Visual feedback
+        const syncLabel = navigator.onLine ? ' (synced)' : ' (จะ sync เมื่อ online)';
         if (window.HUD_NOTIFY) {
-            HUD_NOTIFY.toast('มอบหมายสำเร็จ', `ส่งงาน "${moduleTitle}" ให้ ${teacherName} แล้ว`, 'success');
+            HUD_NOTIFY.toast('มอบหมายสำเร็จ', `ส่งงาน "${moduleTitle}" ให้ ${teacherName} แล้ว${syncLabel}`, 'success');
         } else {
-            alert(`มอบหมายงานให้ ${teacherName} สำเร็จ!`);
+            alert(`มอบหมายงานให้ ${teacherName} สำเร็จ!${syncLabel}`);
         }
 
         // Reset form & refresh

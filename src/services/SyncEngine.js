@@ -47,8 +47,13 @@ const SyncEngineConfig = {
     // Operation priorities (higher = sync first)
     priorities: {
         'createUser': 100,
+        'createDelegation': 98,
+        'removeDelegation': 97,
         'updateGrade': 95,
         'updateAttendance': 90,
+        'addPassportRecord': 85,
+        'addCredential': 85,
+        'addIntelligenceSnapshot': 84,
         'updateUser': 80,
         'updateSchool': 70,
         'default': 50
@@ -333,7 +338,24 @@ class SyncEngine {
                 case 'updateSchool':
                     result = await dataService.updateSchool(operation.schoolId, operation.data);
                     break;
-                // Add more operation types as needed
+                case 'createDelegation':
+                    result = await dataService.addDelegation(
+                        operation.delegatorId, operation.delegateeId,
+                        operation.schoolId, operation.capabilityKey, operation.note
+                    );
+                    break;
+                case 'removeDelegation':
+                    result = await dataService.removeDelegation(operation.delegationId);
+                    break;
+                case 'addPassportRecord':
+                    result = await dataService.addPassportRecord(operation.userId, operation.record);
+                    break;
+                case 'addCredential':
+                    result = await dataService.addCredential(operation.personId, operation.credentialData, operation.creatorId);
+                    break;
+                case 'addIntelligenceSnapshot':
+                    result = await dataService.addIntelligenceSnapshot(operation.personId, operation.kpaed, operation.creatorId, operation.source);
+                    break;
                 default:
                     console.warn(`[SyncEngine] Unknown operation type: ${operation.type}`);
                     return { success: false, error: 'Unknown operation type' };

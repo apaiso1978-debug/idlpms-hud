@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PERSONNEL REGISTRATION | IDLPMS HUD</title>
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+    <link rel="stylesheet" href="../assets/css/notifications.css" />
+    <link rel="stylesheet" href="../assets/css/student_input.css" /> <!-- Reuse styles for consistency -->
+    <script src="../assets/js/data.js"></script>
+    <script src="../src/services/DataService.js"></script>
+    <script src="../assets/js/notifications.js"></script>
+</head>
+
+<body class="vs-bg-deep">
+    <div class="student-page">
+        <!-- ═══ TOP HEADER ═══ -->
+        <header class="student-header">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <h1>Personnel Registration</h1>
+                <span class="hud-badge-micro" style="color:var(--vs-text-muted)">STAFF INDUCTION V1.0</span>
+            </div>
+            <div class="header-actions">
+                <button onclick="submitForm()" class="vs-btn vs-btn-solid">
+                    <span>CREATE PROFILE</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- ═══ FORM CONTENT ═══ -->
+        <form id="personnelRegistrationForm" onsubmit="return false;">
+
+            <!-- STEP 1: IDENTITY -->
+            <div class="form-tab active">
+                <div class="vs-section-card" style="margin-bottom:16px">
+                    <div class="form-section-header">
+                        <span class="section-title">ข้อมูลพื้นฐานบุคลากร</span>
+                        <span class="section-badge">identity</span>
+                    </div>
+                    <div class="vs-form-grid">
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ประเภทผู้ใช้งาน</label>
+                                <select id="role" class="vs-input-industrial">
+                                    <option value="TEACHER">ครูผู้สอน (Teacher)</option>
+                                    <option value="SCHOOL_DIR">ผู้อำนวยการ (Director)</option>
+                                    <option value="ADMIN">ผู้ดูแลระบบ (Admin)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">เลขบัตรประชาชน</label>
+                                <input type="text" id="id_number" class="vs-input-industrial"
+                                    placeholder="X-XXXX-XXXXX-XX-X">
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">คำนำหน้า</label>
+                                <select id="prefix_th" class="vs-input-industrial">
+                                    <option value="นาย">นาย</option>
+                                    <option value="นาง">นาง</option>
+                                    <option value="นางสาว">นางสาว</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="vs-col-6">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ชื่อภาษาไทย *</label>
+                                <input type="text" id="first_name_th" class="vs-input-industrial" required>
+                            </div>
+                        </div>
+                        <div class="vs-col-6">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">นามสกุลภาษาไทย *</label>
+                                <input type="text" id="last_name_th" class="vs-input-industrial" required>
+                            </div>
+                        </div>
+
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label-en">First Name (English)</label>
+                                <input type="text" id="first_name_en" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label-en">Last Name (English)</label>
+                                <input type="text" id="last_name_en" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">เพศ</label>
+                                <select id="gender" class="vs-input-industrial">
+                                    <option value="male">ชาย</option>
+                                    <option value="female">หญิง</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Professional Info -->
+                <div class="vs-section-card" style="margin-bottom:16px">
+                    <div class="form-section-header">
+                        <span class="section-title">ข้อมูลวิชาชีพ</span>
+                        <span class="section-badge">professional</span>
+                    </div>
+                    <div class="vs-form-grid">
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">ตำแหน่ง</label>
+                                <input type="text" id="position" class="vs-input-industrial"
+                                    placeholder="เช่น ครู คศ.2">
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">วิทยฐานะ</label>
+                                <input type="text" id="academic_standing" class="vs-input-industrial"
+                                    placeholder="เช่น ชำนาญการพิเศษ">
+                            </div>
+                        </div>
+                        <div class="vs-col-4">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">วิชาเอก/สาขา</label>
+                                <input type="text" id="major" class="vs-input-industrial"
+                                    placeholder="เช่น วิทยาศาสตร์">
+                            </div>
+                        </div>
+
+                        <div class="vs-col-6">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">วุฒิการศึกษาสูงสุด</label>
+                                <select id="education_level" class="vs-input-industrial">
+                                    <option value="bachelor">ปริญญาตรี</option>
+                                    <option value="master">ปริญญาโท</option>
+                                    <option value="doctorate">ปริญญาเอก</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="vs-col-6">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">กลุ่มสาระการเรียนรู้</label>
+                                <input type="text" id="subject_group" class="vs-input-industrial">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Contact -->
+                <div class="vs-section-card" style="margin-bottom:16px">
+                    <div class="form-section-header">
+                        <span class="section-title">ข้อมูลการติดต่อ</span>
+                        <span class="section-badge">contact</span>
+                    </div>
+                    <div class="vs-form-grid">
+                        <div class="vs-col-6">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label">เบอร์โทรศัพท์</label>
+                                <input type="tel" id="phone" class="vs-input-industrial">
+                            </div>
+                        </div>
+                        <div class="vs-col-6">
+                            <div class="vs-field-group">
+                                <label class="vs-field-label-en">Email</label>
+                                <input type="email" id="email" class="vs-input-industrial">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        async function submitForm() {
+            if (typeof showNotification === 'function') {
+                showNotification('กำลังสร้างโปรไฟล์บุคลากร...', 'info');
+            }
+
+            try {
+                const form = document.getElementById('personnelRegistrationForm');
+                const inputs = form.querySelectorAll('input, select, textarea');
+                const data = {};
+                const role = document.getElementById('role').value;
+
+                inputs.forEach(input => {
+                    if (input.id) {
+                        data[input.id] = input.value;
+                    }
+                });
+
+                // Add metadata
+                data.created_by = 'DIR_MABLUD'; // From session
+
+                const service = await window.getDataService();
+                const newUser = await service.createPerson(role, data);
+
+                if (typeof showNotification === 'function') {
+                    showNotification(`ลงทะเบียนสำเร็จ: ${newUser.fullName} (${newUser.role})`, 'success');
+                }
+
+                setTimeout(() => {
+                    if (confirm('สร้างโปรไฟล์สำเร็จ! ต้องการกลับไปยังหน้าหลักหรือไม่?')) {
+                        window.location.href = 'home.html';
+                    }
+                }, 1500);
+
+            } catch (err) {
+                console.error('Registration failed:', err);
+                if (typeof showNotification === 'function') {
+                    showNotification('เกิดข้อผิดพลาด: ' + err.message, 'error');
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

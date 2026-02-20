@@ -15,7 +15,7 @@
 
 const DataServiceConfig = {
     // Current mode: 'local' | 'appsscript' | 'insforge'
-    mode: 'local',
+    mode: 'insforge',
 
     // InsForge settings (local/cloud)
     insforge: {
@@ -75,14 +75,26 @@ class AbstractDataService {
     async getUser(userId) { throw new Error('Method not implemented'); }
     async getUsersByRole(role) { throw new Error('Method not implemented'); }
     async getUsersBySchool(schoolId) { throw new Error('Method not implemented'); }
-    async getUsersByESA(esaId) { throw new Error('Method not implemented'); }
+    async getUsersByESA(esaId) { throw new new Error('Method not implemented'); }
     async updateUser(userId, data) { throw new Error('Method not implemented'); }
 
     // ----- School Operations -----
     async getSchool(schoolId) { throw new Error('Method not implemented'); }
     async getSchoolsByESA(esaId) { throw new Error('Method not implemented'); }
-    async updateSchool(schoolId, data) { throw new Error('Method not implemented'); }
+    async updateSchool(schoolId, data) {
+        throw new Error('Not implemented');
+    }
 
+    /**
+     * Unified Person Creation (Student/Teacher/Director)
+     * Maps form data (snake_case) to model (camelCase) and persists.
+     * @param {string} role - STUDENT, TEACHER, or SCHOOL_DIR
+     * @param {object} rawData - Data from input forms
+     * @returns {Promise<object>} - Created user object
+     */
+    async createPerson(role, rawData) {
+        throw new Error('Not implemented');
+    }
     // ----- ESA/District Operations -----
     async getESA(esaId) { throw new Error('Method not implemented'); }
     async getAllESAs() { throw new Error('Method not implemented'); }
@@ -111,6 +123,12 @@ class AbstractDataService {
 
     // ----- Delegation Operations (DMDP) -----
     async getDelegations(personId, schoolId) { throw new Error('Method not implemented'); }
+    async createDelegation(data) { throw new Error('Method not implemented'); }
+    async getSubordinates(userId, role) { throw new Error('Method not implemented'); }
+
+    // ----- Passport Operations -----
+    async addPassportRecord(userId, record) { throw new Error('Method not implemented'); }
+    async getPassport(userId) { throw new Error('Method not implemented'); }
 }
 
 // ============================================================================
@@ -323,6 +341,46 @@ class LocalDataService extends AbstractDataService {
         return this._data.structure.schools[schoolId];
     }
 
+    async createPerson(role, rawData) {
+        this._ensureInitialized();
+
+        const timestamp = Date.now();
+        const idPrefix = {
+            'STUDENT': 'STU_',
+            'TEACHER': 'TEA_',
+            'SCHOOL_DIR': 'DIR_'
+        }[role] || 'USR_';
+
+        const userId = idPrefix + timestamp;
+
+        // Unified Mapping: Formalizing the "Bridge" between snake_case forms and camelCase models
+        const newUser = {
+            id: userId,
+            role: role,
+            status: 'ACTIVE',
+            fullName: rawData.fullName ||
+                (rawData.first_name_th && rawData.last_name_th
+                    ? `${rawData.prefix_th || ''}${rawData.first_name_th} ${rawData.last_name_th}`.trim()
+                    : rawData.name || 'Anonymous User'),
+            citizenId: rawData.citizenId || rawData.id_number || '',
+            birthDate: rawData.birthDate || rawData.birth_date || null,
+            email: rawData.email || `${userId.toLowerCase()}@idlpms.moe.go.th`,
+            phone: rawData.phone || '',
+            address: rawData.address || rawData.reg_house || '',
+            schoolId: rawData.schoolId || 'SCH_MABLUD',
+            classId: rawData.classId || rawData.grade_level || '',
+            password: 'password123', // Default
+            _created: timestamp,
+            _lastModified: timestamp,
+            ...rawData // Keep original fields for backward compat
+        };
+
+        this._data.users[userId] = newUser;
+        this._persist();
+
+        console.info(`[LocalDataService] Created ${role}: ${newUser.fullName} (${userId})`);
+        return newUser;
+    }
     // ----- ESA/District Operations -----
 
     async getESA(esaId) {
@@ -472,40 +530,103 @@ class LocalDataService extends AbstractDataService {
     // ----- Delegation Operations (DMDP) -----
 
     /**
-     * Get delegations for a teacher (mock data)
-     * Returns capabilities that have been delegated by the director
+     * Get viable delegation targets based on hierarchy
+     */
+    async getSubordinates(userId, role) {
+        this._ensureInitialized();
+        const user = await this.getUser(userId);
+        if (!user) return [];
+
+        const allUsers = Object.entries(this._data.users).map(([id, u]) => ({ id, ...u }));
+
+        switch (role) {
+            case 'OBEC':
+            case 'MOE':
+                // OBEC/MOE can delegate to ESA Directors
+                return allUsers.filter(u => u.role === 'ESA_DIR');
+
+            case 'ESA_DIR':
+                // ESA Dir can delegate to School Directors in their district
+                return allUsers.filter(u => u.role === 'SCHOOL_DIR' && u.districtId === user.districtId);
+
+            case 'SCHOOL_DIR':
+                // School Dir can delegate to Teachers in their school
+                return allUsers.filter(u => u.role === 'TEACHER' && u.schoolId === user.schoolId);
+
+            case 'TEACHER':
+                // Teachers can delegate to Students in their class
+                // Note: Students don't delegate (per instructions)
+                return allUsers.filter(u => u.role === 'STUDENT' && u.classId === user.classId);
+
+            default:
+                return [];
+        }
+    }
+
+    /**
+     * Persist a new delegation mission
+     */
+    async createDelegation(data) {
+        this._ensureInitialized();
+        const delegationId = 'DEL_' + Date.now();
+        const newDelegation = {
+            id: delegationId,
+            status: 'PENDING',
+            created_at: new Date().toISOString(),
+            ...data
+        };
+
+        if (!this._data.delegations) this._data.delegations = [];
+        this._data.delegations.push(newDelegation);
+
+        // 🧬 Passport Integration: Write to recipient's passport
+        await this.addPassportRecord(data.delegatee_id, {
+            type: 'MISSION',
+            missionId: delegationId,
+            title: data.moduleTitle || 'ภารกิจมอบหมาย',
+            note: data.note || '',
+            delegatorId: data.delegator_id,
+            timestamp: newDelegation.created_at
+        });
+
+        this._persist();
+        return newDelegation;
+    }
+
+    /**
+     * Get delegations involving this user
      */
     async getDelegations(personId, schoolId) {
         this._ensureInitialized();
+        const delegations = this._data.delegations || [];
 
-        // Mock delegation data: ผอ. มอบหมายงานให้ครู
-        const mockDelegations = [
-            // WAT MAP CHALUD dataset — ผอ.บุญเรือง มอบหมายให้ครูวรชัย (Developer/Admin)
-            {
-                id: 'DEL_001',
-                delegator_id: 'DIR_MABLUD',         // ผอ.บุญเรือง ถ้ำมณี
-                delegatee_id: 'TEA_WORACHAI',        // ครูวรชัย อภัยโส (Developer/Admin/Founder)
-                school_id: 'SCH_MABLUD',
-                capability_key: 'ADMIN_STUDENT_MGMT',
-                note: 'มอบหมายให้ดูแลข้อมูลนักเรียนและระบบทั้งหมด',
-                created_at: '2025-06-01T00:00:00Z'
-            },
-            // Original dataset (hud.html switchRole uses these IDs)
-            {
-                id: 'DEL_002',
-                delegator_id: 'DIR_001',
-                delegatee_id: 'TEA_001',
-                school_id: 'SCH_001',
-                capability_key: 'ADMIN_STUDENT_MGMT',
-                note: 'มอบหมายให้ดูแลข้อมูลนักเรียนทั้งหมด',
-                created_at: '2025-06-01T00:00:00Z'
-            }
-        ];
-
-        // Filter by personId and schoolId
-        return mockDelegations.filter(
-            d => d.delegatee_id === personId && d.school_id === schoolId
+        // Return both Dispatched and Inbox for Dashboard visibility
+        return delegations.filter(d =>
+            d.delegatee_id === personId || d.delegator_id === personId
         );
+    }
+
+    // ----- Passport Operations -----
+
+    async addPassportRecord(userId, record) {
+        this._ensureInitialized();
+        if (!this._data.passports) this._data.passports = {};
+        if (!this._data.passports[userId]) this._data.passports[userId] = [];
+
+        const newRecord = {
+            id: 'REC_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+            timestamp: new Date().toISOString(),
+            ...record
+        };
+
+        this._data.passports[userId].push(newRecord);
+        this._persist();
+        return newRecord;
+    }
+
+    async getPassport(userId) {
+        this._ensureInitialized();
+        return this._data.passports?.[userId] || [];
     }
 
     /**
@@ -884,7 +1005,21 @@ class DataServiceFactory {
         }
 
         service._mode = mode;
-        await service.initialize();
+
+        try {
+            await service.initialize();
+        } catch (error) {
+            // Hybrid Fallback: if InsForge/AppsScript fails, fallback to local
+            if (mode !== 'local') {
+                console.warn(`[DataServiceFactory] ${mode} initialization failed, falling back to local mode:`, error.message);
+                service = new LocalDataService();
+                service._mode = 'local';
+                service._fallbackFrom = mode; // Track original intended mode
+                await service.initialize();
+            } else {
+                throw error;
+            }
+        }
 
         this._instance = service;
         return service;

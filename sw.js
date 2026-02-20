@@ -432,7 +432,7 @@ function createOfflineHTML() {
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Sarabun', sans-serif;
-            background: #1c1c1f; /* Zinc-850 Baseline */
+            background: #222428; /* Slate Wash Base */
             color: #fafafa;     /* var(--vs-text-title) */
             min-height: 100vh;
             display: flex;
@@ -461,8 +461,8 @@ function createOfflineHTML() {
         .btn {
             display: inline-block;
             padding: 12px 24px;
-            background: #22d3ee; /* var(--vs-accent) */
-            color: #1c1c1f;     /* var(--vs-bg-deep) */
+            background: #38bdf8; /* var(--vs-accent) Sky Blue */
+            color: #222428;     /* var(--vs-bg-deep) Base */
             border: none;
             border-radius: 3px;
             font-weight: 600;
