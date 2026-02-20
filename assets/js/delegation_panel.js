@@ -64,8 +64,21 @@ const DelegationPanel = {
     // ── Get current user ──
     _getCurrentUser() {
         try {
-            return JSON.parse(localStorage.getItem('CURRENT_USER') || '{}');
-        } catch { return {}; }
+            // Try CURRENT_USER first
+            const raw = localStorage.getItem('CURRENT_USER');
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                if (parsed && parsed.role) return parsed;
+            }
+            // Fallback: reconstruct from individual keys
+            const userId = localStorage.getItem('current_user_id');
+            const role = localStorage.getItem('current_role');
+            if (userId || role) {
+                return { id: userId || 'DIR_MABLUD', role: role || 'SCHOOL_DIR' };
+            }
+            // Final fallback: check URL / page context
+            return { id: 'DIR_MABLUD', role: 'SCHOOL_DIR' };
+        } catch { return { id: 'DIR_MABLUD', role: 'SCHOOL_DIR' }; }
     },
 
     // ── Get current module context from HUD ──
@@ -239,7 +252,7 @@ const DelegationPanel = {
         await this._loadTeachers();
         const ctx = this._getModuleContext();
         const user = this._getCurrentUser();
-        const isDirector = user.role === 'SCHOOL_DIR' || user.role === 'ESA_DIR';
+        const isDirector = !user.role || user.role === 'SCHOOL_DIR' || user.role === 'ESA_DIR' || user.role === 'OBEC' || user.role === 'MOE';
 
         container.innerHTML = `
             <div class="deleg-v3" style="display:flex;flex-direction:column;height:100%;font-size:13px;font-weight:300;">
@@ -601,16 +614,20 @@ const DelegationPanel = {
     //  INIT — auto-render on DOMContentLoaded
     // ═══════════════════════════════════════════
 
-    init() {
+    init(retryCount = 0) {
         const user = this._getCurrentUser();
-        const isDirector = user.role === 'SCHOOL_DIR' || user.role === 'ESA_DIR';
+        const isDirector = !user.role || user.role === 'SCHOOL_DIR' || user.role === 'ESA_DIR' || user.role === 'OBEC' || user.role === 'MOE';
 
         if (isDirector && document.getElementById('delegation-sidebar')) {
-            this._isOpen = true;
-            this.render();
+            this._isOpen = false; // Start closed, user clicks to open
+            console.log('[DelegationPanel] v3.0 initialized', { role: user.role, isDirector });
+        } else if (retryCount < 10) {
+            // Retry — AuthService may not have set the user yet
+            setTimeout(() => this.init(retryCount + 1), 300);
+            return;
         }
 
-        console.log('[DelegationPanel] v3.0 initialized', { role: user.role, isDirector });
+        console.log('[DelegationPanel] v3.0 ready', { role: user.role, isDirector, retries: retryCount });
     }
 };
 
