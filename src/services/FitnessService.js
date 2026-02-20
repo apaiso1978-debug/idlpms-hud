@@ -18,7 +18,7 @@ const FitnessService = {
 
     // InsForge connection
     _baseUrl: 'https://3tcdq2dd.ap-southeast.insforge.app',
-    _apiKey: 'ik_e9ac09dcf4f6732689dd5558fe889c0a',
+    _apiKey: window.LOCAL_SECRETS?.INSFORGE_API_KEY || '',
 
     // ══════════════════════════════════════════
     // LOCAL STORAGE (Fast Path)

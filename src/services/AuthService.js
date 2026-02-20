@@ -94,7 +94,8 @@ const RoleHierarchy = {
     SCHOOL_DIR: { level: 4, canAccess: ['school_data', 'all_teachers', 'reports', 'admin'] },
     ESA_DIR: { level: 5, canAccess: ['esa_data', 'all_schools', 'reports', 'admin'] },
     OBEC: { level: 6, canAccess: ['all_esa', 'national_reports', 'admin', 'policy'] },
-    MOE: { level: 7, canAccess: ['everything'] }
+    MOE: { level: 7, canAccess: ['everything'] },
+    ADMIN: { level: 8, canAccess: ['everything', 'system_config'] }
 };
 
 // ============================================================================

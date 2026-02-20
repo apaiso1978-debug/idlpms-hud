@@ -16,6 +16,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <script src="assets/js/data.js"></script>
+    <script src="assets/js/secrets.local.js"></script>
     <!-- HLS.js for DLTV video playback (Global) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.6.5/hls.min.js"></script>
     <!-- Core Services -->
@@ -107,6 +108,12 @@
                     </button>
                     <button
                         class="nav-item w-full text-left px-[18px] py-1.5 rounded-[var(--vs-radius)] transition-all text-[var(--vs-text-title)] font-light text-[13px] group"
+                        data-page="pages/admin/dashboard.html" data-name="System Telemetry">
+                        <i class="icon i-cpu h-4 w-4 inline-block mr-2 group-hover:scale-110 transition-transform"></i>
+                        <span>ติดตามทรัพยากรระบบ</span>
+                    </button>
+                    <button
+                        class="nav-item w-full text-left px-[18px] py-1.5 rounded-[var(--vs-radius)] transition-all text-[var(--vs-text-title)] font-light text-[13px] group"
                         data-page="pages/subject_cards.html" data-name="Subject Matrix">
                         <i class="icon i-book h-4 w-4 inline-block mr-2 group-hover:scale-110 transition-transform"></i>
                         <span>กลุ่มสาระการเรียนรู้</span>
@@ -116,7 +123,7 @@
                 <div class="flex-1 flex flex-col items-center justify-center p-6 text-center opacity-20">
                     <i class="icon i-finger-print h-12 w-12 mb-4"></i>
                     <div class="hud-badge-micro uppercase Thai-Rule">รอการยืนยันตัวตนจากส่วนกลาง</div>
-                    <div class="text-[10px] mt-2 font-mono uppercase">Unified Intelligence Matrix v1.0</div>
+                    <div class="text-[13px] mt-2 font-mono uppercase">Unified Intelligence Matrix v1.0</div>
                 </div>
             </div>
 
@@ -389,7 +396,7 @@
                     <div id="status-role-badge" class="flex items-center space-x-1"
                         style="color: rgba(var(--vs-text-muted-rgb, 113, 113, 122), 0.5)">
                         <i class="icon i-user h-3 w-3"></i>
-                        <span class="font-light Thai-Rule text-[10px]">ระดับสิทธิ: ข้อมูลพื้นฐาน</span>
+                        <span class="font-light Thai-Rule text-[13px]">ระดับสิทธิ: ข้อมูลพื้นฐาน</span>
                     </div>
                 </div>
             </div>

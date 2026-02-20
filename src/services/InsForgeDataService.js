@@ -9,7 +9,7 @@ class InsForgeDataService extends AbstractDataService {
     constructor(config = {}) {
         super();
         this._baseUrl = config.baseUrl || 'https://3tcdq2dd.ap-southeast.insforge.app';
-        this._apiKey = config.apiKey || 'ik_e9ac09dcf4f6732689dd5558fe889c0a';
+        this._apiKey = config.apiKey || window.LOCAL_SECRETS?.INSFORGE_API_KEY || '';
         this._initialized = false;
     }
 

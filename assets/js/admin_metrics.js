@@ -21,15 +21,15 @@ class AdminMetricsService {
             },
             netlify: {
                 siteId: '0df70491-f08d-4572-aefa-c1458e8fd7f2', // Found in deploy.ps1
-                token: 'nfp_5U2EHaoVnAYAfXobrm5DvPiRDVR59sz2cc5e'        // Generated via agent
+                token: window.LOCAL_SECRETS?.NETLIFY_TOKEN || ''        // Generated via agent
             },
             github: {
                 repo: 'apaiso1978-debug/idlpms-hud',   // Found in git remote
                 token: '' // Optional for public repos
             },
             webhookUrl: '',
-            lineChannelToken: 'khxlUfwZtVqIYdP9Xe+CBJoeWkyV5ElBndaWiwYcWG+6PHWRyU8BfpalkDtyLfPUwPmGUHAHFVEjtpmnTfSAPbDxDvtQn//pTezdmOnax/dicLpwCRgE1a74yR0O8dO7gtfI83dynNeN47z6/I+TCgdB04t89/1O/w1cDnyilFU=',
-            lineTargetId: 'U2be6b5ab002d97491ba4827832f15125'
+            lineChannelToken: window.LOCAL_SECRETS?.LINE_CHANNEL_TOKEN || '',
+            lineTargetId: window.LOCAL_SECRETS?.LINE_TARGET_ID || ''
         };
 
         this.config = JSON.parse(JSON.stringify(this.defaultConfig));

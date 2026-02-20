@@ -3,539 +3,237 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IDLPMS | Instructional Data-Driven Learning Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>IDLPMS | Instructional OS</title>
+
+    <!-- Tailwind CSS (via CDN for development, controlled via theme.css in prod) -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Core Stylesheets -->
+    <link rel="stylesheet" href="assets/css/utilities.css">
     <link rel="stylesheet" href="assets/css/theme.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+
     <style>
         /* Precision Overrides for Industrial HUD */
         body {
             background-color: var(--vs-bg-deep);
             color: var(--vs-text-body);
-            font-family: 'Sarabun', sans-serif;
-            font-weight: 200;
             overflow-x: hidden;
+            font-family: 'Sarabun', sans-serif;
+            font-weight: 300;
         }
 
-        .hud-grid {
+        /* 
+         * Hero HUD Grid Background 
+         * Rule 2 & 6: Translucent grid overlay
+         */
+        .hero-grid {
             background-image:
-                linear-gradient(rgba(34, 211, 238, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(34, 211, 238, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
+                linear-gradient(rgba(34, 211, 238, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(34, 211, 238, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: center;
         }
 
-        .dna-axis-label {
-            font-size: 10px;
-            color: var(--vs-text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .tactical-border {
-            border: 1px solid var(--vs-border);
+        /* Nav Header (Rule 1: 48px Height) */
+        .landing-nav {
+            height: 48px;
+            background-color: var(--vs-bg-panel);
+            border-bottom: 1px solid var(--vs-border);
+            box-shadow: 0 1px 0 var(--vs-border-highlight) inset;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
             position: relative;
+            z-index: 10;
         }
 
-        .tactical-border::before {
+        /* Decorative Tactical Border lines */
+        .tactical-frame {
+            position: relative;
+            border: 1px solid var(--vs-border);
+            border-radius: var(--vs-radius);
+            background: var(--vs-bg-card);
+            padding: 24px;
+            /* Inset groove shadow */
+            box-shadow: 0 1px 0 var(--vs-border-highlight) inset;
+        }
+
+        .tactical-frame::before {
             content: '';
             position: absolute;
             top: -1px;
             left: -1px;
-            width: 5px;
-            height: 5px;
-            border-top: 1px solid var(--vs-accent);
-            border-left: 1px solid var(--vs-accent);
+            width: 8px;
+            height: 8px;
+            border-top: 1px solid rgba(var(--vs-accent-rgb), 0.5);
+            border-left: 1px solid rgba(var(--vs-accent-rgb), 0.5);
+            border-top-left-radius: var(--vs-radius);
         }
 
-        .tactical-border::after {
+        .tactical-frame::after {
             content: '';
             position: absolute;
             bottom: -1px;
             right: -1px;
-            width: 5px;
-            height: 5px;
-            border-bottom: 1px solid var(--vs-accent);
-            border-right: 1px solid var(--vs-accent);
+            width: 8px;
+            height: 8px;
+            border-bottom: 1px solid rgba(var(--vs-accent-rgb), 0.5);
+            border-right: 1px solid rgba(var(--vs-accent-rgb), 0.5);
+            border-bottom-right-radius: var(--vs-radius);
         }
 
-        /* Hero DNA Animation */
-        @keyframes dna-pulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-                opacity: 0.3;
-            }
-
-            50% {
-                transform: scale(1.05);
-                opacity: 0.5;
-            }
-        }
-
-        .dna-bg {
-            animation: dna-pulse 8s infinite ease-in-out;
-        }
-
-        /* Iron Rules: RGBA compliance for dynamic classes */
-        .bg-custom-deep-op {
-            background-color: rgba(28, 28, 31, 0.80);
-        }
-
-        .bg-custom-accent-op-05 {
-            background-color: rgba(34, 211, 238, 0.05);
-        }
-
-        .bg-custom-accent-op-15 {
-            background-color: rgba(34, 211, 238, 0.15);
-        }
-
-        .bg-custom-accent-op-10 {
-            background-color: rgba(34, 211, 238, 0.10);
-        }
-
-        .border-custom-accent-op-30 {
-            border-color: rgba(34, 211, 238, 0.30);
-        }
-
-        .bg-custom-panel-op-50 {
-            background-color: rgba(39, 39, 42, 0.50);
-        }
-
-        .bg-custom-panel-op-30 {
-            background-color: rgba(39, 39, 42, 0.30);
-        }
-
-        .border-custom-rose-op-30 {
-            border-color: rgba(244, 63, 94, 0.30);
-        }
-
-        .bg-custom-rose-op-20 {
-            background-color: rgba(244, 63, 94, 0.20);
-        }
-
-        .border-custom-rose-op-40 {
-            border-color: rgba(244, 63, 94, 0.40);
-        }
-
-        .bg-custom-amber-op-10 {
-            background-color: rgba(251, 191, 36, 0.10);
-        }
-
-        .border-custom-amber-op-30 {
-            border-color: rgba(251, 191, 36, 0.30);
+        .glitch-text {
+            color: var(--vs-text-title);
+            text-shadow: 0 0 10px rgba(34, 211, 238, 0.3);
         }
     </style>
 </head>
 
-<body class="antialiased font-light hud-grid min-h-screen Thai-Rule">
+<body>
 
     <!-- Top Navigation -->
-    <nav
-        class="fixed top-0 w-full h-14 bg-custom-deep-op backdrop-blur-md border-b border-[var(--vs-border)] z-50 px-6 flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-            <div class="w-8 h-8 rounded-[var(--vs-radius)] bg-[var(--vs-accent)] flex items-center justify-center">
-                <i class="icon i-chip h-5 w-5 text-[var(--vs-bg-deep)]"></i>
-            </div>
-            <div>
-                <span class="text-[var(--vs-text-title)] uppercase text-[11px] block">IDLPMS</span>
-                <span class="text-[var(--vs-text-muted)] text-[9px] uppercase block -mt-1">Instructional OS v6.0</span>
-            </div>
+    <nav class="landing-nav">
+        <div class="flex items-center gap-2">
+            <i class="icon i-cpu-chip w-5 h-5 bg-[var(--vs-accent)]"
+                style="mask-size: 20px; -webkit-mask-size: 20px;"></i>
+            <span class="text-[var(--vs-text-title)] text-[13px] uppercase font-light">IDLPMS <span
+                    class="text-[var(--vs-text-muted)]">v2.0 HUD</span></span>
         </div>
 
-        <div class="hidden md:flex items-center space-x-8">
-            <a href="#vision"
-                class="text-[var(--vs-text-muted)] hover:text-[var(--vs-accent)] text-[11px] uppercase transition-colors">Vision</a>
-            <a href="#kpaed"
-                class="text-[var(--vs-text-muted)] hover:text-[var(--vs-accent)] text-[11px] uppercase transition-colors">KPAED
-                Matrix</a>
-            <a href="#roles"
-                class="text-[var(--vs-text-muted)] hover:text-[var(--vs-accent)] text-[11px] uppercase transition-colors">Hierarchy</a>
-        </div>
+        <div class="flex items-center gap-3">
+            <a href="docs/NETLIFY_GUIDE.md"
+                class="text-[13px] text-[var(--vs-text-muted)] hover:text-[var(--vs-text-title)] transition-colors hidden md:block">Documentation</a>
 
-        <div class="flex items-center space-x-4">
+            <!-- Enter HUD Button (Neon Style Rule 6) -->
             <a href="login.html"
-                class="px-4 py-2 bg-[var(--vs-accent)] text-[var(--vs-bg-deep)] text-[11px] uppercase rounded-[var(--vs-radius)] transition-all font-light"
-                style="background-color: var(--vs-accent);">
-                Enter HUD
+                class="neon-btn-accent px-4 py-1.5 flex items-center gap-1.5 rounded-[3px] text-[13px] uppercase">
+                <i class="icon i-arrow-right-on-rectangle w-3 h-3 bg-current"
+                    style="mask-size: 12px; -webkit-mask-size: 12px;"></i>
+                Enter Access
             </a>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="pt-32 pb-24 px-6 md:px-24 max-w-[1600px] mx-auto space-y-32">
+    <!-- Hero Section -->
+    <main
+        class="relative hero-grid min-h-[calc(100vh-48px)] flex flex-col items-center justify-center p-6 bg-gradient-to-b from-[var(--vs-bg-deep)] to-[#151518]">
 
-        <!-- Hero Section -->
-        <section class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div class="space-y-8">
-                <div
-                    class="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-custom-accent-op-30 bg-custom-accent-op-05">
-                    <span class="w-2 h-2 rounded-full bg-[var(--vs-accent)] animate-pulse"></span>
-                    <span class="text-[var(--vs-accent)] text-[11px] uppercase font-light">System Status: Optimal</span>
+        <div class="max-w-5xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+            <!-- Left: Typography & Intro -->
+            <div class="flex flex-col z-10">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="w-2 h-2 rounded-full bg-[var(--vs-success)] animate-pulse"></span>
+                    <span class="text-[13px] text-[var(--vs-success)] uppercase">System Online : Optimal
+                        Performance</span>
                 </div>
 
-                <h1 class="text-4xl md:text-6xl font-extralight text-[var(--vs-text-title)] leading-tight">
-                    ถอดรหัสร่องรอยแห่งปัญญา<br>
-                    <span class="text-[var(--vs-accent)]">สู่การศึกษาที่วัดผลได้จริง</span>
+                <h1
+                    class="text-4xl md:text-5xl lg:text-6xl text-[var(--vs-text-title)] font-light leading-tight mb-4 glitch-text">
+                    The Modern <br>
+                    <span class="text-[var(--vs-accent)]">Instructional OS</span>
                 </h1>
 
-                <p class="text-[var(--vs-text-body)] text-lg max-w-xl leading-relaxed">
-                    IDLPMS คือระบบปฏิบัติการทางการศึกษา (Instructional OS) ที่เน้นความโปร่งใสของข้อมูล
-                    และการวิเคราะห์ศักยภาพผู้เรียนผ่านโมเดล 5 แกนมาตรฐาน เพื่อความเท่าเทียมในทุกพื้นที่
+                <p class="text-[var(--vs-text-body)] text-[13px] leading-relaxed mb-8 max-w-lg">
+                    แพลตฟอร์มบริหารจัดการข้อมูลการศึกษายุคใหม่ระดับองค์กร (IDLPMS) <br>
+                    ออกแบบภายใต้สถาปัตยกรรม <strong>Offline-First</strong> และผสานระบบ <strong>Mastery AI</strong> <br>
+                    เพื่อการประมวลผล DNA ของผู้เรียนแบบ Zero-Mismatch
                 </p>
 
-                <div class="flex items-center space-x-6">
-                    <div class="space-y-1">
-                        <span class="text-[var(--vs-text-title)] text-2xl font-extralight">10M+</span>
-                        <span class="text-[var(--vs-text-muted)] text-[11px] uppercase block">Data Samples</span>
+                <div class="flex flex-wrap items-center gap-3">
+                    <a href="login.html"
+                        class="neon-btn-accent px-8 py-3 flex items-center gap-2 rounded-[3px] text-[13px] uppercase text-center justify-center">
+                        <i class="icon i-finger-print w-4 h-4 bg-current"></i>
+                        Initiate Login Sequence
+                    </a>
+                </div>
+
+                <!-- Metrics Grid -->
+                <div
+                    class="grid grid-cols-3 gap-6 mt-12 border-t border-[var(--vs-border)] pt-6 groove-top w-full max-w-lg">
+                    <div>
+                        <div class="text-[24px] text-[var(--vs-text-title)]">100%</div>
+                        <div class="text-[13px] opacity-60 text-[var(--vs-text-muted)] uppercase">Offline Capable</div>
                     </div>
-                    <div class="w-px h-10 bg-[var(--vs-border)]"></div>
-                    <div class="space-y-1">
-                        <span class="text-[var(--vs-accent)] text-2xl font-extralight">0%</span>
-                        <span class="text-[var(--vs-text-muted)] text-[11px] uppercase block">Data Mismatch</span>
+                    <div>
+                        <div class="text-[24px] text-[var(--vs-accent)]">0%</div>
+                        <div class="text-[13px] opacity-60 text-[var(--vs-text-muted)] uppercase">Data Mismatch</div>
                     </div>
-                    <div class="w-px h-10 bg-[var(--vs-border)]"></div>
-                    <div class="space-y-1">
-                        <span class="text-[var(--vs-text-title)] text-2xl font-extralight">7-Level</span>
-                        <span class="text-[var(--vs-text-muted)] text-[11px] uppercase block">Unity Framework</span>
+                    <div>
+                        <div class="text-[24px] text-[var(--vs-success)]">7-Tier</div>
+                        <div class="text-[13px] opacity-60 text-[var(--vs-text-muted)] uppercase">Hierarchy Level</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Hero Intelligence DNA Visualization -->
-            <div class="relative flex items-center justify-center">
-                <div class="absolute inset-0 bg-custom-accent-op-05 rounded-full filter blur-[100px]"></div>
-                <div
-                    class="relative w-full aspect-square max-w-[500px] tactical-border p-8 bg-custom-panel-op-50 backdrop-blur-sm">
-                    <div class="absolute top-4 left-4 text-[10px] text-[var(--vs-text-muted)] uppercase">Intelligence
-                        DNA Core</div>
-                    <div class="absolute bottom-4 right-4 text-[10px] text-[var(--vs-accent)] animate-pulse">Tracking
-                        Active Trace...</div>
-
-                    <!-- Radar Chart SVG Simulation -->
-                    <svg viewBox="0 0 100 100" class="w-full h-full dna-bg">
-                        <!-- Grid lines -->
-                        <polygon points="50,5 95,25 95,75 50,95 5,75 5,25" fill="none" stroke="rgba(255,255,255,0.05)"
-                            stroke-width="0.5" />
-                        <polygon points="50,23 77,35 77,65 50,77 23,65 23,35" fill="none"
-                            stroke="rgba(255,255,255,0.05)" stroke-width="0.5" />
-                        <polygon points="50,41 59,45 59,55 50,59 41,55 41,45" fill="none"
-                            stroke="rgba(255,255,255,0.05)" stroke-width="0.5" />
-
-                        <!-- Axes -->
-                        <line x1="50" y1="50" x2="50" y2="5" stroke="rgba(255,255,255,0.1)" stroke-width="0.2" />
-                        <line x1="50" y1="50" x2="95" y2="25" stroke="rgba(255,255,255,0.1)" stroke-width="0.2" />
-                        <line x1="50" y1="50" x2="95" y2="75" stroke="rgba(255,255,255,0.1)" stroke-width="0.2" />
-                        <line x1="50" y1="50" x2="50" y2="95" stroke="rgba(255,255,255,0.1)" stroke-width="0.2" />
-                        <line x1="50" y1="50" x2="5" y2="75" stroke="rgba(255,255,255,0.1)" stroke-width="0.2" />
-                        <line x1="50" y1="50" x2="5" y2="25" stroke="rgba(255,255,255,0.1)" stroke-width="0.2" />
-
-                        <!-- Data Polygon (Sample) -->
-                        <polygon points="50,15 85,30 75,70 50,85 20,60 30,30" fill="rgba(34, 211, 238, 0.15)"
-                            stroke="var(--vs-accent)" stroke-width="1" />
-
-                        <!-- Dots -->
-                        <circle cx="50" cy="15" r="1.5" fill="var(--vs-accent)" />
-                        <circle cx="85" cy="30" r="1.5" fill="var(--vs-accent)" />
-                        <circle cx="75" cy="70" r="1.5" fill="var(--vs-accent)" />
-                        <circle cx="50" cy="85" r="1.5" fill="var(--vs-accent)" />
-                        <circle cx="20" cy="60" r="1.5" fill="var(--vs-accent)" />
-                        <circle cx="30" cy="30" r="1.5" fill="var(--vs-accent)" />
-                    </svg>
-
-                    <!-- Labels on Axes -->
-                    <div class="absolute top-[5%] left-1/2 -translate-x-1/2 dna-axis-label">K - Knowledge</div>
-                    <div class="absolute top-[22%] right-[2%] dna-axis-label">P - Process</div>
-                    <div class="absolute bottom-[22%] right-[2%] dna-axis-label">A - Attitude</div>
-                    <div class="absolute bottom-[5%] left-1/2 -translate-x-1/2 dna-axis-label">E - Effort</div>
-                    <div class="absolute bottom-[22%] left-[2%] dna-axis-label">D - Discipline</div>
-                    <div class="absolute top-[22%] left-[2%] dna-axis-label">I - Intelligence</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Vision Section -->
-        <section id="vision" class="space-y-12">
-            <header class="flex items-center space-x-4">
-                <span class="text-[var(--vs-accent)] text-lg font-extralight uppercase">01</span>
-                <h2 class="text-2xl text-[var(--vs-text-title)] uppercase font-extralight">Strategy & Vision</h2>
-            </header>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div
-                    class="p-8 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[var(--vs-border)] space-y-4 hover:border-custom-accent-op-30 transition-colors group">
-                    <i class="icon i-lightning h-8 w-8 text-amber-400"></i>
-                    <h3 class="text-[var(--vs-text-title)] text-lg">Operational Efficiency</h3>
-                    <p class="text-[var(--vs-text-muted)] text-[11px] leading-relaxed uppercase">
-                        การประมวลผลแบบ Real-time เพื่อการตัดสินใจที่รวดเร็ว แม่นยำ และมีประสิทธิภาพสูงสุดในทุกระนาบ
+            <!-- Right: Feature Cards / Tactical Display -->
+            <div class="flex flex-col gap-4 z-10 w-full max-w-md mx-auto">
+                <div class="tactical-frame fade-in">
+                    <div class="flex items-center gap-2 mb-2 w-full border-b border-[var(--vs-border)] pb-2 groove">
+                        <i class="icon i-cloud-arrow-down w-4 h-4 bg-[var(--id-obec)]"></i>
+                        <span class="text-[13px] text-[var(--vs-text-title)] uppercase">Resilient Architecture</span>
+                    </div>
+                    <p class="text-[13px] text-[var(--vs-text-muted)] leading-relaxed">
+                        ระบบซิงก์ข้อมูลอัจฉริยะ (SyncEngine) ทำงานเบื้องหลังอย่างไร้รอยต่อ
+                        แม้ในพื้นที่ที่อินเทอร์เน็ตไม่เสถียร รองรับการเก็บข้อมูล PWA เต็มรูปแบบ
                     </p>
                 </div>
-                <div
-                    class="p-8 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[var(--vs-border)] space-y-4 hover:border-custom-accent-op-30 transition-colors group">
-                    <i class="icon i-shield h-8 w-8 text-emerald-400"></i>
-                    <h3 class="text-[var(--vs-text-title)] text-lg">Data Integrity</h3>
-                    <p class="text-[var(--vs-text-muted)] text-[11px] leading-relaxed uppercase">
-                        ความเป็นหนึ่งเดียวของข้อมูล (Unity) ด้วยเป้าหมาย Single Unified Portal สำหรับบุคลากรทุกระดับชั้น
+
+                <div class="tactical-frame fade-in" style="animation-delay: 0.1s;">
+                    <div class="flex items-center gap-2 mb-2 w-full border-b border-[var(--vs-border)] pb-2 groove">
+                        <i class="icon i-shield-check w-4 h-4 bg-[var(--vs-warning)]"></i>
+                        <span class="text-[13px] text-[var(--vs-text-title)] uppercase">Role-Based DNA Harvesting</span>
+                    </div>
+                    <p class="text-[13px] text-[var(--vs-text-muted)] leading-relaxed">
+                        โครงสร้างสิทธิ์การเข้าถึง 7 ระดับ (นักเรียนจนถึงส่วนกลาง) และชุดเก็บข้อมูลพฤติกรรม KPA+
+                        มั่นใจในความถูกต้องและบริสุทธิ์ของข้อมูลเด็ก
                     </p>
                 </div>
-                <div
-                    class="p-8 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[var(--vs-border)] space-y-4 hover:border-custom-accent-op-30 transition-colors group">
-                    <i class="icon i-globe h-8 w-8 text-indigo-400"></i>
-                    <h3 class="text-[var(--vs-text-title)] text-lg">Scalability & Agility</h3>
-                    <p class="text-[var(--vs-text-muted)] text-[11px] leading-relaxed uppercase">
-                        รองรับผู้ใช้งานหลักล้านคนทั่วประเทศ พร้อมระบบ Offline-First สำหรับพื้นที่ห่างไกล
+
+                <div class="tactical-frame fade-in" style="animation-delay: 0.2s;">
+                    <div class="flex items-center gap-2 mb-2 w-full border-b border-[var(--vs-border)] pb-2 groove">
+                        <i class="icon i-bolt w-4 h-4 bg-[var(--sj-sci)]"></i>
+                        <span class="text-[13px] text-[var(--vs-text-title)] uppercase">Mastery AI Auditor</span>
+                    </div>
+                    <p class="text-[13px] text-[var(--vs-text-muted)] leading-relaxed">
+                        ระบบ AI ล้ำสมัยคอยตรวจสอบความสมเหตุสมผลของแพลตฟอร์ม วิเคราะห์พฤติกรรมการพิมพ์
+                        และป้องกันการคัดลอกคำตอบ
                     </p>
                 </div>
             </div>
-        </section>
 
-        <!-- KPAED Matrix -->
-        <section id="kpaed" class="space-y-12">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <div class="order-2 lg:order-1 relative">
-                    <div class="tactical-border p-6 bg-[var(--vs-bg-panel)]">
-                        <div class="flex items-center justify-between mb-8">
-                            <span class="text-[var(--vs-text-title)] text-[11px] uppercase">Neural Trace Harvest</span>
-                            <div class="flex items-center space-x-2">
-                                <span class="text-[var(--vs-accent)] text-[10px]">ACTIVE NODE</span>
-                                <span class="w-1.5 h-1.5 rounded-full bg-[var(--vs-accent)]"></span>
-                            </div>
-                        </div>
-
-                        <div class="space-y-6">
-                            <div class="space-y-2">
-                                <div class="flex justify-between text-[10px] uppercase">
-                                    <span>Knowledge Trace</span>
-                                    <span class="text-[var(--vs-accent)]">85%</span>
-                                </div>
-                                <div class="vs-progress-track">
-                                    <div class="vs-progress-fill" style="width: 85%"></div>
-                                </div>
-                            </div>
-                            <div class="space-y-2">
-                                <div class="flex justify-between text-[10px] uppercase">
-                                    <span>Process Skills</span>
-                                    <span class="text-[var(--vs-success)]">72%</span>
-                                </div>
-                                <div class="vs-progress-track">
-                                    <div class="vs-progress-fill-success" style="width: 72%"></div>
-                                </div>
-                            </div>
-                            <div class="space-y-2">
-                                <div class="flex justify-between text-[10px] uppercase">
-                                    <span>Attitude Alignment</span>
-                                    <span class="text-rose-400">94%</span>
-                                </div>
-                                <div class="vs-progress-track">
-                                    <div class="vs-progress-fill"
-                                        style="background-color: rgba(244, 63, 94, 1); width: 94%"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mt-8 pt-6 border-t border-[var(--vs-border)] flex items-start space-x-4">
-                            <div
-                                class="w-10 h-10 rounded-full bg-custom-amber-op-10 flex items-center justify-center border border-custom-amber-op-30">
-                                <i class="icon i-sparkles h-5 w-5 text-amber-400"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-amber-400 text-[11px] uppercase">Neural Star Detected</h4>
-                                <p class="text-[var(--vs-text-muted)] text-[11px]">
-                                    ระบบได้บันทึกร่องรอยการเรียนรู้ใหม่ในมิติ Effort (ความพยายาม) สำเร็จแล้ว</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="order-1 lg:order-2 space-y-6">
-                    <header class="flex items-center space-x-4">
-                        <span class="text-[var(--vs-accent)] text-lg font-extralight uppercase">02</span>
-                        <h2 class="text-2xl text-[var(--vs-text-title)] uppercase font-extralight">The Intelligence DNA
-                        </h2>
-                    </header>
-                    <p class="text-[var(--vs-text-body)] text-lg leading-relaxed">
-                        เราไม่ได้ตัดสินผู้เรียนเพียงแค่จาก "คะแนนสอบ" (K)
-                        แต่เราเก็บเกี่ยวผลลัพธ์ผ่านร่องรอยแห่งปัญญาทั้ง 5 แกน (KPAED)
-                        เพื่อค้นหาจุดแข็งที่แท้จริงของมนุษย์
-                    </p>
-                    <ul class="space-y-4">
-                        <li class="flex items-center space-x-3 text-[11px] text-[var(--vs-text-muted)]">
-                            <span class="text-[var(--vs-accent)] font-bold">K</span>
-                            <span class="uppercase">Knowledge (ความรู้)</span>
-                        </li>
-                        <li class="flex items-center space-x-3 text-[11px] text-[var(--vs-text-muted)]">
-                            <span class="text-[var(--vs-accent)] font-bold">P</span>
-                            <span class="uppercase">Process (ทักษะกระบวนการ)</span>
-                        </li>
-                        <li class="flex items-center space-x-3 text-[11px] text-[var(--vs-text-muted)]">
-                            <span class="text-[var(--vs-accent)] font-bold">A</span>
-                            <span class="uppercase">Attitude (เจตคติ)</span>
-                        </li>
-                        <li class="flex items-center space-x-3 text-[11px] text-[var(--vs-text-muted)]">
-                            <span class="text-[var(--vs-accent)] font-bold">E</span>
-                            <span class="uppercase">Effort (ความพยายาม)</span>
-                        </li>
-                        <li class="flex items-center space-x-3 text-[11px] text-[var(--vs-text-muted)]">
-                            <span class="text-[var(--vs-accent)] font-bold">D</span>
-                            <span class="uppercase">Discipline (วินัย)</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- Role Hierarchy Section -->
-        <section id="roles" class="space-y-12">
-            <header class="text-center space-y-4">
-                <span class="text-[var(--vs-accent)] text-lg font-extralight uppercase">03</span>
-                <h2 class="text-3xl text-[var(--vs-text-title)] uppercase font-extralight">Role Hierarchy & Chain of
-                    Command</h2>
-                <p class="text-[var(--vs-text-muted)] text-[11px] uppercase">Unifying 7 Tiers of Educational Governance
-                </p>
-            </header>
-
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 text-[11px]">
-                <div
-                    class="tactical-border p-4 bg-[var(--vs-bg-panel)] flex flex-col items-center text-center space-y-3">
-                    <span class="text-[8px] text-[var(--vs-text-muted)] uppercase">Lvl 07</span>
-                    <span class="role-badge role-badge-moe">MOE</span>
-                    <span class="text-[var(--vs-text-title)]">กระทรวงฯ</span>
-                </div>
-                <div
-                    class="tactical-border p-4 bg-[var(--vs-bg-panel)] flex flex-col items-center text-center space-y-3">
-                    <span class="text-[8px] text-[var(--vs-text-muted)] uppercase">Lvl 06</span>
-                    <span class="role-badge" style="--vs-neon-rgb: 129, 140, 248">OBEC</span>
-                    <span class="text-[var(--vs-text-title)]">สพฐ.</span>
-                </div>
-                <div
-                    class="tactical-border p-4 bg-[var(--vs-bg-panel)] flex flex-col items-center text-center space-y-3">
-                    <span class="text-[8px] text-[var(--vs-text-muted)] uppercase">Lvl 05</span>
-                    <span class="role-badge role-badge-esa">ESA</span>
-                    <span class="text-[var(--vs-text-title)]">เขตพื้นที่</span>
-                </div>
-                <div
-                    class="tactical-border p-4 bg-[var(--vs-bg-panel)] flex flex-col items-center text-center space-y-3">
-                    <span class="text-[8px] text-[var(--vs-text-muted)] uppercase">Lvl 04</span>
-                    <span class="role-badge role-badge-director">DIR</span>
-                    <span class="text-[var(--vs-text-title)]">ผอ. รร.</span>
-                </div>
-                <div
-                    class="tactical-border p-4 bg-[var(--vs-bg-panel)] flex flex-col items-center text-center space-y-3">
-                    <span class="text-[8px] text-[var(--vs-text-muted)] uppercase">Lvl 03</span>
-                    <span class="role-badge role-badge-teacher">TEA</span>
-                    <span class="text-[var(--vs-text-title)]">ครูผู้สอน</span>
-                </div>
-                <div
-                    class="tactical-border p-4 bg-[var(--vs-bg-panel)] flex flex-col items-center text-center space-y-3">
-                    <span class="text-[8px] text-[var(--vs-text-muted)] uppercase">Lvl 02</span>
-                    <span class="role-badge role-badge-parent">PAR</span>
-                    <span class="text-[var(--vs-text-title)]">ผู้ปกครอง</span>
-                </div>
-                <div
-                    class="tactical-border p-4 bg-[var(--vs-bg-panel)] flex flex-col items-center text-center space-y-3">
-                    <span class="text-[8px] text-[var(--vs-text-muted)] uppercase">Lvl 01</span>
-                    <span class="role-badge role-badge-student">STU</span>
-                    <span class="text-[var(--vs-text-title)]">นักเรียน</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Access Sentinel Section -->
-        <section class="p-12 tactical-border bg-custom-panel-op-30 backdrop-blur-sm overflow-hidden relative">
-            <div
-                class="absolute top-0 right-0 w-64 h-64 bg-custom-accent-op-10 rounded-full filter blur-[80px] -translate-y-1/2 translate-x-1/2">
-            </div>
-
-            <div class="relative grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                <div class="space-y-6">
-                    <h3 class="text-xl text-[var(--vs-text-title)] flex items-center space-x-3">
-                        <i class="icon i-shield h-6 w-6 text-[var(--vs-accent)]"></i>
-                        <span>Access Sentinel Intelligence</span>
-                    </h3>
-                    <p class="text-[var(--vs-text-body)] text-md leading-relaxed">
-                        ระบบรักษาความปลอดภัยอัจฉริยะที่ตรวจสอบความสอดคล้องระหว่าง "ระดับผู้ใช้" และ "ระดับเนื้อหา" แบบ
-                        Real-time (Zero-Mismatch Policy) เพื่อคงมาตรฐานคุณภาพข้อมูลสูงสุด
-                    </p>
-                    <div
-                        class="p-4 bg-[var(--vs-bg-deep)] rounded-[var(--vs-radius)] border-custom-rose-op-30 flex items-center space-x-4">
-                        <div
-                            class="px-2 py-0.5 rounded-[2px] bg-custom-rose-op-20 border-custom-rose-op-40 text-rose-500 text-[10px] animate-pulse whitespace-nowrap uppercase">
-                            GRADE MISMATCH DETECTED</div>
-                        <span class="text-[var(--vs-text-muted)] text-[11px] uppercase font-light">Automatic Sentinel
-                            Intervention active</span>
-                    </div>
-                </div>
-                <div class="hidden md:block">
-                    <div
-                        class="p-6 bg-[var(--vs-bg-deep)] rounded-[var(--vs-radius)] border border-[var(--vs-border)] font-mono text-[10px] text-[var(--vs-success)] space-y-1">
-                        <div>[SENTINEL_LOG]: Authentication Success...</div>
-                        <div>[SENTINEL_LOG]: Role: SCHOOL_DIR (Level 04) Verified.</div>
-                        <div>[SENTINEL_LOG]: Scanning Class Metadata: Grade 9...</div>
-                        <div>[SENTINEL_LOG]: Scan Result: COMPATIBLE.</div>
-                        <div class="animate-pulse">_</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Final CTA -->
-        <section class="text-center py-20 space-y-10">
-            <h2 class="text-4xl font-extralight text-[var(--vs-text-title)]">
-                พร้อมเริ่มเก็บเกี่ยวร่องรอยแห่งปัญญาหรือยัง?</h2>
-            <div class="flex flex-col md:flex-row items-center justify-center gap-6">
-                <a href="login.html"
-                    class="px-10 py-4 text-[var(--vs-bg-deep)] text-[11px] uppercase rounded-[var(--vs-radius)] transition-all font-light shadow-lg"
-                    style="background-color: var(--vs-accent);">
-                    Enter Instructional OS
-                </a>
-            </div>
-        </section>
+        </div>
 
     </main>
 
-    <!-- Footer -->
-    <footer class="border-t border-[var(--vs-border)] py-12 px-6 bg-custom-panel-op-50">
-        <div class="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
-            <div class="space-y-4">
-                <div class="flex items-center space-x-2">
-                    <i class="icon i-chip h-5 w-5 text-[var(--vs-accent)]"></i>
-                    <span class="text-[var(--vs-text-title)] uppercase text-[11px]">IDLPMS Matrix</span>
-                </div>
-                <p class="text-[var(--vs-text-muted)] text-[11px] uppercase">
-                    ระบบวิเคราะห์และติดตามพัฒนาการผู้เรียนรายบุคคล <br>
-                    สงวนลิขสิทธิ์ © 2026 กระทรวงศึกษาธิการ
-                </p>
-            </div>
-
-            <div class="space-y-4 text-[11px]">
-                <h5 class="text-[var(--vs-text-title)] uppercase">Development Standards</h5>
-                <ul class="text-[var(--vs-text-muted)] space-y-2 uppercase">
-                    <li>Iron Rule v1.2 Compliant</li>
-                    <li>Industrial HUD Aesthetic</li>
-                    <li>Zero-Mismatch Protocol</li>
-                </ul>
-            </div>
-
-            <div class="space-y-4 text-[11px]">
-                <h5 class="text-[var(--vs-text-title)] uppercase">System Protocols</h5>
-                <ul class="text-[var(--vs-text-muted)] space-y-2 uppercase">
-                    <li>Offline-First Canvas</li>
-                    <li>KPAED Learning Model</li>
-                    <li>Neural Trace Archive</li>
-                </ul>
-            </div>
-
-            <div class="space-y-4 text-[11px]">
-                <h5 class="text-[var(--vs-text-title)] uppercase">Node Status</h5>
-                <div class="flex items-center space-x-2">
-                    <span class="w-2 h-2 rounded-full bg-[var(--vs-success)]"></span>
-                    <span class="text-[var(--vs-text-muted)] uppercase">Cloud Terminal Online</span>
-                </div>
-            </div>
+    <!-- Footer Area (Rule 1: Minimal) -->
+    <footer
+        class="h-[48px] bg-[var(--vs-bg-deep)] border-t border-[var(--vs-border)] flex items-center justify-center px-4 groove-top">
+        <div class="text-[13px] text-[var(--vs-text-muted)] opacity-60 flex items-center gap-3">
+            <span>&copy; 2026 IDLPMS Developer Team</span>
+            <span class="w-[1px] h-[12px] bg-[var(--vs-border)]"></span>
+            <span class="text-[var(--vs-accent)]">Zero-Mismatch Policy</span>
         </div>
     </footer>
 
+    <!-- Simple fade-in animation -->
+    <style>
+        .fade-in {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </body>
 
 </html>

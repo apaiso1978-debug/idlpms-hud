@@ -1718,6 +1718,17 @@ const IDLPMS_DATA = {
             avatar: 'SP',
             color: 'id-moe',
         },
+
+        // --- SYSTEM ADMIN ---
+        SYS_ADMIN_001: {
+            role: 'ADMIN',
+            fullName: 'ผู้ดูแลระบบส่วนกลาง (System Admin)',
+            name: 'IDLPMS Admin',
+            org: 'Central Administration',
+            avatar: 'SA',
+            color: 'vs-accent',
+            specialRoles: ['ADMIN', 'DEVELOPER']
+        }
     },
 
     // Dashboard Stats Mock
