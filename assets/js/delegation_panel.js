@@ -116,7 +116,7 @@ const DelegationPanel = {
             const dataService = await this._getDataService();
             const syncEngine = await this._getSyncEngine();
 
-            if (dataService && dataService._mode === 'insforge') {
+            if (dataService && typeof dataService.addDelegation === 'function') {
                 // Direct write to InsForge (when online)
                 const currentUser = JSON.parse(localStorage.getItem('CURRENT_USER') || '{}');
                 await dataService.addDelegation(

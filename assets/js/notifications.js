@@ -6,6 +6,13 @@ window.HUD_NOTIFY = {
     init() {
         console.log("HUD Notification Engine Initializing...");
         this.container = document.getElementById('vs-toast-container');
+        // Auto-create container if missing
+        if (!this.container) {
+            this.container = document.createElement('div');
+            this.container.id = 'vs-toast-container';
+            document.body.appendChild(this.container);
+            console.warn('[HUD_NOTIFY] Auto-created vs-toast-container');
+        }
         this.badges = {
             explorer: document.getElementById('badge-explorer'),
             manual: document.getElementById('badge-manual'),

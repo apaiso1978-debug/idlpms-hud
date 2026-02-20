@@ -1010,8 +1010,10 @@ class DataServiceFactory {
             default:
                 throw new Error(`Unknown DataService mode: ${mode}`);
         }
-
-        service._mode = mode;
+        // Only set _mode if not already set by a guard/fallback path
+        if (!service._fallbackFrom) {
+            service._mode = mode;
+        }
 
         try {
             await service.initialize();
