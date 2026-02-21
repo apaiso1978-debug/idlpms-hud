@@ -1286,6 +1286,22 @@ select option:hover {
     mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20fill%3D%27none%27%20viewBox%3D%270%200%2024%2024%27%20stroke%3D%27currentColor%27%20stroke-width%3D%271.5%27%3E%3Cpath%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20d%3D%27M9.75%209.75l4.5%204.5m0-4.5l-4.5%204.5M21%2012a9%209%200%2011-18%200%209%209%200%200118%200z%27%2F%3E%3C%2Fsvg%3E")
 }
 
+/* Missing Icons Added for Telemetry Dashboard */
+.i-credit-card {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2024%2024%22%20stroke-width%3D%221.5%22%20stroke%3D%22currentColor%22%3E%3Cpath%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20d%3D%22M2.25%208.25h19.5M2.25%209h19.5m-16.5%205.25h6m-6%202.25h3m-3.75%203h15a2.25%202.25%200%20002.25-2.25V6.75A2.25%202.25%200%200019.5%204.5h-15a2.25%202.25%200%2000-2.25%202.25v10.5A2.25%202.25%200%20004.5%2019.5z%22%20%2F%3E%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2024%2024%22%20stroke-width%3D%221.5%22%20stroke%3D%22currentColor%22%3E%3Cpath%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20d%3D%22M2.25%208.25h19.5M2.25%209h19.5m-16.5%205.25h6m-6%202.25h3m-3.75%203h15a2.25%202.25%200%20002.25-2.25V6.75A2.25%202.25%200%200019.5%204.5h-15a2.25%202.25%200%2000-2.25%202.25v10.5A2.25%202.25%200%20004.5%2019.5z%22%20%2F%3E%3C%2Fsvg%3E")
+}
+
+.i-arrow-top-right-on-square {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2024%2024%22%20stroke-width%3D%221.5%22%20stroke%3D%22currentColor%22%3E%3Cpath%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20d%3D%22M13.5%206H5.25A2.25%202.25%200%20003%208.25v10.5A2.25%202.25%200%20005.25%2021h10.5A2.25%202.25%200%200018%2018.75V10.5m-10.5%206L21%203m0%200h-5.25M21%203v5.25%22%20%2F%3E%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2024%2024%22%20stroke-width%3D%221.5%22%20stroke%3D%22currentColor%22%3E%3Cpath%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20d%3D%22M13.5%206H5.25A2.25%202.25%200%20003%208.25v10.5A2.25%202.25%200%20005.25%2021h10.5A2.25%202.25%200%200018%2018.75V10.5m-10.5%206L21%203m0%200h-5.25M21%203v5.25%22%20%2F%3E%3C%2Fsvg%3E")
+}
+
+.i-arrow-right {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2024%2024%22%20stroke-width%3D%221.5%22%20stroke%3D%22currentColor%22%3E%3Cpath%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20d%3D%22M13.5%204.5L21%2012m0%200l-7.5%207.5M21%2012H3%22%20%2F%3E%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2024%2024%22%20stroke-width%3D%221.5%22%20stroke%3D%22currentColor%22%3E%3Cpath%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20d%3D%22M13.5%204.5L21%2012m0%200l-7.5%207.5M21%2012H3%22%20%2F%3E%3C%2Fsvg%3E")
+}
+
 /* Login Page Components (Premium Refactor) */
 .vs-login-container {
     background-color: var(--vs-bg-deep) !important;

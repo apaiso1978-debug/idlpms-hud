@@ -105,11 +105,11 @@
 
 ### 9.2 Page Body Padding (Iron Rule)
 
-| Page Type | Required Class | Value |
-|-----------|---------------|-------|
-| **Functional pages** (schedule, config, dashboard, etc.) | `p-6` | 24px all sides |
-| **Manual/Document pages** | `px-8 pt-8 pb-24` | 32px sides + top, 96px bottom scroll |
-| **Chat interface** | No body padding | Uses flex column layout |
+| Page Type | Required Class | Value | Usage |
+|-----------|---------------|-------|-------|
+| **Functional pages** (schedule, config, dashboard, etc.) | `p-6` | 24px all sides | **System Standard** |
+| **Manual/Document pages** | `px-8 pt-8 pb-24` | 32px sides + top, 96px bottom scroll | Readability focus |
+| **Chat interface** | No body padding | Uses flex column layout | Full width |
 
 ### 9.3 Context-Specific Usage Rules
 
@@ -237,3 +237,13 @@
 ### 16.4 View Toggle (Teacher Only)
 *   `.view-toggle` container with `.view-toggle-btn` buttons
 *   Toggle between "Individual" (Spider) and "Class" (Heatmap) views
+
+## 20. กฏความสม่ำเสมอในแนวขรื้อ (Horizontal Alignment Unity — The X-Axis Rule)
+*เพื่อรักษาเส้นนำสายตา (Visual Axis) จาก Shell ไปยังเนื้อหาภายใน*
+
+*   **Iron Rule:** ทุกองค์ประกอบใน Header ของ Shell (`hud.html`) และเนื้อหาในหน้า Dashboard/Functional Page ต้องมีระยะห่างจากขอบ (Horizontal Padding) เท่ากันที่ **24px (`px-6`)**
+*   **Vertical Line Unity:** เมื่อมองจากบนลงล่าง:
+    *   ขอบซ้ายของ Breadcrumbs ใน Shell ต้องตรงกับขอบซ้ายของเนื้อหาในหน้าเพจ
+    *   ขอบขวาของปุ่ม "มอบหมายงาน" (Delegation) ต้องตรงกับขอบขวาของปุ่ม Action (Settings/Refresh) หรือขอบของ Widget ตัวสุดท้าย
+*   **Consistency:** ห้ามหน้าใดหน้าหนึ่งใช้ `px-4` (16px) หรือ `px-8` (32px) ในขณะที่หน้าอื่นใช้ `px-6` โดยเด็ดขาด เพื่อป้องกันอาการ "หน้าเบี้ยว" เมื่อสลับไปมา
+

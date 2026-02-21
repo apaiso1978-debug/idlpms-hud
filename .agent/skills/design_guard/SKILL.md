@@ -294,6 +294,12 @@ On dark backgrounds (`--vs-bg-card` ≈ `#333338` / `--vs-bg-deep` ≈ `#1e1e22`
 | `--vs-warning` | #eab308 | 234, 179, 8 | Warning / Alert |
 | `--vs-danger` | #ef4444 | 239, 68, 68 | Reject / Error |
 
+### Rule 20 — Horizontal Alignment Unity (The X-Axis Rule)
+- **Iron Rule**: Shell Header padding (`hud.html`) and Functional Page padding MUST be synchronized at **24px (`px-6`)**.
+- **Visual Axis**: Breadcrumbs (Left) and Delegation Button (Right) must align perfectly with the page content edges.
+- **BANNED**: Using `px-4` (16px) or `px-8` (32px) for functional page layout. Everything must use the 24px standard to prevent "shifting" between views.
+
+
 ---
 
 ## Workflow Mandate

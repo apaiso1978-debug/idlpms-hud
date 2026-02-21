@@ -22,8 +22,7 @@
 </head>
 
 <body class="bg-transparent p-6 overflow-y-auto overflow-x-hidden font-['Sarabun'] antialiased vs-scrollbar">
-    <div id="auto-schedule-app"
-        class="max-w-[1600px] mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div id="auto-schedule-app" class="max-w-[1600px] space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
         <!-- Header Section -->
         <div class="flex items-center justify-between">
@@ -51,7 +50,7 @@
         <!-- System Governance Cards -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div
-                class="dna-zone p-4 border-[rgba(var(--vs-accent-rgb),0.2)] bg-[rgba(var(--vs-accent-rgb),0.02)] shadow-[0_0_20px_rgba(var(--vs-accent-rgb),0.03)] selection:bg-[rgba(var(--vs-accent-rgb),0.2)]">
+                class="dna-zone p-6 border-[rgba(var(--vs-accent-rgb),0.2)] bg-[rgba(var(--vs-accent-rgb),0.02)] shadow-[0_0_20px_rgba(var(--vs-accent-rgb),0.03)] selection:bg-[rgba(var(--vs-accent-rgb),0.2)]">
                 <div
                     class="hud-badge-micro text-[var(--vs-accent)] mb-2 font-light border-[rgba(var(--vs-accent-rgb),0.2)]">
                     Governance
@@ -60,7 +59,7 @@
                     Rate (35 Periods)</div>
             </div>
             <div
-                class="dna-zone p-4 border-[rgba(var(--vs-accent-rgb),0.2)] bg-[rgba(var(--vs-accent-rgb),0.02)] shadow-[0_0_20px_rgba(var(--vs-accent-rgb),0.03)] space-y-2">
+                class="dna-zone p-6 border-[rgba(var(--vs-accent-rgb),0.2)] bg-[rgba(var(--vs-accent-rgb),0.02)] shadow-[0_0_20px_rgba(var(--vs-accent-rgb),0.03)] space-y-2">
                 <div
                     class="hud-badge-micro text-[var(--vs-accent)] mb-2 font-light border-[rgba(var(--vs-accent-rgb),0.2)]">
                     Governance 02</div>
@@ -69,7 +68,7 @@
                 </div>
             </div>
             <div
-                class="dna-zone p-4 border-[rgba(var(--vs-accent-rgb),0.2)] bg-[rgba(var(--vs-accent-rgb),0.02)] shadow-[0_0_20px_rgba(var(--vs-accent-rgb),0.03)]">
+                class="dna-zone p-6 border-[rgba(var(--vs-accent-rgb),0.2)] bg-[rgba(var(--vs-accent-rgb),0.02)] shadow-[0_0_20px_rgba(var(--vs-accent-rgb),0.03)]">
                 <div
                     class="hud-badge-micro text-[var(--vs-accent)] mb-2 font-light border-[rgba(var(--vs-accent-rgb),0.2)]">
                     Governance 03</div>
@@ -77,7 +76,7 @@
                     Overlap</div>
             </div>
             <div
-                class="dna-zone p-4 border-[rgba(var(--vs-accent-rgb),0.2)] bg-[rgba(var(--vs-accent-rgb),0.02)] shadow-[0_0_20px_rgba(var(--vs-accent-rgb),0.03)]">
+                class="dna-zone p-6 border-[rgba(var(--vs-accent-rgb),0.2)] bg-[rgba(var(--vs-accent-rgb),0.02)] shadow-[0_0_20px_rgba(var(--vs-accent-rgb),0.03)]">
                 <div
                     class="hud-badge-micro text-[var(--vs-accent)] mb-2 font-light border-[rgba(var(--vs-accent-rgb),0.2)]">
                     Governance 04</div>
@@ -133,7 +132,7 @@
 
         <!-- Welcome Placeholder -->
         <div id="welcome-state"
-            class="dna-zone p-8 flex flex-col items-center justify-center text-center space-y-4 min-h-[360px]">
+            class="dna-zone p-6 flex flex-col items-center justify-center text-center space-y-4 min-h-[360px]">
             <div
                 class="w-24 h-24 rounded-[3px] border border-[rgba(var(--vs-accent-rgb),0.2)] flex items-center justify-center animate-pulse">
                 <i class="icon i-academic w-12 h-12 text-[var(--vs-accent)]/50"></i>
@@ -150,7 +149,7 @@
         <div id="result-view" class="space-y-6 hidden">
             <!-- Dynamic Controls -->
             <div
-                class="flex items-center gap-2 p-4 dna-zone border-[var(--vs-border)] bg-[rgba(var(--vs-bg-deep-rgb),0.3)]">
+                class="flex items-center gap-2 p-6 dna-zone border-[var(--vs-border)] bg-[rgba(var(--vs-bg-deep-rgb),0.3)]">
                 <div class="flex items-center gap-2">
                     <span class="hud-badge-micro font-light border-[var(--vs-border)] uppercase mr-1">Data
                         View</span>
@@ -171,7 +170,7 @@
             </div>
 
             <!-- Global Schedule Grid (Unity: uses same CSS Grid as Teacher Schedule) -->
-            <div class="dna-zone p-4 overflow-x-auto relative">
+            <div class="dna-zone p-6 overflow-x-auto relative">
                 <div id="auto-schedule-grid" class="schedule-grid"
                     style="grid-template-columns: 80px repeat(9, minmax(90px, 1fr)); min-width: 1100px;">
                     <!-- Headers + Body injected by renderGrid() -->
@@ -179,7 +178,7 @@
             </div>
 
             <!-- Workload Summary Bar (กคศ. 4-Domain Compliance) -->
-            <div id="workload-bar" class="dna-zone p-4 hidden">
+            <div id="workload-bar" class="dna-zone p-6 hidden">
                 <div class="flex items-center gap-2 mb-3">
                     <span
                         class="hud-badge-micro border-[rgba(var(--vs-accent-rgb),0.3)] text-[var(--vs-accent)]">Workload</span>
