@@ -299,6 +299,12 @@ On dark backgrounds (`--vs-bg-card` ≈ `#333338` / `--vs-bg-deep` ≈ `#1e1e22`
 - **Visual Axis**: Breadcrumbs (Left) and Delegation Button (Right) must align perfectly with the page content edges.
 - **BANNED**: Using `px-4` (16px) or `px-8` (32px) for functional page layout. Everything must use the 24px standard to prevent "shifting" between views.
 
+### Rule 21 — Edge-to-Edge Fluidity (The Frame Fill Rule)
+- **Iron Rule**: BANNED use of `max-width` (e.g., `max-w-7xl`, `max-w-[1200px]`) on all functional pages.
+- **Full Frame**: Modules must extend to fill the available horizontal frame (`w-full`).
+- **Dynamic Columns**: Use Tailwind breakpoints (`2xl:`, `3xl:`) to increase grid columns as the screen gets wider to prevent awkward stretching.
+- **Unity**: Must still maintain the 24px horizontal padding (Rule 20) even when fluid.
+
 
 ---
 
