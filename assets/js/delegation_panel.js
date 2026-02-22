@@ -561,14 +561,19 @@ const DelegationPanel = {
         const dispatched = allDel.filter(d => d.assignedBy === (user.id || 'DIR_MABLUD'));
         const inbox = allDel.filter(d => d.assignee === (user.id || 'DIR_MABLUD'));
 
+        const title = dispActive ? `งานที่ส่ง (${dispatched.length})` : `งานที่ได้รับ (${inbox.length})`;
+        const nextMode = dispActive ? 'INBOX' : 'DISPATCHED';
+        const iconClass = dispActive ? 'i-paper-airplane' : 'i-inbox';
+        const colorClass = dispActive ? 'var(--vs-accent)' : 'var(--vs-success)';
+
         return `
-            <div class="vs-tab-bar" style="margin:0 12px;">
-                <button class="vs-tab-bar-btn deleg-view-tab${dispActive ? ' active' : ''}" data-tab="DISPATCHED">
-                    งานที่ส่ง (${dispatched.length})
-                </button>
-                <button class="vs-tab-bar-btn deleg-view-tab${!dispActive ? ' active' : ''}" data-tab="INBOX">
-                    งานที่ได้รับ (${inbox.length})
-                </button>
+            <div style="height:48px;min-height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;
+                        background:var(--vs-bg-panel);border-bottom:1px solid var(--vs-border);">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <i class="icon ${iconClass}" style="width:16px;height:16px;color:${colorClass};"></i>
+                    <span style="color:var(--vs-text-title);text-transform:uppercase;font-size:13px;font-weight:300;">${title}</span>
+                </div>
+                <button class="vs-toggle deleg-view-tab${dispActive ? '' : ' active'}" data-tab="${nextMode}"></button>
             </div>`;
     },
 
