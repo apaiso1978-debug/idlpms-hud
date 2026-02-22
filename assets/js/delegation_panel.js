@@ -141,6 +141,74 @@ const DelegationPanel = {
         return { icon: '●', cls: 'success', label: 'ปกติ' };
     },
 
+    // ── Custom Confirm Modal ──
+    showConfirm(title, msg, onConfirm, onCancel = null) {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+            z-index: 20000; display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.2s ease;
+        `;
+
+        const modal = document.createElement('div');
+        const colorVar = 'var(--vs-warning)';
+        const rgbVar = '234, 179, 8';
+
+        modal.className = "Thai-Rule";
+        modal.style.cssText = `
+            background: var(--vs-bg-deep); border: 1px solid rgba(63,63,70,0.5);
+            border-top: 1px solid rgba(${rgbVar}, 0.5); border-radius: var(--vs-radius); padding: 20px 24px;
+            width: 320px; box-shadow: 0 0 30px rgba(0,0,0,0.5), inset 0 0 15px rgba(${rgbVar}, 0.05);
+            transform: translateY(20px) scale(0.95); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        `;
+
+        modal.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                <i class="icon i-exclamation-triangle" style="width:20px; height:20px; color: ${colorVar};"></i>
+                <h3 style="margin:0; font-size:13px; font-weight:300; color:var(--vs-text-title); text-transform:uppercase;">${title}</h3>
+            </div>
+            <p style="margin:0 0 20px 0; font-size:13px; font-weight:300; color:var(--vs-text-body); line-height:1.4;">${msg}</p>
+            <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                <button id="confirm-cancel" class="Thai-Rule" style="
+                    background: transparent; color: var(--vs-text-muted); border: 1px solid rgba(255,255,255,0.1); 
+                    padding: 6px 16px; border-radius: var(--vs-radius); cursor: pointer; font-size: 13px; font-weight: 300;
+                    transition: all 0.2s; outline: none;
+                " onmouseover="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.2)';" 
+                  onmouseout="this.style.background='transparent'; this.style.borderColor='rgba(255,255,255,0.1)';">ยกเลิก</button>
+                  
+                <button id="confirm-ok" class="Thai-Rule" style="
+                    background: rgba(${rgbVar}, 0.1); color: ${colorVar}; border: 1px solid rgba(${rgbVar}, 0.3); 
+                    padding: 6px 16px; border-radius: var(--vs-radius); cursor: pointer; font-size: 13px; font-weight: 300;
+                    transition: all 0.2s; outline: none;
+                " onmouseover="this.style.background='rgba(${rgbVar}, 0.15)'; this.style.borderColor='rgba(${rgbVar}, 0.5)'; this.style.boxShadow='0 0 8px rgba(${rgbVar}, 0.1)';" 
+                  onmouseout="this.style.background='rgba(${rgbVar}, 0.1)'; this.style.borderColor='rgba(${rgbVar}, 0.3)'; this.style.boxShadow='none';">ตกลง</button>
+            </div>
+        `;
+
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+
+        requestAnimationFrame(() => {
+            overlay.style.opacity = '1';
+            modal.style.transform = 'translateY(0) scale(1)';
+        });
+
+        const closeConfirm = (isConfirmed) => {
+            overlay.style.opacity = '0';
+            modal.style.transform = 'translateY(10px) scale(0.95)';
+            setTimeout(() => {
+                if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+                if (isConfirmed && onConfirm) onConfirm();
+                else if (!isConfirmed && onCancel) onCancel();
+            }, 200);
+        };
+
+        modal.querySelector('#confirm-cancel').addEventListener('click', () => closeConfirm(false));
+        modal.querySelector('#confirm-ok').addEventListener('click', () => closeConfirm(true));
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) closeConfirm(false); });
+    },
+
     // ── Custom Alert Modal (Replaces Native Alert) ──
     showAlert(title, msg, type = 'warning') {
         const overlay = document.createElement('div');
@@ -609,23 +677,28 @@ const DelegationPanel = {
     },
 
     _revokeDelegation(id) {
-        if (!confirm('ยืนยันการยกเลิกภารกิจนี้?')) return;
-        const list = this.getAllDelegations();
-        const dlg = list.find(d => d.id === id);
-        if (dlg) {
-            dlg.status = 'REVOKED';
-            this._saveDelegations(list);
+        this.showConfirm(
+            'ยืนยันการยกเลิก',
+            'คุณแน่ใจหรือไม่ว่าต้องการยกเลิกภารกิจนี้? การดำเนินการนี้จะระงับการทำงานของปลายทางทันที',
+            () => {
+                const list = this.getAllDelegations();
+                const dlg = list.find(d => d.id === id);
+                if (dlg) {
+                    dlg.status = 'REVOKED';
+                    this._saveDelegations(list);
 
-            // Soft sync to backend (status update)
-            this._syncToBackend({ ...dlg, status: 'REVOKED' });
+                    // Soft sync to backend (status update)
+                    this._syncToBackend({ ...dlg, status: 'REVOKED' });
 
-            if (window.HUD_NOTIFY) {
-                HUD_NOTIFY.toast('ยกเลิกภารกิจ', `ระงับภารกิจ "${dlg.moduleTitle}" เรียบร้อยแล้ว`, 'info');
-            } else {
-                this.showAlert('ยกเลิกสำเร็จ', `ระงับภารกิจ "${dlg.moduleTitle}" ออกจากระบบแล้ว`, 'success');
+                    if (window.HUD_NOTIFY) {
+                        HUD_NOTIFY.toast('ยกเลิกภารกิจ', `ระงับภารกิจ "${dlg.moduleTitle}" เรียบร้อยแล้ว`, 'info');
+                    } else {
+                        this.showAlert('ยกเลิกสำเร็จ', `ระงับภารกิจ "${dlg.moduleTitle}" ออกจากระบบแล้ว`, 'success');
+                    }
+                    this.render();
+                }
             }
-            this.render();
-        }
+        );
     },
 
     _formatTime(iso) {
