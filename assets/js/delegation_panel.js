@@ -519,11 +519,11 @@ const DelegationPanel = {
                         <span id="deleg-score-display" style="color:var(--vs-text-body);font-size:12px;font-weight:300;">-</span>
                     </div>
                     <input type="hidden" id="deleg-score" value="" />
-                    <div style="display:flex;gap:6px;">
-                        <button type="button" class="neon-btn neon-btn-success deleg-score-btn" data-score="10" style="flex:1;justify-content:center;padding:6px 0;">S</button>
-                        <button type="button" class="neon-btn neon-btn-warning deleg-score-btn" data-score="20" style="flex:1;justify-content:center;padding:6px 0;">M</button>
-                        <button type="button" class="neon-btn neon-btn-primary deleg-score-btn" data-score="50" style="flex:1;justify-content:center;padding:6px 0;">L</button>
-                        <button type="button" class="neon-btn neon-btn-danger deleg-score-btn" data-score="100" style="flex:1;justify-content:center;padding:6px 0;">XL</button>
+                    <div class="vs-tab-bar">
+                        <button type="button" class="vs-tab-bar-btn deleg-score-btn" data-score="10">S (10)</button>
+                        <button type="button" class="vs-tab-bar-btn deleg-score-btn" data-score="20">M (20)</button>
+                        <button type="button" class="vs-tab-bar-btn deleg-score-btn" data-score="50">L (50)</button>
+                        <button type="button" class="vs-tab-bar-btn deleg-score-btn" data-score="100">XL (100)</button>
                     </div>
                     <div id="deleg-score-custom-wrap" style="display:none;margin-top:8px;">
                         <input id="deleg-score-custom" type="number" placeholder="ระบุคะแนนเอง..." min="1" max="100" autocomplete="off"
@@ -757,22 +757,35 @@ const DelegationPanel = {
             btn.addEventListener('click', () => {
                 // Reset all
                 scoreBtns.forEach(b => {
-                    b.style.boxShadow = 'none';
-                    b.style.opacity = '0.5';
+                    b.classList.remove('active');
+                    b.style.color = '';
+                    b.style.boxShadow = '';
                 });
+
                 // Highlight active
-                btn.style.boxShadow = `0 0 8px ${window.getComputedStyle(btn).color}`;
-                btn.style.opacity = '1';
+                btn.classList.add('active');
+
+                // Determine color based on T-Shirt size
+                const score = btn.dataset.score;
+                if (score === '10') {
+                    btn.style.color = 'var(--vs-success)';
+                    btn.style.boxShadow = '0 1px 3px rgba(0,0,0,0.3), 0 0 0 1px rgba(34,197,94,0.15)';
+                } else if (score === '20') {
+                    btn.style.color = 'var(--vs-warning)';
+                    btn.style.boxShadow = '0 1px 3px rgba(0,0,0,0.3), 0 0 0 1px rgba(234,179,8,0.15)';
+                } else if (score === '50') {
+                    btn.style.color = 'var(--vs-accent)';
+                    btn.style.boxShadow = '0 1px 3px rgba(0,0,0,0.3), 0 0 0 1px rgba(34,211,238,0.15)';
+                } else if (score === '100') {
+                    btn.style.color = 'var(--vs-danger)';
+                    btn.style.boxShadow = '0 1px 3px rgba(0,0,0,0.3), 0 0 0 1px rgba(239,68,68,0.15)';
+                }
 
                 // Set value
-                const score = btn.dataset.score;
                 if (scoreInput) scoreInput.value = score;
                 if (scoreDisplay) scoreDisplay.textContent = `${score} pts`;
             });
         });
-
-        // Initial state for score buttons (dim them)
-        scoreBtns.forEach(b => b.style.opacity = '0.5');
 
         // Teacher select → enable/disable submit
         const select = container.querySelector('#deleg-teacher-select');
