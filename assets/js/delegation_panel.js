@@ -551,25 +551,25 @@ const DelegationPanel = {
                             box-sizing:border-box;">
                             
                             <div style="display:flex;flex-direction:column;gap:4px;">
-                                <div class="deleg-score-opt" data-val="10" data-txt="10 Points — 🟢 งานด่วน (S)" 
+                                <div class="deleg-score-opt" data-val="10" data-txt="10 Points — งานด่วน (S)" 
                                      style="padding:8px 12px;cursor:pointer;font-size:13px;font-weight:300;color:var(--vs-text-body);border-radius:3px;border:1px solid transparent;transition:border-color 0.2s, background 0.2s;" 
                                      onmouseover="this.style.background='rgba(var(--vs-success-rgb),0.05)';this.style.borderColor='rgba(var(--vs-success-rgb),0.3)'" onmouseout="this.style.background='transparent';this.style.borderColor='transparent'">
-                                    10 Points — <span style="color:var(--vs-success);">🟢 งานด่วน (S)</span>
+                                    10 Points — <span style="color:var(--vs-success);">งานด่วน (S)</span>
                                 </div>
-                                <div class="deleg-score-opt" data-val="20" data-txt="20 Points — 🟡 งานทั่วไป (M)" 
+                                <div class="deleg-score-opt" data-val="20" data-txt="20 Points — งานทั่วไป (M)" 
                                      style="padding:8px 12px;cursor:pointer;font-size:13px;font-weight:300;color:var(--vs-text-body);border-radius:3px;border:1px solid transparent;transition:border-color 0.2s, background 0.2s;" 
                                      onmouseover="this.style.background='rgba(var(--vs-warning-rgb),0.05)';this.style.borderColor='rgba(var(--vs-warning-rgb),0.3)'" onmouseout="this.style.background='transparent';this.style.borderColor='transparent'">
-                                    20 Points — <span style="color:var(--vs-warning);">🟡 งานทั่วไป (M)</span>
+                                    20 Points — <span style="color:var(--vs-warning);">งานทั่วไป (M)</span>
                                 </div>
-                                <div class="deleg-score-opt" data-val="50" data-txt="50 Points — 🟠 โปรเจกต์ (L)" 
+                                <div class="deleg-score-opt" data-val="50" data-txt="50 Points — โปรเจกต์ (L)" 
                                      style="padding:8px 12px;cursor:pointer;font-size:13px;font-weight:300;color:var(--vs-text-body);border-radius:3px;border:1px solid transparent;transition:border-color 0.2s, background 0.2s;" 
                                      onmouseover="this.style.background='rgba(var(--vs-accent-rgb),0.05)';this.style.borderColor='rgba(var(--vs-accent-rgb),0.3)'" onmouseout="this.style.background='transparent';this.style.borderColor='transparent'">
-                                    50 Points — <span style="color:var(--vs-accent);">🟠 โปรเจกต์ (L)</span>
+                                    50 Points — <span style="color:var(--vs-accent);">โปรเจกต์ (L)</span>
                                 </div>
-                                <div class="deleg-score-opt" data-val="100" data-txt="100 Points — 🔴 งานระดับโรงเรียน (XL)" 
+                                <div class="deleg-score-opt" data-val="100" data-txt="100 Points — งานระดับโรงเรียน (XL)" 
                                      style="padding:8px 12px;cursor:pointer;font-size:13px;font-weight:300;color:var(--vs-text-body);border-radius:3px;border:1px solid transparent;transition:border-color 0.2s, background 0.2s;" 
                                      onmouseover="this.style.background='rgba(var(--vs-danger-rgb),0.05)';this.style.borderColor='rgba(var(--vs-danger-rgb),0.3)'" onmouseout="this.style.background='transparent';this.style.borderColor='transparent'">
-                                    100 Points — <span style="color:var(--vs-danger);">🔴 งานระดับโรงเรียน (XL)</span>
+                                    100 Points — <span style="color:var(--vs-danger);">งานระดับโรงเรียน (XL)</span>
                                 </div>
                             </div>
                         </div>
