@@ -510,25 +510,46 @@ const DelegationPanel = {
                     </select>
                 </div>
 
-                <!-- Score Points (T-Shirt Presets) -->
-                <div style="margin-bottom:12px;">
+                <!-- Score Points Custom Dropdown -->
+                <div style="margin-bottom:12px; position:relative;" id="deleg-score-wrapper">
                     <label style="color:var(--vs-text-muted);font-size:12px;font-weight:300;display:block;margin-bottom:6px;text-transform:uppercase;">
                         น้ำหนักงาน (Score Point)
                     </label>
                     <div style="position:relative;">
                         <i class="icon i-chart-bar" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:rgba(255,255,255,0.4);pointer-events:none;z-index:2;"></i>
-                        <select id="deleg-score"
+                        <input id="deleg-score-display_input" type="text" placeholder="-- เลือกน้ำหนักคะแนน --" autocomplete="off" readonly
                             style="width:100%;padding:10px 12px 10px 34px;background:var(--vs-bg-deep);border:none;
                                    border-radius:var(--vs-radius);color:var(--vs-text-body);font-size:13px;font-weight:300;
-                                   outline:none;transition:box-shadow 0.2s;box-sizing:border-box;cursor:pointer;
-                                   appearance:none;"
+                                   outline:none;transition:box-shadow 0.2s;box-sizing:border-box;cursor:pointer;"
                             onfocus="this.style.boxShadow='inset 0 0 0 1px rgba(var(--vs-accent-rgb),0.5)'" onblur="this.style.boxShadow='none'">
-                            <option value="">-- เลือกน้ำหนักคะแนน --</option>
-                            <option value="10">10 Points — 🟢 งานด่วน (S)</option>
-                            <option value="20">20 Points — 🟡 งานทั่วไป (M)</option>
-                            <option value="50">50 Points — 🟠 โปรเจกต์ (L)</option>
-                            <option value="100">100 Points — 🔴 งานระดับโรงเรียน (XL)</option>
-                        </select>
+                        <input type="hidden" id="deleg-score" value="">
+                        
+                        <!-- Custom Menu -->
+                        <div id="deleg-score-menu" style="display:none; position:absolute; top:100%; left:0; right:0; margin-top:4px;
+                            background:var(--vs-bg-card); border:1px solid rgba(var(--vs-border-rgb),0.5); border-radius:3px; z-index:100;
+                            box-shadow:0 4px 12px rgba(0,0,0,0.5); overflow:hidden;">
+                            
+                            <div class="deleg-score-opt" data-val="10" data-txt="10 Points — 🟢 งานด่วน (S)" 
+                                 style="padding:10px 12px;cursor:pointer;font-size:13px;font-weight:300;color:var(--vs-text-body);border-bottom:1px solid rgba(var(--vs-border-rgb),0.3);" 
+                                 onmouseover="this.style.background='rgba(var(--vs-success-rgb),0.1)'" onmouseout="this.style.background='transparent'">
+                                10 Points — <span style="color:var(--vs-success);">🟢 งานด่วน (S)</span>
+                            </div>
+                            <div class="deleg-score-opt" data-val="20" data-txt="20 Points — 🟡 งานทั่วไป (M)" 
+                                 style="padding:10px 12px;cursor:pointer;font-size:13px;font-weight:300;color:var(--vs-text-body);border-bottom:1px solid rgba(var(--vs-border-rgb),0.3);" 
+                                 onmouseover="this.style.background='rgba(var(--vs-warning-rgb),0.1)'" onmouseout="this.style.background='transparent'">
+                                20 Points — <span style="color:var(--vs-warning);">🟡 งานทั่วไป (M)</span>
+                            </div>
+                            <div class="deleg-score-opt" data-val="50" data-txt="50 Points — 🟠 โปรเจกต์ (L)" 
+                                 style="padding:10px 12px;cursor:pointer;font-size:13px;font-weight:300;color:var(--vs-text-body);border-bottom:1px solid rgba(var(--vs-border-rgb),0.3);" 
+                                 onmouseover="this.style.background='rgba(var(--vs-accent-rgb),0.1)'" onmouseout="this.style.background='transparent'">
+                                50 Points — <span style="color:var(--vs-accent);">🟠 โปรเจกต์ (L)</span>
+                            </div>
+                            <div class="deleg-score-opt" data-val="100" data-txt="100 Points — 🔴 งานระดับโรงเรียน (XL)" 
+                                 style="padding:10px 12px;cursor:pointer;font-size:13px;font-weight:300;color:var(--vs-text-body);" 
+                                 onmouseover="this.style.background='rgba(var(--vs-danger-rgb),0.1)'" onmouseout="this.style.background='transparent'">
+                                100 Points — <span style="color:var(--vs-danger);">🔴 งานระดับโรงเรียน (XL)</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -747,7 +768,47 @@ const DelegationPanel = {
             });
         });
 
-        // Score is natively handled by the <select id="deleg-score"> element.
+        // Custom Score Dropdown
+        const scoreWrapper = container.querySelector('#deleg-score-wrapper');
+        const scoreInputDisplay = container.querySelector('#deleg-score-display_input');
+        const scoreMenu = container.querySelector('#deleg-score-menu');
+        const scoreHidden = container.querySelector('#deleg-score');
+
+        if (scoreWrapper && scoreInputDisplay && scoreMenu && scoreHidden) {
+            // Toggle menu on input click
+            scoreInputDisplay.addEventListener('click', (e) => {
+                e.stopPropagation();
+                scoreMenu.style.display = scoreMenu.style.display === 'none' ? 'block' : 'none';
+            });
+
+            // Handle option click
+            const opts = scoreMenu.querySelectorAll('.deleg-score-opt');
+            opts.forEach(opt => {
+                opt.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const val = opt.dataset.val;
+                    const txt = opt.dataset.txt;
+                    scoreHidden.value = val;
+                    scoreInputDisplay.value = txt;
+                    scoreMenu.style.display = 'none';
+
+                    // Update icon color based on selection
+                    let color = 'rgba(255,255,255,0.4)';
+                    if (val === '10') color = 'var(--vs-success)';
+                    else if (val === '20') color = 'var(--vs-warning)';
+                    else if (val === '50') color = 'var(--vs-accent)';
+                    else if (val === '100') color = 'var(--vs-danger)';
+                    scoreWrapper.querySelector('.i-chart-bar').style.color = color;
+                });
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!scoreWrapper.contains(e.target)) {
+                    scoreMenu.style.display = 'none';
+                }
+            });
+        }
 
         // Teacher select → enable/disable submit
         const select = container.querySelector('#deleg-teacher-select');
