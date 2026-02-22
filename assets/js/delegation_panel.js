@@ -464,7 +464,7 @@ const DelegationPanel = {
         const isAdHoc = this._mode === 'ADHOC';
 
         return `
-            <div style="padding:8px 12px;border-bottom:1px solid var(--vs-border);">
+            <div style="padding:12px 12px 24px 12px;border-bottom:1px solid var(--vs-border);">
                 <!-- Module Context -->
                 <div style="margin-bottom:8px;">
                     <label style="color:var(--vs-text-muted);font-size:13px;font-weight:300;display:block;margin-bottom:4px;">
