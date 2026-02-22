@@ -578,25 +578,29 @@ const DelegationPanel = {
                             <span style="color:var(--vs-text-title);font-size:13px;font-weight:300;">${d.moduleTitle}</span>
                         </span>
                         <div style="display:flex;align-items:center;">
-                            <span style="font-size:12px;font-weight:300;padding:1px 6px;border-radius:3px;
-                                         background:rgba(34,211,238,0.1);color:var(--vs-accent);
-                                         border:1px solid rgba(34,211,238,0.15);${textStyle}">
-                                ${typeBadge}
-                            </span>
                             ${revokeBtnHtml}
                         </div>
                     </div>
-                    <div style="display:flex;align-items:center;justify-content:space-between;">
+                    <!-- Line 2: Person + Badge -->
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
                         <span style="color:var(--vs-text-muted);font-size:13px;font-weight:300;${textStyle}">
                             ${this._viewTab === 'DISPATCHED' ? '→' : '←'} ${person}
                         </span>
+                        <span style="font-size:12px;font-weight:300;padding:1px 6px;border-radius:3px;
+                                     background:rgba(34,211,238,0.1);color:var(--vs-accent);
+                                     border:1px solid rgba(34,211,238,0.15);${textStyle}">
+                            ${typeBadge}
+                        </span>
+                    </div>
+                    <!-- Line 3: Time + Status -->
+                    <div style="display:flex;align-items:center;justify-content:space-between;">
+                        <div style="color:var(--vs-text-muted);font-size:12px;font-weight:300;opacity:0.6;">
+                            ${time}
+                        </div>
                         <div style="display:flex;align-items:center;gap:6px;">
                             <span style="width:6px;height:6px;border-radius:50%;background:${statusColor};display:inline-block;"></span>
                             <span style="color:var(--vs-text-muted);font-size:13px;font-weight:300;">${statusLabel}</span>
                         </div>
-                    </div>
-                    <div style="color:var(--vs-text-muted);font-size:12px;font-weight:300;opacity:0.6;margin-top:4px;">
-                        ${time}
                     </div>
                 </div>`;
         }).join('');
