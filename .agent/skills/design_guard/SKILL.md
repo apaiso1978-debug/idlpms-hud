@@ -333,6 +333,21 @@ On dark backgrounds (`--vs-bg-card` ≈ `#333338` / `--vs-bg-deep` ≈ `#1e1e22`
 </div>
 ```
 
+### Rule 25 — Binary Toggle Knob Standard
+- **Iron Rule**: Any UI element presenting a strict **two-option choice** (e.g., A/B toggles, System vs Adhoc, Inbox vs Dispatched) MUST use the `.vs-toggle` slider knob.
+- **BANNED**: Using traditional side-by-side squared tabs or segmented controls (`.vs-tab-bar`) for binary choices. Segmented controls are reserved strictly for 3+ options or distinct routing views.
+- **Layout Unity**: The knob must be placed on the right-hand edge of the container (e.g., via `justify-between`). The textual label must reflect the current active state explicitly.
+- **HTML Structure**:
+```html
+<div style="height:48px; display:flex; align-items:center; justify-content:space-between; padding:0 12px;">
+    <div style="display:flex; align-items:center; gap:8px;">
+        <i class="icon i-example text-[var(--vs-accent)]"></i>
+        <span>Active State Name</span>
+    </div>
+    <button class="vs-toggle" data-tab="NEXT_STATE"></button>
+</div>
+```
+
 ---
 
 ## Workflow Mandate
