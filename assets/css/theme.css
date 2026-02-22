@@ -321,19 +321,26 @@ select {
 
 .vs-modal-header {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    align-items: flex-start;
+    /* Align to top so icon and text align properly if text wraps */
+    gap: 12px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     padding-bottom: 12px;
 }
 
+.vs-modal-header .icon {
+    margin-top: -1px;
+    /* Optical alignment with text baseline */
+}
+
 .vs-modal-title {
     font-size: 14px;
-    /* A bit larger for modal title */
     font-weight: 300;
     color: var(--vs-text-title);
     text-transform: uppercase;
     margin: 0;
+    flex: 1;
+    /* Take up remaining space */
 }
 
 .vs-modal-body {
@@ -342,6 +349,8 @@ select {
     color: var(--vs-text-body);
     line-height: 1.5;
     margin: 0;
+    padding-left: 0;
+    /* Removing any stray padding */
 }
 
 .vs-modal-footer {

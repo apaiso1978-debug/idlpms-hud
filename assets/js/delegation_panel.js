@@ -150,11 +150,15 @@ const DelegationPanel = {
         modal.className = 'vs-modal warning';
 
         modal.innerHTML = `
-            <div class="vs-modal-header">
-                <i class="icon i-exclamation-triangle"></i>
-                <h3 class="vs-modal-title">${title}</h3>
+            <div class="vs-icon-layout">
+                <div class="icon-col">
+                    <i class="icon i-exclamation-triangle" style="width:20px;height:20px;color:var(--vs-warning);"></i>
+                </div>
+                <div class="content-col">
+                    <h3 class="vs-modal-title" style="margin-bottom:8px;">${title}</h3>
+                    <div class="vs-modal-body">${msg}</div>
+                </div>
             </div>
-            <div class="vs-modal-body">${msg}</div>
             <div class="vs-modal-footer">
                 <button id="confirm-cancel" class="Thai-Rule" style="
                     background: transparent; color: var(--vs-text-muted); border: 1px solid rgba(255,255,255,0.1); 
@@ -214,11 +218,15 @@ const DelegationPanel = {
         const colorVar = type === 'error' ? 'var(--vs-danger)' : (type === 'success' ? 'var(--vs-success)' : 'var(--vs-warning)');
 
         modal.innerHTML = `
-            <div class="vs-modal-header">
-                <i class="icon ${icon}"></i>
-                <h3 class="vs-modal-title">${title}</h3>
+            <div class="vs-icon-layout">
+                <div class="icon-col">
+                    <i class="icon ${icon}" style="width:20px;height:20px;color:${colorVar};"></i>
+                </div>
+                <div class="content-col">
+                    <h3 class="vs-modal-title" style="margin-bottom:8px;">${title}</h3>
+                    <div class="vs-modal-body">${msg}</div>
+                </div>
             </div>
-            <div class="vs-modal-body">${msg}</div>
             <div class="vs-modal-footer">
                 <button id="alert-btn" class="Thai-Rule" style="
                     background: rgba(${rgbVar}, 0.1); color: ${colorVar}; border: 1px solid rgba(${rgbVar}, 0.3); 
