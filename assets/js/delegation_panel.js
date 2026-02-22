@@ -797,11 +797,37 @@ const DelegationPanel = {
         const scoreMenu = container.querySelector('#deleg-score-menu');
         const scoreHidden = container.querySelector('#deleg-score');
 
+        // Custom Teacher Dropdown
+        const teacherWrapper = container.querySelector('#deleg-teacher-wrapper');
+        const teacherInputDisplay = container.querySelector('#deleg-teacher-display_input');
+        const teacherMenu = container.querySelector('#deleg-teacher-menu');
+        const teacherHidden = container.querySelector('#deleg-teacher-select');
+
+        // Centralized Dropdown Auto-Collapse Logic
+        const closeAllDropdowns = () => {
+            if (teacherMenu) {
+                teacherMenu.style.display = 'none';
+                teacherWrapper.style.zIndex = '1';
+            }
+            if (scoreMenu) {
+                scoreMenu.style.display = 'none';
+                scoreWrapper.style.zIndex = '1';
+            }
+            if (deadlineInput && deadlineInput._calendarInstance && deadlineInput._calendarInstance.isOpen) {
+                deadlineInput._calendarInstance.close();
+            }
+        };
+
         if (scoreWrapper && scoreInputDisplay && scoreMenu && scoreHidden) {
             // Toggle menu on input click
             scoreInputDisplay.addEventListener('click', (e) => {
                 e.stopPropagation();
-                scoreMenu.style.display = scoreMenu.style.display === 'none' ? 'block' : 'none';
+                const isOpening = scoreMenu.style.display === 'none';
+                closeAllDropdowns();
+                if (isOpening) {
+                    scoreMenu.style.display = 'block';
+                    scoreWrapper.style.zIndex = '100';
+                }
             });
 
             // Handle option click
@@ -814,6 +840,7 @@ const DelegationPanel = {
                     scoreHidden.value = val;
                     scoreInputDisplay.value = txt;
                     scoreMenu.style.display = 'none';
+                    scoreWrapper.style.zIndex = '1';
 
                     // Update icon color based on selection
                     let color = 'rgba(255,255,255,0.4)';
@@ -829,21 +856,21 @@ const DelegationPanel = {
             document.addEventListener('click', (e) => {
                 if (!scoreWrapper.contains(e.target)) {
                     scoreMenu.style.display = 'none';
+                    scoreWrapper.style.zIndex = '1';
                 }
             });
         }
-
-        // Custom Teacher Dropdown
-        const teacherWrapper = container.querySelector('#deleg-teacher-wrapper');
-        const teacherInputDisplay = container.querySelector('#deleg-teacher-display_input');
-        const teacherMenu = container.querySelector('#deleg-teacher-menu');
-        const teacherHidden = container.querySelector('#deleg-teacher-select');
 
         if (teacherWrapper && teacherInputDisplay && teacherMenu && teacherHidden) {
             // Toggle menu on input click
             teacherInputDisplay.addEventListener('click', (e) => {
                 e.stopPropagation();
-                teacherMenu.style.display = teacherMenu.style.display === 'none' ? 'block' : 'none';
+                const isOpening = teacherMenu.style.display === 'none';
+                closeAllDropdowns();
+                if (isOpening) {
+                    teacherMenu.style.display = 'block';
+                    teacherWrapper.style.zIndex = '100';
+                }
             });
 
             // Handle option click
@@ -856,6 +883,7 @@ const DelegationPanel = {
                     teacherHidden.value = val;
                     teacherInputDisplay.value = txt;
                     teacherMenu.style.display = 'none';
+                    teacherWrapper.style.zIndex = '1';
 
                     // Manually trigger the validation logic that used to be on 'change' event
                     teacherHidden.dispatchEvent(new Event('change'));
@@ -866,6 +894,21 @@ const DelegationPanel = {
             document.addEventListener('click', (e) => {
                 if (!teacherWrapper.contains(e.target)) {
                     teacherMenu.style.display = 'none';
+                    teacherWrapper.style.zIndex = '1';
+                }
+            });
+        }
+
+        // Ensure Calendar toggling collapses the custom dropdowns too
+        if (deadlineInput) {
+            deadlineInput.addEventListener('click', () => {
+                if (teacherMenu) {
+                    teacherMenu.style.display = 'none';
+                    teacherWrapper.style.zIndex = '1';
+                }
+                if (scoreMenu) {
+                    scoreMenu.style.display = 'none';
+                    scoreWrapper.style.zIndex = '1';
                 }
             });
         }
