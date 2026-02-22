@@ -274,6 +274,113 @@ select {
    These components automatically inherit Razor-Sharp rules
    ═══════════════════════════════════════════════════ */
 
+/* Component: .vs-modal-overlay & .vs-modal */
+.vs-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 20000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.vs-modal-overlay.active {
+    opacity: 1;
+}
+
+.vs-modal {
+    background: var(--vs-bg-deep);
+    border: 1px solid rgba(63, 63, 70, 0.5);
+    /* 50% opacity Zinc-700 */
+    border-radius: var(--vs-radius);
+    /* 3px */
+    padding: 24px;
+    width: 400px;
+    /* Standard panel size */
+    max-width: 90vw;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    /* Glow base */
+    transform: translateY(20px) scale(0.95);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.vs-modal.active {
+    transform: translateY(0) scale(1);
+}
+
+.vs-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 12px;
+}
+
+.vs-modal-title {
+    font-size: 14px;
+    /* A bit larger for modal title */
+    font-weight: 300;
+    color: var(--vs-text-title);
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.vs-modal-body {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--vs-text-body);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.vs-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Modal Variants based on intent */
+.vs-modal.warning {
+    border-top: 1px solid rgba(var(--vs-warning-rgb), 0.5);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(var(--vs-warning-rgb), 0.05);
+}
+
+.vs-modal.warning .vs-modal-title i {
+    color: var(--vs-warning);
+}
+
+.vs-modal.danger {
+    border-top: 1px solid rgba(var(--vs-danger-rgb), 0.5);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(var(--vs-danger-rgb), 0.05);
+}
+
+.vs-modal.danger .vs-modal-title i {
+    color: var(--vs-danger);
+}
+
+.vs-modal.success {
+    border-top: 1px solid rgba(var(--vs-success-rgb), 0.5);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(var(--vs-success-rgb), 0.05);
+}
+
+.vs-modal.success .vs-modal-title i {
+    color: var(--vs-success);
+}
+
+
 /* Component: .vs-card */
 .vs-card {
     background: var(--vs-bg-card);

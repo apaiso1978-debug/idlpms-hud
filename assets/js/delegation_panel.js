@@ -144,32 +144,18 @@ const DelegationPanel = {
     // ── Custom Confirm Modal ──
     showConfirm(title, msg, onConfirm, onCancel = null) {
         const overlay = document.createElement('div');
-        overlay.style.cssText = `
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
-            z-index: 20000; display: flex; align-items: center; justify-content: center;
-            opacity: 0; transition: opacity 0.2s ease;
-        `;
+        overlay.className = 'vs-modal-overlay';
 
         const modal = document.createElement('div');
-        const colorVar = 'var(--vs-warning)';
-        const rgbVar = '234, 179, 8';
-
-        modal.className = "Thai-Rule";
-        modal.style.cssText = `
-            background: var(--vs-bg-deep); border: 1px solid rgba(63,63,70,0.5);
-            border-top: 1px solid rgba(${rgbVar}, 0.5); border-radius: var(--vs-radius); padding: 20px 24px;
-            width: 320px; box-shadow: 0 0 30px rgba(0,0,0,0.5), inset 0 0 15px rgba(${rgbVar}, 0.05);
-            transform: translateY(20px) scale(0.95); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        `;
+        modal.className = 'vs-modal warning';
 
         modal.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                <i class="icon i-exclamation-triangle" style="width:20px; height:20px; color: ${colorVar};"></i>
-                <h3 style="margin:0; font-size:13px; font-weight:300; color:var(--vs-text-title); text-transform:uppercase;">${title}</h3>
+            <div class="vs-modal-header">
+                <i class="icon i-exclamation-triangle"></i>
+                <h3 class="vs-modal-title">${title}</h3>
             </div>
-            <p style="margin:0 0 20px 0; font-size:13px; font-weight:300; color:var(--vs-text-body); line-height:1.4;">${msg}</p>
-            <div style="display: flex; justify-content: flex-end; gap: 8px;">
+            <div class="vs-modal-body">${msg}</div>
+            <div class="vs-modal-footer">
                 <button id="confirm-cancel" class="Thai-Rule" style="
                     background: transparent; color: var(--vs-text-muted); border: 1px solid rgba(255,255,255,0.1); 
                     padding: 6px 16px; border-radius: var(--vs-radius); cursor: pointer; font-size: 13px; font-weight: 300;
@@ -178,30 +164,30 @@ const DelegationPanel = {
                   onmouseout="this.style.background='transparent'; this.style.borderColor='rgba(255,255,255,0.1)';">ยกเลิก</button>
                   
                 <button id="confirm-ok" class="Thai-Rule" style="
-                    background: rgba(${rgbVar}, 0.1); color: ${colorVar}; border: 1px solid rgba(${rgbVar}, 0.3); 
+                    background: rgba(var(--vs-warning-rgb), 0.1); color: var(--vs-warning); border: 1px solid rgba(var(--vs-warning-rgb), 0.3); 
                     padding: 6px 16px; border-radius: var(--vs-radius); cursor: pointer; font-size: 13px; font-weight: 300;
                     transition: all 0.2s; outline: none;
-                " onmouseover="this.style.background='rgba(${rgbVar}, 0.15)'; this.style.borderColor='rgba(${rgbVar}, 0.5)'; this.style.boxShadow='0 0 8px rgba(${rgbVar}, 0.1)';" 
-                  onmouseout="this.style.background='rgba(${rgbVar}, 0.1)'; this.style.borderColor='rgba(${rgbVar}, 0.3)'; this.style.boxShadow='none';">ตกลง</button>
+                " onmouseover="this.style.background='rgba(var(--vs-warning-rgb), 0.15)'; this.style.borderColor='rgba(var(--vs-warning-rgb), 0.5)'; this.style.boxShadow='0 0 8px rgba(var(--vs-warning-rgb), 0.1)';" 
+                  onmouseout="this.style.background='rgba(var(--vs-warning-rgb), 0.1)'; this.style.borderColor='rgba(var(--vs-warning-rgb), 0.3)'; this.style.boxShadow='none';">ตกลง</button>
             </div>
         `;
 
         overlay.appendChild(modal);
         document.body.appendChild(overlay);
 
-        requestAnimationFrame(() => {
-            overlay.style.opacity = '1';
-            modal.style.transform = 'translateY(0) scale(1)';
-        });
+        // Trigger reflow for transition
+        overlay.offsetHeight;
+        overlay.classList.add('active');
+        modal.classList.add('active');
 
         const closeConfirm = (isConfirmed) => {
-            overlay.style.opacity = '0';
-            modal.style.transform = 'translateY(10px) scale(0.95)';
+            overlay.classList.remove('active');
+            modal.classList.remove('active');
             setTimeout(() => {
                 if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
                 if (isConfirmed && onConfirm) onConfirm();
                 else if (!isConfirmed && onCancel) onCancel();
-            }, 200);
+            }, 300);
         };
 
         modal.querySelector('#confirm-cancel').addEventListener('click', () => closeConfirm(false));
@@ -212,33 +198,28 @@ const DelegationPanel = {
     // ── Custom Alert Modal (Replaces Native Alert) ──
     showAlert(title, msg, type = 'warning') {
         const overlay = document.createElement('div');
-        overlay.style.cssText = `
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
-            z-index: 20000; display: flex; align-items: center; justify-content: center;
-            opacity: 0; transition: opacity 0.2s ease;
-        `;
+        overlay.className = 'vs-modal-overlay';
 
         const modal = document.createElement('div');
-        const colorVar = type === 'error' ? 'var(--vs-danger)' : (type === 'success' ? 'var(--vs-success)' : 'var(--vs-warning)');
-        const rgbVar = type === 'error' ? '239, 68, 68' : (type === 'success' ? '34, 197, 94' : '234, 179, 8');
-        const icon = type === 'error' ? 'i-x-circle' : (type === 'success' ? 'i-check-circle' : 'i-exclamation-triangle');
+        modal.className = `vs-modal ${type}`;
 
-        modal.className = "Thai-Rule";
-        modal.style.cssText = `
-            background: var(--vs-bg-deep); border: 1px solid rgba(63,63,70,0.5);
-            border-top: 1px solid rgba(${rgbVar}, 0.5); border-radius: var(--vs-radius); padding: 20px 24px;
-            width: 320px; box-shadow: 0 0 30px rgba(0,0,0,0.5), inset 0 0 15px rgba(${rgbVar}, 0.05);
-            transform: translateY(20px) scale(0.95); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        `;
+        const typeIcons = {
+            'warning': 'i-exclamation-triangle',
+            'danger': 'i-x-circle',
+            'success': 'i-check-circle',
+            'error': 'i-x-circle'
+        };
+        const icon = typeIcons[type] || typeIcons['warning'];
+        const rgbVar = type === 'error' ? 'var(--vs-danger-rgb)' : (type === 'success' ? 'var(--vs-success-rgb)' : 'var(--vs-warning-rgb)');
+        const colorVar = type === 'error' ? 'var(--vs-danger)' : (type === 'success' ? 'var(--vs-success)' : 'var(--vs-warning)');
 
         modal.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                <i class="icon ${icon}" style="width:20px; height:20px; color: ${colorVar};"></i>
-                <h3 style="margin:0; font-size:13px; font-weight:300; color:var(--vs-text-title); text-transform:uppercase;">${title}</h3>
+            <div class="vs-modal-header">
+                <i class="icon ${icon}"></i>
+                <h3 class="vs-modal-title">${title}</h3>
             </div>
-            <p style="margin:0 0 20px 0; font-size:13px; font-weight:300; color:var(--vs-text-body); line-height:1.4;">${msg}</p>
-            <div style="text-align: right;">
+            <div class="vs-modal-body">${msg}</div>
+            <div class="vs-modal-footer">
                 <button id="alert-btn" class="Thai-Rule" style="
                     background: rgba(${rgbVar}, 0.1); color: ${colorVar}; border: 1px solid rgba(${rgbVar}, 0.3); 
                     padding: 6px 16px; border-radius: var(--vs-radius); cursor: pointer; font-size: 13px; font-weight: 300;
@@ -251,15 +232,15 @@ const DelegationPanel = {
         overlay.appendChild(modal);
         document.body.appendChild(overlay);
 
-        requestAnimationFrame(() => {
-            overlay.style.opacity = '1';
-            modal.style.transform = 'translateY(0) scale(1)';
-        });
+        // Trigger reflow for transition
+        overlay.offsetHeight;
+        overlay.classList.add('active');
+        modal.classList.add('active');
 
         const closeAlert = () => {
-            overlay.style.opacity = '0';
-            modal.style.transform = 'translateY(10px) scale(0.95)';
-            setTimeout(() => { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 200);
+            overlay.classList.remove('active');
+            modal.classList.remove('active');
+            setTimeout(() => { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 300);
         };
 
         modal.querySelector('#alert-btn').addEventListener('click', closeAlert);
