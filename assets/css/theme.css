@@ -312,7 +312,8 @@ select {
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
+    /* 3px Rule */
 }
 
 .vs-modal.active {
@@ -324,8 +325,6 @@ select {
     align-items: flex-start;
     /* Align to top so icon and text align properly if text wraps */
     gap: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    padding-bottom: 12px;
 }
 
 .vs-modal-header .icon {
@@ -350,15 +349,15 @@ select {
     line-height: 1.5;
     margin: 0;
     padding-left: 0;
-    /* Removing any stray padding */
 }
 
 .vs-modal-footer {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
+    gap: 12px;
+    /* 3px Rule */
     padding-top: 12px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    /* 3px Rule aligned spacing */
 }
 
 /* Modal Variants based on intent */
