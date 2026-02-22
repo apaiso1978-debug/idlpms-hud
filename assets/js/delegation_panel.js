@@ -83,6 +83,33 @@ const DelegationPanel = {
 
     // ── Get current module context from HUD ──
     _getModuleContext() {
+        // Try active sidebar item first (Mission Control / Explorer)
+        const activeSidebarItem = document.querySelector('.timeline-child-item.active, .vs-menu-item.active');
+        if (activeSidebarItem) {
+            const iconNode = activeSidebarItem.querySelector('.icon');
+            const textNode = activeSidebarItem.querySelector('span');
+
+            if (textNode) {
+                const title = textNode.textContent.trim();
+                const id = title.replace(/\s+/g, '_').toUpperCase();
+                // Extract icon class
+                let iconClass = 'i-academic'; // default fallback
+                let colorClass = '';
+                if (iconNode) {
+                    // Extract all i-* classes
+                    const classes = Array.from(iconNode.classList);
+                    const iClass = classes.find(c => c.startsWith('i-'));
+                    if (iClass) iconClass = iClass;
+
+                    // Extract color classes if any (e.g., text-rose-400)
+                    const cClass = classes.find(c => c.startsWith('text-'));
+                    if (cClass) colorClass = cClass;
+                }
+
+                return { title, id, icon: iconClass, colorClass };
+            }
+        }
+
         // Try breadcrumb first
         const breadcrumb = document.querySelector('.vs-breadcrumb-text, #breadcrumb-title');
         const moduleTitle = breadcrumb ? breadcrumb.textContent.trim() : '';
@@ -96,7 +123,9 @@ const DelegationPanel = {
 
         return {
             title: moduleTitle || iframeTitle || 'งานทั่วไป',
-            id: moduleTitle ? moduleTitle.replace(/\s+/g, '_').toUpperCase() : 'GENERAL'
+            id: moduleTitle ? moduleTitle.replace(/\s+/g, '_').toUpperCase() : 'GENERAL',
+            icon: 'i-command-line', // fallback icon
+            colorClass: 'text-[var(--vs-accent)]'
         };
     },
 
@@ -112,17 +141,98 @@ const DelegationPanel = {
         return { icon: '●', cls: 'success', label: 'ปกติ' };
     },
 
+    // ── Custom Alert Modal (Replaces Native Alert) ──
+    showAlert(title, msg, type = 'warning') {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+            z-index: 20000; display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.2s ease;
+        `;
+
+        const modal = document.createElement('div');
+        const colorVar = type === 'error' ? 'var(--vs-danger)' : (type === 'success' ? 'var(--vs-success)' : 'var(--vs-warning)');
+        const rgbVar = type === 'error' ? '239, 68, 68' : (type === 'success' ? '34, 197, 94' : '234, 179, 8');
+        const icon = type === 'error' ? 'i-x-circle' : (type === 'success' ? 'i-check-circle' : 'i-exclamation-triangle');
+
+        modal.className = "Thai-Rule";
+        modal.style.cssText = `
+            background: var(--vs-bg-deep); border: 1px solid rgba(63,63,70,0.5);
+            border-top: 2px solid ${colorVar}; border-radius: var(--vs-radius); padding: 20px 24px;
+            width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            transform: translateY(20px) scale(0.95); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        `;
+
+        modal.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                <i class="icon ${icon}" style="width:20px; height:20px; color: ${colorVar};"></i>
+                <h3 style="margin:0; font-size:13px; font-weight:300; color:var(--vs-text-title); text-transform:uppercase;">${title}</h3>
+            </div>
+            <p style="margin:0 0 20px 0; font-size:13px; font-weight:300; color:var(--vs-text-body); line-height:1.4;">${msg}</p>
+            <div style="text-align: right;">
+                <button id="alert-btn" class="Thai-Rule" style="
+                    background: rgba(${rgbVar}, 0.1); color: ${colorVar}; border: 1px solid rgba(${rgbVar}, 0.3); 
+                    padding: 6px 16px; border-radius: var(--vs-radius); cursor: pointer; font-size: 13px; font-weight: 300;
+                    transition: all 0.2s; outline: none;
+                " onmouseover="this.style.background='rgba(${rgbVar}, 0.15)'; this.style.borderColor='rgba(${rgbVar}, 0.5)'; this.style.boxShadow='0 0 8px rgba(${rgbVar}, 0.1)';" 
+                  onmouseout="this.style.background='rgba(${rgbVar}, 0.1)'; this.style.borderColor='rgba(${rgbVar}, 0.3)'; this.style.boxShadow='none';">ตกลง</button>
+            </div>
+        `;
+
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+
+        requestAnimationFrame(() => {
+            overlay.style.opacity = '1';
+            modal.style.transform = 'translateY(0) scale(1)';
+        });
+
+        const closeAlert = () => {
+            overlay.style.opacity = '0';
+            modal.style.transform = 'translateY(10px) scale(0.95)';
+            setTimeout(() => { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 200);
+        };
+
+        modal.querySelector('#alert-btn').addEventListener('click', closeAlert);
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) closeAlert(); });
+    },
+
     // ═══════════════════════════════════════════
     //  ASSIGN + SYNC
     // ═══════════════════════════════════════════
 
-    assign(teacherId, teacherName, moduleTitle, moduleId) {
+    assign(teacherId, teacherName, moduleTitle, moduleId, ctx = {}) {
         const user = this._getCurrentUser();
+        const list = this.getAllDelegations();
+
+        // 🚨 PREVENT DUPES: Iron Rule - Single Active Assignment per Task per Person
+        const isDuplicate = list.some(d =>
+            d.assignee === teacherId &&
+            d.moduleId === moduleId &&
+            (d.status === 'PENDING' || d.status === 'IN_PROGRESS')
+        );
+
+        if (isDuplicate) {
+            console.warn(`[Delegation Guard] Blocked duplicate assignment of ${moduleId} to ${teacherId}`);
+            if (window.HUD_NOTIFY) {
+                HUD_NOTIFY.toast(
+                    'การมอบหมายซ้ำซ้อน (Blocked)',
+                    `คุณได้มอบหมายงาน <b>${moduleTitle}</b> ให้ <b>${teacherName}</b> ไปแล้ว และงานนี้ยังอยู่ระหว่างดำเนินการ`,
+                    'warning'
+                );
+            }
+            this.showAlert('ปฏิเสธการมอบหมาย', `${teacherName} กำลังดำเนินการภารกิจนี้อยู่แล้ว`, 'warning');
+            return null; // Stop execution
+        }
+
         const delegation = {
             id: `DEL_${Date.now()}`,
             type: this._mode,
             moduleTitle,
             moduleId,
+            icon: ctx.icon || 'i-command-line', // Store icon
+            colorClass: ctx.colorClass || 'text-[var(--vs-accent)]', // Store color
             assignee: teacherId,
             assigneeName: teacherName,
             assignedBy: user.id || 'DIR_MABLUD',
@@ -133,7 +243,7 @@ const DelegationPanel = {
         };
 
         // Save locally
-        const list = this.getAllDelegations();
+        // list is already loaded at beginning of assign
         list.push(delegation);
         this._saveDelegations(list);
 
@@ -309,8 +419,11 @@ const DelegationPanel = {
                                    border-radius:3px;color:var(--vs-text-body);font-size:13px;font-weight:300;
                                    outline:none;color-scheme:dark;box-sizing:border-box;" />`
                 : `<div style="padding:8px 12px;background:var(--vs-bg-deep);border-radius:3px;
-                                      color:var(--vs-text-body);font-size:13px;font-weight:300;">
-                            ${ctx.title}
+                                      color:var(--vs-text-body);font-size:13px;font-weight:300;
+                                      display:flex;align-items:center;gap:8px;">
+                            <i class="icon ${ctx.icon || 'i-command-line'} ${ctx.colorClass || 'text-[var(--vs-accent)]'}" 
+                               style="width:16px;height:16px;flex-shrink:0;"></i>
+                            <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${ctx.title}</span>
                            </div>`
             }
                 </div>
@@ -340,16 +453,33 @@ const DelegationPanel = {
                     </select>
                 </div>
 
-                <!-- Deadline -->
-                <div style="margin-bottom:8px;">
-                    <label style="color:var(--vs-text-muted);font-size:13px;font-weight:300;display:block;margin-bottom:4px;">
-                        กำหนดส่ง
+                <!-- Score Points -->
+                <div style="margin-bottom:12px;">
+                    <label style="color:var(--vs-text-muted);font-size:12px;font-weight:300;display:block;margin-bottom:6px;text-transform:uppercase;">
+                        น้ำหนักงาน (Score Point)
                     </label>
-                    <input id="deleg-deadline" type="date"
-                        style="width:100%;padding:8px 12px;background:var(--vs-bg-deep);border:none;
-                               border-radius:3px;color:var(--vs-text-body);font-size:13px;font-weight:300;
-                               outline:none;color-scheme:dark;box-sizing:border-box;" />
+                    <input id="deleg-score" type="number" placeholder="-- ระบุคะแนน --" min="1" max="100" autocomplete="off"
+                        style="width:100%;padding:10px 12px;background:var(--vs-bg-deep);border:none;
+                               border-radius:var(--vs-radius);color:var(--vs-text-body);font-size:13px;font-weight:300;
+                               outline:none;transition:box-shadow 0.2s;box-sizing:border-box;"
+                        onfocus="this.style.boxShadow='inset 0 0 0 1px rgba(var(--vs-accent-rgb),0.5)'" onblur="this.style.boxShadow='none'" />
                 </div>
+
+                <!-- SLA Deadline -->
+                <div style="margin-bottom:16px;">
+                    <label style="color:var(--vs-text-muted);font-size:12px;font-weight:300;display:block;margin-bottom:6px;text-transform:uppercase;">
+                        กำหนดส่ง (SLA Deadline)
+                    </label>
+                    <div style="position:relative;">
+                        <i class="icon i-calendar" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:rgba(255,255,255,0.4);pointer-events:none;z-index:2;"></i>
+                        <input id="deleg-deadline" type="text" placeholder="-- เลือกกำหนดส่ง --" autocomplete="off" readonly
+                            style="width:100%;padding:10px 12px 10px 34px;background:var(--vs-bg-deep);border:none;
+                                   border-radius:var(--vs-radius);color:var(--vs-text-body);font-size:13px;font-weight:300;
+                                   outline:none;transition:box-shadow 0.2s;box-sizing:border-box;cursor:pointer;"
+                            onfocus="this.style.boxShadow='inset 0 0 0 1px rgba(var(--vs-accent-rgb),0.5)'" onblur="this.style.boxShadow='none'" />
+                    </div>
+                </div>
+
 
                 <!-- Submit -->
                 <button id="deleg-submit-btn" disabled
@@ -408,33 +538,56 @@ const DelegationPanel = {
                 </div>`;
         }
 
-        const listHtml = items.slice(0, 20).map(d => {
-            const statusColor = d.status === 'COMPLETED' ? 'var(--vs-success)' :
-                d.status === 'IN_PROGRESS' ? 'var(--vs-warning)' : 'var(--vs-accent)';
-            const statusLabel = d.status === 'COMPLETED' ? 'เสร็จ' :
-                d.status === 'IN_PROGRESS' ? 'กำลังทำ' : 'รอ';
+        const listHtml = items.slice(0, 50).map(d => {
+            const isRevoked = d.status === 'REVOKED';
+            const statusColor = isRevoked ? 'var(--vs-danger)' :
+                (d.status === 'COMPLETED' ? 'var(--vs-success)' :
+                    d.status === 'IN_PROGRESS' ? 'var(--vs-warning)' : 'var(--vs-accent)');
+
+            const statusLabel = isRevoked ? 'ยกเลิก' :
+                (d.status === 'COMPLETED' ? 'เสร็จ' :
+                    d.status === 'IN_PROGRESS' ? 'กำลังทำ' : 'รอ');
+
             const typeBadge = d.type === 'ADHOC' ? 'ADH' : 'SYS';
             const time = this._formatTime(d.timestamp);
             const person = this._viewTab === 'DISPATCHED' ? d.assigneeName : d.assignedByName;
 
+            // Strikethrough logic
+            const textStyle = isRevoked ? 'text-decoration:line-through;opacity:0.5;' : '';
+
+            // Revoke Button (only show if dispatched and pending/in_progress)
+            const showRevoke = this._viewTab === 'DISPATCHED' && !isRevoked && d.status !== 'COMPLETED';
+            const revokeBtnHtml = showRevoke ? `
+                <button class="deleg-revoke-btn" data-id="${d.id}"
+                    style="margin-left:8px;background:none;border:none;color:var(--vs-danger);cursor:pointer;
+                           padding:2px;display:flex;align-items:center;opacity:0.7;transition:all 0.2s;"
+                    onmouseover="this.style.opacity='1'; this.style.transform='scale(1.1)';"
+                    onmouseout="this.style.opacity='0.7'; this.style.transform='scale(1)';">
+                    <i class="icon i-x" style="width:14px;height:14px;"></i>
+                </button>
+            ` : '';
+
             return `
-                <div style="padding:8px 12px;border-bottom:1px solid var(--vs-border);
+                <div style="padding:12px 16px;border-bottom:1px solid var(--vs-border);
                             transition:background 0.15s;cursor:default;"
                      onmouseenter="this.style.background='var(--vs-bg-card)'"
                      onmouseleave="this.style.background='transparent'">
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-                        <span style="color:var(--vs-text-title);font-size:13px;font-weight:300;
-                                     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px;">
-                            ${d.moduleTitle}
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                        <span style="display:flex;align-items:center;gap:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px;${textStyle}">
+                            <i class="icon ${d.icon || 'i-command-line'} ${d.colorClass || 'text-[var(--vs-text-title)]'}" style="width:14px;height:14px;flex-shrink:0;"></i>
+                            <span style="color:var(--vs-text-title);font-size:13px;font-weight:300;">${d.moduleTitle}</span>
                         </span>
-                        <span style="font-size:13px;font-weight:300;padding:1px 6px;border-radius:3px;
-                                     background:rgba(34,211,238,0.1);color:var(--vs-accent);
-                                     border:1px solid rgba(34,211,238,0.15);">
-                            ${typeBadge}
-                        </span>
+                        <div style="display:flex;align-items:center;">
+                            <span style="font-size:12px;font-weight:300;padding:1px 6px;border-radius:3px;
+                                         background:rgba(34,211,238,0.1);color:var(--vs-accent);
+                                         border:1px solid rgba(34,211,238,0.15);${textStyle}">
+                                ${typeBadge}
+                            </span>
+                            ${revokeBtnHtml}
+                        </div>
                     </div>
                     <div style="display:flex;align-items:center;justify-content:space-between;">
-                        <span style="color:var(--vs-text-muted);font-size:13px;font-weight:300;">
+                        <span style="color:var(--vs-text-muted);font-size:13px;font-weight:300;${textStyle}">
                             ${this._viewTab === 'DISPATCHED' ? '→' : '←'} ${person}
                         </span>
                         <div style="display:flex;align-items:center;gap:6px;">
@@ -442,13 +595,33 @@ const DelegationPanel = {
                             <span style="color:var(--vs-text-muted);font-size:13px;font-weight:300;">${statusLabel}</span>
                         </div>
                     </div>
-                    <div style="color:var(--vs-text-muted);font-size:13px;font-weight:300;opacity:0.6;margin-top:2px;">
+                    <div style="color:var(--vs-text-muted);font-size:12px;font-weight:300;opacity:0.6;margin-top:4px;">
                         ${time}
                     </div>
                 </div>`;
         }).join('');
 
         return `<div style="flex:1;overflow-y:auto;">${listHtml}</div>`;
+    },
+
+    _revokeDelegation(id) {
+        if (!confirm('ยืนยันการยกเลิกภารกิจนี้?')) return;
+        const list = this.getAllDelegations();
+        const dlg = list.find(d => d.id === id);
+        if (dlg) {
+            dlg.status = 'REVOKED';
+            this._saveDelegations(list);
+
+            // Soft sync to backend (status update)
+            this._syncToBackend({ ...dlg, status: 'REVOKED' });
+
+            if (window.HUD_NOTIFY) {
+                HUD_NOTIFY.toast('ยกเลิกภารกิจ', `ระงับภารกิจ "${dlg.moduleTitle}" เรียบร้อยแล้ว`, 'info');
+            } else {
+                this.showAlert('ยกเลิกสำเร็จ', `ระงับภารกิจ "${dlg.moduleTitle}" ออกจากระบบแล้ว`, 'success');
+            }
+            this.render();
+        }
     },
 
     _formatTime(iso) {
@@ -468,6 +641,15 @@ const DelegationPanel = {
     // ═══════════════════════════════════════════
 
     _bindEvents(container) {
+        // Initialize Calendar for Deadline Input
+        const deadlineInput = container.querySelector('#deleg-deadline');
+        if (deadlineInput && typeof IDLPMSCalendar !== 'undefined') {
+            // Re-initialize to avoid duplicate calendars if already created
+            if (!deadlineInput._calendarInstance) {
+                deadlineInput._calendarInstance = new IDLPMSCalendar(deadlineInput);
+            }
+        }
+
         // Toggle mode buttons
         container.querySelectorAll('.deleg-toggle-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -518,37 +700,81 @@ const DelegationPanel = {
         if (submitBtn) {
             submitBtn.addEventListener('click', () => this._handleSubmit(container));
         }
+
+        // Revoke buttons
+        container.querySelectorAll('.deleg-revoke-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this._revokeDelegation(btn.dataset.id);
+            });
+        });
     },
 
     _handleSubmit(container) {
+        // Validation 1: Teacher Selection
         const select = container.querySelector('#deleg-teacher-select');
-        if (!select || !select.value) return;
+        if (!select || !select.value) {
+            const msg = 'กรุณาเลือกบุคลากรเป้าหมายก่อนมอบหมายงาน';
+            if (window.HUD_NOTIFY) HUD_NOTIFY.toast('ข้อมูลไม่ครบถ้วน', msg, 'error');
+            this.showAlert('ข้อมูลไม่ครบถ้วน', msg, 'error');
+            return;
+        }
 
         const teacherId = select.value;
         const teacherName = select.options[select.selectedIndex]?.dataset?.name || teacherId;
 
-        let moduleTitle, moduleId;
+        let moduleTitle, moduleId, moduleDesc;
+        let finalCtx = {};
         if (this._mode === 'ADHOC') {
             const titleInput = container.querySelector('#deleg-adhoc-title');
-            moduleTitle = titleInput?.value?.trim() || 'ภารกิจพิเศษ';
+            moduleTitle = titleInput?.value?.trim();
+            if (!moduleTitle) {
+                const msg = 'กรุณาระบุชื่อภารกิจที่ต้องการมอบหมาย';
+                if (window.HUD_NOTIFY) HUD_NOTIFY.toast('ข้อมูลไม่ครบถ้วน', msg, 'error');
+                this.showAlert('ข้อมูลไม่ครบถ้วน', msg, 'error');
+                return;
+            }
+            const descInput = container.querySelector('#deleg-adhoc-desc');
+            moduleDesc = descInput?.value?.trim() || '';
             moduleId = 'ADHOC_' + Date.now();
+            finalCtx = { icon: 'i-lightning-bolt', colorClass: 'text-amber-400' };
         } else {
             const ctx = this._getModuleContext();
             moduleTitle = ctx.title;
             moduleId = ctx.id;
+            finalCtx = ctx;
         }
 
-        // Create delegation
-        const delegation = this.assign(teacherId, teacherName, moduleTitle, moduleId);
+        // Capture Score and Deadline
+        const scoreInput = container.querySelector('#deleg-score');
+        const deadlineInput = container.querySelector('#deleg-deadline');
+        const score = scoreInput ? parseInt(scoreInput.value) || 0 : 0;
+        const deadline = deadlineInput ? deadlineInput.value : null;
+
+        // Create delegation (duplicate validation inside assign)
+        const delegation = this.assign(teacherId, teacherName, moduleTitle, moduleId, finalCtx);
+        if (!delegation) return; // Blocked by duplicate guard
+
+        // Attach extended payload
+        delegation.score = score;
+        if (deadline) delegation.deadline = deadline;
+        if (this._mode === 'ADHOC' && moduleDesc) {
+            delegation.description = moduleDesc;
+        }
+
+        // Update list with full payload
+        const list = this.getAllDelegations();
+        const idx = list.findIndex(t => t.id === delegation.id);
+        if (idx > -1) { list[idx] = delegation; this._saveDelegations(list); }
 
         // Toast notification
         const syncLabel = navigator.onLine ? ' (synced)' : ' (จะ sync เมื่อ online)';
         if (window.HUD_NOTIFY) {
             HUD_NOTIFY.toast('มอบหมายสำเร็จ',
                 `ส่งงาน "${moduleTitle}" ให้ ${teacherName} แล้ว${syncLabel}`, 'success');
-        } else {
-            alert(`มอบหมายงานให้ ${teacherName} สำเร็จ!${syncLabel}`);
         }
+
+        this.close();
 
         // Re-render to show in list
         this.render();

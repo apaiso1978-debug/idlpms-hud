@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>กล่องงานที่ได้รับมอบหมาย | IDLPMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/theme.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <script src="../assets/js/data.js"></script>
+    <script src="../src/services/DataService.js"></script>
+    <script src="../src/services/InsForgeDataService.js"></script>
+    <script src="../src/services/CacheService.js"></script>
+    <script src="../src/services/SyncEngine.js"></script>
+    <style>
+        .task-card {
+            border-left-width: 3px;
+            transition: all 0.2s ease;
+        }
+
+        .task-card:hover {
+            transform: translateX(2px);
+            background-color: var(--vs-bg-panel);
+        }
+
+        .task-card.priority-high {
+            border-left-color: var(--vs-danger);
+        }
+
+        .task-card.priority-normal {
+            border-left-color: var(--vs-accent);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-transparent text-[var(--vs-text-body)] font-['Sarabun'] antialiased select-none m-0 p-0 overflow-x-hidden">
+
+    <!-- Unified Page Framework -->
+    <div class="vs-page-frame w-full min-h-screen pb-16">
+
+        <!-- Page Header -->
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto w-full px-6 py-6">
+
+            <div class="grid grid-cols-1 gap-4">
+
+                <!-- Pending Tasks Area -->
+                <div class="vs-card">
+                    <div class="vs-panel-header px-4 py-3">
+                        <span class="Thai-Rule font-light">ภารกิจที่ต้องดำเนินการ (Pending)</span>
+                    </div>
+
+                    <div class="p-4" id="pending-tasks-container">
+                        <!-- Rendered by JS -->
+                        <div class="flex flex-col items-center justify-center py-10 opacity-50">
+                            <i class="icon i-refresh w-8 h-8 text-[var(--vs-text-muted)] animate-spin"></i>
+                            <span class="text-[13px] mt-2 font-light">กำลังโหลดข้อมูล...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completed History Area -->
+                <div class="vs-card opacity-80 mt-2">
+                    <div class="vs-panel-header px-4 py-3">
+                        <span class="Thai-Rule font-light">ประวัติภารกิจที่ส่งมอบแล้ว (Recently Completed)</span>
+                    </div>
+                    <div class="p-4" id="completed-tasks-container">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <!-- UI Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Basic formatting
+            const formatNumber = (n) => n < 10 ? '0' + n : n;
+
+            const renderEmpty = (container, message) => {
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-8 opacity-40">
+                        <i class="icon i-inbox w-8 h-8 mb-2"></i>
+                        <span class="text-[13px] font-light Thai-Rule">${message}</span>
+                    </div>
+                 `;
+            };
+
+            const loadTasks = () => {
+                const currentUser = window.parent && typeof window.parent.getCurrentUser === 'function'
+                    ? window.parent.getCurrentUser()
+                    : { id: localStorage.getItem('current_user_id') || 'TEA_001' };
+
+                let allDelegations = [];
+                try {
+                    const raw = localStorage.getItem('idlpms_delegations_v1');
+                    if (raw) allDelegations = JSON.parse(raw);
+                } catch (e) { console.warn('Failed to parse delegations'); }
+
+                const myTasks = allDelegations.filter(d => d.assignee === currentUser.id);
+
+                // Split by status
+                const pendingTasks = myTasks.filter(d => d.status === 'PENDING')
+                    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+                const completedTasks = myTasks.filter(d => d.status === 'COMPLETED' || d.status === 'CANCELLED')
+                    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                    .slice(0, 10); // Show last 10
+
+                // Update Count
+                const cntEl = document.getElementById('pending-count');
+                if (cntEl) cntEl.innerText = pendingTasks.length;
+
+                // Render Pending
+                const pendContainer = document.getElementById('pending-tasks-container');
+                if (pendingTasks.length === 0) {
+                    renderEmpty(pendContainer, 'ยอดเยี่ยม! คุณไม่มีภารกิจค้างส่งตกค้าง');
+                } else {
+                    pendContainer.innerHTML = pendingTasks.map(task => renderTaskCard(task, true)).join('');
+                }
+
+                // Render Completed
+                const compContainer = document.getElementById('completed-tasks-container');
+                if (completedTasks.length === 0) {
+                    renderEmpty(compContainer, 'ยังไม่มีประวัติการส่งมอบงาน');
+                } else {
+                    compContainer.innerHTML = completedTasks.map(task => renderTaskCard(task, false)).join('');
+                }
+
+                // Update Main Sidebar Badge (sync parent UI)
+                if (window.parent && window.parent.HUD_NOTIFY) {
+                    window.parent.HUD_NOTIFY.setBadge('manage', pendingTasks.length > 0);
+                }
+            };
+
+            const formatTimeRemaining = (deadline) => {
+                if (!deadline) return '<span class="text-[var(--vs-text-muted)]">-</span>';
+
+                const diff = new Date(deadline).getTime() - Date.now();
+                if (diff < 0) return '<span class="text-[var(--vs-danger)] font-light">เกินกำหนด</span>';
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+                if (days > 0) return `<span class="text-[var(--vs-success)]">เหลือ ${days} วัน</span>`;
+                if (hours > 0) return `<span class="text-[var(--vs-warning)]">เหลือ ${hours} ชม.</span>`;
+                return `<span class="text-[var(--vs-danger)]">ด่วนมาก!</span>`;
+            };
+
+            const renderTaskCard = (task, isPending) => {
+                const isAdhoc = task.moduleId && String(task.moduleId).startsWith('ADHOC');
+                const timeRemainingHTML = formatTimeRemaining(task.deadline);
+                const priorityClass = task.deadline && (new Date(task.deadline).getTime() - Date.now() < 86400000) ? 'priority-high' : 'priority-normal';
+
+                const statusBadge = isPending ?
+                    `<span class="neon-badge neon-badge-warning px-2 py-0.5 rounded-[2px] text-[13px] uppercase">in progress</span>` :
+                    (task.status === 'CANCELLED' ?
+                        `<span class="px-2 py-0.5 rounded-[2px] text-[13px] uppercase bg-white/5 text-white/40 border border-white/10">void</span>` :
+                        `<span class="neon-badge neon-badge-success px-2 py-0.5 rounded-[2px] text-[13px] uppercase">completed</span>`);
+
+                // Action Button Logic
+                let actionButton = '';
+                if (isPending) {
+                    if (isAdhoc) {
+                        actionButton = `
+                            <button onclick="markTaskComplete('${task.id}')" class="neon-btn neon-btn-success px-4 py-1.5 flex items-center gap-1.5 whitespace-nowrap">
+                                <i class="icon i-check w-4 h-4"></i> สนองคำสั่ง (เสร็จสิ้น)
+                            </button>
+                        `;
+                    } else {
+                        actionButton = `
+                            <button onclick="navigateToModule('${task.moduleId}', '${task.moduleRoute || ''}')" class="neon-btn neon-btn-accent px-4 py-1.5 flex items-center gap-1.5 whitespace-nowrap">
+                                <i class="icon i-switch-horizontal w-4 h-4"></i> ไปที่หน้าปฏิบัติงาน
+                            </button>
+                        `;
+                    }
+                }
+
+                // Extracted Icon
+                const taskIcon = task.moduleIcon || (isAdhoc ? 'i-sparkles' : 'i-cube');
+
+                return `
+                    <div class="task-card ${priorityClass} bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] border-l-[3px] rounded-[3px] p-4 mb-3 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center group">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 mb-1.5">
+                                ${statusBadge}
+                                <span class="text-[13px] text-[var(--vs-text-muted)] font-light Thai-Rule">
+                                    จาก: <span class="text-[var(--vs-text-body)]">${task.assignedByName || 'ผู้อำนวยการ'}</span>
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <i class="icon ${taskIcon} w-4 h-4 text-[var(--vs-accent)] opacity-80"></i>
+                                <h3 class="text-[15px] text-[var(--vs-text-title)] font-light Thai-Rule leading-tight truncate">${task.moduleTitle}</h3>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-[var(--vs-text-muted)] font-light Thai-Rule line-clamp-2">
+                                ${task.desc ? `<span>${task.desc}</span>` : ''}
+                                ${isPending && task.deadline ? `<div class="flex items-center gap-1.5"><i class="icon i-clock w-3.5 h-3.5 opacity-60"></i> ${timeRemainingHTML}</div>` : ''}
+                                ${task.baseScore ? `<div class="flex items-center gap-1.5"><i class="icon i-star w-3.5 h-3.5 text-[var(--vs-warning)] opacity-60"></i> ${task.baseScore} PT</div>` : ''}
+                            </div>
+                        </div>
+                        
+                        ${actionButton ? `<div class="shrink-0 w-full sm:w-auto mt-2 sm:mt-0 pt-3 sm:pt-0 border-t border-[rgba(63,63,70,0.5)] sm:border-0">${actionButton}</div>` : ''}
+                    </div>
+                `;
+            };
+
+            // Expose globally for inline onclick
+            window.markTaskComplete = (taskId) => {
+                if (window.parent && window.parent.DelegationPanel) {
+                    window.parent.DelegationPanel.completeTask(taskId);
+                } else {
+                    alert('Delegation Engine not found');
+                }
+            };
+
+            window.navigateToModule = (moduleId, moduleRoute) => {
+                if (window.parent && window.parent.ManagementEngine) {
+                    const route = moduleRoute || 'pages/home.html';
+                    window.parent.ManagementEngine.handleMenuClick(moduleId, route);
+                }
+            };
+
+            // Listen for completion event to reload list
+            if (window.parent && window.parent.document) {
+                window.parent.document.addEventListener('delegation-completed', () => loadTasks());
+            }
+
+            // Initial load
+            loadTasks();
+        });
+    </script>
+</body>
+
+</html>

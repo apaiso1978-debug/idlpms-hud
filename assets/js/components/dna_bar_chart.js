@@ -53,9 +53,11 @@ class DNABarChart {
         const labelWidth = 100;
         const valueWidth = 50;
         const barWidth = 200;
-        const padding = 16;
-        const width = labelWidth + barWidth + valueWidth + padding * 2;
-        const height = (dimensions.length * (barHeight + 12)) + padding * 2;
+        const paddingX = 16;
+        const paddingTop = 0; // Removed extra top padding to align with right panel
+        const paddingBottom = 24; // Keep space for the legend
+        const width = labelWidth + barWidth + valueWidth + paddingX * 2;
+        const height = (dimensions.length * (barHeight + 12)) + paddingTop + paddingBottom;
 
         // Clear container
         this.container.innerHTML = '';
@@ -71,8 +73,8 @@ class DNABarChart {
         dimensions.forEach((dim, i) => {
             const key = dim.toLowerCase();
             const value = this.data[key] || 0;
-            const y = padding + (i * (barHeight + 12));
-            const barX = labelWidth + padding;
+            const y = paddingTop + (i * (barHeight + 12));
+            const barX = labelWidth + paddingX;
             const barFillWidth = (value / 100) * barWidth;
 
             // Dimension label
@@ -148,9 +150,9 @@ class DNABarChart {
         if (showBenchmark) {
             const legendY = height - 12;
             const legendLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            legendLine.setAttribute('x1', labelWidth + padding);
+            legendLine.setAttribute('x1', labelWidth + paddingX);
             legendLine.setAttribute('y1', legendY);
-            legendLine.setAttribute('x2', labelWidth + padding + 20);
+            legendLine.setAttribute('x2', labelWidth + paddingX + 20);
             legendLine.setAttribute('y2', legendY);
             legendLine.setAttribute('stroke', 'var(--vs-text-body)');
             legendLine.setAttribute('stroke-width', '1');
@@ -158,7 +160,8 @@ class DNABarChart {
             this.svg.appendChild(legendLine);
 
             const legendText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            legendText.setAttribute('x', labelWidth + padding + 26);
+            legendText.setAttribute('x', labelWidth + paddingX + 26);
+
             legendText.setAttribute('y', legendY + 4);
             legendText.setAttribute('fill', 'var(--vs-text-muted)');
             legendText.setAttribute('font-size', '14');

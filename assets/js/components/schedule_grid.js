@@ -282,7 +282,7 @@ class TeacherScheduleGrid {
                 if (slot.isLunch) {
                     // Only render the Lunch label for the first day (Monday) and use grid-row span
                     if (dayIndex === 0) {
-                        html += `<div class="schedule-cell schedule-lunch-cell" style="grid-row: span 5; grid-column: ${colIndex}; writing-mode: vertical-lr; transform: rotate(180deg); display: flex; align-items: center; justify-content: center; background: rgba(var(--vs-accent-rgb), 0.08); color: var(--vs-accent); font-weight: 300; font-size: 13px; border: 1px solid var(--vs-border);">LUNCH พักรับประทานอาหาร</div>`;
+                        html += `<div class="schedule-cell schedule-lunch-cell" style="grid-row: span 5; grid-column: ${colIndex}; writing-mode: vertical-lr; transform: rotate(180deg); display: flex; align-items: center; justify-content: center; background: rgba(var(--vs-accent-rgb), 0.08); color: var(--vs-accent); font-weight: 300; font-size: 13px; border: 1px solid rgba(63, 63, 70, 0.5);">LUNCH พักรับประทานอาหาร</div>`;
                     }
                 } else {
                     const cardId = this.schedule[day.id]?.[slot.id];

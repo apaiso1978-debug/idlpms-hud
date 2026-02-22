@@ -17,7 +17,7 @@
 
 <body class="bg-transparent p-6 overflow-y-auto overflow-x-hidden font-['Sarabun'] antialiased vs-scrollbar"
     style="height: auto; min-height: 100vh;">
-    <div id="dashboard-content" class="max-w-[1600px] space-y-6 animate-in fade-in zoom-in-95 duration-500">
+    <div id="dashboard-content" class="w-full space-y-6 animate-in fade-in zoom-in-95 duration-500">
         <!-- Dynamic Content injected by JS -->
     </div>
 
@@ -108,7 +108,7 @@
         function renderDNATab(user) {
             return `
                 <!-- Main Grid -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-2">
                     <!-- Left: Student List -->
                     <div class="lg:col-span-1">
                         <div class="dna-zone p-4">
@@ -121,7 +121,7 @@
                                     <div class="flex items-center justify-between p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] hover:bg-[var(--vs-bg-card)] cursor-pointer transition-colors group ${selectedStudent?.id === s.id ? 'border border-[var(--vs-accent)]' : 'border border-transparent'}"
                                          onclick="selectStudent('${s.id}')">
                                         <div class="flex items-center gap-2">
-                                            <div class="w-8 h-8 rounded-[3px] bg-[var(--vs-bg-panel)] flex items-center justify-center text-[13px] font-light text-[var(--vs-text-muted)]">
+                                            <div class="w-8 h-8 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] flex items-center justify-center text-[13px] font-light text-[var(--vs-text-muted)]">
                                                 ${i + 1}
                                             </div>
                                             <span class="text-[13px] text-[var(--vs-text-body)] font-light Thai-Rule">${s.name}</span>
@@ -146,14 +146,14 @@
                                 </div>
                             </div>
                             
-                            <div class="dna-zone-content flex-col gap-4 mt-4">
+                            <div class="dna-zone-content flex-col gap-2 mt-4">
                                 <!-- Visualization Container -->
-                                <div id="visualization-container" class="w-full min-h-[400px] p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                                <div id="visualization-container" class="w-full min-h-[400px] p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
                                     <!-- Injected by JS -->
                                 </div>
 
                                 <!-- Selected Student Info (Individual View) -->
-                                <div id="student-info" class="hidden w-full p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
+                                <div id="student-info" class="hidden w-full p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)]">
                                     <div class="flex items-center justify-between">
                                         <span class="text-[13px] text-[var(--vs-text-muted)] font-light uppercase">Selected Student</span>
                                         <span id="selected-student-name" class="text-[13px] text-[var(--vs-text-title)] font-light Thai-Rule">-</span>
@@ -226,7 +226,7 @@
                 const averages = heatmap.getClassAverages();
                 const colors = ['var(--dna-k)', 'var(--dna-p)', 'var(--dna-a)', 'var(--dna-e)', 'var(--dna-d)'];
                 classSummary.innerHTML = ['K', 'P', 'A', 'E', 'D'].map((dim, i) => `
-                    <div class="p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] text-center">
+                    <div class="p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] text-center">
                         <div class="text-[13px] text-[var(--vs-text-muted)] uppercase mb-1">${dim}</div>
                         <div class="text-lg font-light" style="color: ${colors[i]}">${averages[dim.toLowerCase()] || 0}%</div>
                     </div>
@@ -266,3 +266,4 @@
 </body>
 
 </html>
+

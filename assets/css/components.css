@@ -114,15 +114,15 @@
 
 /* Ghost (Muted outline only) */
 .neon-btn-ghost {
-    background: transparent;
-    color: var(--vs-text-muted);
-    border-color: rgba(var(--vs-border-rgb), 0.5);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--vs-text-body);
+    border-color: rgba(255, 255, 255, 0.15);
 }
 
 .neon-btn-ghost:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.03);
-    color: var(--vs-text-body);
-    border-color: rgba(var(--vs-border-rgb), 0.8);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--vs-text-title);
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
 /* Small variant */

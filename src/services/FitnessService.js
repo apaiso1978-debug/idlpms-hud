@@ -36,6 +36,43 @@ const FitnessService = {
             updatedAt: new Date().toISOString(),
         };
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(results));
+
+        // --- PHASE 9: OUTPUT TO PERSON-FIRST HEALTH_RECORDS SCHEMA ---
+        if (typeof IDLPMS_DATA !== 'undefined' && IDLPMS_DATA.healthRecords && IDLPMS_DATA.users[studentId]) {
+            const user = IDLPMS_DATA.users[studentId];
+
+            // Look up corresponding Person ID from studentProfile relation if possible, else legacy ID
+            let personId = studentId; // fallback
+
+            // Try to resolve person_id from studentProfiles
+            if (IDLPMS_DATA.studentProfiles) {
+                for (const [profId, profData] of Object.entries(IDLPMS_DATA.studentProfiles)) {
+                    // Check if this studentProfile points to the legacy role ID or matches name/etc.
+                    // For now, if the person_id mapping exists elsewhere we'd use it.
+                    // But in our mock, we just use the ID we know or fallback.
+                    // If user object has personLink, use it:
+                    if (user.person_id) {
+                        personId = user.person_id;
+                        break;
+                    }
+                }
+            }
+
+            // Emulate health_record ID structure: H_{studentId}
+            const recordId = 'H_' + studentId;
+            IDLPMS_DATA.healthRecords[recordId] = {
+                ...(IDLPMS_DATA.healthRecords[recordId] || {}),
+                person_id: personId,
+                record_date: new Date().toISOString().split('T')[0],
+                term: `${this.SEMESTER}/${this.ACADEMIC_YEAR}`,
+                fitness_scores: {
+                    sitReach: data.sitReach,
+                    pushUp: data.pushUp,
+                    stepUp: data.stepUp
+                }
+            };
+        }
+
         return results[studentId];
     },
 

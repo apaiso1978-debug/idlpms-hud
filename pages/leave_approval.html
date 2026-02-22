@@ -85,7 +85,7 @@
             box-shadow: 0 0 8px rgba(239, 68, 68, 0.1);
         }
 
-        .form-input {
+        .vs-input {
             background: var(--vs-bg-deep);
             border: none;
             border-radius: var(--vs-radius);
@@ -100,7 +100,7 @@
             color-scheme: dark;
         }
 
-        .form-input:focus {
+        .vs-input:focus {
             outline: none;
             box-shadow: 0 0 0 1px var(--vs-accent);
         }
@@ -167,9 +167,9 @@
     </div>
 
     <!-- TAB NAVIGATION -->
-    <div class="flex gap-1 border-b border-[var(--vs-border)] mb-6 flex-wrap">
+    <div class="flex gap-1.5 border-b border-[rgba(63,63,70,0.5)] mb-6 flex-wrap">
         <button class="tab-btn active" onclick="switchTab('pending')">รออนุมัติ <span id="pending-badge"
-                class="ml-1 bg-[rgba(234,179,8,0.15)] text-[var(--vs-warning)] text-[13px] px-1.5 rounded-[3px] font-light">0</span></button>
+                class="ml-1 bg-[rgba(234,179,8,0.15)] text-[var(--vs-warning)] text-[13px] px-1.5 rounded-[var(--vs-radius)] font-light">0</span></button>
         <button class="tab-btn" onclick="switchTab('overview')">ภาพรวมบุคลากร</button>
         <button class="tab-btn" onclick="switchTab('quickout')">ออกธุระชั่วคราว</button>
         <button class="tab-btn" onclick="switchTab('all')">ใบลาทั้งหมด</button>
@@ -245,18 +245,18 @@
     <div id="tab-all" class="tab-content hidden">
         <div class="leave-card mb-4">
             <div class="flex items-center gap-2 mb-4 flex-wrap">
-                <select id="filter-type" class="form-input" style="width: auto; min-width: 150px"
+                <select id="filter-type" class="vs-input" style="width: auto; min-width: 150px"
                     onchange="renderAll()">
                     <option value="ALL">ทุกประเภท</option>
                 </select>
-                <select id="filter-status" class="form-input" style="width: auto; min-width: 150px"
+                <select id="filter-status" class="vs-input" style="width: auto; min-width: 150px"
                     onchange="renderAll()">
                     <option value="ALL">ทุกสถานะ</option>
                     <option value="PENDING">รออนุมัติ</option>
                     <option value="APPROVED">อนุมัติแล้ว</option>
                     <option value="REJECTED">ไม่อนุมัติ</option>
                 </select>
-                <select id="filter-personnel" class="form-input" style="width: auto; min-width: 200px"
+                <select id="filter-personnel" class="vs-input" style="width: auto; min-width: 200px"
                     onchange="renderAll()">
                     <option value="ALL">บุคลากรทุกคน</option>
                 </select>
@@ -276,7 +276,7 @@
             <div id="modal-detail" class="text-[13px] text-[var(--vs-text-muted)] mb-4"></div>
             <div class="mb-4">
                 <label class="text-[13px] text-[var(--vs-text-muted)] block mb-1">บันทึก ผอ.</label>
-                <textarea id="modal-note" class="form-input" rows="2" placeholder="หมายเหตุ (ไม่บังคับ)"></textarea>
+                <textarea id="modal-note" class="vs-input" rows="2" placeholder="หมายเหตุ (ไม่บังคับ)"></textarea>
             </div>
             <div class="flex items-center gap-2">
                 <button id="modal-confirm" class="btn-approve" onclick="confirmAction()">ยืนยัน</button>
@@ -336,7 +336,7 @@
                     <!-- ── Group 1: Person + Action ── -->
                     <div class="flex items-center justify-between pb-3 flex-wrap gap-2 groove">
                         <div class="flex items-center gap-2">
-                            <div class="w-10 h-10 rounded-[3px] flex items-center justify-center text-[13px] font-light" 
+                            <div class="w-10 h-10 rounded-[var(--vs-radius)] flex items-center justify-center text-[13px] font-light" 
                                  style="background: color-mix(in srgb, ${type.color} 12%, transparent); color: ${type.color}; border: 1px solid color-mix(in srgb, ${type.color} 25%, transparent)">
                                 ${(person?.name || '?').charAt(0)}
                             </div>
@@ -359,7 +359,7 @@
 
                     <!-- ── Group 2: Leave Details ── -->
                     <div class="py-3 groove">
-                        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-[13px]">
+                        <div class="grid grid-cols-2 md:grid-cols-5 gap-2 text-[13px]">
                             <div>
                                 <div class="text-[var(--vs-text-muted)]">ประเภท</div>
                                 <div class="text-white flex items-center gap-1.5">
@@ -408,7 +408,7 @@
             let html = '';
             // Total row
             html += `
-            <div class="grid grid-cols-5 gap-3 mb-4">
+            <div class="grid grid-cols-5 gap-2 mb-4">
                 <div class="att-stat">
                     <div class="text-lg font-light text-[var(--vs-accent)]">${totals.total}</div>
                     <div class="text-[13px] text-[var(--vs-text-muted)]">บุคลากรทั้งหมด</div>
@@ -443,7 +443,7 @@
                 const label = groupLabels[code] || { name: code, color: 'var(--vs-accent)' };
                 const presentPct = group.total > 0 ? Math.round((group.present / group.total) * 100) : 0;
                 html += `
-                <div class="flex items-center gap-2 py-2 border-t border-[var(--vs-border)]">
+                <div class="flex items-center gap-2 py-2 border-t border-[rgba(63,63,70,0.5)]">
                     <div class="w-32">
                         <div class="text-[13px] font-light" style="color: ${label.color}">${label.name}</div>
                         <div class="text-[13px] text-[var(--vs-text-muted)]">${group.total} คน</div>
@@ -453,7 +453,7 @@
                             <div class="balance-bar-fill" style="width: ${presentPct}%; background: ${label.color}"></div>
                         </div>
                     </div>
-                    <div class="flex gap-3 text-[13px]">
+                    <div class="flex gap-2 text-[13px]">
                         <span class="text-[var(--vs-success)]" title="มา">${group.present}</span>
                         <span class="text-[var(--vs-warning)]" title="ลา">${group.leave}</span>
                         <span class="text-[var(--vs-danger)]" title="ขาด">${group.absent}</span>
@@ -471,7 +471,7 @@
             const personnel = LeaveService.getPersonnel();
             const container = document.getElementById('personnel-leave-stats');
             let html = '<div class="overflow-x-auto"><table class="w-full text-[13px]">';
-            html += `<thead><tr class="text-[var(--vs-text-muted)] border-b border-[var(--vs-border)]">
+            html += `<thead><tr class="text-[var(--vs-text-muted)] border-b border-[rgba(63,63,70,0.5)]">
                 <th class="text-left py-2 font-normal">บุคลากร</th>
                 <th class="text-left py-2 font-normal">ตำแหน่ง</th>
                 <th class="text-center py-2 font-normal">ป่วย</th>
@@ -488,7 +488,7 @@
                 const pType = LeaveService.PERSONNEL_TYPES[p.type];
 
                 html += `
-                <tr class="border-b border-[var(--vs-border)] hover:bg-[rgba(255,255,255,0.02)]">
+                <tr class="border-b border-[rgba(63,63,70,0.5)] hover:bg-[rgba(255,255,255,0.02)]">
                     <td class="py-2 text-white">${p.name}</td>
                     <td class="py-2">
                         <span class="text-[13px] px-1.5 py-0.5 rounded" style="background: color-mix(in srgb, ${pType.color} 15%, transparent); color: ${pType.color}">${p.position}</span>
@@ -520,7 +520,7 @@
                     const person = LeaveService.getPersonnelById(rec.personnelId);
                     const reason = LeaveService.QUICKOUT_REASONS.find(r => r.code === rec.reasonCode);
                     html += `
-                    <div class="flex items-center justify-between py-2 border-b border-[var(--vs-border)] last:border-0">
+                    <div class="flex items-center justify-between py-2 border-b border-[rgba(63,63,70,0.5)] last:border-0">
                         <div class="flex items-center gap-2">
                             <div class="pulse-dot"></div>
                             <div>
@@ -544,7 +544,7 @@
                     const person = LeaveService.getPersonnelById(rec.personnelId);
                     const reason = LeaveService.QUICKOUT_REASONS.find(r => r.code === rec.reasonCode);
                     html += `
-                    <div class="flex items-center justify-between py-2 border-b border-[var(--vs-border)] last:border-0">
+                    <div class="flex items-center justify-between py-2 border-b border-[rgba(63,63,70,0.5)] last:border-0">
                         <div class="flex items-center gap-2">
                             <i class="icon ${reason?.icon || 'i-dots'} w-4 h-4" style="background-color: var(--vs-text-muted)"></i>
                             <div>

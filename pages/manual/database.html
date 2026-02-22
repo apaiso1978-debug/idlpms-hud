@@ -10,291 +10,303 @@
     <link rel="stylesheet" href="../../assets/css/styles.css">
 </head>
 
-<body class="bg-transparent px-8 pt-8 pb-24 overflow-y-auto font-['Sarabun'] antialiased">
-    <div class="max-w-[1600px] space-y-8">
-        <!-- Header -->
-        <header
-            class="h-12 px-6 flex items-center justify-between rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] ">
-            <h1 class="text-[13px] font-light text-[var(--vs-text-title)] uppercase">5. ฐานข้อมูลและโครงสร้าง</h1>
-        </header>
+<body class="bg-transparent overflow-hidden font-['Sarabun'] antialiased vs-scrollbar" style="height: 100vh;">
+    <div class="vs-page-frame animate-in fade-in zoom-in-95 duration-500">
+        <main class="vs-page-content vs-scrollbar">
+            <div class="w-full space-y-8">
 
-        <!-- Data Summary Stats -->
-        <section class="space-y-6">
-            <h2 class="text-[var(--vs-accent)] font-light text-[13px] uppercase">01 Entity Summary (Mock Data)</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                <div
-                    class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] text-center">
-                    <div class="text-2xl font-light text-[var(--vs-accent)]">7</div>
-                    <div class="text-[13px] uppercase text-[var(--vs-text-muted)] mt-1">Roles</div>
-                </div>
-                <div
-                    class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] text-center">
-                    <div class="text-2xl font-light text-[var(--vs-success)]">5</div>
-                    <div class="text-[13px] uppercase text-[var(--vs-text-muted)] mt-1">ESA Districts</div>
-                </div>
-                <div
-                    class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] text-center">
-                    <div class="text-2xl font-light text-[var(--vs-success)]">6</div>
-                    <div class="text-[13px] uppercase text-[var(--vs-text-muted)] mt-1">Schools</div>
-                </div>
-                <div
-                    class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] text-center">
-                    <div class="text-2xl font-light text-[var(--vs-accent)]">7</div>
-                    <div class="text-[13px] uppercase text-[var(--vs-text-muted)] mt-1">Students</div>
-                </div>
-                <div
-                    class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] text-center">
-                    <div class="text-2xl font-light text-[var(--vs-accent)]">6</div>
-                    <div class="text-[13px] uppercase text-[var(--vs-text-muted)] mt-1">Parents</div>
-                </div>
-                <div
-                    class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] text-center">
-                    <div class="text-2xl font-light text-amber-400">12</div>
-                    <div class="text-[13px] uppercase text-[var(--vs-text-muted)] mt-1">Teachers</div>
-                </div>
-                <div
-                    class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] text-center">
-                    <div class="text-2xl font-light text-[var(--vs-success)]">6</div>
-                    <div class="text-[13px] uppercase text-[var(--vs-text-muted)] mt-1">School Directors</div>
-                </div>
-                <div
-                    class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] text-center">
-                    <div class="text-2xl font-light text-rose-400">5</div>
-                    <div class="text-[13px] uppercase text-[var(--vs-text-muted)] mt-1">ESA Directors</div>
-                </div>
-                <div
-                    class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] text-center">
-                    <div class="text-2xl font-light text-rose-400">1</div>
-                    <div class="text-[13px] uppercase text-[var(--vs-text-muted)] mt-1">OBEC</div>
-                </div>
-                <div
-                    class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] text-center">
-                    <div class="text-2xl font-light text-rose-400">1</div>
-                    <div class="text-[13px] uppercase text-[var(--vs-text-muted)] mt-1">MOE</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Scaling & Performance -->
-        <section class="space-y-6">
-            <h2 class="text-[var(--vs-accent)] font-light text-[13px] uppercase">03 Scaling Architecture (10M Users)
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
-                    <h3 class="text-zinc-200 font-light mb-4 text-[13px] uppercase">Google Sheets Sharding (AppScript)
-                    </h3>
-                    <p class="text-[var(--vs-text-muted)] text-[13px] leading-relaxed uppercase">
-                        ใช้กลยุทธ์การแบ่งคูหาข้อมูล (Sharding) โดยใช้ Google Sheets และประมวลผลผ่าน
-                        AppScript เพื่อกระจายภาระงาน รองรับผู้ใช้งานหลัก 10,000,000 คน ได้อย่างมีประสิทธิภาพ
-                    </p>
-                </div>
-                <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
-                    <h3 class="text-zinc-200 font-light mb-4 text-[13px] uppercase">FIFO Google Drive Storage</h3>
-                    <p class="text-[var(--vs-text-muted)] text-[13px] leading-relaxed uppercase">
-                        ระบบจัดสรรพื้นที่เก็บไฟล์ด้วย Google Drive โดยใช้หลักการ FIFO (First-In, First-Out)
-                        เพื่อการจัดการพื้นที่อย่างคุ้มค่า และลดการสะสมไฟล์ที่ไม่ได้ใช้งานนาน
-                    </p>
-                </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
-                    <h3 class="text-zinc-200 font-light mb-4 text-[13px] uppercase">FIFO Memory Guard (Client)</h3>
-                    <p class="text-[var(--vs-text-muted)] text-[13px] leading-relaxed uppercase">
-                        จำกัดจำนวน DOM elements ที่แสดงผล (Limit 50) เพื่อป้องกันความหน่วงของบราวเซอร์
-                        และการใช้หน่วยความจำเกินความจำเป็น
-                    </p>
-                </div>
-                <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
-                    <div class="text-zinc-200 font-light text-[13px] uppercase">Multi-District Balancing</div>
-                    <p class="text-[var(--vs-text-muted)] text-[13px] leading-relaxed Thai-Rule">
-                        การจัดการข้อมูลแยกรายเขตพื้นที่ฯ (ESA District Partitioning)
-                        เพื่อประสิทธิภาพสูงสุดในการเรียกใช้และจัดเก็บข้อมูลตามพื้นที่
-                    </p>
-                </div>
-            </div>
-        </section>
-        <!-- User Type Breakdown -->
-        <section class="space-y-6">
-            <h2 class="text-[var(--vs-accent)] font-light text-[13px] uppercase">02 User Type Breakdown</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div
-                    class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] space-y-3">
-                    <div class="text-zinc-200 font-light text-[13px] uppercase">Students</div>
-                    <div class="space-y-2 text-[13px] uppercase">
-                        <div class="flex justify-between text-[var(--vs-text-body)]">
-                            <span>System (In-School)</span>
-                            <span class="text-[var(--vs-accent)] font-light">5</span>
+                <!-- Data Summary Stats -->
+                <section class="space-y-6">
+                    <h2 class="text-[var(--vs-accent)] font-light text-[13px] uppercase">01 Entity Summary (Mock Data)
+                    </h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] text-center">
+                            <div class="text-2xl font-light text-[var(--vs-accent)]">7</div>
+                            <div class="text-[13px] uppercase text-[var(--vs-text-muted)] mt-1">Roles</div>
                         </div>
-                        <div class="flex justify-between text-[var(--vs-text-body)]">
-                            <span>Homeschool</span>
-                            <span class="text-[var(--vs-accent)] font-light">2</span>
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] text-center">
+                            <div class="text-2xl font-light text-[var(--vs-success)]">5</div>
+                            <div class="text-[13px] uppercase text-[var(--vs-text-muted)] mt-1">ESA Districts</div>
+                        </div>
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] text-center">
+                            <div class="text-2xl font-light text-[var(--vs-success)]">6</div>
+                            <div class="text-[13px] uppercase text-[var(--vs-text-muted)] mt-1">Schools</div>
+                        </div>
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] text-center">
+                            <div class="text-2xl font-light text-[var(--vs-accent)]">7</div>
+                            <div class="text-[13px] uppercase text-[var(--vs-text-muted)] mt-1">Students</div>
+                        </div>
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] text-center">
+                            <div class="text-2xl font-light text-[var(--vs-accent)]">6</div>
+                            <div class="text-[13px] uppercase text-[var(--vs-text-muted)] mt-1">Parents</div>
+                        </div>
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] text-center">
+                            <div class="text-2xl font-light text-amber-400">12</div>
+                            <div class="text-[13px] uppercase text-[var(--vs-text-muted)] mt-1">Teachers</div>
+                        </div>
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] text-center">
+                            <div class="text-2xl font-light text-[var(--vs-success)]">6</div>
+                            <div class="text-[13px] uppercase text-[var(--vs-text-muted)] mt-1">School Directors</div>
+                        </div>
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] text-center">
+                            <div class="text-2xl font-light text-rose-400">5</div>
+                            <div class="text-[13px] uppercase text-[var(--vs-text-muted)] mt-1">ESA Directors</div>
+                        </div>
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] text-center">
+                            <div class="text-2xl font-light text-rose-400">1</div>
+                            <div class="text-[13px] uppercase text-[var(--vs-text-muted)] mt-1">OBEC</div>
+                        </div>
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] text-center">
+                            <div class="text-2xl font-light text-rose-400">1</div>
+                            <div class="text-[13px] uppercase text-[var(--vs-text-muted)] mt-1">MOE</div>
                         </div>
                     </div>
-                </div>
-                <div
-                    class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] space-y-3">
-                    <div class="text-zinc-200 font-light text-[13px] uppercase">Parents</div>
-                    <div class="space-y-2 text-[13px] uppercase">
-                        <div class="flex justify-between text-[var(--vs-text-body)]">
-                            <span>System Parent</span>
-                            <span class="text-[var(--vs-accent)] font-light">4</span>
+                </section>
+
+                <!-- Scaling & Performance -->
+                <section class="space-y-6">
+                    <h2 class="text-[var(--vs-accent)] font-light text-[13px] uppercase">03 Scaling Architecture (10M
+                        Users)
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <div
+                            class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)]">
+                            <h3 class="text-zinc-200 font-light mb-4 text-[13px] uppercase">InsForge Cloud Backend</h3>
+                            <p class="text-[var(--vs-text-muted)] text-[13px] leading-relaxed uppercase">
+                                เปลี่ยนผ่านสถาปัตยกรรมจาก AppScript เป็นระบบฐานข้อมูล InsForge API ประสิทธิภาพสูง
+                                รองรับการทำงานแบบ Offline-first ผ่าน IndexedDB
+                            </p>
                         </div>
-                        <div class="flex justify-between text-[var(--vs-text-body)]">
-                            <span>Homeschool Parent (ผู้ปกครอง HS)</span>
-                            <span class="text-[var(--vs-accent)] font-light">2</span>
+                        <div
+                            class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)]">
+                            <h3 class="text-zinc-200 font-light mb-4 text-[13px] uppercase">Cache & SyncEngine</h3>
+                            <p class="text-[var(--vs-text-muted)] text-[13px] leading-relaxed uppercase">
+                                เก็บข้อมูลแบบ Local Cache ลดการดึงข้อมูลซ้ำซ้อนจากเซิร์ฟเวอร์ และใช้ Background Worker
+                                (SyncEngine) ในการจัดคิวส่งข้อมูลใหม่อัตโนมัติเมื่อเชื่อมต่อเครือข่ายสำเร็จ
+                            </p>
                         </div>
                     </div>
-                </div>
-                <div
-                    class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] space-y-3">
-                    <div class="text-zinc-200 font-light text-[13px] uppercase">Teachers</div>
-                    <div class="space-y-2 text-[13px] uppercase">
-                        <div class="flex justify-between text-[var(--vs-text-body)]">
-                            <span>Class Teacher (ครูประจำชั้น)</span>
-                            <span class="text-amber-400 font-light">4</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <div
+                            class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)]">
+                            <h3 class="text-zinc-200 font-light mb-4 text-[13px] uppercase">FIFO Memory Guard (Client)
+                            </h3>
+                            <p class="text-[var(--vs-text-muted)] text-[13px] leading-relaxed uppercase">
+                                จำกัดจำนวน DOM elements ที่แสดงผล (Limit 50) เพื่อป้องกันความหน่วงของบราวเซอร์
+                                และการใช้หน่วยความจำเกินความจำเป็น
+                            </p>
                         </div>
-                        <div class="flex justify-between text-[var(--vs-text-body)]">
-                            <span>Subject Teacher (ครูประจำวิชา)</span>
-                            <span class="text-amber-400 font-light">8</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Core Subjects -->
-        <section class="space-y-6">
-            <h2 class="text-[var(--vs-accent)] font-light text-[13px] uppercase Thai-Rule">03 กลุ่มสาระการเรียนรู้ (8
-                กลุ่มสาระฯ + 1)
-            </h2>
-            <div
-                class="overflow-hidden rounded-[var(--vs-radius)] border border-[var(--vs-border)] bg-[var(--vs-bg-card)]">
-                <table class="w-full text-left text-[13px] border-collapse">
-                    <thead>
-                        <tr class="bg-[var(--vs-bg-panel)] text-[var(--vs-text-body)] text-[13px] uppercase">
-                            <th class="p-3 border-b border-[var(--vs-border)]">Subject ID</th>
-                            <th class="p-3 border-b border-[var(--vs-border)]">Subject Name</th>
-                            <th class="p-3 border-b border-[var(--vs-border)]">Color Code</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-[var(--vs-text-body)] text-[13px] uppercase">
-                        <tr class="border-b border-[var(--vs-border)]">
-                            <td class="p-3">THAI</td>
-                            <td class="p-3">ภาษาไทย</td>
-                            <td class="p-3"><span class="text-[var(--sj-thai)]">sj-thai</span></td>
-                        </tr>
-                        <tr class="border-b border-[var(--vs-border)]">
-                            <td class="p-3">MATH</td>
-                            <td class="p-3">คณิตศาสตร์</td>
-                            <td class="p-3"><span class="text-[var(--sj-math)]">sj-math</span></td>
-                        </tr>
-                        <tr class="border-b border-[var(--vs-border)]">
-                            <td class="p-3">SCI</td>
-                            <td class="p-3">วิทยาศาสตร์และเทคโนโลยี</td>
-                            <td class="p-3"><span class="text-[var(--sj-sci)]">sj-sci</span></td>
-                        </tr>
-                        <tr class="border-b border-[var(--vs-border)]">
-                            <td class="p-3">SOC</td>
-                            <td class="p-3">สังคมศึกษา ศาสนา และวัฒนธรรม</td>
-                            <td class="p-3"><span class="text-[var(--sj-soc)]">sj-soc</span></td>
-                        </tr>
-                        <tr class="border-b border-[var(--vs-border)]">
-                            <td class="p-3">PE</td>
-                            <td class="p-3">สุขศึกษาและพลศึกษา</td>
-                            <td class="p-3"><span class="text-[var(--sj-pe)]">sj-pe</span></td>
-                        </tr>
-                        <tr class="border-b border-[var(--vs-border)]">
-                            <td class="p-3">ART</td>
-                            <td class="p-3">ศิลปะ</td>
-                            <td class="p-3"><span class="text-[var(--sj-art)]">sj-art</span></td>
-                        </tr>
-                        <tr class="border-b border-[var(--vs-border)]">
-                            <td class="p-3">WORK</td>
-                            <td class="p-3">การงานอาชีพ</td>
-                            <td class="p-3"><span class="text-[var(--sj-work)]">sj-work</span></td>
-                        </tr>
-                        <tr class="border-b border-[var(--vs-border)]">
-                            <td class="p-3">ENG</td>
-                            <td class="p-3">ภาษาต่างประเทศ (English)</td>
-                            <td class="p-3"><span class="text-[var(--sj-eng)]">sj-eng</span></td>
-                        </tr>
-                        <tr>
-                            <td class="p-3">HIST</td>
-                            <td class="p-3">ประวัติศาสตร์</td>
-                            <td class="p-3"><span class="text-[var(--sj-hist)]">sj-hist</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- Data Schema: Pedagogical Data -->
-        <section class="space-y-6">
-            <h2 class="text-[var(--vs-accent)] font-light text-[13px] uppercase Thai-Rule">04 โครงสร้างข้อมูลบทเรียน
-                (Pedagogical Data Schema)</h2>
-            <div
-                class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] space-y-6">
-                <div class="space-y-4">
-                    <h3 class="text-zinc-200 text-[13px] uppercase">pedagogicalData (Standard Object)</h3>
-                    <p class="text-[var(--vs-text-muted)] text-[13px] Thai-Rule">
-                        โครงสร้างหลักที่ได้จากการ Harvest ต้องรองรับความหลากหลายของข้อมูล DLTV ดังนี้:
-                    </p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-[13px] font-mono text-[var(--vs-text-body)]">
-                        <div class="p-4 bg-black/30 rounded-[var(--vs-radius)] border border-[var(--vs-border)]">
-                            <span class="text-[var(--vs-accent)]">// Objectives (Polymorphic)</span><br>
-                            objectives: { K: "", P: "", A: "" } <span class="text-zinc-500">|| Array[]</span><br><br>
-                            <span class="text-[var(--vs-accent)]">// Core Content</span><br>
-                            indicator: "ส 4.x ...",<br>
-                            summary: "สรุปเนื้อหาสำคัญ...",<br>
-                            hlsUrl: "https://...",<br>
-                        </div>
-                        <div class="p-4 bg-black/30 rounded-[var(--vs-radius)] border border-[var(--vs-border)]">
-                            <span class="text-[var(--vs-accent)]">// Assessment (🤖 AUTO)</span><br>
-                            quiz: [<br>
-                            &nbsp;&nbsp;{ question: "", options: [], answer: 0 }<br>
-                            ],<br>
-                            masterChallenge: {<br>
-                            &nbsp;&nbsp;scenario: "ถ้านักเรียน...",<br>
-                            &nbsp;&nbsp;criteria: []<br>
-                            }
+                        <div
+                            class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)]">
+                            <div class="text-zinc-200 font-light text-[13px] uppercase">Multi-District Balancing</div>
+                            <p class="text-[var(--vs-text-muted)] text-[13px] leading-relaxed Thai-Rule">
+                                การจัดการข้อมูลแยกรายเขตพื้นที่ฯ (ESA District Partitioning)
+                                เพื่อประสิทธิภาพสูงสุดในการเรียกใช้และจัดเก็บข้อมูลตามพื้นที่
+                            </p>
                         </div>
                     </div>
-                </div>
+                </section>
+                <!-- User Type Breakdown -->
+                <section class="space-y-6">
+                    <h2 class="text-[var(--vs-accent)] font-light text-[13px] uppercase">02 User Type Breakdown</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                        <div
+                            class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] space-y-3">
+                            <div class="text-zinc-200 font-light text-[13px] uppercase">Students</div>
+                            <div class="space-y-2 text-[13px] uppercase">
+                                <div class="flex justify-between text-[var(--vs-text-body)]">
+                                    <span>System (In-School)</span>
+                                    <span class="text-[var(--vs-accent)] font-light">5</span>
+                                </div>
+                                <div class="flex justify-between text-[var(--vs-text-body)]">
+                                    <span>Homeschool</span>
+                                    <span class="text-[var(--vs-accent)] font-light">2</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] space-y-3">
+                            <div class="text-zinc-200 font-light text-[13px] uppercase">Parents</div>
+                            <div class="space-y-2 text-[13px] uppercase">
+                                <div class="flex justify-between text-[var(--vs-text-body)]">
+                                    <span>System Parent</span>
+                                    <span class="text-[var(--vs-accent)] font-light">4</span>
+                                </div>
+                                <div class="flex justify-between text-[var(--vs-text-body)]">
+                                    <span>Homeschool Parent (ผู้ปกครอง HS)</span>
+                                    <span class="text-[var(--vs-accent)] font-light">2</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] space-y-3">
+                            <div class="text-zinc-200 font-light text-[13px] uppercase">Teachers</div>
+                            <div class="space-y-2 text-[13px] uppercase">
+                                <div class="flex justify-between text-[var(--vs-text-body)]">
+                                    <span>Class Teacher (ครูประจำชั้น)</span>
+                                    <span class="text-amber-400 font-light">4</span>
+                                </div>
+                                <div class="flex justify-between text-[var(--vs-text-body)]">
+                                    <span>Subject Teacher (ครูประจำวิชา)</span>
+                                    <span class="text-amber-400 font-light">8</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-                <div class="pt-4 border-t border-[var(--vs-border)]">
-                    <h4 class="text-amber-400 text-[13px] uppercase mb-2">Harvesting Rule: Sidebar Verification</h4>
-                    <p class="text-[var(--vs-text-muted)] text-[13px] Thai-Rule">
-                        ต้องเขียนบันทึก Subject Name, Year, และ Semester จาก <span class="text-white">Sidebar ขวา</span>
-                        ลงใน Metadata ของบทเรียนเสมอ
-                        เพื่อใช้เป็น Primary Key ในการดึง HLS Stream ที่ถูกต้อง
-                    </p>
-                </div>
-            </div>
-        </section>
+                <!-- Core Subjects -->
+                <section class="space-y-6">
+                    <h2 class="text-[var(--vs-accent)] font-light text-[13px] uppercase Thai-Rule">03
+                        กลุ่มสาระการเรียนรู้ (8
+                        กลุ่มสาระฯ + 1)
+                    </h2>
+                    <div
+                        class="overflow-hidden rounded-[var(--vs-radius)] border border-[rgba(63,63,70,0.5)] bg-[var(--vs-bg-card)]">
+                        <table class="w-full text-left text-[13px] border-collapse">
+                            <thead>
+                                <tr class="bg-[var(--vs-bg-panel)] text-[var(--vs-text-body)] text-[13px] uppercase">
+                                    <th class="p-3 border-b border-[rgba(63,63,70,0.5)]">Subject ID</th>
+                                    <th class="p-3 border-b border-[rgba(63,63,70,0.5)]">Subject Name</th>
+                                    <th class="p-3 border-b border-[rgba(63,63,70,0.5)]">Color Code</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-[var(--vs-text-body)] text-[13px] uppercase">
+                                <tr class="border-b border-[rgba(63,63,70,0.5)]">
+                                    <td class="p-3">THAI</td>
+                                    <td class="p-3">ภาษาไทย</td>
+                                    <td class="p-3"><span class="text-[var(--sj-thai)]">sj-thai</span></td>
+                                </tr>
+                                <tr class="border-b border-[rgba(63,63,70,0.5)]">
+                                    <td class="p-3">MATH</td>
+                                    <td class="p-3">คณิตศาสตร์</td>
+                                    <td class="p-3"><span class="text-[var(--sj-math)]">sj-math</span></td>
+                                </tr>
+                                <tr class="border-b border-[rgba(63,63,70,0.5)]">
+                                    <td class="p-3">SCI</td>
+                                    <td class="p-3">วิทยาศาสตร์และเทคโนโลยี</td>
+                                    <td class="p-3"><span class="text-[var(--sj-sci)]">sj-sci</span></td>
+                                </tr>
+                                <tr class="border-b border-[rgba(63,63,70,0.5)]">
+                                    <td class="p-3">SOC</td>
+                                    <td class="p-3">สังคมศึกษา ศาสนา และวัฒนธรรม</td>
+                                    <td class="p-3"><span class="text-[var(--sj-soc)]">sj-soc</span></td>
+                                </tr>
+                                <tr class="border-b border-[rgba(63,63,70,0.5)]">
+                                    <td class="p-3">PE</td>
+                                    <td class="p-3">สุขศึกษาและพลศึกษา</td>
+                                    <td class="p-3"><span class="text-[var(--sj-pe)]">sj-pe</span></td>
+                                </tr>
+                                <tr class="border-b border-[rgba(63,63,70,0.5)]">
+                                    <td class="p-3">ART</td>
+                                    <td class="p-3">ศิลปะ</td>
+                                    <td class="p-3"><span class="text-[var(--sj-art)]">sj-art</span></td>
+                                </tr>
+                                <tr class="border-b border-[rgba(63,63,70,0.5)]">
+                                    <td class="p-3">WORK</td>
+                                    <td class="p-3">การงานอาชีพ</td>
+                                    <td class="p-3"><span class="text-[var(--sj-work)]">sj-work</span></td>
+                                </tr>
+                                <tr class="border-b border-[rgba(63,63,70,0.5)]">
+                                    <td class="p-3">ENG</td>
+                                    <td class="p-3">ภาษาต่างประเทศ (English)</td>
+                                    <td class="p-3"><span class="text-[var(--sj-eng)]">sj-eng</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3">HIST</td>
+                                    <td class="p-3">ประวัติศาสตร์</td>
+                                    <td class="p-3"><span class="text-[var(--sj-hist)]">sj-hist</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
 
-        <!-- Sharding Logic -->
-        <section class="space-y-6">
-            <h2 class="text-[var(--vs-accent)] font-light text-[13px] uppercase">05 Scaling Architecture</h2>
-            <div class="space-y-4">
-                <div
-                    class="flex items-center justify-between p-4 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[var(--vs-border)]">
-                    <span class="text-[var(--vs-text-body)] text-[13px] uppercase">Sharding Strategy</span>
-                    <span class="text-[var(--vs-accent)] font-light text-[13px]">Geo-Based Partitioning (ESA
-                        Level)</span>
-                </div>
-                <div
-                    class="flex items-center justify-between p-4 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[var(--vs-border)]">
-                    <span class="text-[var(--vs-text-body)] text-[13px] uppercase">Target Capacity</span>
-                    <span class="text-[var(--vs-success)] font-light text-[13px]">10M+ Users</span>
-                </div>
-                <div
-                    class="flex items-center justify-between p-4 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[var(--vs-border)]">
-                    <span class="text-[var(--vs-text-body)] text-[13px] uppercase">Data Source</span>
-                    <span class="text-amber-400 font-light text-[13px]">data.js (Mock) | Future: Google Sheets
-                        Sharding</span>
-                </div>
-            </div>
-        </section>
+                <!-- Data Schema: Pedagogical Data -->
+                <section class="space-y-6">
+                    <h2 class="text-[var(--vs-accent)] font-light text-[13px] uppercase Thai-Rule">04
+                        โครงสร้างข้อมูลบทเรียน
+                        (Pedagogical Data Schema)</h2>
+                    <div
+                        class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] space-y-6">
+                        <div class="space-y-4">
+                            <h3 class="text-zinc-200 text-[13px] uppercase">pedagogicalData (Standard Object)</h3>
+                            <p class="text-[var(--vs-text-muted)] text-[13px] Thai-Rule">
+                                โครงสร้างหลักที่ได้จากการ Harvest ต้องรองรับความหลากหลายของข้อมูล DLTV ดังนี้:
+                            </p>
+                            <div
+                                class="grid grid-cols-1 md:grid-cols-2 gap-2 text-[13px] font-mono text-[var(--vs-text-body)]">
+                                <div
+                                    class="p-4 bg-black/30 rounded-[var(--vs-radius)] border border-[rgba(63,63,70,0.5)]">
+                                    <span class="text-[var(--vs-accent)]">// Objectives (Polymorphic)</span><br>
+                                    objectives: { K: "", P: "", A: "" } <span class="text-zinc-500">||
+                                        Array[]</span><br><br>
+                                    <span class="text-[var(--vs-accent)]">// Core Content</span><br>
+                                    indicator: "ส 4.x ...",<br>
+                                    summary: "สรุปเนื้อหาสำคัญ...",<br>
+                                    hlsUrl: "https://...",<br>
+                                </div>
+                                <div
+                                    class="p-4 bg-black/30 rounded-[var(--vs-radius)] border border-[rgba(63,63,70,0.5)]">
+                                    <span class="text-[var(--vs-accent)]">// Assessment (🤖 AUTO)</span><br>
+                                    quiz: [<br>
+                                    &nbsp;&nbsp;{ question: "", options: [], answer: 0 }<br>
+                                    ],<br>
+                                    masterChallenge: {<br>
+                                    &nbsp;&nbsp;scenario: "ถ้านักเรียน...",<br>
+                                    &nbsp;&nbsp;criteria: []<br>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-t border-[rgba(63,63,70,0.5)]">
+                            <h4 class="text-amber-400 text-[13px] uppercase mb-2">Harvesting Rule: Sidebar Verification
+                            </h4>
+                            <p class="text-[var(--vs-text-muted)] text-[13px] Thai-Rule">
+                                ต้องเขียนบันทึก Subject Name, Year, และ Semester จาก <span class="text-white">Sidebar
+                                    ขวา</span>
+                                ลงใน Metadata ของบทเรียนเสมอ
+                                เพื่อใช้เป็น Primary Key ในการดึง HLS Stream ที่ถูกต้อง
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sharding Logic -->
+                <section class="space-y-6">
+                    <h2 class="text-[var(--vs-accent)] font-light text-[13px] uppercase">05 Scaling Architecture</h2>
+                    <div class="space-y-4">
+                        <div
+                            class="flex items-center justify-between p-4 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[rgba(63,63,70,0.5)]">
+                            <span class="text-[var(--vs-text-body)] text-[13px] uppercase">Sharding Strategy</span>
+                            <span class="text-[var(--vs-accent)] font-light text-[13px]">Geo-Based Partitioning (ESA
+                                Level)</span>
+                        </div>
+                        <div
+                            class="flex items-center justify-between p-4 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[rgba(63,63,70,0.5)]">
+                            <span class="text-[var(--vs-text-body)] text-[13px] uppercase">Target Capacity</span>
+                            <span class="text-[var(--vs-success)] font-light text-[13px]">10M+ Users</span>
+                        </div>
+                        <div
+                            class="flex items-center justify-between p-4 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[rgba(63,63,70,0.5)]">
+                            <span class="text-[var(--vs-text-body)] text-[13px] uppercase">Data Source</span>
+                            <span class="text-sky-400 font-light text-[13px]">InsForge Cloud API (Production) / data.js
+                                (Mock)</span>
+                        </div>
+                    </div>
+                </section>
+        </main>
     </div>
 </body>
 

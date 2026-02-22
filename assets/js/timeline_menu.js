@@ -25,7 +25,7 @@ window.TimelineMenu = {
 
         // Timeline children
         if (children.length > 0) {
-            html += `<div class="timeline-children-container" id="${containerId}-children">`;
+            html += `<div class="timeline-children-container collapsed" id="${containerId}-children">`;
 
             children.forEach((child) => {
                 html += this._renderChildItem(child, activeItem);
@@ -44,14 +44,14 @@ window.TimelineMenu = {
     _renderParentItem(item, hasChildren, containerId) {
         return `
             <button 
-                class="timeline-parent-item${hasChildren ? ' menu-has-children' : ''}${item.active ? ' active' : ''}"
+                class="timeline-parent-item collapsed${hasChildren ? ' menu-has-children' : ''}${item.active ? ' active' : ''}"
                 data-page="${item.page || '#'}"
                 data-name="${item.name}"
                 data-action="${item.action || ''}"
                 data-toggle="${containerId}-children"
             >
-                <i class="icon ${item.icon || 'i-folder'}"></i>
-                <span>${item.name}</span>
+                <i class="icon ${item.icon || 'i-folder'} ${item.colorClass || ''}"></i>
+                <span style="color: var(--vs-text-title) !important;" class="font-light">${item.name}</span>
                 ${hasChildren ? '<i class="icon i-chevron-right timeline-chevron"></i>' : ''}
             </button>
         `;
@@ -133,7 +133,41 @@ window.TimelineMenu = {
                 if (page && page !== '#') {
                     const mainFrame = document.getElementById('main-frame');
                     if (mainFrame) {
-                        mainFrame.src = page;
+                        let loadPath = page;
+
+                        // Handle System Tasks (Delegation Inbox)
+                        if (loadPath.startsWith('__SYSTEM_TASK__')) {
+                            const sysModuleId = loadPath.replace('__SYSTEM_TASK__', '');
+                            if (window.ManagementEngine) {
+                                const sysItem = window.ManagementEngine.findMenuItem(sysModuleId);
+                                if (sysItem && (sysItem.page || sysItem.path)) {
+                                    loadPath = sysItem.page || sysItem.path;
+                                } else {
+                                    // Fuzzy recovery for old corrupted tasks in localStorage
+                                    const rawId = String(sysModuleId).trim();
+                                    const upperId = rawId.toUpperCase();
+
+                                    if (upperId.includes('FITNESS') || upperId.includes('สมรรถภาพ') || rawId === '100' || rawId === 'fitness-test') {
+                                        loadPath = 'pages/fitness_test.html';
+                                    } else if (upperId === 'GENERAL') {
+                                        // Ad-Hoc / General tasks should open the inbox logic or detailed view
+                                        loadPath = 'pages/teacher_inbox.html';
+                                    } else {
+                                        loadPath = 'pages/home.html';
+                                    }
+                                }
+                            } else {
+                                loadPath = 'pages/home.html';
+                            }
+                        } else if (loadPath.startsWith('__ACCEPT_MISSION__')) {
+                            const taskId = loadPath.replace('__ACCEPT_MISSION__', '');
+                            loadPath = `pages/mission_accept.html#taskId=${taskId}`;
+                        } else if (loadPath.startsWith('__COMPONENT__')) {
+                            const componentName = loadPath.replace('__COMPONENT__', '');
+                            loadPath = `pages/mission_hud.html#cmp=${componentName}&ctx=DELEGATED`;
+                        }
+
+                        mainFrame.src = loadPath;
                     }
 
                     // Update breadcrumb
@@ -141,6 +175,11 @@ window.TimelineMenu = {
                     if (breadcrumbPage) {
                         breadcrumbPage.innerText = name;
                     }
+                }
+
+                // --- Sync Active Module for Delegation System ---
+                if (window.ManagementEngine) {
+                    window.ManagementEngine.activeModule = action || page;
                 }
 
                 // Handle custom action
@@ -202,14 +241,6 @@ window.TimelineMenu = {
             const mainFrame = document.getElementById('main-frame');
             if (mainFrame) {
                 mainFrame.src = 'pages/schedule/domain4.html';
-            }
-        },
-
-        // Academic: Auto Scheduler
-        'auto-schedule': function (e) {
-            const mainFrame = document.getElementById('main-frame');
-            if (mainFrame) {
-                mainFrame.src = 'pages/auto_schedule.html?v=' + Date.now();
             }
         },
 

@@ -15,7 +15,7 @@
 </head>
 
 <body class="bg-transparent p-6 overflow-y-auto overflow-x-hidden font-['Sarabun'] antialiased vs-scrollbar">
-    <div class="max-w-[1600px] mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div class="w-full space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
         <!-- Header -->
         <div class="flex items-center justify-between">
@@ -45,7 +45,7 @@
                 <!-- Populated by renderDomain4Panel() -->
             </div>
             <button onclick="addDomain4Activity()"
-                class="mt-4 flex items-center gap-1 px-6 py-2.5 text-[13px] text-[#34d399] border border-[#34d399]/20 rounded-[var(--vs-radius)] hover:bg-[#34d399]/10 transition-all">
+                class="mt-4 flex items-center gap-1.5 px-6 py-2.5 text-[13px] text-[#34d399] border border-[#34d399]/20 rounded-[var(--vs-radius)] hover:bg-[#34d399]/10 transition-all">
                 <span>+ เพิ่มกิจกรรม</span>
             </button>
         </div>
@@ -86,12 +86,12 @@
             if (!container) return;
             const activities = loadDomainInputs(4) || getDefaultDomain4();
 
-            let html = `<div class="grid grid-cols-[minmax(0,1fr)_100px_160px_36px] gap-3 text-[13px] text-[var(--vs-text-muted)] uppercase pb-1 border-b border-[rgba(63,63,70,0.5)]">
+            let html = `<div class="grid grid-cols-[minmax(0,1fr)_100px_160px_36px] gap-2 text-[13px] text-[var(--vs-text-muted)] uppercase pb-1 border-b border-[rgba(63,63,70,0.5)]">
                 <span>กิจกรรม</span><span class="text-center">วัน</span><span class="text-center">คาบ</span><span></span>
             </div>`;
 
             activities.forEach((a, idx) => {
-                html += `<div class="grid grid-cols-[minmax(0,1fr)_100px_160px_36px] gap-3 items-center py-2 border-b border-[rgba(63,63,70,0.1)]">
+                html += `<div class="grid grid-cols-[minmax(0,1fr)_100px_160px_36px] gap-2 items-center py-2 border-b border-[rgba(63,63,70,0.1)]">
                     <input type="text" value="${a.name}" onchange="updateD4Activity(${idx}, 'name', this.value)"
                         class="bg-[rgba(255,255,255,0.03)] text-[13px] text-[var(--vs-text-body)] border border-[rgba(255,255,255,0.1)] rounded-[var(--vs-radius)] focus:border-[#34d399]/50 outline-none px-3 py-2" />
                     <select onchange="updateD4Activity(${idx}, 'day', parseInt(this.value))"

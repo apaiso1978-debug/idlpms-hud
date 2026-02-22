@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../assets/css/theme.css" />
     <link rel="stylesheet" href="../assets/css/styles.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
     <link rel="stylesheet" href="../assets/css/notifications.css" />
     <script src="../assets/js/data.js"></script>
     <script src="../assets/js/secrets.local.js"></script>
@@ -25,10 +26,10 @@
 </head>
 
 <body class="p-6 bg-[var(--vs-bg-main)] text-[var(--vs-text-body)] font-light Thai-Rule">
-    <div class="max-w-4xl mx-auto space-y-6">
+    <div class="w-full space-y-6">
         <!-- Header -->
         <header class="flex items-center justify-between mb-8">
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center gap-2">
                 <div
                     class="w-12 h-12 rounded-[var(--vs-radius)] bg-[rgba(var(--vs-accent-rgb),0.1)] flex items-center justify-center">
                     <i class="icon i-office w-6 h-6 text-[var(--vs-accent)]"></i>
@@ -41,56 +42,57 @@
                 </div>
             </div>
             <button onclick="saveSetup()" id="save-btn"
-                class="flex items-center space-x-2 px-6 py-2.5 bg-[rgba(var(--vs-accent-rgb),0.1)] border border-[rgba(var(--vs-accent-rgb),0.3)] rounded-[var(--vs-radius)] text-[var(--vs-accent)] hover:bg-[rgba(var(--vs-accent-rgb),0.2)] transition-all group">
+                class="flex items-center gap-2 px-6 py-2.5 bg-[rgba(var(--vs-accent-rgb),0.1)] border border-[rgba(var(--vs-accent-rgb),0.3)] rounded-[var(--vs-radius)] text-[var(--vs-accent)] hover:bg-[rgba(var(--vs-accent-rgb),0.2)] transition-all group">
                 <i class="icon i-save w-4 h-4"></i>
                 <span class="Thai-Rule">บันทึกข้อมูลโรงเรียน</span>
             </button>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
             <!-- 1. School Info -->
             <div class="vs-section-card space-y-4">
-                <div class="flex items-center space-x-2 text-[var(--vs-accent)] mb-2">
+                <div class="flex items-center gap-2 text-[var(--vs-accent)] mb-2">
                     <i class="icon i-office w-4 h-4"></i>
                     <span class="text-[13px] uppercase font-light">School Profile</span>
                 </div>
                 <div>
                     <label class="text-[13px] text-[var(--vs-text-muted)] uppercase block mb-1">ชื่อโรงเรียน</label>
-                    <input type="text" id="school-name" class="vs-setup-input Thai-Rule" placeholder="ระบุชื่อโรงเรียน">
+                    <input type="text" id="school-name" class="vs-input w-full Thai-Rule" placeholder="ระบุชื่อโรงเรียน">
                 </div>
                 <div>
                     <label class="text-[13px] text-[var(--vs-text-muted)] uppercase block mb-1">สังกัดเขตพื้นที่
                         (ESA)</label>
-                    <input type="text" id="school-esa" class="vs-setup-input Thai-Rule" placeholder="เช่น สพป. เขต 1">
+                    <input type="text" id="school-esa" class="vs-input w-full Thai-Rule" placeholder="เช่น สพป. เขต 1">
                 </div>
                 <div>
                     <label class="text-[13px] text-[var(--vs-text-muted)] uppercase block mb-1">ชื่อผู้อำนวยการ</label>
-                    <input type="text" id="school-director" class="vs-setup-input Thai-Rule"
+                    <input type="text" id="school-director" class="vs-input w-full Thai-Rule"
                         placeholder="ชื่อ-นามสกุล ผอ.">
                 </div>
             </div>
 
             <!-- 2. Schedule Structure -->
             <div class="vs-section-card space-y-4">
-                <div class="flex items-center space-x-2 text-[var(--vs-accent)] mb-2">
+                <div class="flex items-center gap-2 text-[var(--vs-accent)] mb-2">
                     <i class="icon i-calendar w-4 h-4"></i>
                     <span class="text-[13px] uppercase font-light">Schedule Structure</span>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="text-[13px] text-[var(--vs-text-muted)] uppercase block mb-1">จำนวนวัน/สัปดาห์</label>
-                        <input type="number" id="days-per-week" class="vs-setup-input text-center" value="5" min="1"
+                        <label
+                            class="text-[13px] text-[var(--vs-text-muted)] uppercase block mb-1">จำนวนวัน/สัปดาห์</label>
+                        <input type="number" id="days-per-week" class="vs-input w-full text-center" value="5" min="1"
                             max="7">
                     </div>
                     <div>
                         <label class="text-[13px] text-[var(--vs-text-muted)] uppercase block mb-1">จำนวนคาบ/วัน</label>
-                        <input type="number" id="periods-per-day" class="vs-setup-input text-center" value="8" min="4"
+                        <input type="number" id="periods-per-day" class="vs-input w-full text-center" value="8" min="4"
                             max="12">
                     </div>
                     <div>
                         <label class="text-[13px] text-[var(--vs-text-muted)] uppercase block mb-1">คาบพักกลางวัน
                             (ลำดับที่)</label>
-                        <input type="number" id="lunch-period" class="vs-setup-input text-center" value="4" min="1"
+                        <input type="number" id="lunch-period" class="vs-input w-full text-center" value="4" min="1"
                             max="8">
                     </div>
                 </div>
@@ -98,11 +100,11 @@
 
             <!-- 3. Enrollment / Classes -->
             <div class="vs-section-card md:col-span-2 space-y-4">
-                <div class="flex items-center space-x-2 text-[var(--vs-accent)] mb-2">
+                <div class="flex items-center gap-2 text-[var(--vs-accent)] mb-2">
                     <i class="icon i-users w-4 h-4"></i>
                     <span class="text-[13px] uppercase font-light">Grade Enrollment & Classes</span>
                 </div>
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4" id="classes-grid">
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2" id="classes-grid">
                     <!-- Grade Inputs injected here -->
                 </div>
                 <p class="text-[13px] text-[var(--vs-text-muted)] ">* ระบุจำนวนห้องเรียนในแต่ละสายชั้น
@@ -159,10 +161,10 @@
             let html = '';
             for (let i = 1; i <= 6; i++) {
                 html += `
-                    <div class="bg-[var(--vs-bg-panel)] p-3 rounded border border-[var(--vs-border)]">
+                    <div class="bg-[var(--vs-bg-panel)] p-3 rounded border border-[rgba(63,63,70,0.5)]">
                         <label class="text-[13px] text-[var(--vs-accent)] uppercase block mb-1">ชั้นประถมศึกษาปีที่ ${i}</label>
-                        <div class="flex items-center space-x-2">
-                            <input type="number" id="grade-${i}-sections" class="vs-setup-input text-center text-[13px]" value="0" min="0" max="10">
+                        <div class="flex items-center gap-2">
+                            <input type="number" id="grade-${i}-sections" class="vs-input w-full text-center text-[13px]" value="0" min="0" max="10">
                             <span class="text-[13px] opacity-40">ห้อง</span>
                         </div>
                     </div>
@@ -209,3 +211,4 @@
 </body>
 
 </html>
+

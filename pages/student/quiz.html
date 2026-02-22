@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quiz Engine - IDLPMS</title>
+    <link rel="stylesheet" href="../../assets/css/utilities.css">
+    <link rel="stylesheet" href="../../assets/css/theme.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <style>
+        body {
+            background-color: var(--vs-bg-deep);
+            color: var(--vs-text-body);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .quiz-header {
+            padding: 16px;
+            background: var(--vs-bg-main);
+            border-bottom: 1px solid rgba(63, 63, 70, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--vs-bg-card);
+            border-radius: 2px;
+            overflow: hidden;
+            flex: 1;
+            margin: 0 16px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, rgba(var(--vs-accent-rgb), 0.2), rgba(var(--vs-accent-rgb), 0.8));
+            width: 20%;
+            /* Example progress */
+            transition: width 0.3s ease;
+        }
+
+        .quiz-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .question-card {
+            background: var(--vs-bg-card);
+            border: 1px solid rgba(63, 63, 70, 0.5);
+            border-radius: var(--vs-radius-lg);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .question-text {
+            font-size: 18px;
+            color: var(--vs-text-heading);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .choice-btn {
+            background: var(--vs-bg-panel);
+            border: 1px solid rgba(63, 63, 70, 0.5);
+            border-radius: var(--vs-radius-md);
+            padding: 16px;
+            text-align: left;
+            font-size: 15px;
+            color: var(--vs-text-body);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .choice-btn:hover {
+            border-color: var(--vs-accent);
+            background: rgba(var(--vs-accent-rgb), 0.05);
+        }
+
+        .choice-btn.selected {
+            border-color: var(--vs-accent);
+            background: rgba(var(--vs-accent-rgb), 0.1);
+            color: var(--vs-accent);
+            font-weight: 500;
+        }
+
+        .choice-btn.correct {
+            border-color: var(--vs-success);
+            background: rgba(var(--vs-success-rgb), 0.1);
+            color: var(--vs-success);
+        }
+
+        .choice-btn.incorrect {
+            border-color: var(--vs-danger);
+            background: rgba(var(--vs-danger-rgb), 0.1);
+            color: var(--vs-danger);
+        }
+
+        .quiz-footer {
+            padding: 16px;
+            background: var(--vs-bg-main);
+            border-top: 1px solid var(--vs-border);
+        }
+
+        .dna-capture-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(var(--vs-bg-deep-rgb), 0.9);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .dna-capture-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+
+<body class="Thai-Rule antialiased">
+
+    <!-- Header -->
+    <header class="quiz-header">
+        <button class="vs-btn vs-btn-icon text-[var(--vs-text-muted)] hover:text-[var(--vs-text-body)]"
+            onclick="window.history.back()">
+            <i class="icon i-x-mark"></i>
+        </button>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="text-[13px] font-light text-[var(--vs-accent)] Thai-Rule" id="progressText">1/5</div>
+    </header>
+
+    <!-- Content -->
+    <main class="quiz-content" data-dna-slot="quiz_assessment">
+        <div class="mb-4 text-center">
+            <span
+                class="inline-block px-2 py-1 bg-[rgba(var(--vs-accent-rgb),0.1)] text-[var(--vs-accent)] text-[13px] rounded-[var(--vs-radius)] uppercase font-light Thai-Rule">วิทยาศาสตร์
+                ป.6</span>
+        </div>
+
+        <div class="question-card">
+            <h2 class="question-text" id="questionText">ข้อใดคือหน้าที่หลักของระบบย่อยอาหารในร่างกายมนุษย์?</h2>
+
+            <div class="choices-container" id="choicesContainer">
+                <button class="choice-btn" onclick="selectChoice(0, this)">ก. สูบฉีดเลือดไปเลี้ยงส่วนต่างๆ
+                    ของร่างกาย</button>
+                <button class="choice-btn" onclick="selectChoice(1, this)">ข.
+                    ย่อยอาหารให้มีขนาดเล็กลงเพื่อดูดซึมเข้าสู่กระแสเลือด</button>
+                <button class="choice-btn" onclick="selectChoice(2, this)">ค.
+                    แลกเปลี่ยนแก๊สออกซิเจนและคาร์บอนไดออกไซด์</button>
+                <button class="choice-btn" onclick="selectChoice(3, this)">ง. ควบคุมการทำงานของอวัยวะต่างๆ
+                    ในร่างกาย</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="quiz-footer">
+        <button class="vs-btn vs-btn-primary w-full py-3" id="submitBtn" onclick="submitAnswer()" data-dna-slot="K"
+            data-dna-value="10" data-dna-action="ส่งคำตอบแบบทดสอบความรู้" disabled>ตรวจคำตอบ</button>
+    </footer>
+
+    <!-- DNA Capture Overlay -->
+    <div class="dna-capture-overlay" id="dnaOverlay">
+        <i class="icon i-finger-print text-6xl text-[var(--vs-accent)] mb-4 animate-pulse opacity-80"></i>
+        <h2 class="text-xl font-light text-[var(--vs-text-title)] mb-2 Thai-Rule">DNA CAPTURED</h2>
+        <p class="text-[13px] font-light text-[var(--vs-text-muted)] text-center max-w-xs mb-6 Thai-Rule">
+            ระบบได้บันทึกความคืบหน้าและการตอบสนองของคุณเข้าสู่ DNA Profile เรียบร้อยแล้ว</p>
+        <button class="vs-btn vs-btn-outline" onclick="window.location.href='learn.html'">กลับสู่แผนการเรียนรู้</button>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../assets/js/secrets.local.js"></script>
+    <script src="../../src/engines/QuizEngine.js"></script>
+    <script src="../../src/engines/DNAHarvester.js"></script>
+    <script>
+        let selectedIndex = -1;
+        // Mock correct answer is index 1 (ข)
+        const currentQuestion = {
+            correctIndex: 1
+        };
+
+        function selectChoice(index, el) {
+            // Remove selected class from all
+            document.querySelectorAll('.choice-btn').forEach(btn => btn.classList.remove('selected'));
+
+            // Add to clicked
+            el.classList.add('selected');
+            selectedIndex = index;
+
+            // Enable submit button
+            document.getElementById('submitBtn').disabled = false;
+        }
+
+        function submitAnswer() {
+            if (selectedIndex === -1) return;
+
+            const isCorrect = selectedIndex === currentQuestion.correctIndex;
+            const choices = document.querySelectorAll('.choice-btn');
+
+            // Show result
+            choices.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === currentQuestion.correctIndex) {
+                    btn.classList.add('correct');
+                    btn.innerHTML += ' <i class="icon i-check-circle float-right"></i>';
+                } else if (idx === selectedIndex && !isCorrect) {
+                    btn.classList.add('incorrect');
+                    btn.innerHTML += ' <i class="icon i-x-circle float-right"></i>';
+                }
+            });
+
+            // Record to QuizEngine if available
+            if (window.QuizEngine) {
+                window.QuizEngine.submitAnswer(selectedIndex, isCorrect);
+            }
+
+            // Change button action
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.textContent = "ดำเนินการต่อ";
+            submitBtn.onclick = finishQuiz;
+        }
+
+        function finishQuiz() {
+            // Show DNA Capture Overlay
+            document.getElementById('dnaOverlay').classList.add('active');
+
+            // Here we would typically update the DNA Harvester context
+        }
+
+        // Initialize Quiz Engine
+        if (window.QuizEngine) {
+            window.QuizEngine.startQuestion();
+        }
+    </script>
+</body>
+
+</html>

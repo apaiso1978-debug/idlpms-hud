@@ -4,23 +4,47 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Work Passport | IDLPMS</title>
+    <title>Universal Profile | IDLPMS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../assets/css/theme.css" />
     <link rel="stylesheet" href="../assets/css/styles.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
     <link rel="stylesheet" href="../assets/css/passport.css" />
+    <script src="../assets/js/data.js"></script>
+    <script src="../assets/js/secrets.local.js"></script>
+    <script src="../src/services/DataService.js"></script>
+    <script src="../src/services/AuthService.js"></script>
+    <script src="../src/services/FitnessService.js"></script>
+    <script src="../src/services/FitnessGrading.js"></script>
+    <script src="../assets/js/services/DNACoreService.js"></script>
+    <script src="../assets/js/components/ComponentRegistry.js"></script>
+    <script src="../assets/js/notifications.js"></script>
+    <style>
+        .dna-card {
+            background: var(--vs-bg-card);
+            border: 1px solid rgba(63, 63, 70, 0.5);
+            border-radius: var(--vs-radius);
+            padding: 16px;
+            transition: all 0.2s;
+        }
+
+        .dna-card:hover {
+            border-color: rgba(var(--vs-accent-rgb), 0.4);
+            background: rgba(var(--vs-accent-rgb), 0.03);
+        }
+    </style>
 </head>
 
 <body class="bg-[var(--vs-bg-main)] text-[var(--vs-text-body)] font-['Sarabun'] antialiased p-6">
-    <div class="max-w-[1600px] space-y-6">
+    <div class="w-full space-y-6">
 
         <!-- ═══ Page Header ═══ -->
         <header class="flex items-center justify-between h-12">
             <h1 class="text-[13px] font-light text-[var(--vs-text-title)] uppercase">
-                Self-Service / Work Passport
+                Self-Service / Universal Profile
             </h1>
             <button onclick="handleSave()" id="save-btn"
-                class="px-4 py-2 bg-[rgba(34,211,238,0.1)] text-[var(--vs-accent)] border border-[rgba(34,211,238,0.3)] font-light text-[13px] rounded-[var(--vs-radius)] flex items-center space-x-2 hover:opacity-90 active:scale-95 transition-all">
+                class="px-4 py-2 bg-[rgba(var(--vs-accent-rgb), 0.1)] text-[var(--vs-accent)] border border-[rgba(var(--vs-accent-rgb), 0.3)] font-light text-[13px] rounded-[var(--vs-radius)] flex items-center gap-1.5 hover:opacity-90 active:scale-95 transition-all">
                 <i class="icon i-save h-4 w-4"></i>
                 <span>Save All Changes</span>
             </button>
@@ -28,7 +52,7 @@
 
         <!-- ═══ Profile Header Card ═══ -->
         <section class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] hud-border">
-            <div class="flex items-center space-x-6">
+            <div class="flex items-center gap-6">
                 <div class="relative">
                     <div id="prof-avatar"
                         class="w-20 h-20 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] flex items-center justify-center text-[var(--vs-accent)] hud-border text-2xl font-light">
@@ -39,11 +63,11 @@
                     <h2 id="prof-name" class="text-xl font-light text-[var(--vs-text-title)]">
                         Loading...
                     </h2>
-                    <p class="text-[13px] text-[var(--vs-text-muted)] flex items-center space-x-2">
+                    <p class="text-[13px] text-[var(--vs-text-muted)] flex items-center gap-1.5">
                         <i class="icon i-user h-4 w-4"></i>
                         <span id="prof-id">ID: 0000</span>
                     </p>
-                    <div class="flex space-x-2">
+                    <div class="flex gap-1.5">
                         <span id="prof-role-badge"
                             class="px-2 py-0.5 bg-[var(--vs-bg-deep)] hud-border text-[var(--vs-text-body)] text-[13px] uppercase font-light rounded-[var(--vs-radius)]">
                             Role
@@ -55,9 +79,9 @@
                     </div>
                 </div>
                 <!-- Export Button (right side) -->
-                <div class="ml-auto flex items-center space-x-2">
+                <div class="ml-auto flex items-center gap-1.5">
                     <button
-                        class="px-4 py-2 bg-[var(--vs-bg-deep)] hud-border text-[13px] text-[var(--vs-text-body)] font-light rounded-[var(--vs-radius)] flex items-center space-x-2 hover:border-[rgba(var(--vs-accent-rgb),0.3)] transition-all">
+                        class="px-4 py-2 bg-[var(--vs-bg-deep)] hud-border text-[13px] text-[var(--vs-text-body)] font-light rounded-[var(--vs-radius)] flex items-center gap-1.5 hover:border-[rgba(var(--vs-accent-rgb),0.3)] transition-all">
                         <i class="icon i-download h-4 w-4"></i>
                         <span>Export PDF</span>
                     </button>
@@ -65,15 +89,23 @@
             </div>
         </section>
 
-        <!-- ═══ Tab Switcher ═══ -->
-        <nav class="passport-tabs">
-            <button data-tab="basic" class="passport-tab active">
+        <!-- ═══ Tab Switcher (Universal 5-Tab) ═══ -->
+        <nav class="passport-tabs overflow-x-auto whitespace-nowrap hide-scroll">
+            <button data-tab="personal" class="passport-tab active">
                 <i class="icon i-user h-4 w-4"></i>
-                <span>Basic</span>
+                <span>Personal</span>
+            </button>
+            <button data-tab="role" class="passport-tab">
+                <i class="icon i-office h-4 w-4"></i>
+                <span>Role Details</span>
+            </button>
+            <button data-tab="health" class="passport-tab">
+                <i class="icon i-heart h-4 w-4"></i>
+                <span>Health & Dev</span>
             </button>
             <button data-tab="workflow" class="passport-tab">
                 <i class="icon i-clipboard-check h-4 w-4"></i>
-                <span>Workflow</span>
+                <span>Work Passport</span>
             </button>
             <button data-tab="settings" class="passport-tab">
                 <i class="icon i-cog h-4 w-4"></i>
@@ -82,48 +114,42 @@
         </nav>
 
         <!-- ═══════════════════════════════════════════════════════════
-             TAB: BASIC
+             TAB 1: PERSONAL
              ═══════════════════════════════════════════════════════════ -->
-        <div id="panel-basic" class="passport-panel space-y-6">
+        <div id="panel-personal" class="passport-panel space-y-6">
 
             <!-- Personal Information -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
                 <section class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] hud-border">
                     <h3
-                        class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase flex items-center space-x-2 mb-4">
+                        class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase flex items-center gap-2 mb-4">
                         <i class="icon i-user h-4 w-4"></i>
                         <span>Personal Information</span>
                     </h3>
                     <div class="space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                             <div class="space-y-1">
                                 <label class="text-[13px] text-[var(--vs-text-muted)] uppercase">Full Name</label>
-                                <input id="in-name" type="text"
-                                    class="w-full bg-[var(--vs-bg-deep)] hud-border rounded-[var(--vs-radius)] px-3 py-2 text-[13px] text-[var(--vs-text-title)] focus:border-[var(--vs-accent)] focus:outline-none transition-colors" />
+                                <input id="in-name" type="text" class="w-full vs-input" />
                             </div>
                             <div class="space-y-1">
                                 <label class="text-[13px] text-[var(--vs-text-muted)] uppercase">Citizen ID</label>
-                                <input id="in-citizen" type="text"
-                                    class="w-full bg-[var(--vs-bg-deep)] hud-border rounded-[var(--vs-radius)] px-3 py-2 text-[13px] text-[var(--vs-text-muted)] focus:outline-none"
-                                    readonly />
+                                <input id="in-citizen" type="text" class="w-full vs-input opacity-60" readonly />
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                             <div class="space-y-1">
                                 <label class="text-[13px] text-[var(--vs-text-muted)] uppercase">Email Address</label>
-                                <input id="in-email" type="email"
-                                    class="w-full bg-[var(--vs-bg-deep)] hud-border rounded-[var(--vs-radius)] px-3 py-2 text-[13px] text-[var(--vs-text-title)] focus:border-[var(--vs-accent)] focus:outline-none transition-colors" />
+                                <input id="in-email" type="email" class="w-full vs-input" />
                             </div>
                             <div class="space-y-1">
                                 <label class="text-[13px] text-[var(--vs-text-muted)] uppercase">Phone Number</label>
-                                <input id="in-phone" type="text"
-                                    class="w-full bg-[var(--vs-bg-deep)] hud-border rounded-[var(--vs-radius)] px-3 py-2 text-[13px] text-[var(--vs-text-title)] focus:border-[var(--vs-accent)] focus:outline-none transition-colors" />
+                                <input id="in-phone" type="text" class="w-full vs-input" />
                             </div>
                         </div>
                         <div class="space-y-1">
                             <label class="text-[13px] text-[var(--vs-text-muted)] uppercase">Residential Address</label>
-                            <textarea id="in-address" rows="3"
-                                class="w-full bg-[var(--vs-bg-deep)] hud-border rounded-[var(--vs-radius)] px-3 py-2 text-[13px] text-[var(--vs-text-title)] focus:border-[var(--vs-accent)] focus:outline-none transition-colors resize-none"></textarea>
+                            <textarea id="in-address" rows="3" class="w-full vs-input resize-none"></textarea>
                         </div>
                     </div>
                 </section>
@@ -131,7 +157,7 @@
                 <!-- Account Security -->
                 <section class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] hud-border">
                     <h3
-                        class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase flex items-center space-x-2 mb-4">
+                        class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase flex items-center gap-2 mb-4">
                         <i class="icon i-lock h-4 w-4"></i>
                         <span>Account Security</span>
                     </h3>
@@ -140,66 +166,102 @@
                             <div class="space-y-1">
                                 <label class="text-[13px] text-[var(--vs-text-muted)] uppercase">New Password</label>
                                 <input type="password" placeholder="••••••••"
-                                    class="w-full bg-[var(--vs-bg-panel)] hud-border rounded-[var(--vs-radius)] px-3 py-2 text-[13px] text-[var(--vs-text-title)] focus:border-rose-500/50 focus:outline-none transition-colors" />
+                                    class="w-full vs-input bg-[var(--vs-bg-panel)]" />
                             </div>
                             <div class="space-y-1">
                                 <label class="text-[13px] text-[var(--vs-text-muted)] uppercase">Confirm New
                                     Password</label>
                                 <input type="password" placeholder="••••••••"
-                                    class="w-full bg-[var(--vs-bg-panel)] hud-border rounded-[var(--vs-radius)] px-3 py-2 text-[13px] text-[var(--vs-text-title)] focus:border-rose-500/50 focus:outline-none transition-colors" />
+                                    class="w-full vs-input bg-[var(--vs-bg-panel)]" />
                             </div>
                             <button
-                                class="w-full py-2 bg-rose-500/20 border border-rose-500/30 text-[13px] text-rose-400 font-light rounded-[var(--vs-radius)] hover:bg-rose-500/30 transition-all">
+                                class="w-full py-2 bg-[rgba(var(--vs-danger-rgb),0.1)] border border-[rgba(var(--vs-danger-rgb),0.3)] text-[13px] text-[var(--vs-danger)] font-light rounded-[var(--vs-radius)] hover:bg-[rgba(var(--vs-danger-rgb),0.15)] hover:border-[rgba(var(--vs-danger-rgb),0.5)] transition-all">
                                 Update Security Credentials
                             </button>
-                        </div>
-                        <div
-                            class="p-4 bg-[var(--vs-bg-deep)] hud-border rounded-[var(--vs-radius)] flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
-                                <i class="icon i-shield h-4 w-4 text-emerald-500"></i>
-                                <span class="text-[13px] text-[var(--vs-text-body)]">Two-Factor Authentication</span>
-                            </div>
-                            <span class="text-[13px] text-emerald-500 font-light uppercase">Active</span>
                         </div>
                     </div>
                 </section>
             </div>
-
-            <!-- Role Metrics -->
-            <section class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] hud-border">
-                <h3
-                    class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase flex items-center space-x-2 mb-4">
-                    <i class="icon i-chart h-4 w-4"></i>
-                    <span id="metrics-title">Performance Metrics</span>
-                </h3>
-                <div id="metrics-grid" class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <!-- Dynamic Metrics -->
-                </div>
-            </section>
-
         </div>
 
         <!-- ═══════════════════════════════════════════════════════════
-             TAB: WORKFLOW
+             TAB 2: ROLE DETAILS
+             ═══════════════════════════════════════════════════════════ -->
+        <div id="panel-role" class="passport-panel hidden space-y-6">
+            <!-- Role Metrics -->
+            <section class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] hud-border">
+                <h3 class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase flex items-center gap-2 mb-4">
+                    <i class="icon i-chart h-4 w-4"></i>
+                    <span id="metrics-title">Performance Metrics</span>
+                </h3>
+                <div id="metrics-grid" class="grid grid-cols-1 md:grid-cols-4 gap-2">
+                    <!-- Dynamic Metrics Rendered by passport.js -->
+                </div>
+            </section>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             TAB 3: HEALTH & DEV
+             ═══════════════════════════════════════════════════════════ -->
+        <div id="panel-health" class="passport-panel hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- LEFT DNASpider -->
+                <div class="dna-card flex flex-col items-center relative">
+                    <!-- The ComponentRegistry will automatically inject DNA_RadarWidget here. 
+                         We pass an empty props string '{}' because passport.js will manually tell it 
+                         to render the target student id once loaded. -->
+                    <div id="student-spider-container" class="w-full h-full min-h-[350px]"
+                        data-component="DNA_RadarWidget"></div>
+                </div>
+
+                <!-- RIGHT Fitness Dashboard -->
+                <div class="space-y-4">
+                    <div class="dna-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-[13px] text-[var(--vs-text-title)] font-light flex items-center gap-2">
+                                <i class="icon i-heart h-4 w-4 text-[var(--sj-pe)]"></i>
+                                Physical Fitness Data (P-Axis)
+                            </h2>
+                        </div>
+                        <div id="fitness-metrics-container" class="space-y-3">
+                            <!-- Populated by passport.js -->
+                            <div
+                                class="text-[13px] text-[var(--vs-text-muted)] p-4 text-center border border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)]">
+                                Loading fitness data...
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-right">
+                        <a href="school_dna.html"
+                            class="px-4 py-2 bg-[rgba(var(--vs-accent-rgb),0.1)] text-[var(--vs-accent)] border border-[rgba(var(--vs-accent-rgb),0.3)] font-light text-[13px] rounded-[var(--vs-radius)] inline-flex items-center gap-1.5 hover:bg-[rgba(var(--vs-accent-rgb),0.15)] transition-all">
+                            <i class="icon i-chart h-4 w-4"></i> View School DNA Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             TAB 4: WORK PASSPORT (Formerly Workflow)
              ═══════════════════════════════════════════════════════════ -->
         <div id="panel-workflow" class="passport-panel hidden space-y-6">
 
             <!-- Workflow Stats Bar -->
-            <div class="flex items-center space-x-6">
+            <div class="flex items-center gap-6">
                 <div
-                    class="flex items-center space-x-2 px-4 py-2 bg-[var(--vs-bg-card)] hud-border rounded-[var(--vs-radius)]">
+                    class="flex items-center gap-1.5 px-4 py-2 bg-[var(--vs-bg-card)] hud-border rounded-[var(--vs-radius)]">
                     <i class="icon i-clipboard-check h-4 w-4 text-[var(--vs-accent)]"></i>
                     <span class="text-[13px] text-[var(--vs-text-muted)]">Total:</span>
                     <span id="wf-total" class="text-[13px] text-[var(--vs-text-title)] font-light">0</span>
                 </div>
                 <div
-                    class="flex items-center space-x-2 px-4 py-2 bg-[var(--vs-bg-card)] hud-border rounded-[var(--vs-radius)]">
+                    class="flex items-center gap-1.5 px-4 py-2 bg-[var(--vs-bg-card)] hud-border rounded-[var(--vs-radius)]">
                     <i class="icon i-check h-4 w-4 text-emerald-400"></i>
                     <span class="text-[13px] text-[var(--vs-text-muted)]">Verified:</span>
                     <span id="wf-verified" class="text-[13px] text-emerald-400 font-light">0</span>
                 </div>
                 <div
-                    class="flex items-center space-x-2 px-4 py-2 bg-[var(--vs-bg-card)] hud-border rounded-[var(--vs-radius)]">
+                    class="flex items-center gap-1.5 px-4 py-2 bg-[var(--vs-bg-card)] hud-border rounded-[var(--vs-radius)]">
                     <i class="icon i-clock h-4 w-4 text-amber-400"></i>
                     <span class="text-[13px] text-[var(--vs-text-muted)]">Pending:</span>
                     <span id="wf-pending" class="text-[13px] text-amber-400 font-light">0</span>
@@ -239,16 +301,16 @@
         </div>
 
         <!-- ═══════════════════════════════════════════════════════════
-             TAB: SETTINGS
+             TAB 5: SETTINGS
              ═══════════════════════════════════════════════════════════ -->
         <div id="panel-settings" class="passport-panel hidden space-y-6">
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
 
                 <!-- Theme & Display -->
                 <section class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] hud-border">
                     <h3
-                        class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase flex items-center space-x-2 mb-4">
+                        class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase flex items-center gap-2 mb-4">
                         <i class="icon i-cog h-4 w-4"></i>
                         <span>Theme & Display</span>
                     </h3>
@@ -257,103 +319,39 @@
                             <span class="text-[13px] text-[var(--vs-text-body)]">Dark Mode</span>
                             <div class="settings-toggle active"></div>
                         </div>
-                        <div class="border-t border-[var(--vs-border)] opacity-50 my-0" style="border-width: 1px;">
+                        <div class="border-t border-[rgba(63,63,70,0.5)] opacity-50 my-0" style="border-width: 1px;">
                         </div>
                         <div class="flex items-center justify-between">
                             <span class="text-[13px] text-[var(--vs-text-body)]">Large Text</span>
                             <div class="settings-toggle"></div>
                         </div>
-                        <div class="border-t border-[var(--vs-border)] opacity-50 my-0" style="border-width: 1px;">
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-[13px] text-[var(--vs-text-body)]">Animations</span>
-                            <div class="settings-toggle active"></div>
-                        </div>
                     </div>
                 </section>
 
-                <!-- Notifications -->
+                <!-- Active Role Information -->
                 <section class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] hud-border">
                     <h3
-                        class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase flex items-center space-x-2 mb-4">
-                        <i class="icon i-bell h-4 w-4"></i>
-                        <span>Notifications</span>
+                        class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase flex items-center gap-2 mb-4">
+                        <i class="icon i-users h-4 w-4"></i>
+                        <span>Active Role</span>
                     </h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[13px] text-[var(--vs-text-body)]">Verification Updates</span>
-                            <div class="settings-toggle active"></div>
-                        </div>
-                        <div class="border-t border-[var(--vs-border)] opacity-50 my-0" style="border-width: 1px;">
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-[13px] text-[var(--vs-text-body)]">System Announcements</span>
-                            <div class="settings-toggle active"></div>
-                        </div>
-                        <div class="border-t border-[var(--vs-border)] opacity-50 my-0" style="border-width: 1px;">
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-[13px] text-[var(--vs-text-body)]">Chat Messages</span>
-                            <div class="settings-toggle active"></div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[13px] text-[var(--vs-text-body)]">Current active role:</span>
+                            <span id="settings-active-role"
+                                class="px-3 py-1 bg-[var(--vs-bg-deep)] text-[var(--vs-accent)] text-[13px] font-light rounded-[var(--vs-radius)]"
+                                style="border: 1px solid rgba(var(--vs-accent-rgb), 0.3)">
+                                TEACHER
+                            </span>
                         </div>
                     </div>
                 </section>
             </div>
 
-            <!-- Privacy Level -->
-            <section class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] hud-border">
-                <h3
-                    class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase flex items-center space-x-2 mb-4">
-                    <i class="icon i-shield h-4 w-4"></i>
-                    <span>Passport Privacy</span>
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="privacy-option" data-level="public">
-                        <div class="flex items-center space-x-3 mb-2">
-                            <i class="icon i-eye h-4 w-4 text-[var(--vs-accent)]"></i>
-                            <span class="text-[13px] text-[var(--vs-text-title)] font-light">Public</span>
-                        </div>
-                        <p class="text-[13px] text-[var(--vs-text-muted)]">Visible to all IDLPMS users</p>
-                    </div>
-                    <div class="privacy-option selected" data-level="org">
-                        <div class="flex items-center space-x-3 mb-2">
-                            <i class="icon i-building h-4 w-4 text-amber-400"></i>
-                            <span class="text-[13px] text-[var(--vs-text-title)] font-light">Organization Only</span>
-                        </div>
-                        <p class="text-[13px] text-[var(--vs-text-muted)]">Visible to same school/district</p>
-                    </div>
-                    <div class="privacy-option" data-level="private">
-                        <div class="flex items-center space-x-3 mb-2">
-                            <i class="icon i-lock h-4 w-4 text-rose-400"></i>
-                            <span class="text-[13px] text-[var(--vs-text-title)] font-light">Private</span>
-                        </div>
-                        <p class="text-[13px] text-[var(--vs-text-muted)]">Only you + supervisors</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Active Role -->
-            <section class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] hud-border">
-                <h3
-                    class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase flex items-center space-x-2 mb-4">
-                    <i class="icon i-users h-4 w-4"></i>
-                    <span>Active Role</span>
-                </h3>
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <span class="text-[13px] text-[var(--vs-text-body)]">Current active role:</span>
-                        <span id="settings-active-role"
-                            class="px-3 py-1 bg-[var(--vs-bg-deep)] text-[var(--vs-accent)] text-[13px] font-light rounded-[var(--vs-radius)]"
-                            style="border: 1px solid rgba(34, 211, 238, 0.3)">
-                            TEACHER
-                        </span>
-                    </div>
-                </div>
-            </section>
-
             <!-- Danger Zone -->
-            <section class="p-6 rounded-[var(--vs-radius)] border border-rose-500/30 bg-rose-500/5">
-                <h3 class="text-[13px] font-light text-rose-400 uppercase mb-4">Danger Zone</h3>
+            <section
+                class="p-6 rounded-[var(--vs-radius)] border border-[rgba(var(--vs-danger-rgb),0.3)] bg-[rgba(var(--vs-danger-rgb),0.05)]">
+                <h3 class="text-[13px] font-light text-[var(--vs-danger)] uppercase mb-4">Danger Zone</h3>
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-[13px] text-[var(--vs-text-title)]">Sign Out from all devices</p>
@@ -361,7 +359,7 @@
                         </p>
                     </div>
                     <button onclick="window.parent.logout()"
-                        class="px-4 py-2 border border-rose-500/50 text-[13px] text-rose-400 hover:bg-rose-500/20 rounded-[var(--vs-radius)] transition-colors">
+                        class="px-4 py-2 border border-[rgba(var(--vs-danger-rgb),0.5)] text-[13px] text-[var(--vs-danger)] hover:bg-[rgba(var(--vs-danger-rgb),0.15)] hover:border-[rgba(var(--vs-danger-rgb),0.5)] rounded-[var(--vs-radius)] transition-colors">
                         Sign Out
                     </button>
                 </div>

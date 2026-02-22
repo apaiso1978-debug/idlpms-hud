@@ -163,7 +163,7 @@ const TeacherGrading = {
             const isActive = this.activeSubmissionId === sub.id;
 
             return `
-            <div class="submission-card ${isActive ? 'active-review' : ''} p-5 rounded-[3px] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] cursor-pointer"
+            <div class="submission-card ${isActive ? 'active-review' : ''} p-5 rounded-[3px] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] cursor-pointer"
                  onclick="TeacherGrading.openReview('${sub.id}')">
                 <div class="flex items-center gap-4">
                     <!-- Avatar -->
@@ -216,7 +216,7 @@ const TeacherGrading = {
         const currentComment = existingReview ? existingReview.comment : '';
 
         panel.innerHTML = `
-        <div class="p-6 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)] space-y-6">
+        <div class="p-6 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[rgba(63,63,70,0.5)] space-y-6">
 
             <!-- Header -->
             <div class="flex items-center justify-between">
@@ -241,13 +241,13 @@ const TeacherGrading = {
                 <div class="space-y-4">
 
                     <!-- Question -->
-                    <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                    <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
                         <div class="hud-badge-micro text-[var(--vs-accent)] mb-2 uppercase">QUESTION</div>
                         <p class="text-[13px] font-light text-[var(--vs-text-body)] Thai-Rule">${sub.question}</p>
                     </div>
 
                     <!-- Student Answer -->
-                    <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                    <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
                         <div class="hud-badge-micro text-purple-400 mb-2 uppercase">คำตอบนักเรียน</div>
                         <p class="text-[13px] font-light text-[var(--vs-text-body)] Thai-Rule leading-relaxed">${sub.answer}</p>
                     </div>
@@ -266,11 +266,11 @@ const TeacherGrading = {
                 <div class="space-y-4">
 
                     <!-- Rubric -->
-                    <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                    <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
                         <div class="hud-badge-micro text-amber-400 mb-3 uppercase">เกณฑ์การให้คะแนน (RUBRIC)</div>
                         <div class="space-y-3">
                             ${sub.rubric.map((r, i) => `
-                                <div class="p-3 rounded-[3px] bg-[rgba(255,255,255,0.02)] border border-[var(--vs-border)]">
+                                <div class="p-3 rounded-[3px] bg-[rgba(255,255,255,0.02)] border border-[rgba(63,63,70,0.5)]">
                                     <div class="flex items-center justify-between mb-1">
                                         <span class="text-[13px] font-light text-[var(--vs-text-title)] Thai-Rule">${r.criterion}</span>
                                         <span class="hud-badge-micro text-amber-400">${r.maxScore} คะแนน</span>
@@ -278,7 +278,7 @@ const TeacherGrading = {
                                     <p class="text-[13px] font-light text-[var(--vs-text-muted)] Thai-Rule">${r.description}</p>
                                 </div>
                             `).join('')}
-                            <div class="flex items-center justify-end pt-2 border-t border-[var(--vs-border)]">
+                            <div class="flex items-center justify-end pt-2 border-t border-[rgba(63,63,70,0.5)]">
                                 <span class="text-[13px] font-light text-[var(--vs-text-muted)]">คะแนนเต็ม: </span>
                                 <span class="text-base font-light text-[var(--vs-text-title)] ml-1">${sub.totalScore}</span>
                             </div>
@@ -321,7 +321,7 @@ const TeacherGrading = {
 
                     ${existingReview ? `
                     <!-- Previous Review Info -->
-                    <div class="p-3 rounded-[3px] bg-[rgba(255,255,255,0.02)] border border-[var(--vs-border)]">
+                    <div class="p-3 rounded-[3px] bg-[rgba(255,255,255,0.02)] border border-[rgba(63,63,70,0.5)]">
                         <div class="text-[13px] font-light text-[var(--vs-text-muted)] Thai-Rule">
                             ตรวจล่าสุดโดย ${existingReview.reviewedBy} เมื่อ ${this.formatDate(existingReview.reviewedAt)}
                         </div>
@@ -402,7 +402,7 @@ const TeacherGrading = {
         } catch (e) { /* ignore */ }
 
         // Fallback: simple alert
-        alert(message);
+        console.warn('Toast Fallback:', message);
     },
 
     // ── Utilities ──────────────────────────────────────────────────

@@ -37,10 +37,11 @@ const TaskSystem = {
      * @param {string} title       — ชื่อ task
      * @param {string} deadline    — 'YYYY-MM-DD'
      * @param {string} note        — หมายเหตุเพิ่มเติม
-     * @param {string} schoolId    — 'SCH_MABLUD'
-     * @param {string} createdBy   — 'DIR_MABLUD'
+     * @param {string} schoolId    — '99999999-9999-4999-8999-999999999999'
+     * @param {string} createdBy   — '11111111-1111-4111-8111-111111111111'
+     * @param {number} baseScore   — ค่าน้ำหนักของงาน (Gamification Score)
      */
-    createTask(templateId, title, deadline, note, schoolId, createdBy) {
+    createTask(templateId, title, deadline, note, schoolId, createdBy, baseScore = 100) {
         const tasks = this.getAllTasks();
 
         // สร้าง unique Task ID
@@ -75,6 +76,7 @@ const TaskSystem = {
             createdAt: new Date().toISOString(),
             deadline,
             note: note || '',
+            baseScore: parseInt(baseScore, 10) || 100,
             status: 'active',
             assignments,
         };
@@ -170,6 +172,22 @@ const TaskSystem = {
 
             tasks[taskId].assignments[teacherId].status = 'submitted';
             tasks[taskId].assignments[teacherId].submittedAt = new Date().toISOString();
+            this.saveTasks(tasks);
+            return true;
+        }
+        return false;
+    },
+
+    /**
+     * ครู กดขอเลื่อนกำหนด (Request Extension)
+     * @param {string} taskId
+     * @param {string} teacherId
+     */
+    requestExtension(taskId, teacherId) {
+        const tasks = this.getAllTasks();
+        if (tasks[taskId]?.assignments[teacherId]) {
+            tasks[taskId].assignments[teacherId].extensionRequested = true;
+            tasks[taskId].assignments[teacherId].extensionRequestedAt = new Date().toISOString();
             this.saveTasks(tasks);
             return true;
         }

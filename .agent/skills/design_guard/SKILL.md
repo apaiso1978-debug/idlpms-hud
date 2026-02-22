@@ -305,6 +305,33 @@ On dark backgrounds (`--vs-bg-card` ≈ `#333338` / `--vs-bg-deep` ≈ `#1e1e22`
 - **Dynamic Columns**: Use Tailwind breakpoints (`2xl:`, `3xl:`) to increase grid columns as the screen gets wider to prevent awkward stretching.
 - **Unity**: Must still maintain the 24px horizontal padding (Rule 20) even when fluid.
 
+### Rule 22 — Domain Color Accent Policy
+- **Iron Rule**: The textual labels for working domains (e.g., in sidebars, navigation, or headers) must ALWAYS use the standard primary text color (`var(--vs-text-title)` or `var(--vs-text-body)`).
+- **Icon Accent Only**: ONLY the accompanying icon should be injected with the domain's specific color/accent (e.g., `text-pink-400` for Student Affairs).
+- **Auto-Collapse**: Hierarchical navigation menus (like accordions) MUST default to the `collapsed` state to maintain a clean initial UI load.
+### Rule 23 — Absolute Sidebar Parity (The 1px Iron Rule)
+- **Iron Rule**: The layout mathematics of ALL Sidebar Panels (Explorer, Management, Settings, etc.) MUST REMAIN ABSOLUTELY FIXED and IDENTICAL. Future AI agents are **STRICTLY FORBIDDEN** from altering these base equations.
+- **Panel Header Strictness**: `.vs-panel-header` MUST retain `height: 48px; min-height: 48px; max-height: 48px; flex-shrink: 0;` to prevent sub-pixel flexbox compression bugs when content overflows.
+- **Ghost Padding**: Every interactive `.vs-menu-item`, `.timeline-parent-item`, or `.timeline-child-item` MUST include `border-left: 1px solid transparent;` in its default state. This prevents a `1px` layout shift when the item becomes `.active` and gains a `1px` solid border.
+- **Visual Node Parity**: Top-level clickable menus in panels like Explorer MUST utilize the `.timeline-parent-item` HTML structure (without the nested `.timeline-node` dots unless explicitly building a timeline rail) to ensure 100% hover/active aesthetic synchronization with the Mission Control accordion menus.
+- **Typography Alignment**: All `.vs-panel-header` instances in `hud.html` must universally use `uppercase font-light text-[13px] text-[var(--vs-text-muted)] Thai-Rule`. Do NOT mix and match `text-[var(--vs-text-title)]` across different panel headers.
+
+
+### Rule 24 — Icon-Text Alignment Layout (No Line Overflow)
+- **Iron Rule**: Any layout utilizing a leading icon accompanied by multi-line trailing text MUST left-align the subsequent lines with the starting edge of the text body. **Subsequent text lines are STRICTLY FORBIDDEN from overflowing underneath the icon.**
+- **Enforcement**: Always use the `.vs-icon-layout` global utility (defined in `theme.css`) to bind the icon and text block together rather than loose flex positioning.
+- **HTML Structure**:
+```html
+<div class="vs-icon-layout">
+    <div class="icon-col">
+        <i class="i-check w-4 h-4"></i>
+    </div>
+    <div class="content-col">
+        <div>Line 1: Main Title</div>
+        <div>Line 2: Supporting Subtext (Aligned perfectly to Line 1)</div>
+    </div>
+</div>
+```
 
 ---
 

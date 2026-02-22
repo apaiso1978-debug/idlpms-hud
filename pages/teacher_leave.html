@@ -76,7 +76,7 @@
             border-color: var(--vs-accent);
         }
 
-        .form-input {
+        .vs-input {
             background: var(--vs-bg-deep);
             border: none;
             border-radius: var(--vs-radius);
@@ -91,12 +91,12 @@
             color-scheme: dark;
         }
 
-        .form-input:focus {
+        .vs-input:focus {
             outline: none;
             box-shadow: 0 0 0 1px var(--vs-accent);
         }
 
-        select.form-input {
+        select.vs-input {
             -webkit-appearance: none;
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 20 20' fill='%2367e8f9'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z'/%3E%3C/svg%3E");
@@ -208,7 +208,7 @@
     </div>
 
     <!-- TAB NAVIGATION -->
-    <div class="flex gap-1 border-b border-[var(--vs-border)] mb-6 flex-wrap">
+    <div class="flex gap-1 border-b border-[rgba(63,63,70,0.5)] mb-6 flex-wrap">
         <button class="tab-btn active" onclick="switchTab('balance')">สิทธิ์ลาคงเหลือ</button>
         <button class="tab-btn" onclick="switchTab('request')">ยื่นใบลา</button>
         <button class="tab-btn" onclick="switchTab('quickout')">ออกธุระชั่วคราว</button>
@@ -246,7 +246,7 @@
                         <!-- Leave Type -->
                         <div>
                             <label class="text-[13px] text-[var(--vs-text-muted)] block mb-1">ประเภทการลา</label>
-                            <select id="leave-type" class="form-input" onchange="onLeaveTypeChange()">
+                            <select id="leave-type" class="vs-input" onchange="onLeaveTypeChange()">
                                 <option value="">— เลือกประเภทการลา —</option>
                             </select>
                         </div>
@@ -260,11 +260,11 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="text-[13px] text-[var(--vs-text-muted)] block mb-1">วันที่เริ่มลา</label>
-                                <input type="date" id="leave-start" class="form-input" onchange="calcDays()">
+                                <input type="date" id="leave-start" class="vs-input" onchange="calcDays()">
                             </div>
                             <div>
                                 <label class="text-[13px] text-[var(--vs-text-muted)] block mb-1">วันที่สิ้นสุด</label>
-                                <input type="date" id="leave-end" class="form-input" onchange="calcDays()">
+                                <input type="date" id="leave-end" class="vs-input" onchange="calcDays()">
                             </div>
                         </div>
 
@@ -285,14 +285,14 @@
                         <!-- Reason -->
                         <div>
                             <label class="text-[13px] text-[var(--vs-text-muted)] block mb-1">เหตุผลการลา</label>
-                            <textarea id="leave-reason" class="form-input" rows="3"
+                            <textarea id="leave-reason" class="vs-input" rows="3"
                                 placeholder="ระบุเหตุผลการลา..."></textarea>
                         </div>
 
                         <!-- Attachment -->
                         <div>
                             <label class="text-[13px] text-[var(--vs-text-muted)] block mb-1">เอกสารแนบ (ถ้ามี)</label>
-                            <input type="file" id="leave-attachment" class="form-input" accept=".pdf,.jpg,.png">
+                            <input type="file" id="leave-attachment" class="vs-input" accept=".pdf,.jpg,.png">
                             <div id="required-docs" class="text-[13px] text-[var(--vs-text-muted)] mt-1 hidden">
                                 <i class="icon i-information-circle w-3 h-3 inline-block align-middle mr-1.5"></i>
                                 <span id="required-docs-text"></span>
@@ -385,13 +385,13 @@
                     <div class="space-y-4">
                         <div>
                             <label class="text-[13px] text-[var(--vs-text-muted)] block mb-1">ประเภทธุระ</label>
-                            <select id="qo-reason" class="form-input">
+                            <select id="qo-reason" class="vs-input">
                                 <option value="">— เลือก —</option>
                             </select>
                         </div>
                         <div>
                             <label class="text-[13px] text-[var(--vs-text-muted)] block mb-1">รายละเอียด</label>
-                            <input type="text" id="qo-detail" class="form-input"
+                            <input type="text" id="qo-detail" class="vs-input"
                                 placeholder="เช่น โอนเงินที่ธนาคารกรุงไทย">
                         </div>
                         <button id="qo-submit" class="btn-primary" onclick="quickOutStart()" disabled>
@@ -459,7 +459,8 @@
 
     <script>
         // ─── State ──────────────────────────────────────────────
-        const CURRENT_TEACHER = 'TEA_WORACHAI'; // from session
+        const _sessionStore = JSON.parse(localStorage.getItem('currentUser') || 'null');
+        const CURRENT_TEACHER = _sessionStore ? _sessionStore.id : '22222222-2222-4222-8222-222222222222'; // fallback to dev teacher
         let currentTab = 'balance';
 
         // ─── Init ───────────────────────────────────────────────
@@ -579,7 +580,7 @@
                 const status = LeaveService.STATUSES[req.status];
                 const type = LeaveService.LEAVE_TYPES[req.type];
                 html += `
-                <div class="flex items-center justify-between py-1.5 border-b border-[var(--vs-border)] last:border-0">
+                <div class="flex items-center justify-between py-1.5 border-b border-[rgba(63,63,70,0.5)] last:border-0">
                     <div>
                         <div class="text-[13px] text-white">${type.name}</div>
                         <div class="text-[13px] text-[var(--vs-text-muted)]">${formatDate(req.startDate)} — ${req.days} วัน</div>
@@ -909,7 +910,7 @@
                 const r = LeaveService.QUICKOUT_REASONS.find(x => x.code === rec.reasonCode);
                 const isOut = rec.status === 'OUT';
                 html += `
-                <div class="flex items-center justify-between py-2 border-b border-[var(--vs-border)] last:border-0">
+                <div class="flex items-center justify-between py-2 border-b border-[rgba(63,63,70,0.5)] last:border-0">
                     <div class="flex items-center gap-2">
                         <i class="icon ${r?.icon || 'i-dots'} w-4 h-4" style="background-color: var(--vs-text-muted)"></i>
                         <div>

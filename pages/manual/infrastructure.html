@@ -10,103 +10,116 @@
     <link rel="stylesheet" href="../../assets/css/styles.css?v=2.4" />
 </head>
 
-<body class="bg-[var(--vs-bg-main)] text-[var(--vs-text-body)] font-['Sarabun'] p-8">
-    <div class="max-w-4xl mx-auto space-y-12">
-        <header class="border-b border-[var(--vs-border)] pb-6">
-            <h1 class="text-3xl font-light text-[var(--vs-accent)] mb-2 uppercase">11. INFRASTRUCTURE &
-                DEPLOYMENT</h1>
-            <p class="text-[var(--vs-text-muted)] Thai-Rule">รายละเอียดการตั้งค่าระบบ คลาวด์ และการปรับใช้ซอฟต์แวร์
-                (สำหรับทีมพัฒนาและ AI)</p>
-        </header>
+<body class="bg-transparent overflow-hidden font-['Sarabun'] antialiased vs-scrollbar" style="height: 100vh;">
+    <div class="vs-page-frame animate-in fade-in zoom-in-95 duration-500">
+        <main class="vs-page-content vs-scrollbar">
+            <div class="w-full space-y-8">
 
-        <!-- GitHub Section -->
-        <section class="space-y-4">
-            <h2 class="text-xl font-normal text-[var(--vs-text-title)] flex items-center">
-                <i class="icon i-brand-github h-5 w-5 mr-3 text-[var(--vs-accent)]"></i>
-                Source Control (GitHub)
-            </h2>
-            <div class="hud-card p-6 border border-[var(--vs-border)] rounded-xl bg-[var(--vs-bg-card)]">
-                <table class="w-full text-[13px]">
-                    <tr class="border-b border-[rgba(var(--vs-border-rgb),0.5)]">
-                        <td class="py-3 text-[var(--vs-text-muted)] w-1/3">Repository URL</td>
-                        <td class="py-3 font-mono text-[var(--vs-accent)]">
-                            https://github.com/apaiso1978-debug/idlpms-hud</td>
-                    </tr>
-                    <tr class="border-b border-[rgba(var(--vs-border-rgb),0.5)]">
-                        <td class="py-3 text-[var(--vs-text-muted)]">Main Branch</td>
-                        <td class="py-3 uppercase">main</td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 text-[var(--vs-text-muted)]">CI/CD Trigger</td>
-                        <td class="py-3">GitHub Webhook (Linked to Netlify)</td>
-                    </tr>
-                </table>
+                <p class="text-[var(--vs-text-muted)] text-[13px] Thai-Rule leading-relaxed">
+                    รายละเอียดการตั้งค่าระบบ คลาวด์ และการปรับใช้ซอฟต์แวร์ (สำหรับทีมพัฒนาและ AI)
+                </p>
+
+                <!-- GitHub Section -->
+                <section class="space-y-4">
+                    <h2
+                        class="text-[13px] font-normal text-[var(--vs-text-title)] flex items-center gap-2 uppercase Thai-Rule">
+                        <i class="icon i-brand-github h-4 w-4 text-[var(--vs-accent)]"></i>
+                        Source Control (GitHub)
+                    </h2>
+                    <div
+                        class="hud-card p-6 border border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)]">
+                        <table class="w-full text-[13px]">
+                            <tr class="border-b border-[rgba(var(--vs-border-rgb),0.5)]">
+                                <td class="py-3 text-[var(--vs-text-muted)] w-1/3">Repository URL</td>
+                                <td class="py-3 font-mono text-[var(--vs-accent)]">
+                                    https://github.com/apaiso1978-debug/idlpms-hud</td>
+                            </tr>
+                            <tr class="border-b border-[rgba(var(--vs-border-rgb),0.5)]">
+                                <td class="py-3 text-[var(--vs-text-muted)]">Main Branch</td>
+                                <td class="py-3 uppercase">main</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 text-[var(--vs-text-muted)]">CI/CD Trigger</td>
+                                <td class="py-3">GitHub Webhook (Linked to Netlify)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Netlify Section -->
+                <section class="space-y-4">
+                    <h2
+                        class="text-[13px] font-normal text-[var(--vs-text-title)] flex items-center gap-2 uppercase Thai-Rule">
+                        <i class="icon i-globe h-4 w-4 text-[var(--vs-accent)]"></i>
+                        Live Hosting (Netlify)
+                    </h2>
+                    <div
+                        class="hud-card p-6 border border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)]">
+                        <table class="w-full text-[13px]">
+                            <tr class="border-b border-[rgba(var(--vs-border-rgb),0.5)]">
+                                <td class="py-3 text-[var(--vs-text-muted)] w-1/3">Site Name</td>
+                                <td class="py-3 font-mono text-[var(--vs-accent)]">idlpms.netlify.app</td>
+                            </tr>
+                            <tr class="border-b border-[rgba(var(--vs-border-rgb),0.5)]">
+                                <td class="py-3 text-[var(--vs-text-muted)]">Netlify Site ID</td>
+                                <td class="py-3 font-mono opacity-50 text-[13px]">0df70491-f08d-4572-aefa-c1458e8fd7f2
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 text-[var(--vs-text-muted)]">Deployment Path</td>
+                                <td class="py-3">Root (/) based on index.html</td>
+                            </tr>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- InsForge Section -->
+                <section class="space-y-4">
+                    <h2
+                        class="text-[13px] font-normal text-[var(--vs-text-title)] flex items-center gap-2 uppercase Thai-Rule">
+                        <i class="icon i-database h-4 w-4 text-[var(--vs-accent)]"></i>
+                        Backend & Cloud (InsForge)
+                    </h2>
+                    <div
+                        class="hud-card p-6 border border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)]">
+                        <table class="w-full text-[13px]">
+                            <tr class="border-b border-[rgba(var(--vs-border-rgb),0.5)]">
+                                <td class="py-3 text-[var(--vs-text-muted)] w-1/3">Project Endpoint</td>
+                                <td class="py-3 font-mono text-[var(--vs-accent)]">
+                                    https://3tcdq2dd.ap-southeast.insforge.app</td>
+                            </tr>
+                            <tr class="border-b border-[rgba(var(--vs-border-rgb),0.5)]">
+                                <td class="py-3 text-[var(--vs-text-muted)]">Data Service</td>
+                                <td class="py-3">src/services/DataService.js (InsForge Adapter)</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 text-[var(--vs-text-muted)]">Auth Provider</td>
+                                <td class="py-3">src/services/AuthService.js (Session-based)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </section>
+
+                <section
+                    class="p-4 bg-[rgba(34,211,238,0.05)] border border-[rgba(34,211,238,0.2)] rounded-[var(--vs-radius)] space-y-3">
+                    <h3 class="text-[13px] font-light text-[var(--vs-accent)] flex items-center gap-2 uppercase">
+                        <i class="icon i-information-circle h-4 w-4"></i>
+                        Guide for Future Developers / AI Agents
+                    </h3>
+                    <p class="text-[13px] text-[var(--vs-text-muted)] leading-relaxed">
+                        ระบบนี้ใช้สถาปัตยกรรม <strong>Decoupled Static Frontend</strong> โดยข้อมูลทั้งหมดถูกจัดการผ่าน
+                        <code>InsForgeDataService</code>. หากต้องการแก้ไขระบบ ให้เริ่มต้นจากการตรวจสอบ
+                        <code>src/services/AppBootstrap.js</code>
+                        เพื่อทำความเข้าใจการเริ่มต้นของบริการแกนหลัก
+                    </p>
+                </section>
+
+                <footer class="pt-12 pb-6 text-center opacity-20 text-[13px] uppercase tracking-widest">
+                    IDLPMS Unified Protocol V2.0 • Infrastructure Secure Node
+                </footer>
+
             </div>
-        </section>
-
-        <!-- Netlify Section -->
-        <section class="space-y-4">
-            <h2 class="text-xl font-normal text-[var(--vs-text-title)] flex items-center">
-                <i class="icon i-globe h-5 w-5 mr-3 text-[var(--vs-accent)]"></i>
-                Live Hosting (Netlify)
-            </h2>
-            <div class="hud-card p-6 border border-[var(--vs-border)] rounded-xl bg-[var(--vs-bg-card)]">
-                <table class="w-full text-[13px]">
-                    <tr class="border-b border-[rgba(var(--vs-border-rgb),0.5)]">
-                        <td class="py-3 text-[var(--vs-text-muted)] w-1/3">Site Name</td>
-                        <td class="py-3 font-mono text-[var(--vs-accent)] text-lg">idlpms.netlify.app</td>
-                    </tr>
-                    <tr class="border-b border-[rgba(var(--vs-border-rgb),0.5)]">
-                        <td class="py-3 text-[var(--vs-text-muted)]">Netlify Site ID</td>
-                        <td class="py-3 font-mono opacity-50 text-[13px]">0df70491-f08d-4572-aefa-c1458e8fd7f2</td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 text-[var(--vs-text-muted)]">Deployment Path</td>
-                        <td class="py-3">Root (/) based on index.html</td>
-                    </tr>
-                </table>
-            </div>
-        </section>
-
-        <!-- InsForge Section -->
-        <section class="space-y-4">
-            <h2 class="text-xl font-normal text-[var(--vs-text-title)] flex items-center">
-                <i class="icon i-database h-5 w-5 mr-3 text-[var(--vs-accent)]"></i>
-                Backend & Cloud (InsForge)
-            </h2>
-            <div class="hud-card p-6 border border-[var(--vs-border)] rounded-xl bg-[var(--vs-bg-card)]">
-                <table class="w-full text-[13px]">
-                    <tr class="border-b border-[rgba(var(--vs-border-rgb),0.5)]">
-                        <td class="py-3 text-[var(--vs-text-muted)] w-1/3">Project Endpoint</td>
-                        <td class="py-3 font-mono text-[var(--vs-accent)]">https://3tcdq2dd.ap-southeast.insforge.app
-                        </td>
-                    </tr>
-                    <tr class="border-b border-[rgba(var(--vs-border-rgb),0.5)]">
-                        <td class="py-3 text-[var(--vs-text-muted)]">Data Service</td>
-                        <td class="py-3">src/services/DataService.js (InsForge Adapter)</td>
-                    </tr>
-                    <tr>
-                        <td class="py-3 text-[var(--vs-text-muted)]">Auth Provider</td>
-                        <td class="py-3">src/services/AuthService.js (Session-based)</td>
-                    </tr>
-                </table>
-            </div>
-        </section>
-
-        <section class="p-4 bg-cyan-500/5 border border-cyan-500/20 rounded-xl space-y-3">
-            <h3 class="text-[13px] font-light text-cyan-400 uppercase">Guide for Future Developers / AI
-                Agents</h3>
-            <p class="text-[13px] text-[var(--vs-text-muted)] leading-relaxed">
-                ระบบนี้ใช้สถาปัตยกรรม **Decoupled Static Frontend** โดยข้อมูลทั้งหมดถูกจัดการผ่าน
-                **InsForgeDataService**.
-                หากต้องการแก้ไขระบบ ให้เริ่มต้นจากการตรวจสอบ `src/services/AppBootstrap.js`
-                เพื่อทำความเข้าใจการเริ่มต้นของบริการแกนหลัก
-            </p>
-        </section>
-
-        <footer class="pt-12 text-center opacity-20 text-[10px] uppercase">
-            IDLPMS Unified Protocol V2.0 • Infrastructure Secure Node
-        </footer>
+        </main>
     </div>
 
     <!-- Tabler Icons -->

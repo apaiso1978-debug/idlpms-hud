@@ -62,203 +62,192 @@
     </style>
 </head>
 
-<body
-    class="p-6 bg-transparent text-[var(--vs-text-body)] font-light Thai-Rule overflow-y-auto vs-scrollbar font-['Sarabun']">
-    <div class="max-w-[1600px] space-y-6">
+<body class="bg-transparent overflow-hidden font-['Sarabun'] antialiased vs-scrollbar" style="height: 100vh;">
+    <div class="vs-page-frame animate-in fade-in zoom-in-95 duration-500">
+        <main class="vs-page-content vs-scrollbar">
+            <div class="w-full space-y-6">
 
-        <!-- ① HEADER BAR -->
-        <header class="flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-                <div
-                    class="w-12 h-12 rounded-[3px] bg-[rgba(var(--vs-accent-rgb),0.1)] flex items-center justify-center border border-[rgba(var(--vs-accent-rgb),0.2)]">
-                    <i class="icon i-cpu w-6 h-6 text-[var(--vs-accent)]"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl text-[var(--vs-text-title)] font-light Thai-Rule">DNA Overview โรงเรียน</h1>
-                    <p class="text-[13px] text-[var(--vs-text-muted)] Thai-Rule">ภาพรวม Intelligence DNA / <span
-                            style="color:var(--vs-accent)">Core 5-Axis</span></p>
+                <!-- ② MAIN GRID: 9 col + 3 col -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-2 items-start">
+
+                    <!-- WORKSPACE (col-9) -->
+                    <div class="lg:col-span-12 space-y-6">
+
+                        <!-- KPI CARDS -->
+                        <div id="dna-kpis" class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                            <!-- Cards will be populated dynamically -->
+                            <div class="dna-card animate-pulse">
+                                <div class="h-10 bg-white/5 rounded"></div>
+                            </div>
+                            <div class="dna-card animate-pulse">
+                                <div class="h-10 bg-white/5 rounded"></div>
+                            </div>
+                            <div class="dna-card animate-pulse">
+                                <div class="h-10 bg-white/5 rounded"></div>
+                            </div>
+                            <div class="dna-card animate-pulse">
+                                <div class="h-10 bg-white/5 rounded"></div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 xl:grid-cols-2 gap-2">
+                            <!-- SPIDER CHART -->
+                            <div class="dna-card flex flex-col items-center relative">
+                                <div class="w-full flex justify-between items-center mb-4">
+                                    <h2
+                                        class="text-[13px] text-[var(--vs-text-title)] font-light flex items-center gap-2">
+                                        <i class="icon i-chart-pie h-4 w-4 text-[var(--vs-accent)]"></i>
+                                        Average School DNA Core
+                                    </h2>
+                                    <div class="flex gap-2">
+                                        <!-- Legend -->
+                                        <span
+                                            class="bg-[rgba(var(--vs-accent-rgb),0.1)] border border-[rgba(var(--vs-accent-rgb),0.3)] text-[var(--vs-accent)] px-2 py-0.5 rounded text-[13px] font-light Thai-Rule uppercase">ACTUAL</span>
+                                        <span
+                                            class="bg-white/5 border border-[rgba(63,63,70,0.5)] text-[var(--vs-text-muted)] px-2 py-0.5 rounded text-[13px] font-light Thai-Rule uppercase border-dashed">BENCHMARK</span>
+                                    </div>
+                                </div>
+                                <div id="school-spider-container">
+                                    <!-- Spinner while loading -->
+                                    <div class="animate-spin h-8 w-8 border-t-2 border-b-2 border-[var(--vs-accent)]"
+                                        style="border-radius: 50%;">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- AXIS BREAKDOWN & EXPLANATION -->
+                            <div class="dna-card flex flex-col justify-start">
+                                <h2
+                                    class="text-[13px] text-[var(--vs-text-title)] font-light mb-4 flex items-center gap-2">
+                                    <i class="icon i-information-circle h-4 w-4 text-[var(--vs-text-muted)]"></i>
+                                    DNA Axis Dictionary
+                                </h2>
+
+                                <div class="space-y-4">
+                                    <!-- K -->
+                                    <div class="flex items-start gap-2">
+                                        <div class="w-8 h-8 rounded-[var(--vs-radius)] flex items-center justify-center font-light text-[#111] text-[13px] Thai-Rule"
+                                            style="background:var(--dna-k, #fb7185)">K</div>
+                                        <div class="flex-1">
+                                            <div class="flex justify-between items-center">
+                                                <h3 class="text-[13px] text-[var(--vs-text-title)] font-light">Knowledge
+                                                    (ความรู้)</h3>
+                                                <span id="score-k"
+                                                    class="text-[13px] font-light text-[var(--vs-text-title)]"
+                                                    style="color:var(--dna-k, #fb7185)">--</span>
+                                            </div>
+                                            <p class="text-[13px] font-light Thai-Rule text-[var(--vs-text-muted)] mt-1">ผลสัมฤทธิ์ทางวิชาการ
+                                                คะแนนสอบ O-NET, RT, NT</p>
+                                        </div>
+                                    </div>
+                                    <!-- P -->
+                                    <div class="flex items-start gap-2">
+                                        <div class="w-8 h-8 rounded-[var(--vs-radius)] flex items-center justify-center font-light text-[#111] text-[13px] Thai-Rule"
+                                            style="background:var(--dna-p, #60a5fa)">P</div>
+                                        <div class="flex-1">
+                                            <div class="flex justify-between items-center">
+                                                <h3 class="text-[13px] text-[var(--vs-text-title)] font-light">
+                                                    Process/Skill
+                                                    (ทักษะและสมรรถภาพ)</h3>
+                                                <span id="score-p"
+                                                    class="text-[13px] font-light text-[var(--vs-text-title)]"
+                                                    style="color:var(--dna-p, #60a5fa)">--</span>
+                                            </div>
+                                            <p class="text-[13px] font-light Thai-Rule text-[var(--vs-text-muted)] mt-1">
+                                                การทดสอบสมรรถภาพทางกาย
+                                                (Fitness Test), ทักษะการปฏิบัติ</p>
+                                        </div>
+                                    </div>
+                                    <!-- A -->
+                                    <div class="flex items-start gap-2">
+                                        <div class="w-8 h-8 rounded-[var(--vs-radius)] flex items-center justify-center font-light text-[#111] text-[13px] Thai-Rule"
+                                            style="background:var(--dna-a, #34d399)">A</div>
+                                        <div class="flex-1">
+                                            <div class="flex justify-between items-center">
+                                                <h3 class="text-[13px] text-[var(--vs-text-title)] font-light">Attitude
+                                                    (เจตคติ)
+                                                </h3>
+                                                <span id="score-a"
+                                                    class="text-[13px] font-light text-[var(--vs-text-title)]"
+                                                    style="color:var(--dna-a, #34d399)">--</span>
+                                            </div>
+                                            <p class="text-[13px] font-light Thai-Rule text-[var(--vs-text-muted)] mt-1">
+                                                คุณลักษณะอันพึงประสงค์,
+                                                กิจกรรมเพื่อสังคม</p>
+                                        </div>
+                                    </div>
+                                    <!-- E -->
+                                    <div class="flex items-start gap-2">
+                                        <div class="w-8 h-8 rounded-[var(--vs-radius)] flex items-center justify-center font-light text-[#111] text-[13px] Thai-Rule"
+                                            style="background:var(--dna-e, #fbbf24)">E</div>
+                                        <div class="flex-1">
+                                            <div class="flex justify-between items-center">
+                                                <h3 class="text-[13px] text-[var(--vs-text-title)] font-light">Effort
+                                                    (ความพยายาม)</h3>
+                                                <span id="score-e"
+                                                    class="text-[13px] font-light text-[var(--vs-text-title)]"
+                                                    style="color:var(--dna-e, #fbbf24)">--</span>
+                                            </div>
+                                            <p class="text-[13px] font-light Thai-Rule text-[var(--vs-text-muted)] mt-1">อัตราการส่งงาน,
+                                                การเข้าเรียนสม่ำเสมอ</p>
+                                        </div>
+                                    </div>
+                                    <!-- D -->
+                                    <div class="flex items-start gap-2">
+                                        <div class="w-8 h-8 rounded-[50%] flex items-center justify-center font-light text-[#111] text-[13px] font-light Thai-Rule"
+                                            style="background:var(--dna-d, #a78bfa)">D</div>
+                                        <div class="flex-1">
+                                            <div class="flex justify-between items-center">
+                                                <h3 class="text-[13px] text-[var(--vs-text-title)] font-light">
+                                                    Discipline
+                                                    (วินัย)</h3>
+                                                <span id="score-d" class="text-[13px] font-light"
+                                                    style="color:var(--dna-d, #a78bfa)">--</span>
+                                            </div>
+                                            <p class="text-[13px] font-light Thai-Rule text-[var(--vs-text-muted)] mt-1">
+                                                การปฏิบัติตามกฎระเบียบ,
+                                                ประวัติพฤติกรรม</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- HEATMAP (Class Comparison) -->
+                        <div class="dna-card">
+                            <div class="w-full flex justify-between items-center mb-4">
+                                <h2 class="text-[13px] text-[var(--vs-text-title)] font-light flex items-center gap-2">
+                                    <i class="icon i-view-grid h-4 w-4 text-[var(--vs-accent)]"></i>
+                                    Class DNA Distribution Grid
+                                </h2>
+                            </div>
+                            <div id="heatmap-container">
+                                <!-- Spinner while loading -->
+                                <div class="flex items-center justify-center h-40">
+                                    <div
+                                        class="animate-spin rounded-[50%] h-8 w-8 border-t-2 border-b-2 border-[var(--vs-text-muted)]">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- ③ DELEGATION PANEL (col-3) -->
+
                 </div>
             </div>
-            <div class="flex items-center gap-2">
-                <span
-                    class="hud-badge-micro bg-white/5 text-[var(--vs-text-muted)] px-2 py-0.5 rounded-[3px] uppercase text-[10px] tracking-wider">GROUP
-                    1</span>
-            </div>
-        </header>
 
-        <!-- ② MAIN GRID: 9 col + 3 col -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <!-- Link the specific page logic script -->
+            <script src="../assets/js/pages/school_dna_logic.js"></script>
 
-            <!-- WORKSPACE (col-9) -->
-            <div class="lg:col-span-9 space-y-6">
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    if (window.DelegationPanel) {
 
-                <!-- KPI CARDS -->
-                <div id="dna-kpis" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <!-- Cards will be populated dynamically -->
-                    <div class="dna-card animate-pulse">
-                        <div class="h-10 bg-white/5 rounded"></div>
-                    </div>
-                    <div class="dna-card animate-pulse">
-                        <div class="h-10 bg-white/5 rounded"></div>
-                    </div>
-                    <div class="dna-card animate-pulse">
-                        <div class="h-10 bg-white/5 rounded"></div>
-                    </div>
-                    <div class="dna-card animate-pulse">
-                        <div class="h-10 bg-white/5 rounded"></div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                    <!-- SPIDER CHART -->
-                    <div class="dna-card flex flex-col items-center relative">
-                        <div class="w-full flex justify-between items-center mb-4">
-                            <h2 class="text-[14px] text-[var(--vs-text-title)] font-light flex items-center gap-2">
-                                <i class="icon i-chart-pie h-4 w-4 text-[var(--vs-accent)]"></i>
-                                Average School DNA Core
-                            </h2>
-                            <div class="flex gap-2">
-                                <!-- Legend -->
-                                <span
-                                    class="bg-[rgba(var(--vs-accent-rgb),0.1)] border border-[rgba(var(--vs-accent-rgb),0.3)] text-[var(--vs-accent)] px-2 py-0.5 rounded text-[11px] uppercase">ACTUAL</span>
-                                <span
-                                    class="bg-white/5 border border-[var(--vs-border)] text-[var(--vs-text-muted)] px-2 py-0.5 rounded text-[11px] uppercase border-dashed">BENCHMARK</span>
-                            </div>
-                        </div>
-                        <div id="school-spider-container">
-                            <!-- Spinner while loading -->
-                            <div
-                                class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[var(--vs-accent)]">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- AXIS BREAKDOWN & EXPLANATION -->
-                    <div class="dna-card flex flex-col justify-start">
-                        <h2 class="text-[14px] text-[var(--vs-text-title)] font-light mb-4 flex items-center gap-2">
-                            <i class="icon i-information-circle h-4 w-4 text-[var(--vs-text-muted)]"></i>
-                            DNA Axis Dictionary
-                        </h2>
-
-                        <div class="space-y-4">
-                            <!-- K -->
-                            <div class="flex items-start gap-4">
-                                <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-[#111] text-[12px]"
-                                    style="background:var(--dna-k, #fb7185)">K</div>
-                                <div class="flex-1">
-                                    <div class="flex justify-between items-center">
-                                        <h3 class="text-[13px] text-[var(--vs-text-title)] font-light">Knowledge
-                                            (ความรู้)</h3>
-                                        <span id="score-k" class="text-[13px] font-bold"
-                                            style="color:var(--dna-k, #fb7185)">--</span>
-                                    </div>
-                                    <p class="text-[12px] text-[var(--vs-text-muted)] mt-1">ผลสัมฤทธิ์ทางวิชาการ
-                                        คะแนนสอบ O-NET, RT, NT</p>
-                                </div>
-                            </div>
-                            <!-- P -->
-                            <div class="flex items-start gap-4">
-                                <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-[#111] text-[12px]"
-                                    style="background:var(--dna-p, #60a5fa)">P</div>
-                                <div class="flex-1">
-                                    <div class="flex justify-between items-center">
-                                        <h3 class="text-[13px] text-[var(--vs-text-title)] font-light">Process/Skill
-                                            (ทักษะและสมรรถภาพ)</h3>
-                                        <span id="score-p" class="text-[13px] font-bold"
-                                            style="color:var(--dna-p, #60a5fa)">--</span>
-                                    </div>
-                                    <p class="text-[12px] text-[var(--vs-text-muted)] mt-1">การทดสอบสมรรถภาพทางกาย
-                                        (Fitness Test), ทักษะการปฏิบัติ</p>
-                                </div>
-                            </div>
-                            <!-- A -->
-                            <div class="flex items-start gap-4">
-                                <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-[#111] text-[12px]"
-                                    style="background:var(--dna-a, #34d399)">A</div>
-                                <div class="flex-1">
-                                    <div class="flex justify-between items-center">
-                                        <h3 class="text-[13px] text-[var(--vs-text-title)] font-light">Attitude (เจตคติ)
-                                        </h3>
-                                        <span id="score-a" class="text-[13px] font-bold"
-                                            style="color:var(--dna-a, #34d399)">--</span>
-                                    </div>
-                                    <p class="text-[12px] text-[var(--vs-text-muted)] mt-1">คุณลักษณะอันพึงประสงค์,
-                                        กิจกรรมเพื่อสังคม</p>
-                                </div>
-                            </div>
-                            <!-- E -->
-                            <div class="flex items-start gap-4">
-                                <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-[#111] text-[12px]"
-                                    style="background:var(--dna-e, #fbbf24)">E</div>
-                                <div class="flex-1">
-                                    <div class="flex justify-between items-center">
-                                        <h3 class="text-[13px] text-[var(--vs-text-title)] font-light">Effort
-                                            (ความพยายาม)</h3>
-                                        <span id="score-e" class="text-[13px] font-bold"
-                                            style="color:var(--dna-e, #fbbf24)">--</span>
-                                    </div>
-                                    <p class="text-[12px] text-[var(--vs-text-muted)] mt-1">อัตราการส่งงาน,
-                                        การเข้าเรียนสม่ำเสมอ</p>
-                                </div>
-                            </div>
-                            <!-- D -->
-                            <div class="flex items-start gap-4">
-                                <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-[#111] text-[12px]"
-                                    style="background:var(--dna-d, #a78bfa)">D</div>
-                                <div class="flex-1">
-                                    <div class="flex justify-between items-center">
-                                        <h3 class="text-[13px] text-[var(--vs-text-title)] font-light">Discipline
-                                            (วินัย)</h3>
-                                        <span id="score-d" class="text-[13px] font-bold"
-                                            style="color:var(--dna-d, #a78bfa)">--</span>
-                                    </div>
-                                    <p class="text-[12px] text-[var(--vs-text-muted)] mt-1">การปฏิบัติตามกฎระเบียบ,
-                                        ประวัติพฤติกรรม</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- HEATMAP (Class Comparison) -->
-                <div class="dna-card">
-                    <div class="w-full flex justify-between items-center mb-4">
-                        <h2 class="text-[14px] text-[var(--vs-text-title)] font-light flex items-center gap-2">
-                            <i class="icon i-view-grid h-4 w-4 text-[var(--vs-accent)]"></i>
-                            Class DNA Distribution Grid
-                        </h2>
-                    </div>
-                    <div id="heatmap-container">
-                        <!-- Spinner while loading -->
-                        <div class="flex items-center justify-center h-40">
-                            <div
-                                class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[var(--vs-text-muted)]">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- ③ DELEGATION PANEL (col-3) -->
-            <div class="lg:col-span-3" id="delegation-panel"></div>
-        </div>
-    </div>
-
-    <!-- Link the specific page logic script -->
-    <script src="../assets/js/pages/school_dna_logic.js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.DelegationPanel) {
-                DelegationPanel.render('delegation-panel', {
-                    moduleId: 'ADMIN_DNA_VIEW',
-                    moduleTitle: 'DNA Overview โรงเรียน',
-                    moduleIcon: 'i-cpu'
+                    }
                 });
-            }
-        });
-    </script>
+            </script>
 </body>
 
 </html>

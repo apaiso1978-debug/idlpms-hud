@@ -196,10 +196,24 @@ class AuthService {
             throw new Error('User not found');
         }
 
+        // Feature: Find the corresponding Person for Lifelong Identity Sync
+        let personId = userId;
+        let availableRoles = [userId];
+
+        if (IDLPMS_DATA.persons) {
+            const person = Object.values(IDLPMS_DATA.persons).find(p => p.roles && p.roles.includes(userId));
+            if (person) {
+                personId = person.id;
+                availableRoles = person.roles;
+            }
+        }
+
         const roleConfig = IDLPMS_DATA.roles[userData.role];
 
         this._currentUser = {
             id: userId,
+            personId,
+            availableRoles,
             ...userData,
             roleConfig,
             permissions: this._buildPermissions(userData.role)
@@ -273,12 +287,34 @@ class AuthService {
     /**
      * Local login (using data.js)
      */
-    async _localLogin(userId, securityKey = null) {
+    async _localLogin(authId, securityKey = null) {
         if (typeof IDLPMS_DATA === 'undefined') {
             throw new AuthError('ไม่พบข้อมูลระบบ', 'DATA_NOT_FOUND');
         }
 
-        const userData = IDLPMS_DATA.users[userId];
+        let activePerson = null;
+        let activeUserId = null;
+
+        // 1. Check if authId is a Person ID or Citizen ID
+        if (IDLPMS_DATA.persons) {
+            if (IDLPMS_DATA.persons[authId]) {
+                activePerson = IDLPMS_DATA.persons[authId];
+                activeUserId = activePerson.roles[0];
+            } else {
+                const person = Object.values(IDLPMS_DATA.persons).find(p => p.citizenId === authId);
+                if (person) {
+                    activePerson = person;
+                    activeUserId = person.roles[0];
+                }
+            }
+        }
+
+        // 2. Fallback to direct Role ID login
+        if (!activeUserId) {
+            activeUserId = authId;
+        }
+
+        const userData = IDLPMS_DATA.users[activeUserId];
         if (!userData) {
             throw new AuthError('ไม่พบผู้ใช้งาน', 'USER_NOT_FOUND');
         }
@@ -290,14 +326,51 @@ class AuthService {
             throw new AuthError('รหัสผ่านไม่ถูกต้อง', 'INVALID_CREDENTIALS');
         }
 
+        let personId = activeUserId;
+        let availableRoles = [activeUserId];
+        if (activePerson) {
+            personId = activePerson.id;
+            availableRoles = activePerson.roles;
+        } else if (IDLPMS_DATA.persons) {
+            const person = Object.values(IDLPMS_DATA.persons).find(p => p.roles && p.roles.includes(activeUserId));
+            if (person) {
+                personId = person.id;
+                availableRoles = person.roles;
+            }
+        }
+
         const roleConfig = IDLPMS_DATA.roles[userData.role];
 
         return {
-            id: userId,
+            id: activeUserId,
+            personId,
+            availableRoles,
             ...userData,
             roleConfig,
             permissions: this._buildPermissions(userData.role)
         };
+    }
+
+    /**
+     * Switch Active Role within the same Person
+     */
+    async switchActiveRole(newRoleId) {
+        if (!this._currentUser || !this._currentUser.availableRoles.includes(newRoleId)) {
+            throw new Error('บัญชีนี้ไม่มีสิทธิ์เข้าถึงบทบาทดังกล่าว');
+        }
+
+        // Use _localLogin to re-authenticate as the new role silently
+        const newUser = await this._localLogin(newRoleId, null);
+
+        this._session = this._createSession(newUser, this._session.remember);
+        this._currentUser = newUser;
+        this._persistSession();
+
+        // Emit event so UI can update seamlessly without a full reload if possible
+        this._emit('role_switched', { user: newUser });
+
+        console.log(`[AuthService] Switched role to: ${newRoleId}`);
+        return newUser;
     }
 
     /**

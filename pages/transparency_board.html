@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transparency Ledger</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/theme.css" />
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+</head>
+
+<body class="overflow-hidden m-0 p-0 h-screen w-screen">
+    <div class="vs-page-frame w-full h-full flex flex-col bg-[var(--vs-bg-deep)]">
+
+        <!-- Header: Edge to Edge 48px standard -->
+        <header
+            class="vs-page-header sticky top-0 z-20 bg-[var(--vs-bg-deep)] h-[48px] px-6 border-b border-[rgba(63,63,70,0.5)] flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <i class="icon i-eye h-4 w-4 text-[var(--vs-accent)]"></i>
+                <div class="text-[13px] text-[var(--vs-text-title)] font-light">
+                    ความโปร่งใสองค์กร (Transparency Ledger)
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button
+                    class="px-3 py-1.5 bg-[rgba(var(--vs-accent-rgb),0.1)] text-[var(--vs-accent)] border border-[rgba(var(--vs-accent-rgb),0.3)] hover:bg-[rgba(var(--vs-accent-rgb),0.15)] hover:border-[rgba(var(--vs-accent-rgb),0.5)] hover:shadow-[0_0_8px_rgba(var(--vs-accent-rgb),0.1)] transition-all rounded-[3px] flex items-center gap-1.5"
+                    onclick="TransparencyLedger.refreshData()">
+                    <i class="icon i-refresh h-4 w-4"></i>
+                    <span class="text-[13px] font-light">ซิงค์ข้อมูลล่าสุด</span>
+                </button>
+            </div>
+        </header>
+
+        <main class="vs-page-content flex-1 overflow-y-auto p-6">
+            <!-- 1. Explicit Rule Dashboard -->
+            <div class="vs-card mb-6 p-6">
+                <div class="vs-icon-layout items-start gap-4">
+                    <div class="icon-col text-[var(--vs-accent)] mt-1">
+                        <i class="icon i-information-circle h-4 w-4"></i>
+                    </div>
+                    <div class="content-col flex-1">
+                        <h2 class="text-[var(--vs-text-title)] text-[13px] mb-4">กฎการให้คะแนนภารกิจ (Gamified Scoring
+                            System)</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-[var(--vs-bg-deep)] p-4 rounded-[3px] border border-[rgba(63,63,70,0.5)]">
+                                <div class="text-[var(--vs-success)] text-[13px] mb-2 flex items-center gap-1.5">
+                                    <i class="icon i-check-circle h-4 w-4"></i> ส่งก่อนเวลา (Early Bird)
+                                </div>
+                                <div class="text-[13px] text-[var(--vs-text-muted)]">โบนัส <span
+                                        class="text-[var(--vs-success)]">+20%</span> ของคะแนนฐานภารกิจ
+                                    หากส่งงานก่อนกำหนดล่วงหน้าเกิน 24 ชั่วโมง</div>
+                            </div>
+                            <div class="bg-[var(--vs-bg-deep)] p-4 rounded-[3px] border border-[rgba(63,63,70,0.5)]">
+                                <div class="text-[var(--vs-text-title)] text-[13px] mb-2 flex items-center gap-1.5">
+                                    <i class="icon i-clock h-4 w-4"></i> ส่งตรงเวลา (On-Time)
+                                </div>
+                                <div class="text-[13px] text-[var(--vs-text-muted)]">ได้รับคะแนนเต็ม <span
+                                        class="text-[var(--vs-text-title)]">100%</span> ตามฐานการประเมินของภารกิจปกติ
+                                </div>
+                            </div>
+                            <div class="bg-[var(--vs-bg-deep)] p-4 rounded-[3px] border border-[rgba(63,63,70,0.5)]">
+                                <div class="text-[var(--vs-danger)] text-[13px] mb-2 flex items-center gap-1.5">
+                                    <i class="icon i-x h-4 w-4"></i> ส่งล่าช้า (Late Submission)
+                                </div>
+                                <div class="text-[13px] text-[var(--vs-text-muted)]">หักคะแนน <span
+                                        class="text-[var(--vs-danger)]">-10%</span> ต่อ 24 ชม. ที่เกินกำหนด
+                                    กรณีล่าช้าเกิน 7 วันจะได้คะแนน 0 ทันที</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Transparent Leaderboard Ledger -->
+            <h2 class="text-[var(--vs-text-title)] text-[13px] mb-4">ตารางผลการปฏิบัติงานบุคลากร (Live Mission Ranking)
+            </h2>
+            <div id="ledger-content" class="flex flex-col gap-4 pb-8">
+                <!-- Dynamic Users will be injected here -->
+                <div class="text-center p-8 text-[var(--vs-text-muted)] text-[13px]">
+                    กำลังสร้างข้อมูลแผงบัญชีของบุคลากร...
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Load Core System Data -->
+    <script src="../assets/js/data.js"></script>
+    <script src="../assets/js/login.js"></script>
+
+    <script src="../assets/js/transparency_ledger.js"></script>
+    <script>
+        // Use a slight delay to ensure the DOM is ready if needed, 
+        // though defer or placing at end of body is usually enough
+        setTimeout(() => {
+            if (typeof TransparencyLedger !== 'undefined') {
+                TransparencyLedger.init();
+            }
+        }, 100);
+    </script>
+</body>
+
+</html>

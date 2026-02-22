@@ -123,7 +123,7 @@ const LeaveService = (() => {
     // ─── Mock Personnel Data ────────────────────────────────────
     const MOCK_PERSONNEL = [
         // ข้าราชการครู
-        { id: 'TEA_WORACHAI', name: 'นายวรชัย อภัยโส', type: 'TEACHER', position: 'ครู คศ.1' },
+        { id: '22222222-2222-4222-8222-222222222222', name: 'นายวรชัย อภัยโส', type: 'TEACHER', position: 'ครู คศ.1' },
         { id: 'TEA_SOMSRI', name: 'นางสมศรี จันทร์ดี', type: 'TEACHER', position: 'ครู คศ.2' },
         { id: 'TEA_PRANEE', name: 'นางสาวปราณี สุขใจ', type: 'TEACHER', position: 'ครู คศ.2' },
         { id: 'TEA_SOMCHAI_T', name: 'นายสมชาย ใจดี', type: 'TEACHER', position: 'ครู คศ.3' },
@@ -156,14 +156,14 @@ const LeaveService = (() => {
             days: 2,
             reason: 'ไข้หวัดใหญ่ มีไข้สูง',
             status: 'APPROVED',
-            approvedBy: 'DIR_MABLUD',
+            approvedBy: '11111111-1111-4111-8111-111111111111',
             approvedDate: '2025-02-16',
             approverNote: 'อนุญาต ให้พักผ่อนให้หาย',
             createdAt: '2025-02-16T08:30:00'
         },
         {
             id: 'LV-2568-002',
-            personnelId: 'TEA_WORACHAI',
+            personnelId: '22222222-2222-4222-8222-222222222222',
             type: 'PERSONAL',
             startDate: '2025-02-20',
             endDate: '2025-02-20',
@@ -204,7 +204,7 @@ const LeaveService = (() => {
             days: 2,
             reason: 'งานบวชลูกชาย',
             status: 'APPROVED',
-            approvedBy: 'DIR_MABLUD',
+            approvedBy: '11111111-1111-4111-8111-111111111111',
             approvedDate: '2025-02-08',
             approverNote: 'อนุญาต',
             createdAt: '2025-02-07T10:00:00'
@@ -218,7 +218,7 @@ const LeaveService = (() => {
             days: 1,
             reason: 'ปวดท้องรุนแรง',
             status: 'APPROVED',
-            approvedBy: 'DIR_MABLUD',
+            approvedBy: '11111111-1111-4111-8111-111111111111',
             approvedDate: '2025-02-14',
             approverNote: 'อนุญาต',
             createdAt: '2025-02-14T08:00:00'
@@ -251,7 +251,7 @@ const LeaveService = (() => {
     const MOCK_QUICKOUTS = [
         {
             id: 'QO-001',
-            personnelId: 'TEA_WORACHAI',
+            personnelId: '22222222-2222-4222-8222-222222222222',
             reasonCode: 'BANK',
             reasonDetail: 'โอนเงินค่าอุปกรณ์การสอน',
             date: '2025-02-18',
@@ -275,7 +275,7 @@ const LeaveService = (() => {
         },
         {
             id: 'QO-003',
-            personnelId: 'TEA_WORACHAI',
+            personnelId: '22222222-2222-4222-8222-222222222222',
             reasonCode: 'GOVT',
             reasonDetail: 'ส่งเอกสารที่ สพป.',
             date: '2025-02-14',
@@ -401,7 +401,7 @@ const LeaveService = (() => {
             const req = data.find(r => r.id === id);
             if (req) {
                 req.status = 'APPROVED';
-                req.approvedBy = 'DIR_MABLUD';
+                req.approvedBy = '11111111-1111-4111-8111-111111111111';
                 req.approvedDate = new Date().toISOString().split('T')[0];
                 req.approverNote = approverNote;
                 _saveAll(data);
@@ -415,7 +415,7 @@ const LeaveService = (() => {
             const req = data.find(r => r.id === id);
             if (req) {
                 req.status = 'REJECTED';
-                req.approvedBy = 'DIR_MABLUD';
+                req.approvedBy = '11111111-1111-4111-8111-111111111111';
                 req.approvedDate = new Date().toISOString().split('T')[0];
                 req.approverNote = reason;
                 _saveAll(data);

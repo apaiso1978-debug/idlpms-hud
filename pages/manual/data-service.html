@@ -11,14 +11,14 @@
 </head>
 
 <body class="bg-transparent px-8 pt-8 pb-24 overflow-y-auto font-['Sarabun'] antialiased">
-    <div class="max-w-[1600px] space-y-6">
+    <div class="w-full space-y-6">
 
         <!-- Page Header -->
-        <div class="flex items-center justify-between border-b border-[var(--vs-border)] pb-6">
+        <div class="flex items-center justify-between border-b border-[rgba(63,63,70,0.5)] pb-6">
             <div>
-                <div class="flex items-center gap-3 mb-2">
+                <div class="flex items-center gap-2 mb-2">
                     <span
-                        class="hud-badge-micro px-2 py-0.5 rounded-[3px] font-light border border-[var(--vs-border)] bg-[var(--vs-bg-card)] text-[var(--vs-text-title)]">
+                        class="hud-badge-micro px-2 py-0.5 rounded-[var(--vs-radius)] font-light border border-[rgba(63,63,70,0.5)] bg-[var(--vs-bg-card)] text-[var(--vs-text-title)]">
                         CHAPTER 10
                     </span>
                     <span class="text-[13px] text-[var(--vs-text-muted)] uppercase">System Manual</span>
@@ -26,7 +26,7 @@
                 <h1 class="text-3xl font-light text-[var(--vs-text-title)]">
                     DataService & API Layer
                 </h1>
-                <p class="text-[13px] text-[var(--vs-text-body)] mt-2 max-w-2xl">
+                <p class="text-[13px] text-[var(--vs-text-body)] mt-2">
                     สถาปัตยกรรมการจัดการข้อมูลแบบ Abstract Layer ที่รองรับทั้งการทำงานแบบ Local และ Google Apps Script
                 </p>
             </div>
@@ -38,12 +38,12 @@
 
         <!-- Overview Section -->
         <section class="space-y-6">
-            <h2 class="text-xl font-light text-[var(--vs-text-title)] flex items-center gap-4">
+            <h2 class="text-xl font-light text-[var(--vs-text-title)] flex items-center gap-2">
                 <div class="h-6 w-[1.5px] bg-[var(--vs-accent)] shadow-[0_0_8px_var(--vs-accent)]"></div>
                 ภาพรวม DataService
             </h2>
 
-            <div class="p-6 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+            <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[rgba(63,63,70,0.5)]">
                 <p class="text-[13px] text-[var(--vs-text-body)] leading-relaxed mb-6">
                     <strong class="text-[var(--vs-text-title)]">DataService</strong> คือ Abstract Layer
                     ที่ทำหน้าที่เป็นตัวกลางระหว่าง UI กับแหล่งข้อมูล ออกแบบให้สามารถสลับระหว่าง
@@ -53,43 +53,45 @@
                 </p>
 
                 <!-- Architecture Diagram -->
-                <div class="p-6 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
-                    <div class="text-center mb-6">
-                        <div
-                            class="inline-block px-4 py-2 rounded-[3px] bg-[var(--vs-accent)] text-[var(--vs-bg-deep)] font-light text-[13px]">
-                            UI COMPONENTS
-                        </div>
-                    </div>
+                <div
+                    class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] overflow-x-auto vs-scrollbar">
+                    <div class="mermaid flex justify-center w-full">
+                        sequenceDiagram
+                        autonumber
+                        participant UI as HUD Components
+                        participant DS as DataService (Adapter)
+                        participant Cache as CacheLocal (IndexedDB)
+                        participant Sync as SyncEngine
+                        participant Cloud as InsForge (Cloud)
 
-                    <div class="flex justify-center mb-4">
-                        <div class="w-0.5 h-8 bg-[var(--vs-border)]"></div>
-                    </div>
+                        Note over UI,Cloud: Data Query (Read) Protocol
+                        UI->>DS: requestData()
+                        alt Cache Hit (or Offline)
+                        DS->>Cache: readLocal()
+                        Cache-->>DS: return JSON
+                        else Cache Miss (or Refresh)
+                        DS->>Cloud: fetchRemote()
+                        Cloud-->>DS: return JSON
+                        DS->>Cache: updateCache()
+                        end
+                        DS-->>UI: Data Object
 
-                    <div class="text-center mb-4">
-                        <div
-                            class="inline-block px-6 py-3 rounded-[3px] bg-amber-500/20 border border-amber-500/30 text-amber-400 font-light">
-                            DataServiceFactory.getInstance()
-                        </div>
-                    </div>
+                        Note over UI,Cloud: Data Mutation (Write) Protocol
+                        UI->>DS: mutateData(payload)
+                        DS->>Cache: optimisticWriteLocal(payload)
+                        DS-->>UI: return Optimistic Success
 
-                    <div class="flex justify-center mb-4">
-                        <div class="flex items-center gap-8">
-                            <div class="w-24 h-0.5 bg-[var(--vs-border)]"></div>
-                            <div class="w-0.5 h-8 bg-[var(--vs-border)]"></div>
-                            <div class="w-24 h-0.5 bg-[var(--vs-border)]"></div>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-center gap-8">
-                        <div class="p-4 rounded-[3px] text-center"
-                            style="background-color: rgba(var(--vs-accent-rgb), 0.2); border: 1px solid rgba(var(--vs-accent-rgb), 0.3)">
-                            <div class="text-[13px] font-light text-[var(--vs-accent)] mb-1">LocalDataService</div>
-                            <div class="text-[13px] text-[var(--vs-text-muted)]">data.js (Static)</div>
-                        </div>
-                        <div class="p-4 rounded-[3px] bg-emerald-500/20 border border-emerald-500/30 text-center">
-                            <div class="text-[13px] font-light text-emerald-400 mb-1">AppsScriptDataService</div>
-                            <div class="text-[13px] text-[var(--vs-text-muted)]">Google Sheets (API)</div>
-                        </div>
+                        DS->>Sync: enqueueMutationTask()
+                        loop Background Sync Thread
+                        Sync->>Cloud: pushQueue(payloadList)
+                        alt Success
+                        Cloud-->>Sync: 200 OK (Ack)
+                        Sync->>Cache: markTasksCompleted()
+                        else Interrupted / Offline
+                        Cloud--xSync: 503 / Timeout
+                        Sync->>Sync: appendRetryBackoff()
+                        end
+                        end
                     </div>
                 </div>
             </div>
@@ -97,16 +99,16 @@
 
         <!-- Design Principles -->
         <section class="space-y-6">
-            <h2 class="text-xl font-light text-[var(--vs-text-title)] flex items-center gap-4">
+            <h2 class="text-xl font-light text-[var(--vs-text-title)] flex items-center gap-2">
                 <div class="h-6 w-[1.5px] bg-[var(--vs-accent)] shadow-[0_0_8px_var(--vs-accent)]"></div>
                 หลักการออกแบบ
             </h2>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
                 <!-- Principle 1 -->
-                <div class="p-5 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+                <div class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[rgba(63,63,70,0.5)]">
                     <div
-                        class="w-10 h-10 rounded-[3px] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] flex items-center justify-center mb-4">
+                        class="w-10 h-10 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] flex items-center justify-center mb-4">
                         <span class="text-lg font-light text-[var(--vs-accent)]">1</span>
                     </div>
                     <h3 class="text-[13px] font-light text-[var(--vs-text-title)] mb-2">Abstraction</h3>
@@ -116,9 +118,9 @@
                 </div>
 
                 <!-- Principle 2 -->
-                <div class="p-5 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+                <div class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[rgba(63,63,70,0.5)]">
                     <div
-                        class="w-10 h-10 rounded-[3px] hud-bg-emerald hud-border-emerald flex items-center justify-center mb-4">
+                        class="w-10 h-10 rounded-[var(--vs-radius)] hud-bg-emerald hud-border-emerald flex items-center justify-center mb-4">
                         <span class="text-lg font-light text-emerald-400">2</span>
                     </div>
                     <h3 class="text-[13px] font-light text-[var(--vs-text-title)] mb-2">Singleton</h3>
@@ -128,9 +130,9 @@
                 </div>
 
                 <!-- Principle 3 -->
-                <div class="p-5 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+                <div class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[rgba(63,63,70,0.5)]">
                     <div
-                        class="w-10 h-10 rounded-[3px] hud-bg-amber hud-border-amber flex items-center justify-center mb-4">
+                        class="w-10 h-10 rounded-[var(--vs-radius)] hud-bg-amber hud-border-amber flex items-center justify-center mb-4">
                         <span class="text-lg font-light text-amber-400">3</span>
                     </div>
                     <h3 class="text-[13px] font-light text-[var(--vs-text-title)] mb-2">Async/Await</h3>
@@ -140,9 +142,9 @@
                 </div>
 
                 <!-- Principle 4 -->
-                <div class="p-5 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+                <div class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[rgba(63,63,70,0.5)]">
                     <div
-                        class="w-10 h-10 rounded-[3px] hud-bg-rose hud-border-rose flex items-center justify-center mb-4">
+                        class="w-10 h-10 rounded-[var(--vs-radius)] hud-bg-rose hud-border-rose flex items-center justify-center mb-4">
                         <span class="text-lg font-light text-rose-400">4</span>
                     </div>
                     <h3 class="text-[13px] font-light text-[var(--vs-text-title)] mb-2">Fail-Safe</h3>
@@ -155,12 +157,12 @@
 
         <!-- API Reference -->
         <section class="space-y-6">
-            <h2 class="text-xl font-light text-[var(--vs-text-title)] flex items-center gap-4">
+            <h2 class="text-xl font-light text-[var(--vs-text-title)] flex items-center gap-2">
                 <div class="h-6 w-[1.5px] bg-[var(--vs-accent)] shadow-[0_0_8px_var(--vs-accent)]"></div>
                 API Reference
             </h2>
 
-            <div class="p-6 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+            <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[rgba(63,63,70,0.5)]">
                 <!-- User Operations -->
                 <div class="mb-8">
                     <h3 class="text-[13px] font-light text-[var(--vs-accent)] mb-4 flex items-center gap-2">
@@ -169,7 +171,8 @@
                     </h3>
 
                     <div class="space-y-3">
-                        <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
                             <div class="flex items-start justify-between mb-2">
                                 <code class="text-[13px] text-emerald-400">getUser(userId)</code>
                                 <span class="hud-badge-micro">READ</span>
@@ -181,7 +184,8 @@
                             </div>
                         </div>
 
-                        <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
                             <div class="flex items-start justify-between mb-2">
                                 <code class="text-[13px] text-emerald-400">getUsersByRole(role)</code>
                                 <span class="hud-badge-micro">READ</span>
@@ -193,7 +197,8 @@
                             </div>
                         </div>
 
-                        <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
                             <div class="flex items-start justify-between mb-2">
                                 <code class="text-[13px] text-emerald-400">getUsersBySchool(schoolId)</code>
                                 <span class="hud-badge-micro">READ</span>
@@ -205,12 +210,14 @@
                             </div>
                         </div>
 
-                        <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
                             <div class="flex items-start justify-between mb-2">
                                 <code class="text-[13px] text-emerald-400">getUsersByESA(esaId)</code>
                                 <span class="hud-badge-micro">READ</span>
                             </div>
-                            <p class="text-[13px] text-[var(--vs-text-muted)]">ดึงรายชื่อผู้ใช้ทั้งหมดในเขตพื้นที่การศึกษา
+                            <p class="text-[13px] text-[var(--vs-text-muted)]">
+                                ดึงรายชื่อผู้ใช้ทั้งหมดในเขตพื้นที่การศึกษา
                             </p>
                             <div class="mt-2 text-[13px]">
                                 <span class="text-zinc-500">Returns:</span>
@@ -218,12 +225,14 @@
                             </div>
                         </div>
 
-                        <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
                             <div class="flex items-start justify-between mb-2">
                                 <code class="text-[13px] text-rose-400">updateUser(userId, data)</code>
                                 <span class="hud-badge-micro text-rose-400">WRITE</span>
                             </div>
-                            <p class="text-[13px] text-[var(--vs-text-muted)]">อัพเดทข้อมูลผู้ใช้ (merge กับข้อมูลเดิม)</p>
+                            <p class="text-[13px] text-[var(--vs-text-muted)]">อัพเดทข้อมูลผู้ใช้ (merge กับข้อมูลเดิม)
+                            </p>
                             <div class="mt-2 text-[13px]">
                                 <span class="text-zinc-500">Returns:</span>
                                 <code class="text-amber-400">Promise&lt;User&gt;</code>
@@ -240,7 +249,8 @@
                     </h3>
 
                     <div class="space-y-3">
-                        <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
                             <div class="flex items-start justify-between mb-2">
                                 <code class="text-[13px] text-emerald-400">getSchool(schoolId)</code>
                                 <span class="hud-badge-micro">READ</span>
@@ -248,7 +258,8 @@
                             <p class="text-[13px] text-[var(--vs-text-muted)]">ดึงข้อมูลโรงเรียนจาก ID</p>
                         </div>
 
-                        <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
                             <div class="flex items-start justify-between mb-2">
                                 <code class="text-[13px] text-emerald-400">getSchoolsByESA(esaId)</code>
                                 <span class="hud-badge-micro">READ</span>
@@ -266,7 +277,8 @@
                     </h3>
 
                     <div class="space-y-3">
-                        <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
                             <div class="flex items-start justify-between mb-2">
                                 <code class="text-[13px] text-emerald-400">getSubject(subjectId)</code>
                                 <span class="hud-badge-micro">READ</span>
@@ -274,7 +286,8 @@
                             <p class="text-[13px] text-[var(--vs-text-muted)]">ดึงข้อมูลวิชาจาก ID (รวมสี และ units)</p>
                         </div>
 
-                        <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
                             <div class="flex items-start justify-between mb-2">
                                 <code class="text-[13px] text-emerald-400">getAllSubjects()</code>
                                 <span class="hud-badge-micro">READ</span>
@@ -282,7 +295,8 @@
                             <p class="text-[13px] text-[var(--vs-text-muted)]">ดึงรายชื่อวิชาทั้งหมดในระบบ</p>
                         </div>
 
-                        <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
                             <div class="flex items-start justify-between mb-2">
                                 <code class="text-[13px] text-emerald-400">getSubjectUnits(subjectId)</code>
                                 <span class="hud-badge-micro">READ</span>
@@ -300,7 +314,8 @@
                     </h3>
 
                     <div class="space-y-3">
-                        <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
                             <div class="flex items-start justify-between mb-2">
                                 <code class="text-[13px] text-emerald-400">getGlobalStats()</code>
                                 <span class="hud-badge-micro">READ</span>
@@ -309,7 +324,8 @@
                                 โรงเรียน, ผู้ใช้งาน)</p>
                         </div>
 
-                        <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
                             <div class="flex items-start justify-between mb-2">
                                 <code class="text-[13px] text-emerald-400">getSchoolStats(schoolId)</code>
                                 <span class="hud-badge-micro">READ</span>
@@ -318,7 +334,8 @@
                                 เกรดค้างส่ง)</p>
                         </div>
 
-                        <div class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
                             <div class="flex items-start justify-between mb-2">
                                 <code class="text-[13px] text-emerald-400">getESAStats(esaId)</code>
                                 <span class="hud-badge-micro text-[var(--vs-text-muted)]">READ</span>
@@ -332,17 +349,17 @@
 
         <!-- Usage Examples -->
         <section class="space-y-6">
-            <h2 class="text-xl font-light text-[var(--vs-text-title)] flex items-center gap-4">
+            <h2 class="text-xl font-light text-[var(--vs-text-title)] flex items-center gap-2">
                 <div class="h-6 w-[1.5px] bg-[var(--vs-accent)] shadow-[0_0_8px_var(--vs-accent)]"></div>
                 ตัวอย่างการใช้งาน
             </h2>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
                 <!-- Basic Usage -->
-                <div class="p-6 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+                <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[rgba(63,63,70,0.5)]">
                     <h3 class="text-[13px] font-light text-[var(--vs-text-title)] mb-4">Basic Usage</h3>
                     <div
-                        class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] overflow-x-auto">
+                        class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] overflow-x-auto">
                         <pre
                             class="text-[13px] text-[var(--vs-text-body)]"><code><span class="text-[var(--vs-text-muted)]">// Get DataService instance</span>
 <span class="text-rose-400">const</span> service = <span class="text-amber-400">await</span> DataServiceFactory.<span class="text-emerald-400">getInstance</span>();
@@ -358,10 +375,10 @@ console.<span class="text-emerald-400">log</span>(user.fullName); <span class="t
                 </div>
 
                 <!-- With Error Handling -->
-                <div class="p-6 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
+                <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[rgba(63,63,70,0.5)]">
                     <h3 class="text-[13px] font-light text-[var(--vs-text-title)] mb-4">With Error Handling</h3>
                     <div
-                        class="p-4 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] overflow-x-auto">
+                        class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] overflow-x-auto">
                         <pre class="text-[13px] text-[var(--vs-text-body)]"><code><span class="text-rose-400">async function</span> <span class="text-emerald-400">loadUserData</span>(userId) {
   <span class="text-rose-400">try</span> {
     <span class="text-rose-400">const</span> service = <span class="text-amber-400">await</span> <span class="text-emerald-400">getDataService</span>();
@@ -384,24 +401,25 @@ console.<span class="text-emerald-400">log</span>(user.fullName); <span class="t
 
         <!-- Mode Switching -->
         <section class="space-y-6">
-            <h2 class="text-xl font-light text-[var(--vs-text-title)] flex items-center gap-4">
+            <h2 class="text-xl font-light text-[var(--vs-text-title)] flex items-center gap-2">
                 <div class="h-6 w-[1.5px] bg-[var(--vs-accent)] shadow-[0_0_8px_var(--vs-accent)]"></div>
                 การสลับ Mode
             </h2>
 
-            <div class="p-6 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] border border-[rgba(63,63,70,0.5)]">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                     <!-- Local Mode -->
-                    <div class="p-5 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-3 h-3 rounded-[3px] bg-[var(--vs-accent)]"></div>
+                    <div class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
+                        <div class="flex items-center gap-2 mb-4">
+                            <div class="w-3 h-3 rounded-[var(--vs-radius)] bg-[var(--vs-accent)]"></div>
                             <h3 class="text-[13px] font-light text-[var(--vs-text-title)]">Local Mode</h3>
                             <span class="hud-badge-micro text-emerald-400">DEFAULT</span>
                         </div>
                         <p class="text-[13px] text-[var(--vs-text-muted)] mb-4">
                             ใช้ข้อมูลจาก <code class="text-[var(--vs-accent)]">data.js</code> สำหรับการพัฒนาและทดสอบ
                         </p>
-                        <div class="p-3 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                        <div
+                            class="p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
                             <code class="text-[13px] text-[var(--vs-text-body)]">
                                 DataServiceConfig.mode = <span class="text-[var(--vs-accent)]">'local'</span>;
                             </code>
@@ -409,15 +427,66 @@ console.<span class="text-emerald-400">log</span>(user.fullName); <span class="t
                     </div>
 
                     <!-- Apps Script Mode -->
-                    <div class="p-5 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-3 h-3 rounded-[3px] bg-emerald-500"></div>
+                    <div class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
+                        <div class="flex items-center gap-2 mb-4">
+                            <div class="w-3 h-3 rounded-[var(--vs-radius)] bg-emerald-500"></div>
                             <h3 class="text-[13px] font-light text-[var(--vs-text-title)]">Apps Script Mode</h3>
                             <span class="hud-badge-micro text-amber-400">PRODUCTION</span>
                         </div>
                         <p class="text-[13px] text-[var(--vs-text-muted)] mb-4">
                             ใช้ Google Apps Script + Sheets สำหรับ production พร้อม sharding
                         </p>
-                        <div class="p-3 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                        <div
+                            class="p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
+                            DataServiceConfig.mode = <span class="text-emerald-400">'appsscript'</span>;
+                            </code>
+                        </div>
+                    </div>
+
+                    <!-- InsForge Mode -->
+                    <div
+                        class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] md:col-span-2">
+                        <div class="flex items-center gap-2 mb-4">
+                            <div class="w-3 h-3 rounded-[var(--vs-radius)] bg-sky-500"></div>
+                            <h3 class="text-[13px] font-light text-[var(--vs-text-title)]">InsForge Mode (Production
+                                Cloud)</h3>
+                            <span class="hud-badge-micro text-sky-400">CURRENT_TARGET</span>
+                        </div>
+                        <p class="text-[13px] text-[var(--vs-text-muted)] mb-4">
+                            ฐานข้อมูล API ประสิทธิภาพสูง รองรับ Offline-first Sync และ Token-based Authentication
+                        </p>
+                        <div
+                            class="p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
                             <code class="text-[13px] text-[var(--vs-text-body)]">
-                                DataServiceConfig.mode =
+                                DataServiceConfig.mode = <span class="text-sky-400">'insforge'</span>;
+                            </code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Tabler Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+    <!-- Mermaid.js -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                background: 'transparent',
+                primaryColor: 'rgba(39, 39, 42, 0.5)',
+                primaryTextColor: '#a1a1aa',
+                primaryBorderColor: 'rgba(63, 63, 70, 0.8)',
+                lineColor: '#52525b',
+                secondaryColor: 'rgba(34, 211, 238, 0.1)',
+                tertiaryColor: 'rgba(34, 211, 238, 0.2)'
+            }
+        });
+    </script>
+</body>
+
+</html>

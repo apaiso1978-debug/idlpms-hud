@@ -39,7 +39,7 @@
             line-height: 1.6;
         }
 
-        .form-input {
+        .vs-input {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: var(--vs-radius);
@@ -51,7 +51,7 @@
             font-size: 14px;
         }
 
-        .form-input:focus {
+        .vs-input:focus {
             border-color: var(--vs-accent);
             background: rgba(var(--vs-bg-card-rgb), 0.3);
         }
@@ -61,7 +61,7 @@
             align-items: center;
             padding: 10px 12px;
             background: rgba(var(--vs-bg-panel-rgb), 0.5);
-            border: 1px solid rgba(63,63,70,0.5);
+            border: 1px solid rgba(63, 63, 70, 0.5);
             border-radius: 3px;
             cursor: pointer;
             transition: all 0.2s;
@@ -76,7 +76,7 @@
             appearance: none;
             width: 18px;
             height: 18px;
-            border: 1px solid rgba(63,63,70,0.5);
+            border: 1px solid rgba(63, 63, 70, 0.5);
             border-radius: 3px;
             background: var(--vs-bg-deep);
             cursor: pointer;
@@ -86,7 +86,9 @@
         }
 
         .subject-checkbox-label input[type="checkbox"]:checked {
-            background: rgba(34,211,238,0.1); color: var(--vs-accent); border: 1px solid rgba(34,211,238,0.3);
+            background: rgba(var(--vs-accent-rgb), 0.1);
+            color: var(--vs-accent);
+            border: 1px solid rgba(var(--vs-accent-rgb), 0.3);
             border-color: var(--vs-accent);
         }
 
@@ -105,7 +107,7 @@
 </head>
 
 <body class="p-6 bg-[var(--vs-bg-main)] text-[var(--vs-text-body)] font-light Thai-Rule">
-    <div class="max-w-4xl mx-auto space-y-6">
+    <div class="w-full space-y-6">
         <!-- Header Section -->
         <header class="flex items-center justify-between mb-8">
             <div class="flex items-center space-x-4">
@@ -121,7 +123,7 @@
                 </div>
             </div>
             <button onclick="goBack()"
-                class="flex items-center space-x-2 px-4 py-2 bg-[var(--vs-bg-panel)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-white/70 hover:bg-[var(--vs-bg-card)] hover:text-white transition-all group">
+                class="flex items-center space-x-2 px-4 py-2 bg-[var(--vs-bg-panel)] border border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] text-white/70 hover:bg-[var(--vs-bg-card)] hover:text-white transition-all group">
                 <i class="icon i-arrow-left w-4 h-4"></i>
                 <span class="Thai-Rule">กลับ</span>
             </button>
@@ -129,11 +131,11 @@
 
         <!-- Main Form Card -->
         <div
-            class="bg-[var(--vs-bg-card)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] overflow-hidden ">
+            class="bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] overflow-hidden ">
             <div
-                class="p-4 border-b border-[var(--vs-border)] bg-[rgba(var(--vs-bg-deep-rgb),0.3)] flex items-center justify-between">
+                class="p-4 border-b border-[rgba(63,63,70,0.5)] bg-[rgba(var(--vs-bg-deep-rgb),0.3)] flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                    <div class="w-2 h-2 rounded-[3px] bg-[var(--vs-accent)] animate-pulse"></div>
+                    <div class="w-2 h-2 rounded-[var(--vs-radius)] bg-[var(--vs-accent)] animate-pulse"></div>
                     <span class="text-[13px] uppercase text-[var(--vs-text-muted)] font-light Thai-Rule">New
                         Personnel Registration Form</span>
                 </div>
@@ -145,7 +147,7 @@
                     <label class="text-[13px] text-[var(--vs-text-muted)] uppercase block mb-2 Thai-Rule">
                         ชื่อ-นามสกุล บุคลากร
                     </label>
-                    <input type="text" id="teacher-name" class="form-input Thai-Rule"
+                    <input type="text" id="teacher-name" class="vs-input Thai-Rule"
                         placeholder="ระบุชื่อ-นามสกุลเต็ม (เช่น นางสาวสมหญิง ใจดี)">
                 </div>
 
@@ -154,7 +156,7 @@
                     <label class="text-[13px] text-[var(--vs-text-muted)] uppercase block mb-3 Thai-Rule">
                         วิชาที่สามารถสอนได้
                     </label>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" id="subject-checkboxes">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2" id="subject-checkboxes">
                         <!-- Checkboxes will be injected here -->
                     </div>
                 </div>
@@ -164,19 +166,19 @@
                     <label class="text-[13px] text-[var(--vs-text-muted)] uppercase block mb-3 Thai-Rule">
                         ภาระงานสูงสุด (Maximum Workload)
                     </label>
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="text-[13px] text-[var(--vs-text-muted)] block mb-2 Thai-Rule">
                                 คาบต่อวัน (สูงสุด)
                             </label>
-                            <input type="number" id="teacher-max-day" class="form-input text-center" value="7" min="1"
+                            <input type="number" id="teacher-max-day" class="vs-input text-center" value="7" min="1"
                                 max="10">
                         </div>
                         <div>
                             <label class="text-[13px] text-[var(--vs-text-muted)] block mb-2 Thai-Rule">
                                 คาบต่อสัปดาห์ (สูงสุด)
                             </label>
-                            <input type="number" id="teacher-max-week" class="form-input text-center" value="35" min="1"
+                            <input type="number" id="teacher-max-week" class="vs-input text-center" value="35" min="1"
                                 max="50">
                         </div>
                     </div>
@@ -185,9 +187,9 @@
 
             <!-- Footer Actions -->
             <div
-                class="p-6 border-t border-[var(--vs-border)] bg-[rgba(var(--vs-bg-deep-rgb),0.3)] flex justify-end space-x-3">
+                class="p-6 border-t border-[rgba(63,63,70,0.5)] bg-[rgba(var(--vs-bg-deep-rgb),0.3)] flex justify-end space-x-3">
                 <button onclick="goBack()"
-                    class="px-6 py-2.5 bg-[var(--vs-bg-panel)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-white/70 hover:bg-[var(--vs-bg-card)] hover:text-white transition-all Thai-Rule">
+                    class="px-6 py-2.5 bg-[var(--vs-bg-panel)] border border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] text-white/70 hover:bg-[var(--vs-bg-card)] hover:text-white transition-all Thai-Rule">
                     ยกเลิก
                 </button>
                 <button onclick="saveNewTeacher()" id="save-btn"

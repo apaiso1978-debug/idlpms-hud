@@ -129,6 +129,12 @@ class AbstractDataService {
     // ----- Passport Operations -----
     async addPassportRecord(userId, record) { throw new Error('Method not implemented'); }
     async getPassport(userId) { throw new Error('Method not implemented'); }
+
+    // ----- Person-First Architecture Operations -----
+    async getPerson(personId) { throw new Error('Method not implemented'); }
+    async getStudentProfile(personId) { throw new Error('Method not implemented'); }
+    async getHealthRecords(personId) { throw new Error('Method not implemented'); }
+    async getWorkPassport(personId) { throw new Error('Method not implemented'); }
 }
 
 // ============================================================================
@@ -298,12 +304,52 @@ class LocalDataService extends AbstractDataService {
         this._data.users[userId] = {
             ...this._data.users[userId],
             ...data,
-            _lastModified: Date.now()
+            _updated: Date.now()
         };
-
-        this._persist(); // 🧬 Persist changes
+        this._persist();
         return this._data.users[userId];
     }
+
+    // ----- Person-First Architecture Operations -----
+    async getPerson(personId) {
+        this._ensureInitialized();
+        return this._data.persons ? this._data.persons[personId] : null;
+    }
+
+    async getStudentProfile(personId) {
+        this._ensureInitialized();
+        if (!this._data.studentProfiles) return null;
+        for (const [id, profile] of Object.entries(this._data.studentProfiles)) {
+            if (profile.person_id === personId) {
+                return { id, ...profile };
+            }
+        }
+        return null;
+    }
+
+    async getHealthRecords(personId) {
+        this._ensureInitialized();
+        if (!this._data.healthRecords) return [];
+        const records = [];
+        for (const [id, record] of Object.entries(this._data.healthRecords)) {
+            if (record.person_id === personId) {
+                records.push({ id, ...record });
+            }
+        }
+        return records.sort((a, b) => new Date(b.record_date) - new Date(a.record_date));
+    }
+
+    async getWorkPassport(personId) {
+        this._ensureInitialized();
+        if (!this._data.workPassports) return null;
+        for (const [id, passport] of Object.entries(this._data.workPassports)) {
+            if (passport.person_id === personId) {
+                return { id, ...passport };
+            }
+        }
+        return null;
+    }
+
 
     // ----- School Operations -----
 

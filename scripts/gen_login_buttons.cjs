@@ -7,8 +7,8 @@ const path = require('path');
 
 // Real teachers from data.js  [key, displayName, classLabel, borderColor]
 const teachers = [
-    // TEA_WORACHAI first (Developer/Admin — special purple styling)
-    ['TEA_WORACHAI', 'ครูวรชัย', 'Dev/Admin', 'purple'],
+    // 22222222-2222-4222-8222-222222222222 first (Developer/Admin — special purple styling)
+    ['22222222-2222-4222-8222-222222222222', 'ครูวรชัย', 'Dev/Admin', 'purple'],
     // Homeroom teachers
     ['TEA_M_01', 'ครูนิติพร', 'อ.2', 'emerald'],
     ['TEA_M_02', 'ครูสุภาภรณ์', 'อ.3', 'emerald'],

@@ -23,7 +23,7 @@ class TooltipManager {
             font-size: 12px;
             font-family: 'Sarabun', sans-serif;
             font-weight: 300;
-            border: 1px solid var(--vs-border);
+            border: 1px solid rgba(63, 63, 70, 0.5);
             border-radius: 3px;
             z-index: 10000;
             pointer-events: none;

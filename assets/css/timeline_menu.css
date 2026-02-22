@@ -9,7 +9,6 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
-    margin-bottom: 4px;
 }
 
 /* ─── Parent (Group Header) ─── */
@@ -18,13 +17,17 @@
     align-items: center;
     width: 100%;
     text-align: left;
-    padding: 4px 12px;
+    padding: 8px 12px;
+    /* Standardized to py-2 px-3 per Iron Rule 14 */
     border-radius: var(--vs-radius);
     border: none;
+    border-left: 1px solid transparent;
+    /* PREVENT 1px SHIFT WHEN ACTIVE */
     background: transparent;
     cursor: pointer;
     transition: all 0.2s ease;
-    gap: 10px;
+    gap: 8px;
+    /* Changed from 10px to 8px for Group Headers (Rule says gap-2/8px for headers) */
     position: relative;
 }
 
@@ -32,10 +35,14 @@
     background: var(--vs-bg-deep);
 }
 
+.timeline-parent-item.active {
+    background: var(--vs-bg-deep);
+    border-left: 1px solid var(--vs-accent);
+}
+
 .timeline-parent-item .icon {
     width: 16px;
     height: 16px;
-    color: var(--vs-accent);
     flex-shrink: 0;
 }
 
@@ -43,7 +50,6 @@
     font-size: 13px;
     /* Standard HUD 14px */
     font-weight: 300;
-    color: var(--vs-accent);
     flex: 1;
 }
 
@@ -126,13 +132,17 @@
     align-items: center;
     width: 100%;
     text-align: left;
-    padding: 4px 12px;
+    padding: 8px 12px;
+    /* Standardized to py-2 px-3 per Iron Rule 14 */
     border-radius: var(--vs-radius);
     cursor: pointer;
     transition: all 0.15s ease;
-    gap: 10px;
+    gap: 6px;
+    /* Changed from 10px to 6px (gap-1.5) for inline items */
     background: transparent;
     border: none;
+    border-left: 1px solid transparent;
+    /* PREVENT 1px SHIFT WHEN ACTIVE */
 }
 
 .timeline-child-item:hover {
@@ -142,6 +152,16 @@
 .timeline-child-item.active {
     background: var(--vs-bg-deep);
     border-left: 1px solid var(--vs-accent);
+}
+
+/* ─── Explorer Panel Specific Node Overrides ─── */
+#panel-explorer .timeline-parent-item:hover i {
+    color: inherit;
+    /* Prevent white washout, maintain specific inline color */
+}
+
+#panel-explorer .timeline-parent-item.active i {
+    color: inherit;
 }
 
 /* ─── Timeline Node (circle on the rail) ─── */

@@ -41,8 +41,15 @@ window.HUD_NOTIFY = {
         const toast = document.createElement('div');
         toast.className = `vs-toast ${type}`;
         toast.innerHTML = `
-            <div class="vs-toast-title">${title}</div>
-            <div class="vs-toast-text Thai-Rule">${text}</div>
+            <div class="vs-icon-layout">
+                <div class="icon-col text-[var(--vs-text-title)]" style="margin-top: 1px;">
+                    <i class="i-information-circle w-4 h-4"></i>
+                </div>
+                <div class="content-col Thai-Rule">
+                    <div class="vs-toast-title">${title}</div>
+                    <div class="vs-toast-text">${text}</div>
+                </div>
+            </div>
         `;
 
         toast.onclick = () => this.dismiss(toast);
@@ -56,6 +63,67 @@ window.HUD_NOTIFY = {
     dismiss(toast) {
         toast.classList.add('toast-out');
         setTimeout(() => toast.remove(), 300);
+    },
+
+    confirm(title, text, type = 'warning') {
+        return new Promise((resolve) => {
+            if (!this.container) {
+                resolve(confirm(title + '\n\n' + text));
+                return;
+            }
+
+            const modalOverlay = document.createElement('div');
+            Object.assign(modalOverlay.style, {
+                position: 'fixed',
+                top: '0', left: '0', right: '0', bottom: '0',
+                backgroundColor: 'rgba(0,0,0,0.6)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: '10000',
+                backdropFilter: 'blur(10px)'
+            });
+
+            const modal = document.createElement('div');
+            modal.className = `vs-card p-6 border border-[var(--vs-${type})]`;
+            Object.assign(modal.style, {
+                backgroundColor: 'var(--vs-bg-panel)',
+                width: '400px',
+                maxWidth: '90%',
+                boxShadow: `0 0 20px rgba(var(--vs-${type}-rgb), 0.15)`
+            });
+
+            modal.innerHTML = `
+            <div class="flex items-start gap-3">
+                <div class="text-[var(--vs-${type})] shrink-0 mt-0.5"><i class="icon i-warning w-6 h-6"></i></div>
+                <div class="flex-1">
+                    <div class="text-[var(--vs-text-title)] text-[15px] mb-1">${title}</div>
+                    <div class="text-[var(--vs-text-muted)] text-[13px] mb-5 leading-snug whitespace-pre-wrap">${text.replace(/\n+/g, '\n')}</div>
+                    <div class="flex justify-end gap-3 pt-2">
+                        <button class="neon-btn neon-btn-ghost px-5" id="hud-confirm-cancel">ยกเลิก</button>
+                        <button class="neon-btn neon-btn-${type} px-5" id="hud-confirm-ok">ยืนยัน</button>
+                    </div>
+                </div>
+            </div>
+        `;
+            modalOverlay.appendChild(modal);
+            document.body.appendChild(modalOverlay);
+
+            const cleanup = () => {
+                modalOverlay.style.opacity = '0';
+                setTimeout(() => modalOverlay.remove(), 200);
+            };
+
+            modal.querySelector('#hud-confirm-cancel').onclick = () => {
+                cleanup();
+                resolve(false);
+            };
+
+            modal.querySelector('#hud-confirm-ok').onclick = () => {
+                cleanup();
+                resolve(true);
+            };
+        });
     },
 
     setBadge(key, active) {

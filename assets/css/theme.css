@@ -143,6 +143,39 @@ textarea {
     transition: box-shadow 0.2s;
 }
 
+/*
+======================================================================
+  IRON RULE: Icon-Text Alignment (.vs-icon-layout)
+======================================================================
+  Any layout containing a leading icon with multi-line text MUST 
+  left-align the subsequent lines with the text body, NOT underneath 
+  the icon. Used across feeds, delegation, notifications, etc.
+*/
+.vs-icon-layout {
+    display: flex;
+    align-items: flex-start;
+    /* Keep icon at top */
+    gap: 8px;
+    /* Standard optical spacing */
+}
+
+.vs-icon-layout>.icon-col {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* Optical alignment for Thai font baseline */
+    margin-top: 1px;
+}
+
+.vs-icon-layout>.content-col {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    /* Prevent flex-item blowout */
+}
+
 button {
     background: transparent;
     border: none;
@@ -211,7 +244,8 @@ select {
     border-radius: var(--vs-radius);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    padding: 8px;
+    /* Rule 10: Standard padding 24px */
+    padding: 24px;
 }
 
 .dna-zone-header {
@@ -233,6 +267,121 @@ select {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* ═══════════════════════════════════════════════════
+   IRON FORGE SINGLE-SOURCE COMPONENTS
+   These components automatically inherit Razor-Sharp rules
+   ═══════════════════════════════════════════════════ */
+
+/* Component: .vs-card */
+.vs-card {
+    background: var(--vs-bg-card);
+    border: 1px solid rgba(63, 63, 70, 0.5);
+    /* 50% opacity border */
+    border-radius: var(--vs-radius);
+    /* 3px */
+    padding: 16px;
+    /* standard internal padding */
+    transition: all 0.2s ease;
+}
+
+.vs-card:hover {
+    border-color: rgba(var(--vs-accent-rgb), 0.3);
+}
+
+/* Component: .vs-input */
+.vs-input {
+    background: var(--vs-bg-deep);
+    /* Sunken */
+    border: none;
+    /* No border for inputs */
+    border-radius: var(--vs-radius);
+    /* 3px */
+    color: var(--vs-text-body);
+    font-size: 13px;
+    font-weight: 300;
+    padding: 8px 12px;
+    min-height: 36px;
+    outline: none;
+    color-scheme: dark;
+    transition: box-shadow 0.2s;
+}
+
+.vs-input:focus {
+    box-shadow: 0 0 0 1px var(--vs-accent);
+}
+
+/* Component: .vs-progress */
+.vs-progress-track {
+    background: rgba(255, 255, 255, 0.08);
+    /* 8% white */
+    height: 3px;
+    /* Iron Rule precision */
+    border-radius: 3px;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+}
+
+.vs-progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+/* Component: .vs-badge */
+.vs-badge-neon {
+    background: rgba(var(--vs-accent-rgb), 0.1);
+    color: var(--vs-accent);
+    border: 1px solid rgba(var(--vs-accent-rgb), 0.3);
+    font-weight: 300;
+    font-size: 13px;
+    padding: 4px 12px;
+    border-radius: var(--vs-radius);
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+}
+
+.vs-badge-neon:hover {
+    background: rgba(var(--vs-accent-rgb), 0.15);
+    border-color: rgba(var(--vs-accent-rgb), 0.5);
+}
+
+.vs-badge-neon.warning {
+    background: rgba(var(--vs-warning-rgb), 0.1);
+    color: var(--vs-warning);
+    border-color: rgba(var(--vs-warning-rgb), 0.3);
+}
+
+.vs-badge-neon.warning:hover {
+    background: rgba(var(--vs-warning-rgb), 0.15);
+    border-color: rgba(var(--vs-warning-rgb), 0.5);
+}
+
+.vs-badge-neon.success {
+    background: rgba(var(--vs-success-rgb), 0.1);
+    color: var(--vs-success);
+    border-color: rgba(var(--vs-success-rgb), 0.3);
+}
+
+.vs-badge-neon.success:hover {
+    background: rgba(var(--vs-success-rgb), 0.15);
+    border-color: rgba(var(--vs-success-rgb), 0.5);
+}
+
+.vs-badge-neon.danger {
+    background: rgba(var(--vs-danger-rgb), 0.1);
+    color: var(--vs-danger);
+    border-color: rgba(var(--vs-danger-rgb), 0.3);
+}
+
+.vs-badge-neon.danger:hover {
+    background: rgba(var(--vs-danger-rgb), 0.15);
+    border-color: rgba(var(--vs-danger-rgb), 0.5);
 }
 
 /* Role Badges & Global Neon Aesthetic */
@@ -494,12 +643,49 @@ select option:hover {
 
 .vs-panel-header {
     height: 48px;
+    min-height: 48px;
+    /* Force Iron Rule 48px */
+    max-height: 48px;
+    flex-shrink: 0;
+    /* Prevent flex overflow compression */
     /* 48px Rule — aligns with main header */
-    padding: 0 24px;
+    padding: 0 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-size: 13px;
+    border-bottom: 1px solid var(--vs-border);
+}
+
+/* ═══════════════════════════════════════════════════
+   UNIFIED PAGE FRAMEWORK (Rule 1 & Rule 20)
+   Standard layout for all functional modules
+   ═══════════════════════════════════════════════════ */
+.vs-page-frame {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+}
+
+.vs-page-header {
+    height: 48px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    /* Rule 13: Border-bottom unity */
+    border-bottom: 1px solid rgba(63, 63, 70, 0.5);
+}
+
+.vs-page-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    /* Rule 21: Full Fluid scaling */
+    width: 100%;
 }
 
 .vs-sidebar-panel {
@@ -581,6 +767,8 @@ select option:hover {
     transition: all .2s;
     color: var(--vs-text-title);
     padding: 3px 16px;
+    border-left: 1px solid transparent;
+    /* PREVENT 1px SHIFT */
 }
 
 .nav-item:hover,
@@ -668,6 +856,11 @@ select option:hover {
 .i-cog {
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20fill%3D%27none%27%20viewBox%3D%270%200%2024%2024%27%20stroke%3D%27black%27%3E%3Cpath%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20stroke-width%3D%271.5%27%20d%3D%27M10.325%204.317c.426-1.756%202.924-1.756%203.35%200a1.724%201.724%200%20002.573%201.066c1.543-.94%203.31.826%202.37%202.37a1.724%201.724%200%20001.065%202.572c1.756.426%201.756%202.924%200%203.35a1.724%201.724%200%2000-1.066%202.573c.94%201.543-.826%203.31-2.37%202.37a1.724%201.724%200%2000-2.572%201.065c-.426%201.756-2.924%201.756-3.35%200a1.724%201.724%200%2000-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724%201.724%200%2000-1.065-2.572c-1.756-.426-1.756-2.924%200-3.35a1.724%201.724%200%20001.066-2.573c-.94-1.543.826-3.31%202.37-2.37.996.608%202.296.07%202.572-1.065z%27%2F%3E%3Cpath%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20stroke-width%3D%271.5%27%20d%3D%27M15%2012a3%203%200%2011-6%200%203%203%200%20016%200z%27%2F%3E%3C%2Fsvg%3E");
     mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20fill%3D%27none%27%20viewBox%3D%270%200%2024%2024%27%20stroke%3D%27black%27%3E%3Cpath%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20stroke-width%3D%271.5%27%20d%3D%27M10.325%204.317c.426-1.756%202.924-1.756%203.35%200a1.724%201.724%200%20002.573%201.066c1.543-.94%203.31.826%202.37%202.37a1.724%201.724%200%20001.065%202.572c1.756.426%201.756%202.924%200%203.35a1.724%201.724%200%2000-1.066%202.573c.94%201.543-.826%203.31-2.37%202.37a1.724%201.724%200%2000-2.572%201.065c-.426%201.756-2.924%201.756-3.35%200a1.724%201.724%200%2000-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724%201.724%200%2000-1.065-2.572c-1.756-.426-1.756-2.924%200-3.35a1.724%201.724%200%20001.066-2.573c-.94-1.543.826-3.31%202.37-2.37.996.608%202.296.07%202.572-1.065z%27%2F%3E%3Cpath%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20stroke-width%3D%271.5%27%20d%3D%27M15%2012a3%203%200%2011-6%200%203%203%200%20016%200z%27%2F%3E%3C%2Fsvg%3E")
+}
+
+.i-warning {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20fill%3D%27none%27%20viewBox%3D%270%200%2024%2024%27%20stroke%3D%27currentColor%27%20stroke-width%3D%271.5%27%3E%3Cpath%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20d%3D%27M12%209v2m0%204h.01m-6.938%204h13.856c1.54%200%202.502-1.667%201.732-3L13.732%204c-.77-1.333-2.694-1.333-3.464%200L3.34%2016c-.77%201.333.192%203%201.732%203z%27%2F%3E%3C%2Fsvg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20fill%3D%27none%27%20viewBox%3D%270%200%2024%2024%27%20stroke%3D%27currentColor%27%20stroke-width%3D%271.5%27%3E%3Cpath%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%20d%3D%27M12%209v2m0%204h.01m-6.938%204h13.856c1.54%200%202.502-1.667%201.732-3L13.732%204c-.77-1.333-2.694-1.333-3.464%200L3.34%2016c-.77%201.333.192%203%201.732%203z%27%2F%3E%3C%2Fsvg%3E");
 }
 
 

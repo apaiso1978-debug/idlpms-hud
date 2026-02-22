@@ -41,10 +41,66 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         if (avatarContainer) {
             avatarContainer.innerText = user.avatar;
-            avatarContainer.style.background = `color-mix(in srgb, var(--${user.color}, #71717a), transparent 85%)`;
-            avatarContainer.style.border = `1px solid color-mix(in srgb, var(--${user.color}, #71717a), transparent 60%)`;
+            avatarContainer.style.background = `color-mix(in srgb, var(--${user.color}, #71717a) 15%, transparent)`;
+            avatarContainer.style.border = `1px solid color-mix(in srgb, var(--${user.color}, #71717a) 30%, transparent)`;
             avatarContainer.style.color = `var(--${user.color}, #71717a)`;
-            avatarContainer.className = `w-8 h-8 rounded-[3px] flex items-center justify-center font-light text-[13px] flex-shrink-0`;
+            avatarContainer.className = `w-8 h-8 rounded-[var(--vs-radius)] flex items-center justify-center font-light text-[13px] flex-shrink-0`;
+        }
+
+        // Feature: Dynamic Role Switcher (Single Identity)
+        const switcherList = document.getElementById('role-switcher-list');
+        if (switcherList && user.availableRoles) {
+            switcherList.innerHTML = ''; // Clear hardcoded
+            user.availableRoles.forEach(roleId => {
+                const roleData = IDLPMS_DATA.users[roleId];
+                if (!roleData) return;
+                const roleConfig = IDLPMS_DATA.roles[roleData.role];
+                const isActive = roleId === user.id;
+
+                const btn = document.createElement('button');
+                // Applying Neon Aesthetic (Rule 6) and Perfect Alignment
+                btn.className = `w-full text-left px-3 py-2.5 rounded-[var(--vs-radius)] transition-all group 
+                    ${isActive ? 'bg-[rgba(34,211,238,0.08)] border border-[rgba(34,211,238,0.3)] shadow-[0_0_8px_rgba(34,211,238,0.1)]' : 'bg-transparent border border-transparent hover:bg-[rgba(255,255,255,0.03)]'}`;
+
+                btn.innerHTML = `
+                    <div class="flex items-start gap-2.5 w-full text-left">
+                        <i class="icon ${roleConfig.icon || 'i-user'} h-4 w-4 mt-[2px] flex-shrink-0 ${isActive ? 'text-[var(--vs-accent)]' : 'opacity-40'}"></i>
+                        <div class="flex flex-col min-w-0 flex-1 gap-1">
+                            <span class="text-[13px] truncate ${isActive ? 'text-[var(--vs-accent)]' : 'text-[var(--vs-text-title)]'}">${roleData.fullName}</span>
+                            <div class="text-[13px] text-[var(--vs-text-muted)] opacity-70 truncate flex items-center gap-1.5 w-full">
+                                <span class="uppercase">${roleConfig.name}</span>
+                                ${roleData.org || roleData.homeroomClass || roleData.classId ? `<span class="opacity-50">•</span> <span class="truncate">${roleData.org || roleData.homeroomClass || roleData.classId}</span>` : ''}
+                            </div>
+                        </div>
+                        ${isActive ? '<i class="icon i-check h-4 w-4 text-[var(--vs-accent)] flex-shrink-0 mt-1"></i>' : `<i class="icon i-chevron-right h-4 w-4 opacity-0 group-hover:opacity-60 transition-opacity text-[var(--vs-text-muted)] flex-shrink-0 mt-1"></i>`}
+                    </div>
+                `;
+
+                if (!isActive) {
+                    btn.onclick = () => window.switchRole(roleId);
+                }
+                setTimeout(() => switcherList.appendChild(btn), 50); // Small stagger just in case
+            });
+        }
+
+        // Feature: Delegation (Mission Control) Trigger is now Universal (Available for all roles)
+        const delegToggleBtn = document.getElementById('deleg-toggle-btn');
+        if (delegToggleBtn) {
+            delegToggleBtn.style.display = 'flex'; // Ensure it is visible for everyone
+        }
+
+        // Feature: Check Inbox for Pending Deliverables to Light Up HUD Badge
+        try {
+            const raw = localStorage.getItem('idlpms_delegations_v1');
+            if (raw) {
+                const delegations = JSON.parse(raw);
+                const pendingTasks = delegations.filter(d => d.assignee === user.id && d.status === 'PENDING');
+                if (pendingTasks.length > 0 && window.HUD_NOTIFY) {
+                    setTimeout(() => window.HUD_NOTIFY.setBadge('manage', true), 500); // delay to ensure notify is ready
+                }
+            }
+        } catch (e) {
+            console.warn('HUD Inbox Badge logic failed:', e);
         }
     }
 
@@ -52,6 +108,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         await app.init();
         syncUser();
+
+        // Ensure the Mission Control Timeline Menus are painted immediately on load
+        if (window.ManagementEngine) {
+            window.ManagementEngine.renderDashboard();
+        }
     } catch (err) {
         console.error('System bootstrap failed:', err);
     }
@@ -118,51 +179,75 @@ document.addEventListener('DOMContentLoaded', async () => {
                 } else if (view === 'manage') {
                     if (window.ManagementEngine) window.ManagementEngine.renderDashboard();
                 }
-            }
-        });
-    });
 
-    // Page Navigation
-    navItems.forEach(item => {
-        item.addEventListener('click', () => {
-            const page = item.getAttribute('data-page');
-            const span = item.querySelector('span');
-            const pageName = item.getAttribute('data-name') || (span ? span.innerText : 'Profile');
+                // SECURITY/UX ISOLATION: Force hide delegation elements outside Mission Control
+                const delegSidebar = document.getElementById('delegation-sidebar');
+                const btnSubmitMission = document.getElementById('btn-submit-mission');
+                const delegToggleBtn = document.getElementById('deleg-toggle-btn');
 
-            if (page) {
-                if (lastActiveNav) lastActiveNav.classList.remove('active');
-                item.classList.add('active');
-                lastActiveNav = item;
-
-                mainFrame.src = page;
-                if (breadcrumbPage) {
-                    breadcrumbPage.innerText = pageName.split('(')[0].trim();
+                if (view !== 'manage') {
+                    if (delegSidebar) delegSidebar.style.display = 'none';
+                    if (btnSubmitMission) btnSubmitMission.style.display = 'none';
+                    if (delegToggleBtn) delegToggleBtn.style.display = 'none';
+                } else {
+                    if (delegToggleBtn) delegToggleBtn.style.display = 'flex';
                 }
             }
         });
     });
 
+    // Page Navigation
+    const bindNavItems = () => {
+        const navItemsList = document.querySelectorAll('.timeline-parent-item, .timeline-child-item');
+        navItemsList.forEach(item => {
+            // Prevent multiple bindings
+            if (item.dataset.bound) return;
+            item.dataset.bound = 'true';
+
+            item.addEventListener('click', () => {
+                const page = item.getAttribute('data-page');
+                const span = item.querySelector('span');
+                const pageName = item.getAttribute('data-name') || (span ? span.innerText : 'Profile');
+
+                if (page) {
+                    if (lastActiveNav) lastActiveNav.classList.remove('active');
+                    item.classList.add('active');
+                    lastActiveNav = item;
+
+                    mainFrame.src = page;
+                    if (breadcrumbPage) {
+                        breadcrumbPage.innerText = pageName.split('(')[0].trim();
+                    }
+                }
+            });
+        });
+    };
+    bindNavItems(); // Initial binding
+
+    // Expose global nav rebinder to be called if sidebar changes
+    window.rebindNavItems = bindNavItems;
+
     // Role Switching Logic
-    window.switchRole = async (userId) => {
-        console.log("HUD: Switching Session Identity to", userId);
+    window.switchRole = async (roleId) => {
+        console.log("HUD: Switching Context Role to", roleId);
 
         const app = AppBootstrap.getInstance();
         if (!app.isReady) await app.init();
 
         try {
-            await app.auth.login(userId);
+            await app.auth.switchActiveRole(roleId);
 
-            // Show a HUD Notification before reloading
+            // Show a HUD Notification before reloading to apply context
             if (window.HUD_NOTIFY) {
-                window.HUD_NOTIFY.toast('IDENTITY_SYNC', `SWITCHING PERSONA... PLEASE STAND BY`, 'accent', 2000);
+                window.HUD_NOTIFY.toast('ROLE_SWITCH', `เปลี่ยนสิทธิการเข้าถึงเป็น ${roleId}...`, 'accent', 2000);
             }
 
             setTimeout(() => {
                 location.reload();
-            }, 1000);
+            }, 800);
         } catch (err) {
             console.error('Switch role failed:', err);
-            alert('ไม่สามารถสลับตัวตนได้: ' + err.message);
+            if (window.HUD_NOTIFY) HUD_NOTIFY.toast('เกิดข้อผิดพลาด', 'ไม่สามารถสลับตัวตนได้: ' + err.message, 'danger');
         }
     };
-});
+}); // End of DOMContentLoaded

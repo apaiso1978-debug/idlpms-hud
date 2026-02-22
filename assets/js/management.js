@@ -273,6 +273,8 @@ window.ManagementEngine = {
         },
     },
 
+
+
     // Current quiz state for anti-guessing
     quizState: {
         wrongStreak: 0,
@@ -434,7 +436,7 @@ window.ManagementEngine = {
 
         // 🧠 Real-time Transparency: Show Neural Star (1px SVG)
         if (adjustedValue >= 5 || metadata.forceToast) {
-            this.showNeuralStarToast(dim, adjustedValue, signal.action);
+            window.DNAHarvester?.showNeuralStarToast(dim, adjustedValue, signal.action);
         }
 
         this.broadcastDNAUpdate();
@@ -453,35 +455,7 @@ window.ManagementEngine = {
         return Math.max(0.1, decay);
     },
 
-    /**
-     * 🧠 Neural Star Toast (Transparency UI)
-     * Standard: 1px SVG (Iron Rules)
-     */
-    showNeuralStarToast(dim, value, action) {
-        // Remove existing toast if any (keep it clean)
-        const oldToast = document.getElementById('neural-star-toast');
-        if (oldToast) oldToast.remove();
 
-        const toast = document.createElement('div');
-        toast.id = 'neural-star-toast';
-        toast.className = 'fixed bottom-24 left-1/2 -translate-x-1/2 z-[9999] pointer-events-none animate-fade-in-up';
-        toast.innerHTML = `
-            <div class="flex items-center gap-3 px-4 py-2 bg-[rgba(var(--vs-bg-deep-rgb),0.9)] border border-[rgba(var(--vs-border-rgb),0.3)] rounded-[var(--vs-radius)] backdrop-blur-md">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="#fbbf24" class="w-5 h-5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
-                </svg>
-                <div class="flex flex-col">
-                    <span class="text-[10px] text-[var(--vs-text-muted)] font-light uppercase Thai-Rule">ตรวจพบสัญญาณจากระบบ</span>
-                    <span class="text-[13px] font-light text-[var(--vs-text-title)] Thai-Rule">บันทึกข้อมูล DNA: <span class="text-[#fbbf24] font-bold">+${window.formatNumberStandard(value)}%</span></span>
-                    <span class="text-[9px] text-[var(--vs-text-muted)] font-light italic truncate max-w-[150px] opacity-60">${action}</span>
-                </div>
-            </div>
-        `;
-
-        document.body.appendChild(toast);
-        setTimeout(() => toast?.classList.add('opacity-0'), 2500);
-        setTimeout(() => toast?.remove(), 3000);
-    },
 
 
     /**
@@ -970,52 +944,81 @@ window.ManagementEngine = {
                 TimelineMenu.render(`tl-group-${i}`, cfg);
             });
         }
-        // --- Delegation Panel: Auto-render in sidebar for Director roles ---
-        const userRole = currentUser?.role ||
-            JSON.parse(localStorage.getItem('CURRENT_USER') || '{}').role;
-        if (window.DelegationPanel && ['SCHOOL_DIR', 'ESA_DIR'].includes(userRole)) {
-            requestAnimationFrame(() => {
-                // Avoid duplicates
-                if (document.getElementById('sidebar-deleg-panel')) return;
-                const delegContainer = document.createElement('div');
-                delegContainer.id = 'sidebar-deleg-panel';
-                delegContainer.className = 'mt-3 border-t border-[var(--vs-border)] pt-3';
-                container.appendChild(delegContainer);
-
-                const pagePath = window.currentPagePath || 'GENERAL';
-                DelegationPanel.render('sidebar-deleg-panel', {
-                    moduleId: pagePath,
-                    moduleTitle: 'งานมอบหมายทั่วไป'
-                });
-                // Load teacher dropdown
-                if (DelegationPanel._loadTeachers) {
-                    DelegationPanel._loadTeachers();
-                }
-            });
-        }
     },
 
     /**
      * Get timeline menu configs by role
      */
     getRoleTimelineConfigs(user) {
+        let configs = [];
         switch (user.role) {
             case 'SCHOOL_DIR':
-                return this.getAdminTimelineConfigs();
+                configs = this.getAdminTimelineConfigs(); break;
             case 'ESA_DIR':
-                return this.getAdminTimelineConfigs(); // same groups
+                configs = this.getAdminTimelineConfigs(); break; // same groups
             case 'OBEC':
             case 'MOE':
-                return this.getAdminTimelineConfigs();
+                configs = this.getAdminTimelineConfigs(); break;
             case 'TEACHER':
-                return this.getTeacherTimelineConfigs();
+                configs = this.getTeacherTimelineConfigs(); break;
             case 'STUDENT':
-                return this.getStudentTimelineConfigs();
+                configs = this.getStudentTimelineConfigs(); break;
             case 'PARENT':
-                return this.getParentTimelineConfigs();
+                configs = this.getParentTimelineConfigs(); break;
             default:
-                return [];
+                configs = [];
         }
+
+        // --- INJECT MISSION: DIRECTIVE ---
+        try {
+            const userId = localStorage.getItem('idlpms_active_user_id') || localStorage.getItem('current_user_id');
+            const raw = localStorage.getItem('idlpms_delegations_v1');
+            if (raw && userId) {
+                const delegations = JSON.parse(raw);
+                // Inbox Zero: Only show PENDING and IN_PROGRESS tasks.
+                const inboxTasks = delegations.filter(d =>
+                    d.assignee === userId &&
+                    (d.status === 'PENDING' || d.status === 'IN_PROGRESS')
+                );
+
+                if (inboxTasks.length > 0) {
+                    const directiveChildren = inboxTasks.map((task, index) => {
+                        const isAdhoc = task.moduleId && String(task.moduleId).startsWith('ADHOC');
+                        const isPending = task.status === 'PENDING';
+
+                        let badgeStr = '';
+                        if (isPending) badgeStr = 'ACCEPT';
+                        else if (task.status === 'IN_PROGRESS') badgeStr = 'IN PROG';
+
+                        let pageRoute = `__SYSTEM_TASK__${task.moduleId}`;
+                        if (isPending && !isAdhoc) {
+                            pageRoute = `__ACCEPT_MISSION__${task.id}`;
+                        } else if (isAdhoc) {
+                            pageRoute = 'pages/teacher_inbox.html';
+                        }
+
+                        return {
+                            name: task.moduleTitle || 'ภารกิจสั่งการ',
+                            icon: isAdhoc ? 'i-chat-bubble-left-ellipsis' : 'i-lightning',
+                            page: pageRoute,
+                            action: task.moduleId, // Trigger the action if defined
+                            badge: badgeStr
+                        };
+                    });
+
+                    // Prepend to top
+                    configs.unshift({
+                        parent: { name: 'Mission: Directive', icon: 'i-command-line', page: '#', active: true, colorClass: 'text-rose-400' },
+                        children: directiveChildren,
+                        activeItem: directiveChildren[0].action
+                    });
+                }
+            }
+        } catch (e) {
+            console.warn('[ManagementEngine] Failed to read delegations for Timeline configs:', e);
+        }
+
+        return configs;
     },
 
     /**
@@ -1025,7 +1028,7 @@ window.ManagementEngine = {
         return [
             // Group 0: Dashboard ผอ. (Director Command Center)
             {
-                parent: { name: 'Dashboard ผอ.', icon: 'i-home', page: 'pages/director_dashboard.html', active: true },
+                parent: { name: 'Dashboard ผอ.', icon: 'i-home', page: 'pages/director_dashboard.html', active: true, colorClass: 'text-cyan-400' },
                 children: [
                     { name: 'Overview โรงเรียน', icon: 'i-chart', page: 'pages/director_dashboard.html', action: 'dir-overview' },
                     { name: 'กล่องรออนุมัติ', icon: 'i-inbox', page: 'pages/director_inbox.html', action: 'dir-inbox', badge: 3 },
@@ -1036,7 +1039,7 @@ window.ManagementEngine = {
             },
             // Group 1: วิชาการ (Academic Affairs)
             {
-                parent: { name: 'วิชาการ', icon: 'i-book', page: 'pages/schedule/domain1.html' },
+                parent: { name: 'วิชาการ', icon: 'i-book', page: 'pages/schedule/domain1.html', colorClass: 'text-emerald-400' },
                 children: [
                     { name: 'ตารางสอน (Domain 1)', icon: 'i-calendar', page: 'pages/schedule/domain1.html', action: 'schedule-d1' },
                     { name: 'งานสนับสนุน (Domain 2)', icon: 'i-shield', page: 'pages/schedule/domain2.html', action: 'schedule-d2' },
@@ -1051,7 +1054,7 @@ window.ManagementEngine = {
             },
             // Group 2: บุคคล (Personnel Management)
             {
-                parent: { name: 'บุคคล', icon: 'i-users', page: 'pages/teacher_management.html' },
+                parent: { name: 'บุคคล', icon: 'i-users', page: 'pages/teacher_management.html', colorClass: 'text-amber-400' },
                 children: [
                     { name: 'ฐานข้อมูลบุคลากร', icon: 'i-users', page: 'pages/teacher_management.html', action: 'manage-personnel' },
                     { name: 'ใบลาบุคลากร', icon: 'i-document-text', page: 'pages/leave_approval.html', action: 'leave-approval' },
@@ -1064,7 +1067,7 @@ window.ManagementEngine = {
             },
             // Group 3: กิจการนักเรียน (Student Affairs)
             {
-                parent: { name: 'กิจการนักเรียน', icon: 'i-academic', page: 'pages/students.html' },
+                parent: { name: 'กิจการนักเรียน', icon: 'i-academic', page: 'pages/students.html', colorClass: 'text-pink-400' },
                 children: [
                     { name: 'ทะเบียนนักเรียน', icon: 'i-users', page: 'pages/students.html', action: 'student-registry' },
                     { name: 'เพิ่ม/รับนักเรียน', icon: 'i-user-plus', page: 'pages/student_input.html', action: 'student-add' },
@@ -1076,7 +1079,7 @@ window.ManagementEngine = {
             },
             // Group 4: งบประมาณ (Budget Management)
             {
-                parent: { name: 'งบประมาณ', icon: 'i-database', page: 'pages/budget.html' },
+                parent: { name: 'งบประมาณ', icon: 'i-database', page: 'pages/budget.html', colorClass: 'text-sky-400' },
                 children: [
                     { name: 'แผนงบประมาณ', icon: 'i-document', page: 'pages/budget_plan.html', action: 'budget-plan', locked: true },
                     { name: 'ติดตามเบิกจ่าย', icon: 'i-chart', page: 'pages/budget_tracker.html', action: 'budget-track', locked: true },
@@ -1085,7 +1088,7 @@ window.ManagementEngine = {
             },
             // Group 5: บริหารทั่วไป (General Administration)
             {
-                parent: { name: 'บริหารทั่วไป', icon: 'i-cog', page: 'pages/school_setup.html' },
+                parent: { name: 'บริหารทั่วไป', icon: 'i-cog', page: 'pages/school_setup.html', colorClass: 'text-indigo-400' },
                 children: [
                     { name: 'โครงสร้างสถานศึกษา', icon: 'i-office', page: 'pages/school_setup.html', action: 'school-setup' },
                     { name: 'Smart Config (ผอ.)', icon: 'i-cog', page: 'pages/director_config.html', action: 'dir-config', directorOnly: true },
@@ -1095,7 +1098,7 @@ window.ManagementEngine = {
             },
             // Group 6: ประกันคุณภาพ & รายงาน (QA & Reports)
             {
-                parent: { name: 'ประกันคุณภาพ', icon: 'i-chart', page: 'pages/admin_stats.html' },
+                parent: { name: 'ประกันคุณภาพ', icon: 'i-chart', page: 'pages/admin_stats.html', colorClass: 'text-purple-400' },
                 children: [
                     { name: 'สถิติรวมโรงเรียน', icon: 'i-chart', page: 'pages/admin_stats.html', action: 'admin-stats' },
                     { name: 'ผลสัมฤทธิ์นักเรียน', icon: 'i-trending-up', page: 'pages/achievement_report.html', action: 'achieve-report' },
@@ -1111,7 +1114,7 @@ window.ManagementEngine = {
     getTeacherTimelineConfigs() {
         return [
             {
-                parent: { name: '\u0e2b\u0e49\u0e2d\u0e07\u0e40\u0e23\u0e35\u0e22\u0e19\u0e02\u0e2d\u0e07\u0e09\u0e31\u0e19', icon: 'i-users', page: 'pages/class_hud.html?id=61', active: true },
+                parent: { name: '\u0e2b\u0e49\u0e2d\u0e07\u0e40\u0e23\u0e35\u0e22\u0e19\u0e02\u0e2d\u0e07\u0e09\u0e31\u0e19', icon: 'i-users', page: 'pages/class_hud.html?id=61', active: true, colorClass: 'text-violet-400' },
                 children: [
                     { name: '\u0e2b\u0e49\u0e2d\u0e07\u0e40\u0e23\u0e35\u0e22\u0e19 \u0e1b.6/1', icon: 'i-users', page: 'pages/class_hud.html?id=61', action: 'class-61' },
                     { name: '\u0e2b\u0e49\u0e2d\u0e07\u0e40\u0e23\u0e35\u0e22\u0e19 \u0e1b.6/2', icon: 'i-users', page: 'pages/class_hud.html?id=62', action: 'class-62' }
@@ -1119,7 +1122,7 @@ window.ManagementEngine = {
                 activeItem: 'class-61'
             },
             {
-                parent: { name: '\u0e07\u0e32\u0e19\u0e2a\u0e2d\u0e19', icon: 'i-clipboard-check', page: 'pages/grades.html' },
+                parent: { name: '\u0e07\u0e32\u0e19\u0e2a\u0e2d\u0e19', icon: 'i-clipboard-check', page: 'pages/grades.html', colorClass: 'text-emerald-400' },
                 children: [
                     { name: '\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e04\u0e30\u0e41\u0e19\u0e19 (\u0e1b\u0e1e.)', icon: 'i-clipboard-check', page: 'pages/grades.html', action: 'grades' },
                     { name: '\u0e41\u0e1c\u0e19\u0e01\u0e32\u0e23\u0e08\u0e31\u0e14\u0e01\u0e32\u0e23\u0e40\u0e23\u0e35\u0e22\u0e19\u0e23\u0e39\u0e49', icon: 'i-document-duplicate', page: 'pages/lesson_plans.html', action: 'lesson-plans' },
@@ -1127,7 +1130,7 @@ window.ManagementEngine = {
                 ]
             },
             {
-                parent: { name: '\u0e1b\u0e23\u0e30\u0e08\u0e33\u0e27\u0e31\u0e19', icon: 'i-calendar', page: 'pages/attendance.html' },
+                parent: { name: '\u0e1b\u0e23\u0e30\u0e08\u0e33\u0e27\u0e31\u0e19', icon: 'i-calendar', page: 'pages/attendance.html', colorClass: 'text-cyan-400' },
                 children: [
                     { name: '\u0e40\u0e0a\u0e47\u0e04\u0e0a\u0e37\u0e48\u0e2d/\u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e40\u0e27\u0e25\u0e32', icon: 'i-check', page: 'pages/attendance.html', action: 'attendance' },
                     { name: '\u0e15\u0e32\u0e23\u0e32\u0e07\u0e2a\u0e2d\u0e19\u0e02\u0e2d\u0e07\u0e15\u0e19\u0e40\u0e2d\u0e07', icon: 'i-calendar', page: 'pages/schedule.html', action: 'my-schedule' }
@@ -1135,7 +1138,7 @@ window.ManagementEngine = {
             },
             // Group 4: งานบุคคล (Personnel / Leave)
             {
-                parent: { name: 'งานบุคคล', icon: 'i-user-circle', page: 'pages/teacher_leave.html' },
+                parent: { name: 'งานบุคคล', icon: 'i-user', page: 'pages/teacher_leave.html', colorClass: 'text-amber-400' },
                 children: [
                     { name: 'ยื่นใบลา', icon: 'i-document-plus', page: 'pages/teacher_leave.html', action: 'leave-request' },
                     { name: 'ประวัติการลา', icon: 'i-clock', page: 'pages/teacher_leave.html#history', action: 'leave-history' },
@@ -1151,7 +1154,7 @@ window.ManagementEngine = {
     getStudentTimelineConfigs() {
         return [
             {
-                parent: { name: '\u0e27\u0e34\u0e0a\u0e32\u0e40\u0e23\u0e35\u0e22\u0e19', icon: 'i-book', page: 'pages/mission_hud.html?id=THAI', active: true },
+                parent: { name: '\u0e27\u0e34\u0e0a\u0e32\u0e40\u0e23\u0e35\u0e22\u0e19', icon: 'i-book', page: 'pages/mission_hud.html?id=THAI', active: true, colorClass: 'text-pink-400' },
                 children: [
                     { name: '\u0e20\u0e32\u0e29\u0e32\u0e44\u0e17\u0e22', icon: 'i-book', page: 'pages/mission_hud.html?id=THAI', action: 'sub-thai' },
                     { name: '\u0e04\u0e13\u0e34\u0e15\u0e28\u0e32\u0e2a\u0e15\u0e23\u0e4c', icon: 'i-squares', page: 'pages/mission_hud.html?id=MATH', action: 'sub-math' },
@@ -1166,7 +1169,7 @@ window.ManagementEngine = {
                 activeItem: 'sub-thai'
             },
             {
-                parent: { name: '\u0e07\u0e32\u0e19\u0e02\u0e2d\u0e07\u0e09\u0e31\u0e19', icon: 'i-clipboard-check', page: 'pages/tasks.html' },
+                parent: { name: '\u0e07\u0e32\u0e19\u0e02\u0e2d\u0e07\u0e09\u0e31\u0e19', icon: 'i-clipboard-check', page: 'pages/tasks.html', colorClass: 'text-indigo-400' },
                 children: [
                     { name: '\u0e2a\u0e48\u0e07\u0e07\u0e32\u0e19/\u0e01\u0e32\u0e23\u0e1a\u0e49\u0e32\u0e19', icon: 'i-clipboard-check', page: 'pages/tasks.html', action: 'homework' },
                     { name: '\u0e1b\u0e23\u0e30\u0e01\u0e32\u0e28\u0e08\u0e32\u0e01\u0e42\u0e23\u0e07\u0e40\u0e23\u0e35\u0e22\u0e19', icon: 'i-chart', page: 'pages/announcements.html', action: 'announcements' },
@@ -1182,7 +1185,7 @@ window.ManagementEngine = {
     getParentTimelineConfigs() {
         return [
             {
-                parent: { name: '\u0e14\u0e39\u0e41\u0e25\u0e1a\u0e38\u0e15\u0e23', icon: 'i-users', page: 'pages/child_progress.html', active: true },
+                parent: { name: '\u0e14\u0e39\u0e41\u0e25\u0e1a\u0e38\u0e15\u0e23', icon: 'i-users', page: 'pages/child_progress.html', active: true, colorClass: 'text-orange-400' },
                 children: [
                     { name: '\u0e15\u0e34\u0e14\u0e15\u0e32\u0e21\u0e01\u0e32\u0e23\u0e40\u0e23\u0e35\u0e22\u0e19', icon: 'i-trending-up', page: 'pages/child_progress.html', action: 'child-progress' },
                     { name: '\u0e1b\u0e23\u0e30\u0e27\u0e31\u0e15\u0e34\u0e40\u0e02\u0e49\u0e32\u0e40\u0e23\u0e35\u0e22\u0e19', icon: 'i-clock', page: 'pages/child_attendance.html', action: 'child-attend' },
@@ -1232,7 +1235,7 @@ window.ManagementEngine = {
 
                                 return `
                         <button onclick="${isLocked ? `HUD_NOTIFY.warn('FEATURE LOCKED', 'This module is scheduled for Phase 3 rollout.')` : `window.ManagementEngine.handleMenuClick('${item.id}', '${item.path}', '${item.type}')`}"
-                                class="nav-item vs-menu-item w-full text-left ${isSubmenu ? 'pl-8 menu-submenu-item' : 'px-3'} py-[7px] rounded-[var(--vs-radius)] transition-all flex items-center group ${this.activeModule === item.id ? 'active' : ''} ${isLocked ? 'opacity-40 grayscale cursor-not-allowed' : ''}">
+                                class="nav-item vs-menu-item w-full text-left ${isSubmenu ? 'pl-8 menu-submenu-item' : 'px-3'} py-2 rounded-[var(--vs-radius)] transition-all flex items-center group ${this.activeModule === item.id ? 'active' : ''} ${isLocked ? 'opacity-40 grayscale cursor-not-allowed' : ''}">
                             ${isSubmenu ? '<div class="menu-timeline-connector"></div>' : ''}
                             <i class="icon ${item.icon} h-4 w-4 mr-3 transition-colors ${isDirOnly ? 'text-[var(--vs-accent)]' : ''}" ${item.color ? `style="color:${item.color}"` : ''}></i>
                             <span class="text-[13px] font-light Thai-Rule truncate ${isDirOnly ? 'text-white' : ''}">${item.label}</span>
@@ -1258,8 +1261,8 @@ window.ManagementEngine = {
     handleMenuClick(id, path, type = 'SECONDARY') {
         this.activeModule = id;
 
-        // If it's a primary mission, we open the Subject HUD instead of just a page
-        if (type === 'PRIMARY') {
+        // If it's a primary mission (except the Inbox), we open the Subject HUD instead of just a page
+        if (type === 'PRIMARY' && id !== 'TASK_INBOX') {
             this.renderSubjectHUD(id);
             this.renderDashboard(); // Update sidebar active state
         } else {
@@ -1267,11 +1270,56 @@ window.ManagementEngine = {
             // Sync to Main Stage
             const mainFrame = document.getElementById('main-frame');
             if (mainFrame && path) {
-                mainFrame.src = path;
+                let loadPath = path;
+                let targetIdForLabel = id;
+
+                // Handle Component-Based Routing (OS Handoff)
+                if (loadPath.startsWith('__COMPONENT__')) {
+                    const componentName = loadPath.replace('__COMPONENT__', '');
+                    const props = { context: 'DELEGATED' };
+
+                    // We load the empty mission_hud shell, and pass the component instruction via URL hash
+                    // The receiving page will read the hash and mount the component.
+                    loadPath = `pages/mission_hud.html#cmp=${componentName}&ctx=DELEGATED`;
+                    targetIdForLabel = componentName;
+                }
+                // Handle Cross-Role Delegated System Tasks
+                else if (loadPath.startsWith('__SYSTEM_TASK__')) {
+                    const sysModuleId = loadPath.replace('__SYSTEM_TASK__', '');
+                    const sysItem = this.findMenuItem(sysModuleId);
+
+                    if (sysItem && (sysItem.page || sysItem.path)) {
+                        loadPath = sysItem.page || sysItem.path;
+                    } else {
+                        // Fuzzy recovery for old corrupted tasks in localStorage
+                        const rawId = String(sysModuleId).trim();
+                        const upperId = rawId.toUpperCase();
+
+                        if (upperId.includes('FITNESS') || upperId.includes('สมรรถภาพ') || rawId === '100' || rawId === 'fitness-test') {
+                            loadPath = 'pages/fitness_test.html';
+                        } else if (upperId === 'GENERAL') {
+                            // Ad-Hoc / General tasks should open the inbox logic or detailed view
+                            loadPath = 'pages/teacher_inbox.html';
+                        } else {
+                            // If it purely relies on an action but no specific page is defined
+                            loadPath = 'pages/home.html';
+                        }
+                    }
+                    targetIdForLabel = sysItem ? (sysItem.id || sysItem.action) : sysModuleId;
+                }
+
+                mainFrame.src = loadPath;
                 const breadcrumbPage = document.getElementById('header-page-name');
-                const item = this.findMenuItem(id);
-                if (breadcrumbPage && item) {
-                    breadcrumbPage.innerText = item.label;
+                const item = this.findMenuItem(targetIdForLabel);
+
+                if (breadcrumbPage) {
+                    if (item && item.label) {
+                        breadcrumbPage.innerText = item.label;
+                    } else if (loadPath.includes('#cmp=')) {
+                        breadcrumbPage.innerText = 'Delegated Module';
+                    } else {
+                        breadcrumbPage.innerText = 'ภารกิจสั่งการ';
+                    }
                 }
             }
         }
@@ -1314,15 +1362,117 @@ window.ManagementEngine = {
         }
     },
 
+    findMenuItemByPath(path) {
+        const roles = ['TEACHER', 'SCHOOL_DIR', 'STUDENT'];
+        for (const r of roles) {
+            const configs = this.getRoleTimelineConfigs({ role: r });
+            for (const group of configs) {
+                if (group.parent && group.parent.page && group.parent.page.includes(path)) return group.parent;
+                if (group.children) {
+                    const found = group.children.find(c => c.page && c.page.includes(path));
+                    if (found) return found;
+                }
+            }
+        }
+        return null;
+    },
+
     findMenuItem(id) {
         if (id === 'OVERVIEW') return { label: 'Dashboard Overview' };
+
+        // Priority 1: Search Timeline Configs First (Modern Sidebar)
         const user = window.getCurrentUser();
+        const searchTimeline = (role) => {
+            const configs = this.getRoleTimelineConfigs({ role });
+            for (const group of configs) {
+                if (group.parent && (group.parent.action === id || group.parent.id === id)) return group.parent;
+                if (group.children) {
+                    const item = group.children.find(i => i.id === id || i.action === id);
+                    if (item) return item;
+                }
+            }
+            return null;
+        };
+
+        let found = searchTimeline(user.role);
+        if (found) return { ...found, label: found.name }; // map modern name to legacy label
+
+        // Priority 2: Search Current User's Role Menu (Legacy)
         const menu = this.getRoleMenu(user);
         for (const section of menu) {
-            const item = section.items.find((i) => i.id === id);
+            const item = section.items.find((i) => i.id === id || i.action === id);
             if (item) return item;
         }
+
+        // Priority 3: Full System Fallback (If task was delegated from another role)
+        const fallbackRoles = ['SCHOOL_DIR', 'TEACHER', 'STUDENT'];
+        for (const fallbackRole of fallbackRoles) {
+            if (fallbackRole === user.role) continue; // Already checked
+
+            // Check Timeline Configs
+            found = searchTimeline(fallbackRole);
+            if (found) return { ...found, label: found.name };
+
+            // Check Legacy Menus
+            const fallbackMenu = this.getRoleMenu({ role: fallbackRole });
+            for (const section of fallbackMenu) {
+                const item = section.items.find((i) => i.id === id || i.action === id);
+                if (item) return item;
+            }
+        }
+
+        // Priority 4: Hardcoded Fallbacks for System Tasks (If all else fails)
+        if (id === 'FITNESS_TEST' || id === 'fitness-test') {
+            return { id: 'FITNESS_TEST', action: 'fitness-test', label: 'สมรรถภาพทางกาย', page: 'pages/fitness_test.html', icon: 'i-heart', colorClass: 'text-rose-400' };
+        }
+
         return { label: id };
+    },
+
+    submitActiveMission() {
+        // 1. Check if there's an active Mission Context stored globally
+        const activeTaskId = window.ManagementEngine.currentActiveTaskId || sessionStorage.getItem('IDLPMS_ACTIVE_TASK_ID');
+
+        if (!activeTaskId) {
+            if (window.HUD_NOTIFY) HUD_NOTIFY.toast('ไม่พบภารกิจรอดำเนินการ', 'กรุณาเลือกงานจาก Inbox เพื่อเริ่มดำเนินการก่อน', 'warning');
+            return;
+        }
+
+        // 2. Locate the Delegation object
+        if (!window.DelegationPanel) {
+            if (window.HUD_NOTIFY) HUD_NOTIFY.toast('ระบบขัดข้อง', 'ไม่สามารถเชื่อมต่อ Delegation Engine ได้', 'error');
+            return;
+        }
+
+        const list = window.DelegationPanel.getAllDelegations();
+        const task = list.find(t => t.id === activeTaskId);
+
+        if (!task) {
+            if (window.HUD_NOTIFY) HUD_NOTIFY.toast('ข้อมูลผิดพลาด', 'ไม่พบข้อมูลภารกิจนี้ในระบบ', 'error');
+            return;
+        }
+
+        // 3. Confirm Submission
+        const confirmed = confirm(`ยืนยันการนำส่งผลงาน:\n"${task.moduleTitle}"\n\nระบบจะบันทึกสถานะเป็นเสร็จสมบูรณ์ และตัดออกจาก Inbox ของคุณ`);
+        if (confirmed) {
+            // Auto-grant full base score for non-graded system tasks, or prompt for details if AdHoc
+            const score = task.baseScore || 10;
+            const details = task.type === 'ADHOC' ? prompt('โปรดระบุรายละเอียด/ผลการดำเนินงานโดยสังเขป (ถ้ามี):') : '';
+
+            // 4. Dispatch the completion via the Panel API
+            window.DelegationPanel.submitWork(task.id, score, score, details || '');
+
+            // 5. Hide the Submit Button
+            const btn = document.getElementById('btn-submit-mission');
+            if (btn) btn.style.display = 'none';
+
+            // Clear Context
+            window.ManagementEngine.currentActiveTaskId = null;
+            sessionStorage.removeItem('IDLPMS_ACTIVE_TASK_ID');
+
+            // Optionally route back
+            try { this.handleMenuClick('MISSION_INBOX', 'pages/teacher_inbox.html'); } catch (e) { }
+        }
     },
 
     renderMiniMatrix() {
@@ -1365,10 +1515,10 @@ window.ManagementEngine = {
         };
 
         return `
-            <div class="rounded-[3px] border border-[var(--vs-border)] bg-[var(--vs-bg-card)] p-3 hover:border-[rgba(var(--vs-accent-rgb),0.3)] transition-all group ">
+            <div class="rounded-[3px] border border-[rgba(63,63,70,0.5)] bg-[var(--vs-bg-card)] p-3 hover:border-[rgba(var(--vs-accent-rgb),0.3)] transition-all group ">
                 <div class="flex items-center justify-between mb-3">
                     <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded-[3px] flex items-center justify-center border border-[var(--vs-border)]" style="background-color: ${group.bg}">
+                        <div class="w-8 h-8 rounded-[3px] flex items-center justify-center border border-[rgba(63,63,70,0.5)]" style="background-color: ${group.bg}">
                             <i class="icon ${group.icon} h-4 w-4" style="background-color: ${group.color} !important"></i>
                         </div>
                         <div>
@@ -1389,7 +1539,7 @@ window.ManagementEngine = {
                     </div>
                 </div>
 
-                <button onclick="${options.onClick}" class="w-full py-1.5 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[3px] text-[13px] font-light uppercase transition-all hover:bg-[var(--vs-bg-panel)]" style="color: ${group.color}">
+                <button onclick="${options.onClick}" class="w-full py-1.5 bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] rounded-[3px] text-[13px] font-light uppercase transition-all hover:bg-[var(--vs-bg-panel)]" style="color: ${group.color}">
                     Establish Mastery Flow
                 </button>
             </div>
@@ -1403,7 +1553,7 @@ window.ManagementEngine = {
         return `
             <div class="space-y-6 animate-in fade-in duration-300 pb-10">
                 <!-- Neural DNA Matrix -->
-                <div class="p-4 rounded-[3px] border border-[var(--vs-border)] bg-[var(--vs-bg-deep)]">
+                <div class="p-4 rounded-[3px] border border-[rgba(63,63,70,0.5)] bg-[var(--vs-bg-deep)]">
                     <span class="hud-badge-micro mb-4 block">Neural DNA Matrix</span>
                     <div class="grid grid-cols-2 gap-x-6 gap-y-4">
                         ${Object.entries(this.neuralMatrix)
@@ -1425,7 +1575,7 @@ window.ManagementEngine = {
                 </div>
 
                 <!-- ACTIVE MISSION SENTINEL -->
-                <div class="p-4 rounded-[3px] border border-[var(--vs-border)] bg-[var(--vs-bg-panel)] ">
+                <div class="p-4 rounded-[3px] border border-[rgba(63,63,70,0.5)] bg-[var(--vs-bg-panel)] ">
                     <span class="hud-badge-micro mb-3 block">Mission Focus</span>
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-[3px] hud-bg-cyan flex items-center justify-center hud-border-cyan">
@@ -1444,7 +1594,7 @@ window.ManagementEngine = {
                 </div>
 
                 <!-- Behavioral Matrix (8 Traits) -->
-                <div class="p-4 rounded-[3px] border border-[var(--vs-border)] bg-[var(--vs-bg-deep)]">
+                <div class="p-4 rounded-[3px] border border-[rgba(63,63,70,0.5)] bg-[var(--vs-bg-deep)]">
                     <span class="hud-badge-micro mb-4 block">Behavioral Matrix</span>
                     <div class="grid grid-cols-2 gap-x-4 gap-y-4">
                         ${this.renderTrait('PATRIOTISM', this.characteristics.PATRIOTISM, 'text-pink-500')}
@@ -1471,7 +1621,7 @@ window.ManagementEngine = {
         container.innerHTML = `
             <div class="space-y-10 animate-in fade-in duration-500 pb-20">
                 <!-- CLEAN SLATE: AWAITING INTELLIGENCE HUB DESIGN -->
-                <section class="flex flex-col items-center justify-center p-20 border border-dashed border-[var(--vs-border)] rounded-[3px] opacity-20">
+                <section class="flex flex-col items-center justify-center p-20 border border-dashed border-[rgba(63,63,70,0.5)] rounded-[3px] opacity-20">
                     <i class="icon i-cpu h-16 w-16 mb-6"></i>
                     <div class="hud-badge-micro text-lg uppercase mb-2">Protocol: CLEAN_SLATE_V1</div>
                     <div class="text-[10px] font-mono uppercase">Awaiting Unified Intelligence Hub Matrix for role: ${user.role}</div>
@@ -1480,14 +1630,14 @@ window.ManagementEngine = {
                 <!-- Intelligence DNA Matrix (Global Context) -->
                 ${user.role === 'STUDENT'
                 ? `
-                <section class="grid grid-cols-1 xl:grid-cols-2 gap-8 pt-10 border-t border-[var(--vs-border)]">
+                <section class="grid grid-cols-1 xl:grid-cols-2 gap-8 pt-10 border-t border-[rgba(63,63,70,0.5)]">
                     <div class="space-y-4">
                         <h2 class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase">Neural DNA Profile</h2>
                         ${this.renderNeuralDNA()}
                     </div>
                     <div class="space-y-4">
                         <h2 class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase">Active Behavioral Matrix</h2>
-                        <div class="p-6 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] h-full">
+                        <div class="p-6 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] h-full">
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 ${this.renderTrait('Patriotism', 95, 'text-red-400')}
                                 ${this.renderTrait('Integrity', 88, 'text-emerald-400')}
@@ -1515,13 +1665,13 @@ window.ManagementEngine = {
         };
 
         return `
-            <div class="group relative rounded-[3px] border border-[var(--vs-border)] bg-[var(--vs-bg-card)] hover:border-white/40 transition-all duration-300  overflow-hidden cursor-pointer"
+            <div class="group relative rounded-[3px] border border-[rgba(63,63,70,0.5)] bg-[var(--vs-bg-card)] hover:border-white/40 transition-all duration-300  overflow-hidden cursor-pointer"
                  onclick="window.ManagementEngine.handleMenuClick('${mission.id}', '${mission.path}', 'PRIMARY')">
                 <div class="absolute top-0 left-0 w-full h-[2px] bg-[var(--vs-accent)] opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
                 <div class="p-6">
                     <div class="flex justify-between items-start mb-6">
-                        <div class="w-12 h-12 rounded-[3px] flex items-center justify-center border border-[var(--vs-border)] bg-[var(--vs-bg-deep)] group-hover:bg-white/10 transition-colors">
+                        <div class="w-12 h-12 rounded-[3px] flex items-center justify-center border border-[rgba(63,63,70,0.5)] bg-[var(--vs-bg-deep)] group-hover:bg-white/10 transition-colors">
                             <i class="icon ${group.icon} h-6 w-6" style="background-color: ${group.color} !important"></i>
                         </div>
                         <div class="flex items-center justify-center p-1 rounded-[3px] border border-white/20 bg-white/10">
@@ -1567,7 +1717,7 @@ window.ManagementEngine = {
                 </div>
 
                 <!-- Live Neural Activity -->
-                <div class="pt-6 border-t border-[var(--vs-border)]">
+                <div class="pt-6 border-t border-[rgba(63,63,70,0.5)]">
                     <div class="hud-badge-micro mb-4">Live Cognitive Load</div>
                     <div class="space-y-3">
                         ${Object.entries(this.neuralMatrix)
@@ -1589,8 +1739,8 @@ window.ManagementEngine = {
                 </div>
 
                 <!-- Character Assessment Indicator -->
-                <div class="pt-6 border-t border-[var(--vs-border)]">
-                    <div class="p-3 bg-[var(--vs-bg-deep)] rounded-[3px] border border-[var(--vs-border)]">
+                <div class="pt-6 border-t border-[rgba(63,63,70,0.5)]">
+                    <div class="p-3 bg-[var(--vs-bg-deep)] rounded-[3px] border border-[rgba(63,63,70,0.5)]">
                         <div class="hud-badge-micro uppercase font-light mb-1">Active Character Status</div>
                         <div class="flex justify-between items-center">
                             <span class="text-[13px] font-light text-[var(--vs-text-title)] Thai-Rule">วินัยและความรับผิดชอบ</span>
@@ -1721,7 +1871,8 @@ window.ManagementEngine = {
     },
 
     getTeacherMenu() {
-        return [
+        // Base Menu
+        const menu = [
             {
                 section: 'Mission: Primary',
                 items: [
@@ -1782,6 +1933,8 @@ window.ManagementEngine = {
                 ],
             },
         ];
+
+        return menu;
     },
 
     getAdminMenu(title) {
@@ -2144,8 +2297,8 @@ window.ManagementEngine = {
         targetContainer.innerHTML = `
             <div class="flex flex-col h-full animate-in slide-in-from-right-2 duration-300 relative">
                  <!-- Lesson Selector Overlay -->
-                <div id="lesson-selector-dropdown" class="hidden absolute top-16 left-0 z-50 w-96 max-h-[600px] overflow-y-auto bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[3px] animate-in fade-in zoom-in-95 duration-200">
-                    <div class="p-4 border-b border-[var(--vs-border)] bg-[var(--vs-bg-panel)] sticky top-0 flex items-center justify-between">
+                <div id="lesson-selector-dropdown" class="hidden absolute top-16 left-0 z-50 w-96 max-h-[600px] overflow-y-auto bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] rounded-[3px] animate-in fade-in zoom-in-95 duration-200">
+                    <div class="p-4 border-b border-[rgba(63,63,70,0.5)] bg-[var(--vs-bg-panel)] sticky top-0 flex items-center justify-between">
                         <h3 class="text-[13px] font-light text-[var(--vs-text-title)] uppercase">Select Learning Module</h3>
                         <span class="hud-badge-micro text-[var(--vs-text-muted)] opacity-50">PROTOCOL</span>
                     </div>
@@ -2165,7 +2318,7 @@ window.ManagementEngine = {
                 </div>
 
             <!-- Module Header (simplified, keeps only text context) -->
-            <div class="flex items-center justify-between mb-6 pb-4 border-b border-[var(--vs-border)]">
+            <div class="flex items-center justify-between mb-6 pb-4 border-b border-[rgba(63,63,70,0.5)]">
                 <div class="flex items-center gap-4">
                     <button onclick="parent.ManagementEngine.exitMission()" class="p-2 hover:bg-[rgba(39,39,42,0.5)] rounded-[3px] text-[var(--vs-text-muted)] transition-colors">
                         <i class="icon i-chevron-left h-6 w-6"></i>
@@ -2194,7 +2347,7 @@ window.ManagementEngine = {
                 <!-- Content Area -->
             <div class="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-8">
                 <div class="lg:col-span-3 space-y-6">
-                    <div class="p-8 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[var(--vs-border)] relative overflow-hidden min-h-[500px] flex flex-col">
+                    <div class="p-8 rounded-[3px] bg-[var(--vs-bg-panel)] border border-[rgba(63,63,70,0.5)] relative overflow-hidden min-h-[500px] flex flex-col">
                         <!-- Internal Mastery Step Roadmap (Unified 7-Step conduit - FULL WIDTH) -->
                         <div class="relative mb-8 w-full">
                             <!-- Horizontal Conduit Line -->
@@ -2250,7 +2403,7 @@ window.ManagementEngine = {
 
                 <!-- Right Feedback Panel -->
                 <div class="lg:col-span-1 space-y-6 flex flex-col">
-                    <div class="p-6 rounded-[3px] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
+                    <div class="p-6 rounded-[3px] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)]">
                         <h3 class="hud-badge-micro text-[var(--vs-text-muted)] mb-4 uppercase">K-P-A Objectives</h3>
                         <div class="space-y-3">
                             ${(() => {
@@ -2283,7 +2436,7 @@ window.ManagementEngine = {
                         </div>
                     </div>
 
-                    <div class="p-6 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+                    <div class="p-6 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
                         <h3 class="text-[var(--vs-text-muted)] mb-4 uppercase text-[13px] font-light">Neural DNA Impact</h3>
                         ${this.renderMiniMatrix()}
                     </div>
@@ -2363,7 +2516,7 @@ window.ManagementEngine = {
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         ${q.options.map((opt, idx) => `
                             <button onclick="parent.ManagementEngine.submitQuizAnswer(${idx})" 
-                                    class="p-4 text-left rounded-[3px] bg-[rgba(255,255,255,0.02)] border border-[var(--vs-border)] hover:bg-[rgba(var(--vs-accent-rgb),0.1)] hover:border-[rgba(var(--vs-accent-rgb),0.3)] group transition-all">
+                                    class="p-4 text-left rounded-[3px] bg-[rgba(255,255,255,0.02)] border border-[rgba(63,63,70,0.5)] hover:bg-[rgba(var(--vs-accent-rgb),0.1)] hover:border-[rgba(var(--vs-accent-rgb),0.3)] group transition-all">
                                 <span class="text-[13px] font-light text-[var(--vs-text-body)] Thai-Rule group-hover:text-white">${opt}</span>
                             </button>
                         `).join('')}
@@ -2410,12 +2563,12 @@ window.ManagementEngine = {
                     ` : ''
                 }
 
-        <div class="p-6 bg-[var(--vs-bg-deep)] rounded-[3px] border border-[var(--vs-border)]">
+        <div class="p-6 bg-[var(--vs-bg-deep)] rounded-[3px] border border-[rgba(63,63,70,0.5)]">
             <h3 class="text-[13px] text-[var(--vs-accent)] mb-4 uppercase font-light">จุดประสงค์การเรียนรู้ K-P-A</h3>
             <div class="space-y-4">
                 ${isObjectFormat
                     ? ['K', 'P', 'A'].map(key => objectives[key] ? `
-                                    <div class="flex items-start gap-4 p-4 bg-[rgba(255,255,255,0.02)] rounded-[3px] border border-[var(--vs-border)]">
+                                    <div class="flex items-start gap-4 p-4 bg-[rgba(255,255,255,0.02)] rounded-[3px] border border-[rgba(63,63,70,0.5)]">
                                         <div class="w-10 h-10 rounded-[3px] flex items-center justify-center flex-shrink-0" style="background: rgba(${key === 'K' ? '0,204,255' : key === 'P' ? '34,197,94' : '168,85,247'},0.2)">
                                             <span class="text-[13px] font-light" style="color: ${kpaLabels[key].color}">${key}</span>
                                         </div>
@@ -2485,7 +2638,7 @@ window.ManagementEngine = {
                 ${rewindBanner}
                     
                     <!-- Video Player -->
-                    <div class="aspect-video bg-black rounded-[var(--vs-radius)] overflow-hidden border border-[var(--vs-border)] relative group">
+                    <div class="aspect-video bg-black rounded-[var(--vs-radius)] overflow-hidden border border-[rgba(63,63,70,0.5)] relative group">
                         ${playerHTML}
                     </div>
 
@@ -2518,7 +2671,7 @@ window.ManagementEngine = {
 
                     <!-- Lesson Summary (from Harvested Data) -->
             ${summary ? `
-                        <div class="p-6 bg-[var(--vs-bg-deep)] rounded-[var(--vs-radius)] border border-[var(--vs-border)]">
+                        <div class="p-6 bg-[var(--vs-bg-deep)] rounded-[var(--vs-radius)] border border-[rgba(63,63,70,0.5)]">
                             <h3 class="hud-badge-micro text-[var(--vs-accent)] mb-3 uppercase">Key Points</h3>
                             <p class="text-[13px] font-light text-[var(--vs-text-body)] Thai-Rule leading-relaxed">${summary}</p>
                         </div>
@@ -2565,7 +2718,7 @@ window.ManagementEngine = {
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         ${q.options.map((opt, idx) => `
                             <button onclick="parent.ManagementEngine.submitQuizAnswer(${idx})" 
-                                    class="p-4 text-left rounded-[3px] bg-[rgba(255,255,255,0.02)] border border-[var(--vs-border)] hover:bg-[rgba(var(--vs-accent-rgb),0.1)] hover:border-[rgba(var(--vs-accent-rgb),0.3)] group transition-all">
+                                    class="p-4 text-left rounded-[3px] bg-[rgba(255,255,255,0.02)] border border-[rgba(63,63,70,0.5)] hover:bg-[rgba(var(--vs-accent-rgb),0.1)] hover:border-[rgba(var(--vs-accent-rgb),0.3)] group transition-all">
                                 <span class="text-[13px] font-light text-[var(--vs-text-body)] Thai-Rule group-hover:text-white">${opt}</span>
                             </button>
                         `).join('')}
@@ -2591,7 +2744,7 @@ window.ManagementEngine = {
 
             return `
             <div class="space-y-6">
-                <div class="p-6 bg-[var(--vs-bg-deep)] rounded-[3px] border border-[var(--vs-border)]">
+                <div class="p-6 bg-[var(--vs-bg-deep)] rounded-[3px] border border-[rgba(63,63,70,0.5)]">
                     <h3 class="hud-badge-micro text-[var(--vs-accent)] mb-4 uppercase">กิจกรรมจับคู่ความหมาย</h3>
                     <p class="text-[13px] font-light text-[var(--vs-text-body)] Thai-Rule mb-2">${instruction}</p>
                     <p class="text-[13px] font-light text-[var(--vs-text-muted)] mb-6 flex items-center gap-2"><i class="icon i-lightning h-4 w-4 text-amber-500"></i> คลิกที่กล่องซ้าย แล้วคลิกที่กล่องขวาเพื่อเชื่อม (คลิกซ้ายซ้ำเพื่อยกเลิก)</p>
@@ -2631,8 +2784,8 @@ window.ManagementEngine = {
                         </div>
                     </div>
 
-                    <div class="mt-6 pt-4 border-t border-[var(--vs-border)] flex gap-4">
-                        <button onclick="parent.ManagementEngine.clearSyncConnections()" class="flex-1 py-3 bg-[rgba(255,255,255,0.05)] border border-[var(--vs-border)] rounded-[3px] text-[var(--vs-text-muted)] hover:bg-[rgba(255,255,255,0.1)] transition-colors font-light uppercase text-[13px]">
+                    <div class="mt-6 pt-4 border-t border-[rgba(63,63,70,0.5)] flex gap-4">
+                        <button onclick="parent.ManagementEngine.clearSyncConnections()" class="flex-1 py-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(63,63,70,0.5)] rounded-[3px] text-[var(--vs-text-muted)] hover:bg-[rgba(255,255,255,0.1)] transition-colors font-light uppercase text-[13px]">
                             ล้างทั้งหมด
                         </button>
                         <button onclick="parent.ManagementEngine.checkSyncAnswers()" class="flex-1 py-3 bg-[rgba(var(--vs-accent-rgb),0.2)] border border-[rgba(var(--vs-accent-rgb),0.4)] rounded-[3px] text-[var(--vs-accent)] hover:bg-[rgba(var(--vs-accent-rgb),0.3)] transition-colors font-light uppercase text-[13px]">
@@ -2656,7 +2809,7 @@ window.ManagementEngine = {
 
             return `
             <div class="space-y-6">
-                <div class="p-6 bg-[var(--vs-bg-deep)] rounded-[3px] border border-[var(--vs-border)]">
+                <div class="p-6 bg-[var(--vs-bg-deep)] rounded-[3px] border border-[rgba(63,63,70,0.5)]">
                     <h3 class="hud-badge-micro text-[var(--vs-accent)] mb-4 uppercase">กิจกรรมสะท้อนคิด</h3>
 
                     <div class="p-4 bg-[rgba(168,85,247,0.1)] border border-[rgba(168,85,247,0.3)] rounded-[3px] mb-6">
@@ -2664,7 +2817,7 @@ window.ManagementEngine = {
                     </div>
 
                     <textarea id="reflect-answer"
-                        class="w-full h-40 p-4 bg-[rgba(255,255,255,0.03)] border border-[var(--vs-border)] rounded-[3px] text-[13px] font-light text-[var(--vs-text-body)] Thai-Rule resize-none focus:outline-none focus:border-[var(--vs-accent)]"
+                        class="w-full h-40 p-4 bg-[rgba(255,255,255,0.03)] border border-[rgba(63,63,70,0.5)] rounded-[3px] text-[13px] font-light text-[var(--vs-text-body)] Thai-Rule resize-none focus:outline-none focus:border-[var(--vs-accent)]"
                         placeholder="เขียนคำตอบของนักเรียนที่นี่..."
                         onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); parent.ManagementEngine.submitReflection(); }"></textarea>
 
@@ -2679,7 +2832,7 @@ window.ManagementEngine = {
                             </div>
                         ` : ''}
 
-                    <div class="mt-6 pt-4 border-t border-[var(--vs-border)]">
+                    <div class="mt-6 pt-4 border-t border-[rgba(63,63,70,0.5)]">
                         <button onclick="parent.ManagementEngine.submitReflection()" class="w-full py-3 bg-[rgba(168,85,247,0.2)] border border-[rgba(168,85,247,0.4)] rounded-[3px] text-[rgb(168,85,247)] hover:bg-[rgba(168,85,247,0.3)] transition-colors font-light uppercase text-[13px]">
                             บันทึกคำตอบ
                         </button>
@@ -2699,7 +2852,7 @@ window.ManagementEngine = {
 
             return `
             <div class="space-y-6">
-                <div class="p-6 bg-[var(--vs-bg-deep)] rounded-[3px] border border-[var(--vs-border)]">
+                <div class="p-6 bg-[var(--vs-bg-deep)] rounded-[3px] border border-[rgba(63,63,70,0.5)]">
                     <h3 class="hud-badge-micro text-[var(--vs-accent)] mb-4 uppercase"><i class="icon i-academic h-4 w-4 inline-block mr-1"></i> Mastery Challenge</h3>
 
                     <!-- Scenario Box -->
@@ -2716,12 +2869,12 @@ window.ManagementEngine = {
 
                     <!-- Answer Area -->
                     <textarea id="master-answer"
-                        class="w-full h-48 p-4 bg-[rgba(255,255,255,0.03)] border border-[var(--vs-border)] rounded-[3px] text-[13px] font-light text-[var(--vs-text-body)] Thai-Rule resize-none focus:outline-none focus:border-[var(--vs-accent)]"
+                        class="w-full h-48 p-4 bg-[rgba(255,255,255,0.03)] border border-[rgba(63,63,70,0.5)] rounded-[3px] text-[13px] font-light text-[var(--vs-text-body)] Thai-Rule resize-none focus:outline-none focus:border-[var(--vs-accent)]"
                         placeholder="เขียนคำตอบอย่างละเอียด..."
                         onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); parent.ManagementEngine.submitMasterChallenge(); }"></textarea>
 
                     ${challenge.rubric && challenge.rubric.length > 0 ? `
-                            <div class="mt-4 p-3 bg-[rgba(255,255,255,0.03)] border border-[var(--vs-border)] rounded-[3px]">
+                            <div class="mt-4 p-3 bg-[rgba(255,255,255,0.03)] border border-[rgba(63,63,70,0.5)] rounded-[3px]">
                                 <div class="hud-badge-micro text-[var(--vs-text-muted)] mb-2 uppercase">เกณฑ์การให้คะแนน</div>
                                 <ul class="space-y-1">
                                     ${challenge.rubric.map((r, i) => `
@@ -2731,7 +2884,7 @@ window.ManagementEngine = {
                             </div>
                         ` : ''}
 
-                    <div class="mt-6 pt-4 border-t border-[var(--vs-border)]">
+                    <div class="mt-6 pt-4 border-t border-[rgba(63,63,70,0.5)]">
                         <button onclick="parent.ManagementEngine.submitMasterChallenge()" class="w-full py-3 bg-[rgba(255,193,7,0.2)] border border-[rgba(255,193,7,0.4)] rounded-[3px] text-[rgba(255,193,7,1)] hover:bg-[rgba(255,193,7,0.3)] transition-colors font-light uppercase text-[13px]">
                             <i class="icon i-chevron-right h-4 w-4 inline-block mr-1"></i> ส่งคำตอบ Master Challenge
                         </button>
@@ -3405,7 +3558,7 @@ window.ManagementEngine = {
                     padding: 32px;
                     text-align: center;
                     background: var(--vs-bg-card);
-                    border: 1px solid var(--vs-border);
+                    border: 1px solid rgba(63, 63, 70, 0.5);
                     border-radius: var(--vs-radius);
                 ">
                     <!-- Badge (SVG Icon) -->
@@ -3443,7 +3596,7 @@ window.ManagementEngine = {
                         padding: 16px;
                         background: var(--vs-bg-deep);
                         border-radius: var(--vs-radius);
-                        border: 1px solid var(--vs-border);
+                        border: 1px solid rgba(63, 63, 70, 0.5);
                     ">
                         <div>
                             <div style="font-size: 13px; color: var(--vs-text-muted); font-weight: 300;">PRE-TEST</div>
@@ -3483,7 +3636,7 @@ window.ManagementEngine = {
                             font-weight: 300;
                             color: var(--vs-text-body);
                             background: transparent;
-                            border: 1px solid var(--vs-border);
+                            border: 1px solid rgba(63, 63, 70, 0.5);
                             border-radius: var(--vs-radius);
                             cursor: pointer;
                         ">กลับหน้าหลัก</button>
@@ -4017,12 +4170,12 @@ window.ManagementEngine = {
 
     renderMiniCard(label, value, colorClass, icon) {
         return `
-            <div class="p-4 rounded-[3px] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]  flex items-center justify-between group hover:border-white/30 transition-all">
+            <div class="p-4 rounded-[3px] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)]  flex items-center justify-between group hover:border-white/30 transition-all">
                 <div>
                     <div class="text-[13px] text-[var(--vs-text-muted)] uppercase font-light mb-1">${label}</div>
                     <div class="text-2xl font-light text-[var(--vs-text-title)]">${value}</div>
                 </div>
-                <div class="w-10 h-10 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] flex items-center justify-center">
+                <div class="w-10 h-10 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] flex items-center justify-center">
                     <i class="icon ${icon} h-5 w-5 opacity-40 group-hover:opacity-100 transition-opacity"></i>
                 </div>
             </div>
@@ -4031,8 +4184,8 @@ window.ManagementEngine = {
 
     renderActivityItem(name, icon, task, percent) {
         return `
-            <div class="p-4 rounded-[3px] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]  flex items-center space-x-4">
-                <div class="w-10 h-10 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] flex items-center justify-center">
+            <div class="p-4 rounded-[3px] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)]  flex items-center space-x-4">
+                <div class="w-10 h-10 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] flex items-center justify-center">
                     <i class="icon ${icon} h-5 w-5 opacity-40"></i>
                 </div>
                 <div class="flex-1 min-w-0">

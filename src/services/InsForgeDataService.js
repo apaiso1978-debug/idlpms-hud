@@ -30,17 +30,6 @@ class InsForgeDataService extends AbstractDataService {
         }
     }
 
-    /**
-     * Helper to safely map legacy mock string IDs (like TEA_WORACHAI) 
-     * to a valid Postgres UUID during the transition phase.
-     */
-    _mapToUUID(id) {
-        if (!id) return id;
-        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-        if (uuidRegex.test(id)) return id;
-        // Fallback valid UUID for mock IDs (the only one currently in testing DB)
-        return '29a7f9c9-bf7f-412c-9110-e73bc209e5d9';
-    }
 
     async _call(table, options = {}) {
         const { method = 'GET', query = '', body = null, single = false } = options;
@@ -70,6 +59,15 @@ class InsForgeDataService extends AbstractDataService {
         }
 
         return await response.json();
+    }
+
+    /**
+     * Maps local/mock IDs to string formatting expected by InsForge
+     * UUIDs are left as-is. Strings are returned safely.
+     */
+    _mapToUUID(id) {
+        if (!id) return null;
+        return String(id);
     }
 
     // ----- Person-First Operations (Unity Schema v1.0) -----
@@ -110,6 +108,27 @@ class InsForgeDataService extends AbstractDataService {
             method: 'PATCH',
             body: data
         });
+    }
+
+    async getStudentProfile(personId) {
+        try {
+            const query = `person_id=${personId}&is_active=true`;
+            const profiles = await this._call('student_profiles', { query });
+            return profiles.length > 0 ? profiles[0] : null;
+        } catch (e) {
+            console.error('[InsForgeDataService] getStudentProfile failed:', e);
+            return null;
+        }
+    }
+
+    async getHealthRecords(personId) {
+        try {
+            const query = `person_id=${personId}&order=record_date.desc`;
+            return await this._call('student_health_records', { query });
+        } catch (e) {
+            console.error('[InsForgeDataService] getHealthRecords failed:', e);
+            return [];
+        }
     }
 
     // ----- Role Profile Operations (Tab 2 Source) -----

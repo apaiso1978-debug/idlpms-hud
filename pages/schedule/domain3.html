@@ -15,7 +15,7 @@
 </head>
 
 <body class="bg-transparent p-6 overflow-y-auto overflow-x-hidden font-['Sarabun'] antialiased vs-scrollbar">
-    <div class="max-w-[1600px] mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div class="w-full space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
         <!-- Header -->
         <div class="flex items-center justify-between">
@@ -45,7 +45,7 @@
                 <!-- Populated by renderDomain3Panel() -->
             </div>
             <button onclick="addDomain3Project()"
-                class="mt-4 flex items-center gap-1 px-6 py-2.5 text-[13px] text-[#fbbf24] border border-[#fbbf24]/20 rounded-[var(--vs-radius)] hover:bg-[#fbbf24]/10 transition-all">
+                class="mt-4 flex items-center gap-1.5 px-6 py-2.5 text-[13px] text-[#fbbf24] border border-[#fbbf24]/20 rounded-[var(--vs-radius)] hover:bg-[#fbbf24]/10 transition-all">
                 <span>+ เพิ่มโครงการ</span>
             </button>
         </div>
@@ -85,12 +85,12 @@
             if (!container) return;
             const projects = loadDomainInputs(3) || getDefaultDomain3();
 
-            let html = `<div class="grid grid-cols-[minmax(0,1fr)_80px_120px_36px] gap-3 text-[13px] text-[var(--vs-text-muted)] uppercase pb-1 border-b border-[rgba(63,63,70,0.5)]">
+            let html = `<div class="grid grid-cols-[minmax(0,1fr)_80px_120px_36px] gap-2 text-[13px] text-[var(--vs-text-muted)] uppercase pb-1 border-b border-[rgba(63,63,70,0.5)]">
                 <span>โครงการ</span><span class="text-center">ชม./ปี</span><span class="text-center">ภาคเรียน</span><span></span>
             </div>`;
 
             projects.forEach((p, idx) => {
-                html += `<div class="grid grid-cols-[minmax(0,1fr)_80px_120px_36px] gap-3 items-center py-2 border-b border-[rgba(63,63,70,0.1)]">
+                html += `<div class="grid grid-cols-[minmax(0,1fr)_80px_120px_36px] gap-2 items-center py-2 border-b border-[rgba(63,63,70,0.1)]">
                     <input type="text" value="${p.name}" onchange="updateD3Project(${idx}, 'name', this.value)"
                         class="bg-[rgba(255,255,255,0.03)] text-[13px] text-[var(--vs-text-body)] border border-[rgba(255,255,255,0.1)] rounded-[var(--vs-radius)] focus:border-[#fbbf24]/50 outline-none px-3 py-2" />
                     <input type="number" value="${p.hoursPerYear}" min="1" max="100" onchange="updateD3Project(${idx}, 'hoursPerYear', parseInt(this.value))"

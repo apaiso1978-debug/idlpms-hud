@@ -10,48 +10,174 @@
     <link rel="stylesheet" href="../../assets/css/styles.css">
 </head>
 
-<body class="bg-transparent px-8 pt-8 pb-24 overflow-y-auto font-['Sarabun'] antialiased">
-    <div class="max-w-[1600px] space-y-8">
-        <!-- Header -->
-        <header
-            class="h-12 px-6 flex items-center justify-between rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
-            <h1 class="text-[13px] font-light text-[var(--vs-text-title)] uppercase">6. สถาปัตยกรรม</h1>
-        </header>
+<body class="bg-transparent overflow-hidden font-['Sarabun'] antialiased vs-scrollbar" style="height: 100vh;">
+    <div class="vs-page-frame animate-in fade-in zoom-in-95 duration-500">
+        <main class="vs-page-content vs-scrollbar">
+            <div class="w-full space-y-8">
 
-        <!-- Infra Diagram Mockup -->
-        <div
-            class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-dashed border-[var(--vs-border)] flex flex-col items-center justify-center space-y-4">
-            <i class="icon i-cube h-12 w-12 text-[var(--vs-text-muted)] opacity-50"></i>
-            <span class="text-[var(--vs-text-muted)] text-[13px] uppercase">IDLPMS Cloud Ecosystem</span>
-        </div>
+                <!-- Architecture Diagram -->
+                <div
+                    class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] overflow-x-auto vs-scrollbar">
+                    <div class="mermaid flex justify-center">
+                        graph TD
+                        Client["HUD UI (Decoupled Static HTML/JS)"]
 
-        <!-- Layers -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div
-                class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] space-y-4">
-                <h3 class="text-[var(--vs-text-title)] font-light flex items-center space-x-2">
-                    <div class="w-1 h-4 bg-[var(--vs-accent)]"></div>
-                    <span>HUD Dashboard (Level 1)</span>
-                </h3>
-                <p class="text-[var(--vs-text-muted)] text-[13px] leading-relaxed">
-                    หน้าแดชบอร์ดหลักใช้ระบบ Canvas ในการแสดงผล โดยมีสีพื้นหลังหลักเป็น Zinc-850 Baseline
-                    (var(--vs-bg-deep))
-                    เพื่อสร้างมิติและความลึกให้กับอินเทอร์เฟซ
-                </p>
-            </div>
-            <div
-                class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] space-y-4">
-                <h3 class="text-[var(--vs-text-title)] font-light flex items-center space-x-2">
-                    <div class="w-1 h-4 bg-emerald-500"></div>
-                    <span>Module Surface (Level 3)</span>
-                </h3>
-                <p class="text-[var(--vs-text-muted)] text-[13px] leading-relaxed">
-                    ส่วนของ Card และโมดูลต่างๆ จะใช้สี Zinc-800 Panel (var(--vs-bg-panel))
-                    เพื่อสร้างความแตกต่างทางสายตาและแสดงถึง "การยกระดับ" ของข้อมูล
-                </p>
-            </div>
-        </div>
+                        subgraph "AppBootstrap Orchestrator"
+                        Boot{"AppBootstrap.js (Singleton)"}
+                        Auth["AuthService (Session & Identity)"]
+                        Data["DataService (Source of Truth)"]
+                        Cache["CacheService (Local Buffer)"]
+                        Sync["SyncEngine (Background Persist)"]
+                        end
+
+                        Cloud[("InsForge Cloud Backend")]
+                        LocalDB[("IndexedDB (Offline Cache)")]
+
+                        Client -->|"1. Initialize"| Boot
+                        Boot -->|"2. Load Core Data Adapter"| Data
+                        Boot -->|"3. Verify User Token"| Auth
+                        Boot -->|"4. Mount Local Buffers"| Cache
+                        Boot -->|"5. Start Sync Workers"| Sync
+
+                        Data <-->|"REST API over HTTPS"| Cloud
+                            Sync -.->|"Process Mutation Queue"| Cloud
+                            Cache <-->|"Persist State"| LocalDB
+                                Data <-->|"Fallback/Read"| Cache
+                    </div>
+                </div>
+
+                <!-- Layers -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <div
+                        class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] space-y-4">
+                        <h3 class="text-[var(--vs-text-title)] font-light flex items-center space-x-2">
+                            <div class="w-1 h-4 bg-[var(--vs-accent)]"></div>
+                            <span>HUD Dashboard (Level 1)</span>
+                        </h3>
+                        <p class="text-[var(--vs-text-muted)] text-[13px] leading-relaxed">
+                            หน้าแดชบอร์ดหลักใช้ระบบ Canvas ในการแสดงผล โดยมีสีพื้นหลังหลักเป็น Zinc-850 Baseline
+                            (var(--vs-bg-deep))
+                            เพื่อสร้างมิติและความลึกให้กับอินเทอร์เฟซ
+                        </p>
+                    </div>
+                    <div
+                        class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] space-y-4">
+                        <h3 class="text-[var(--vs-text-title)] font-light flex items-center space-x-2">
+                            <div class="w-1 h-4 bg-emerald-500"></div>
+                            <span>Module Surface (Level 3)</span>
+                        </h3>
+                        <p class="text-[var(--vs-text-muted)] text-[13px] leading-relaxed">
+                            ส่วนของ Card และโมดูลต่างๆ จะใช้สี Zinc-800 Panel (var(--vs-bg-panel))
+                            เพื่อสร้างความแตกต่างทางสายตาและแสดงถึง "การยกระดับ" ของข้อมูล
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Mission Protocol & Delegation Flow -->
+                <div class="mt-12 space-y-6">
+                    <h2
+                        class="text-xl text-[var(--vs-text-title)] font-light border-b border-[rgba(63,63,70,0.5)] pb-2 flex items-center space-x-2">
+                        <i class="ti ti-route text-[var(--vs-accent)]"></i>
+                        <span>Mission Protocol & Delegation Flow</span>
+                    </h2>
+                    <p class="text-[var(--vs-text-muted)] text-[14px]">
+                        โครงสร้างหลักของการกำหนดภารกิจ (Mission) ถูกแบ่งออกเป็น 2 ส่วนหลัก
+                        เพื่อให้ผู้ใช้สามารถแยกแยะระหว่างงานระบบและงานที่ได้รับมอบหมายพิเศษได้อย่างชัดเจน
+                    </p>
+
+                    <div
+                        class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] overflow-x-auto vs-scrollbar">
+                        <div class="mermaid flex justify-center">
+                            graph TD
+                            User["User (Director / Teacher / Student)"]
+                            DelegationPanel["Delegation Panel (HUD Module)"]
+
+                            subgraph "Mission Categories"
+                            ModeSystem["System Tasks (งานระบบ)"]
+                            ModeAdhoc["Special Missions (ภารกิจพิเศษ/Ad-hoc)"]
+                            end
+
+                            subgraph "System Tasks Details"
+                            SysAuto["Auto-Scheduled (KPIs, Reports)"]
+                            SysEvent["System Events (Alerts, Triggers)"]
+                            end
+
+                            subgraph "Special Missions Details"
+                            SpcTopDown["Top-Down (Director to Teacher)"]
+                            SpcPeer["Peer-to-Peer (Teacher to Teacher)"]
+                            SpcMentoring["Mentoring (Teacher to Student)"]
+                            end
+
+                            User -->|"Opens Panel"| DelegationPanel
+                            DelegationPanel -->|"Toggle View"| ModeSystem
+                            DelegationPanel -->|"Toggle View"| ModeAdhoc
+
+                            ModeSystem --> SysAuto
+                            ModeSystem --> SysEvent
+
+                            ModeAdhoc --> SpcTopDown
+                            ModeAdhoc --> SpcPeer
+                            ModeAdhoc --> SpcMentoring
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[rgba(39,39,42,0.3)] border border-[rgba(63,63,70,0.3)] space-y-2">
+                            <h4 class="text-[var(--vs-text-title)] font-medium text-sm flex items-center space-x-2">
+                                <i class="ti ti-server-cog text-slate-400"></i>
+                                <span>System Tasks (งานระบบ)</span>
+                            </h4>
+                            <ul class="text-[var(--vs-text-muted)] text-[13px] space-y-1 list-disc list-inside">
+                                <li><strong>Auto-Generated:</strong> สร้างโดยระบบอัตโนมัติตามปฏิทินหรือเหตุการณ์</li>
+                                <li><strong>KPI & Compliance:</strong> งานที่ผูกกับตัวชี้วัดหรือรายงานประจำเดือน</li>
+                                <li><strong>Predictable:</strong> คาดเดาได้ล่วงหน้า มีโครงสร้างตายตัว</li>
+                                <li><strong>UI Color:</strong> เน้นโทนสีกลาง (Slate/Gray) สื่อถึงความเป็นทางการ</li>
+                            </ul>
+                        </div>
+                        <div
+                            class="p-4 rounded-[var(--vs-radius)] bg-[rgba(39,39,42,0.3)] border border-[rgba(63,63,70,0.3)] space-y-2">
+                            <h4 class="text-[var(--vs-text-title)] font-medium text-sm flex items-center space-x-2">
+                                <i class="ti ti-bolt text-[var(--vs-accent)]"></i>
+                                <span>Special Missions (ภารกิจพิเศษ)</span>
+                            </h4>
+                            <ul class="text-[var(--vs-text-muted)] text-[13px] space-y-1 list-disc list-inside">
+                                <li><strong>Human-Delegated:</strong> มอบหมายโดยบุคคล (Director, หัวหน้าหมวด)</li>
+                                <li><strong>Ad-hoc & Urgent:</strong> เกิดขึ้นตามสถานการณ์ (ด่วน/พิเศษ)</li>
+                                <li><strong>Dynamic Team:</strong> อาจมีการตั้งทีมเฉพาะกิจหรือเปลี่ยนมือผู้รับผิดชอบได้
+                                </li>
+                                <li><strong>UI Color:</strong> เน้นโทนสี Accent (Cyan/Emerald/Rose)
+                                    เพื่อการรับรู้ที่รวดเร็ว</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+        </main>
     </div>
+
+    <!-- Tabler Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+    <!-- Mermaid.js -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                background: 'transparent',
+                primaryColor: 'rgba(39, 39, 42, 0.5)', /* Zinc 800 */
+                primaryTextColor: '#a1a1aa', /* Zinc 400 */
+                primaryBorderColor: 'rgba(63, 63, 70, 0.8)', /* Zinc 700 */
+                lineColor: '#52525b', /* Zinc 600 */
+                secondaryColor: 'rgba(34, 211, 238, 0.1)', /* Cyan 400 */
+                tertiaryColor: 'rgba(34, 211, 238, 0.2)'
+            },
+            flowchart: {
+                curve: 'basis'
+            }
+        });
+    </script>
 </body>
 
 </html>

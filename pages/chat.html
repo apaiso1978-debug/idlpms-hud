@@ -17,12 +17,12 @@
     <div class="flex-1 flex flex-col w-full h-full">
         <!-- Chat Header (Fixed 48px) -->
         <header
-            class="h-12 min-h-[48px] px-8 flex items-center justify-between border-b border-[var(--vs-border)] bg-[var(--vs-bg-panel)] relative overflow-hidden">
+            class="h-12 min-h-[48px] px-8 flex items-center justify-between border-b border-[rgba(63,63,70,0.5)] bg-[var(--vs-bg-panel)] relative overflow-hidden">
             <!-- Normal Header Content -->
             <div id="headerContent" class="flex items-center justify-between w-full">
                 <div class="flex items-center space-x-4">
                     <div id="targetAvatar"
-                        class="w-10 h-10 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] flex items-center justify-center text-[13px] font-light text-[var(--vs-accent)]">
+                        class="w-10 h-10 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] flex items-center justify-center text-[13px] font-light text-[var(--vs-accent)]">
                         --
                     </div>
                     <div class="flex items-center space-x-2 text-[13px] font-light">
@@ -38,7 +38,7 @@
                 <div class="flex items-center space-x-2">
                     <div class="hidden md:flex items-center space-x-2 mr-4 text-[13px] font-light uppercase Thai-Rule">
                         <div class="flex items-center space-x-1.5 text-amber-500 opacity-80">
-                            <span class="w-1.5 h-1.5 bg-amber-500 rounded-[3px] animate-pulse"></span>
+                            <span class="w-1.5 h-1.5 bg-amber-500 rounded-[var(--vs-radius)] animate-pulse"></span>
                             <span>Bridge: JS-TEST-MODE</span>
                         </div>
                         <span class="text-[var(--vs-text-muted)] opacity-30">/</span>
@@ -69,7 +69,7 @@
 
         <!-- Personnel Details Flyout -->
         <div id="personnelFlyout"
-            class="hidden absolute top-16 right-6 w-80 bg-[var(--vs-bg-panel)] border border-[var(--vs-border)]  rounded-[var(--vs-radius)] z-[100] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            class="hidden absolute top-16 right-6 w-80 bg-[var(--vs-bg-panel)] border border-[rgba(63,63,70,0.5)]  rounded-[var(--vs-radius)] z-[100] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             <div class="p-6 space-y-6">
                 <!-- Profile Header -->
                 <div class="flex flex-col items-center text-center space-y-3">
@@ -85,7 +85,7 @@
                 </div>
 
                 <!-- Metadata Grid -->
-                <div class="grid grid-cols-2 gap-4 border-t border-[var(--vs-border)] pt-6">
+                <div class="grid grid-cols-2 gap-2 border-t border-[rgba(63,63,70,0.5)] pt-6">
                     <div class="space-y-1">
                         <div class="text-[13px] text-[var(--vs-text-muted)] uppercase font-light">Organization</div>
                         <div id="flyoutOrg" class="text-[13px] text-[var(--vs-text-body)] truncate">ESA District 01
@@ -109,7 +109,7 @@
                 </div>
 
                 <button id="closeFlyout"
-                    class="w-full py-2.5 bg-[var(--vs-bg-deep)] hover:bg-[rgba(var(--vs-border-rgb),0.3)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-muted)] uppercase font-light transition-all">
+                    class="w-full py-2.5 bg-[var(--vs-bg-deep)] hover:bg-[rgba(var(--vs-border-rgb),0.3)] border border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-muted)] uppercase font-light transition-all">
                     Dismiss Dossier
                 </button>
             </div>
@@ -128,7 +128,7 @@
     <!-- Empty State Placeholder (Visible when no chat selected) -->
     <div id="emptyPlaceholder" class="hidden flex-1 flex flex-col items-center justify-center p-6 text-center">
         <div
-            class="w-16 h-16 rounded-[3px] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] flex items-center justify-center mb-6">
+            class="w-16 h-16 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] flex items-center justify-center mb-6">
             <i class="icon i-chat h-8 w-8 text-[var(--vs-accent)] opacity-40"></i>
         </div>
         <h3 class="text-[var(--vs-text-title)] text-lg font-light mb-2 uppercase">Select a
@@ -141,11 +141,11 @@
     <!-- Typing Indicator -->
     <div id="typingIndicator" class="hidden px-8 py-2 flex items-center space-x-2">
         <div class="flex space-x-1">
-            <div class="w-1.5 h-1.5 bg-[var(--vs-accent)] rounded-[3px] animate-bounce" style="animation-delay: 0s">
+            <div class="w-1.5 h-1.5 bg-[var(--vs-accent)] rounded-[var(--vs-radius)] animate-bounce" style="animation-delay: 0s">
             </div>
-            <div class="w-1.5 h-1.5 bg-[var(--vs-accent)] rounded-[3px] animate-bounce" style="animation-delay: 0.2s">
+            <div class="w-1.5 h-1.5 bg-[var(--vs-accent)] rounded-[var(--vs-radius)] animate-bounce" style="animation-delay: 0.2s">
             </div>
-            <div class="w-1.5 h-1.5 bg-[var(--vs-accent)] rounded-[3px] animate-bounce" style="animation-delay: 0.4s">
+            <div class="w-1.5 h-1.5 bg-[var(--vs-accent)] rounded-[var(--vs-radius)] animate-bounce" style="animation-delay: 0.4s">
             </div>
         </div>
         <span class="text-[13px] text-[var(--vs-text-muted)] uppercase">
@@ -154,28 +154,28 @@
     </div>
 
     <!-- Input Area -->
-    <footer class="px-8 py-6 bg-[var(--vs-bg-panel)] border-t border-[var(--vs-border)]">
+    <footer class="px-8 py-6 bg-[var(--vs-bg-panel)] border-t border-[rgba(63,63,70,0.5)]">
         <div class="space-y-4">
             <!-- Quick Templates -->
             <div id="quickTemplates" class="flex items-center space-x-2 overflow-x-auto pb-1 no-scrollbar pl-[96px]">
                 <button
-                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
+                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
                     รับทราบครับ
                 </button>
                 <button
-                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
+                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
                     ขอบคุณครับ
                 </button>
                 <button
-                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
+                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
                     กรุณารอสักครู่
                 </button>
                 <button
-                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
+                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
                     ดำเนินการแล้ว
                 </button>
                 <button
-                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
+                    class="shrink-0 px-3 py-1 bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] text-[13px] text-[var(--vs-text-body)] hover:border-[var(--vs-accent)] transition-colors">
                     ส่งเอกสารแล้ว
                 </button>
             </div>
@@ -197,24 +197,24 @@
 
                 <!-- Text Input -->
                 <textarea id="messageInput" rows="1" placeholder="พิมพ์ข้อความ..."
-                    class="flex-1 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] px-4 py-3 text-[13px] text-[var(--vs-text-title)] placeholder-[var(--vs-text-muted)] focus:border-[var(--vs-accent)] focus:outline-none resize-none Thai-Rule min-h-[46px]"></textarea>
+                    class="flex-1 bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] px-4 py-3 text-[13px] text-[var(--vs-text-title)] placeholder-[var(--vs-text-muted)] focus:border-[var(--vs-accent)] focus:outline-none resize-none Thai-Rule min-h-[46px]"></textarea>
 
                 <button id="sendBtn"
-                    class="h-[46px] w-[46px] flex items-center justify-center bg-[rgba(34,211,238,0.1)] text-[var(--vs-accent)] border border-[rgba(34,211,238,0.3)] rounded-[var(--vs-radius)] hover:opacity-90 active:scale-95 transition-all shrink-0 self-end">
+                    class="h-[46px] w-[46px] flex items-center justify-center bg-[rgba(var(--vs-accent-rgb), 0.1)] text-[var(--vs-accent)] border border-[rgba(var(--vs-accent-rgb), 0.3)] rounded-[var(--vs-radius)] hover:opacity-90 active:scale-95 transition-all shrink-0 self-end">
                     <i class="icon i-paper-airplane h-5 w-5"></i>
                 </button>
             </div>
 
             <!-- Emoji Picker (Hidden) -->
             <div id="emojiPicker"
-                class="hidden p-4 bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] rounded-[var(--vs-radius)] w-full max-w-[400px]">
+                class="hidden p-4 bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] w-full max-w-[400px]">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-[13px] text-[var(--vs-text-muted)] uppercase">Select Emoji</span>
                     <button id="closeEmoji"
                         class="text-[var(--vs-text-muted)] hover:text-[var(--vs-text-title)]">✕</button>
                 </div>
                 <div class="max-h-[220px] overflow-y-auto no-scrollbar">
-                    <div class="grid grid-cols-10 gap-1">
+                    <div class="grid grid-cols-10 gap-1.5">
                         <!-- Smileys & Emotions -->
                         <button
                             class="p-1 hover:bg-[var(--vs-bg-panel)] rounded-[var(--vs-radius)] text-xl transition-colors">👍</button>
@@ -369,7 +369,7 @@
             <!-- Status Bar -->
             <div class="flex items-center justify-between text-[13px] text-[var(--vs-text-muted)]">
                 <span class="flex items-center space-x-1">
-                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-[3px]"></span>
+                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-[var(--vs-radius)]"></span>
                     <span>Encrypted</span>
                 </span>
                 <span>Press Enter to send</span>
@@ -470,10 +470,10 @@
 
                 let innerContent = '';
                 if (type === 'image') {
-                    innerContent = `<img src="${content.url}" alt="${content.name}" class="max-w-[280px] rounded-[var(--vs-radius)] border border-[var(--vs-border)]" />`;
+                    innerContent = `<img src="${content.url}" alt="${content.name}" class="max-w-[280px] rounded-[var(--vs-radius)] border border-[rgba(63,63,70,0.5)]" />`;
                 } else if (type === 'file') {
                     innerContent = `
-                            <div class="flex items-center space-x-3 p-3 bg-[var(--vs-bg-deep)] rounded-[var(--vs-radius)] border border-[var(--vs-border)]">
+                            <div class="flex items-center space-x-3 p-3 bg-[var(--vs-bg-deep)] rounded-[var(--vs-radius)] border border-[rgba(63,63,70,0.5)]">
                                 <i class="icon i-document h-8 w-8 text-[var(--vs-accent)]"></i>
                                 <div>
                                     <div class="text-[13px] text-[var(--vs-text-title)] font-light">${content.name}</div>
@@ -485,7 +485,7 @@
                     innerContent = `<p class="text-[13px] Thai-Rule">${content}</p>`;
                 }
 
-                const bgColor = isSelf ? 'bg-[rgba(34,211,238,0.1)] text-[var(--vs-accent)] border border-[rgba(34,211,238,0.3)]' : 'bg-[var(--vs-bg-card)] text-[var(--vs-text-title)]';
+                const bgColor = isSelf ? 'bg-[rgba(var(--vs-accent-rgb), 0.1)] text-[var(--vs-accent)] border border-[rgba(var(--vs-accent-rgb), 0.3)]' : 'bg-[var(--vs-bg-card)] text-[var(--vs-text-title)]';
 
                 bubble.innerHTML = `
                         <div class="max-w-[70%] ${bgColor} rounded-[var(--vs-radius)] p-3 space-y-1">

@@ -171,9 +171,9 @@
          ══════════════════════════════════════════ -->
     <div class="mb-5">
         <div class="flex items-center justify-between mb-3">
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2">
                 <button onclick="goBack()"
-                    class="p-2 rounded-[3px] border border-[var(--vs-border)] hover:bg-white/5 transition-all"
+                    class="p-2 rounded-[var(--vs-radius)] border border-[rgba(63,63,70,0.5)] hover:bg-white/5 transition-all"
                     title="กลับ">
                     <i class="icon i-arrow-left h-4 w-4"></i>
                 </button>
@@ -187,10 +187,10 @@
                     </div>
                 </div>
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2">
                 <!-- Progress -->
                 <div
-                    class="flex items-center gap-2 px-3 py-1.5 rounded-[var(--vs-radius)] border border-[var(--vs-border)] bg-white/5">
+                    class="flex items-center gap-2 px-3 py-1.5 rounded-[var(--vs-radius)] border border-[rgba(63,63,70,0.5)] bg-white/5">
                     <span id="progress-text" class="text-[13px] font-light text-[var(--vs-text-muted)]">0/0</span>
                     <div class="vs-progress-track" style="width: 80px;">
                         <div id="progress-bar" class="vs-progress-fill" style="width: 0%;"></div>
@@ -198,7 +198,7 @@
                 </div>
                 <!-- Submit -->
                 <button id="btn-submit" onclick="submitResults()" disabled
-                    class="flex items-center gap-2 px-4 py-2 rounded-[3px] text-[13px] font-light transition-all disabled:opacity-30 disabled:grayscale"
+                    class="flex items-center gap-2 px-4 py-2 rounded-[var(--vs-radius)] text-[13px] font-light transition-all disabled:opacity-30 disabled:grayscale"
                     style="background: var(--sj-pe); color: var(--vs-bg-deep);">
                     <i class="icon i-check-circle h-4 w-4"></i>
                     SUBMIT งาน
@@ -207,7 +207,7 @@
         </div>
 
         <!-- 3 Test Types Legend -->
-        <div class="flex items-center gap-4 flex-wrap">
+        <div class="flex items-center gap-2 flex-wrap">
             <div
                 class="flex items-center gap-1.5 px-3 py-1 rounded-[var(--vs-radius)] border border-[rgba(var(--sj-pe-rgb),0.15)] bg-[rgba(var(--sj-pe-rgb),0.05)]">
                 <i class="icon i-hand-raised h-4 w-4" style="color:var(--sj-pe);"></i>
@@ -532,7 +532,8 @@
 
         // ── Submit ──
         async function submitResults() {
-            if (!confirm(`ยืนยันส่งผลทดสอบสมรรถภาพ ชั้น ${currentClassId} ?\n\nเมื่อส่งแล้วจะไม่สามารถแก้ไขได้`)) return;
+            const confirmed = window.HUD_NOTIFY ? await HUD_NOTIFY.confirm('ยืนยันส่งข้อมูล', `ยืนยันส่งผลทดสอบสมรรถภาพ ชั้น ${currentClassId} ?\n\nเมื่อส่งแล้วจะไม่สามารถแก้ไขได้`, 'warning') : confirm(`ยืนยันส่งผลทดสอบสมรรถภาพ ชั้น ${currentClassId} ?\n\nเมื่อส่งแล้วจะไม่สามารถแก้ไขได้`);
+            if (!confirmed) return;
 
             // Batch cloud save for any records not yet synced
             if (typeof FitnessService !== 'undefined') {

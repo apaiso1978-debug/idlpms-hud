@@ -11,10 +11,10 @@
 </head>
 
 <body class="bg-transparent px-8 pt-8 pb-24 overflow-y-auto font-['Sarabun'] antialiased">
-    <div class="max-w-[1600px] space-y-8">
+    <div class="w-full space-y-8">
         <!-- Header -->
         <header
-            class="h-12 px-6 flex items-center justify-between rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] ">
+            class="h-12 px-6 flex items-center justify-between rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] ">
             <h1 class="text-[13px] font-light text-[var(--vs-text-title)] uppercase">3. การติดต่อสื่อสาร</h1>
         </header>
 
@@ -22,37 +22,37 @@
         <section class="space-y-6">
             <h2 class="text-[var(--vs-accent)] font-light text-[13px] uppercase">01 Role-Based Chat Matrix</h2>
             <div
-                class="overflow-hidden rounded-[var(--vs-radius)] border border-[var(--vs-border)] bg-[var(--vs-bg-card)]">
+                class="overflow-hidden rounded-[var(--vs-radius)] border border-[rgba(63,63,70,0.5)] bg-[var(--vs-bg-card)]">
                 <table class="w-full text-left text-[13px] border-collapse">
                     <thead>
                         <tr class="bg-[var(--vs-bg-panel)] text-[var(--vs-text-body)] text-[13px] uppercase">
-                            <th class="p-4 border-b border-[var(--vs-border)]">Role Identity</th>
-                            <th class="p-4 border-b border-[var(--vs-border)]">Upward Comms</th>
-                            <th class="p-4 border-b border-[var(--vs-border)]">Horizontal/Downward</th>
+                            <th class="p-4 border-b border-[rgba(63,63,70,0.5)]">Role Identity</th>
+                            <th class="p-4 border-b border-[rgba(63,63,70,0.5)]">Upward Comms</th>
+                            <th class="p-4 border-b border-[rgba(63,63,70,0.5)]">Horizontal/Downward</th>
                         </tr>
                     </thead>
                     <tbody class="text-[var(--vs-text-muted)] font-light">
-                        <tr class="border-b border-[var(--vs-border)] hover:bg-[var(--vs-bg-card)]">
+                        <tr class="border-b border-[rgba(63,63,70,0.5)] hover:bg-[var(--vs-bg-card)]">
                             <td class="p-4 text-[var(--vs-accent)] font-light">Student</td>
                             <td class="p-4 text-[var(--vs-text-body)]">Teachers (Same Class)</td>
                             <td class="p-4">Peers (Same Class Only)</td>
                         </tr>
-                        <tr class="border-b border-[var(--vs-border)] hover:bg-[var(--vs-bg-card)]">
+                        <tr class="border-b border-[rgba(63,63,70,0.5)] hover:bg-[var(--vs-bg-card)]">
                             <td class="p-4 text-[var(--vs-accent)] font-light">Teacher</td>
                             <td class="p-4 text-[var(--vs-text-body)]">School Director</td>
                             <td class="p-4">Students, Fellow Teachers, Parents</td>
                         </tr>
-                        <tr class="border-b border-[var(--vs-border)] hover:bg-[var(--vs-bg-card)]">
+                        <tr class="border-b border-[rgba(63,63,70,0.5)] hover:bg-[var(--vs-bg-card)]">
                             <td class="p-4 text-[var(--vs-accent)] font-light">School Director</td>
                             <td class="p-4 text-[var(--vs-text-body)]">ESA Director</td>
                             <td class="p-4">School Staff, Fellow Directors</td>
                         </tr>
-                        <tr class="border-b border-[var(--vs-border)] hover:bg-[var(--vs-bg-card)]">
+                        <tr class="border-b border-[rgba(63,63,70,0.5)] hover:bg-[var(--vs-bg-card)]">
                             <td class="p-4 text-[var(--vs-accent)] font-light">HS Parent (ผู้ปกครอง HS)</td>
                             <td class="p-4 text-[var(--vs-text-body)]">ESA Director (Regional HQ)</td>
                             <td class="p-4">HS Students (In custody)</td>
                         </tr>
-                        <tr class="border-b border-[var(--vs-border)] hover:bg-[var(--vs-bg-card)]">
+                        <tr class="border-b border-[rgba(63,63,70,0.5)] hover:bg-[var(--vs-bg-card)]">
                             <td class="p-4 text-[var(--vs-accent)] font-light">ESA Director</td>
                             <td class="p-4 text-[var(--vs-text-body)]">OBEC / MOE Level</td>
                             <td class="p-4">School Directors, HS Parents, Peer ESA Directors</td>
@@ -68,40 +68,40 @@
         <!-- Contact Grouping Logic -->
         <section class="space-y-6">
             <h2 class="text-[var(--vs-accent)] font-light text-[13px] uppercase">02 Contact Grouping Categories</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
                 <div
-                    class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] space-y-3">
+                    class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] space-y-3">
                     <div class="flex items-center space-x-2">
                         <div class="w-2 h-2 rounded-[var(--vs-radius)] bg-rose-500"></div>
                         <span class="text-zinc-200 font-light text-[13px] uppercase">Command Authority</span>
                     </div>
                     <p class="text-[var(--vs-text-muted)] text-[13px] uppercase">สายการบังคับบัญชาโดยตรง (แนวดิ่ง)</p>
                     <div
-                        class="p-3 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[var(--vs-border)] text-[13px] text-[var(--vs-text-body)] uppercase">
+                        class="p-3 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[rgba(63,63,70,0.5)] text-[13px] text-[var(--vs-text-body)] uppercase">
                         Example: Teacher ? School Director ? ESA Director
                     </div>
                 </div>
                 <div
-                    class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] space-y-3">
+                    class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] space-y-3">
                     <div class="flex items-center space-x-2">
                         <div class="w-2 h-2 rounded-[var(--vs-radius)] bg-[var(--vs-accent)]"></div>
                         <span class="text-zinc-200 font-light text-[13px] uppercase">Peer Personnel</span>
                     </div>
                     <p class="text-[var(--vs-text-muted)] text-[13px] uppercase">บุคลากรในระดับเดียวกันหรือใกล้เคียง</p>
                     <div
-                        class="p-3 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[var(--vs-border)] text-[13px] text-[var(--vs-text-body)] uppercase">
+                        class="p-3 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[rgba(63,63,70,0.5)] text-[13px] text-[var(--vs-text-body)] uppercase">
                         Example: ครูประจำชั้นห้องอื่น, ผอ.เขตพื้นที่อื่น
                     </div>
                 </div>
                 <div
-                    class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] space-y-3">
+                    class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] space-y-3">
                     <div class="flex items-center space-x-2">
                         <div class="w-2 h-2 rounded-[var(--vs-radius)] bg-emerald-500"></div>
                         <span class="text-zinc-200 font-light text-[13px] uppercase">Direct Reports</span>
                     </div>
                     <p class="text-[var(--vs-text-muted)] text-[13px] uppercase">บุคลากรในการกำกับดูแลโดยตรง</p>
                     <div
-                        class="p-3 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[var(--vs-border)] text-[13px] text-[var(--vs-text-body)] uppercase">
+                        class="p-3 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)] border border-[rgba(63,63,70,0.5)] text-[13px] text-[var(--vs-text-body)] uppercase">
                         Example: ครูในโรงเรียน, นักเรียนในชั้นเรียน
                     </div>
                 </div>
@@ -111,22 +111,23 @@
         <!-- Message Types -->
         <section class="space-y-6">
             <h2 class="text-[var(--vs-accent)] font-light text-[13px] uppercase">03 Status & Signals</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <div
-                    class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] flex items-center justify-between group cursor-help transition-all hover:bg-[rgba(var(--vs-border-rgb),0.3)]">
+                    class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] flex items-center justify-between group cursor-help transition-all hover:bg-[rgba(var(--vs-border-rgb),0.3)]">
                     <div class="flex items-center space-x-4">
                         <div class="w-2 h-2 rounded-[var(--vs-radius)] bg-emerald-500 vs-status-pulse">
                         </div>
                         <div>
                             <div class="text-zinc-200 font-light text-[13px] uppercase">Active Pulse</div>
-                            <div class="text-[var(--vs-text-muted)] text-[13px] uppercase">Device is online and connected to
+                            <div class="text-[var(--vs-text-muted)] text-[13px] uppercase">Device is online and
+                                connected to
                                 Secure
                                 Gateway</div>
                         </div>
                     </div>
                 </div>
                 <div
-                    class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] flex items-center justify-between group cursor-help transition-all hover:bg-[rgba(var(--vs-border-rgb),0.3)]">
+                    class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] flex items-center justify-between group cursor-help transition-all hover:bg-[rgba(var(--vs-border-rgb),0.3)]">
                     <div class="flex items-center space-x-4">
                         <div class="w-2 h-2 rounded-[var(--vs-radius)] bg-rose-500 animate-pulse">
                         </div>
@@ -144,8 +145,8 @@
         <!-- Next-Gen Interaction Features -->
         <section class="space-y-6">
             <h2 class="text-[var(--vs-accent)] font-light text-[13px] uppercase">04 Interaction Intelligence</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)]">
                     <h3 class="text-zinc-200 font-light mb-4 text-[13px] uppercase">Interaction Intelligence</h3>
                     <p class="text-[var(--vs-text-muted)] text-[13px] leading-relaxed uppercase">
                         - <span>Quick Templates:</span> แม่แบบข้อความตอบกลับด่วนเพื่อความรวดเร็ว<br>
@@ -153,7 +154,7 @@
                         - <span>Role-Based Tinting:</span> สีกล่องข้อความแยกตามบทบาทของผู้ส่งโดยอัตโนมัติ
                     </p>
                 </div>
-                <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)]">
+                <div class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)]">
                     <h3 class="text-zinc-200 font-light mb-4 text-[13px] uppercase">Performance & Security</h3>
                     <p class="text-[var(--vs-text-muted)] text-[13px] leading-relaxed uppercase">
                         - <span>FIFO Stream:</span> จำกัดข้อความแสดงผลเพียง 50
@@ -169,8 +170,8 @@
         <section class="space-y-6">
             <h2 class="text-[var(--vs-accent)] font-light text-[13px] uppercase">05 Chat Engine Technical Notes</h2>
             <div
-                class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[var(--vs-border)] space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-[13px] uppercase">
+                class="p-5 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-[13px] uppercase">
                     <div
                         class="flex justify-between text-[var(--vs-text-body)] p-3 bg-[var(--vs-bg-card)] rounded-[var(--vs-radius)]">
                         <span>Engine File</span>

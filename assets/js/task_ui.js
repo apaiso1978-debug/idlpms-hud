@@ -43,7 +43,7 @@ const TaskUI = {
 
         if (report.length === 0) {
             const empty = document.createElement('div');
-            empty.className = 'px-3 py-6 text-center border border-dashed border-[var(--vs-border)] rounded-[var(--vs-radius)] opacity-30';
+            empty.className = 'px-3 py-6 text-center border border-dashed border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] opacity-30';
             empty.innerHTML = `<div class="text-[13px] font-light italic">ยังไม่มีงานที่มอบหมาย</div>`;
             container.appendChild(empty);
             return;
@@ -120,7 +120,7 @@ const TaskUI = {
 
         if (tasks.length === 0) {
             const empty = document.createElement('div');
-            empty.className = 'px-3 py-6 text-center border border-dashed border-[var(--vs-border)] rounded-[var(--vs-radius)] opacity-30';
+            empty.className = 'px-3 py-6 text-center border border-dashed border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] opacity-30';
             empty.innerHTML = `<div class="text-[13px] font-light italic">ไม่มีงานค้างใน Inbox</div>`;
             container.appendChild(empty);
             return;
@@ -173,11 +173,20 @@ const TaskUI = {
                             ส่งงานแล้ว
                         </div>
                     ` : `
-                        <button onclick="TaskUI.handleSubmit('${task.taskId}')" 
-                                ${!completion.isComplete ? 'disabled' : ''}
-                                class="px-4 py-1.5 bg-[var(--vs-accent)] text-[var(--vs-bg-deep)] rounded-[3px] text-[13px] font-bold hover:brightness-110 active:scale-95 disabled:opacity-30 disabled:grayscale transition-all">
-                            SUBMIT งาน
-                        </button>
+                        <div class="flex items-center gap-2">
+                            ${task.myAssignment.extensionRequested ? `
+                                <div class="px-3 py-1.5 border border-amber-500/30 text-amber-400 bg-amber-500/10 rounded-[3px] text-[11px] font-light cursor-not-allowed">รออนุมัติเลื่อนกำหนด</div>
+                            ` : `
+                                <button onclick="TaskUI.requestExtension('${task.taskId}')" class="px-3 py-1.5 border border-[rgba(63,63,70,0.5)] text-[var(--vs-text-title)] rounded-[3px] text-[11px] font-light hover:border-amber-500/50 hover:text-amber-400 transition-all">
+                                    <i class="icon i-clock h-3 w-3 inline-block align-text-bottom mr-1"></i> เลื่อนกำหนด
+                                </button>
+                            `}
+                            <button onclick="TaskUI.handleSubmit('${task.taskId}')" 
+                                    ${!completion.isComplete ? 'disabled' : ''}
+                                    class="px-4 py-1.5 bg-[var(--vs-accent)] text-[var(--vs-bg-deep)] rounded-[3px] text-[13px] font-bold hover:brightness-110 active:scale-95 disabled:opacity-30 disabled:grayscale transition-all">
+                                SUBMIT งาน
+                            </button>
+                        </div>
                     `}
                 </div>
             `;
@@ -218,8 +227,8 @@ const TaskUI = {
     injectCreateModal() {
         const modalHtml = `
             <div id="modal-create-task" class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm items-center justify-center p-4 Thai-Rule" style="display:none">
-                <div class="vs-glass border border-[var(--vs-border)] w-full max-w-sm rounded-[var(--vs-radius)] overflow-hidden animate-zoom-in">
-                    <div class="px-5 py-4 border-b border-[var(--vs-border)] flex items-center justify-between bg-white/5">
+                <div class="vs-glass border border-[rgba(63,63,70,0.5)] w-full max-w-sm rounded-[var(--vs-radius)] overflow-hidden animate-zoom-in">
+                    <div class="px-5 py-4 border-b border-[rgba(63,63,70,0.5)] flex items-center justify-between bg-white/5">
                         <div class="flex items-center gap-2">
                             <div class="w-1.5 h-6 bg-[var(--vs-accent)]"></div>
                             <span class="text-[13px] font-light text-[var(--vs-text-title)] uppercase">สั่งงานใหม่ — TASK PUSH</span>
@@ -250,6 +259,12 @@ const TaskUI = {
                         </div>
 
                         <div class="space-y-1">
+                            <label class="text-[13px] text-[var(--vs-text-muted)] uppercase">ค่าน้ำหนักภารกิจ (Base Score)</label>
+                            <input id="task-basescore" type="number" min="0" value="100" class="w-full text-[13px] p-2 vs-setup-input" placeholder="เช่น 10, 50, 100" />
+                            <div class="text-[11px] text-[var(--vs-text-muted)] italic mt-1">* ระดับคะแนนอ้างอิงความสำคัญของงาน (ปรับเปลี่ยนได้อย่างอิสระเพื่อความโปร่งใส)</div>
+                        </div>
+
+                        <div class="space-y-1">
                             <label class="text-[13px] text-[var(--vs-text-muted)] uppercase">หมายเหตุ (ถ้ามี)</label>
                             <textarea id="task-note" rows="2" class="w-full text-[13px] p-2 vs-setup-input" placeholder="ระบุรายละเอียดเพิ่มเติม..."></textarea>
                         </div>
@@ -260,7 +275,7 @@ const TaskUI = {
                         </div>
 
                         <div class="flex gap-3 pt-2">
-                            <button onclick="TaskUI.closeCreateModal()" class="flex-1 py-2 rounded-[3px] border border-[var(--vs-border)] text-[13px] font-light hover:bg-white/5">ยกเลิก</button>
+                            <button onclick="TaskUI.closeCreateModal()" class="flex-1 py-2 rounded-[3px] border border-[rgba(63,63,70,0.5)] text-[13px] font-light hover:bg-white/5">ยกเลิก</button>
                             <button onclick="TaskUI.handleCreateSubmit()" class="flex-1 py-2 rounded-[3px] bg-[var(--vs-accent)] text-[var(--vs-bg-deep)] text-[13px] font-bold hover:brightness-110">ส่ง TASK ทันที</button>
                         </div>
                     </div>
@@ -294,6 +309,7 @@ const TaskUI = {
         const title = document.getElementById('task-title').value.trim();
         const deadline = document.getElementById('task-deadline').value;
         const note = document.getElementById('task-note').value.trim();
+        const baseScore = document.getElementById('task-basescore').value;
 
         if (!title || !deadline) {
             if (window.HUD_NOTIFY) HUD_NOTIFY.toast('MISSING_DATA', 'กรุณากรอกข้อมูลให้ครบถ้วน', 'warning');
@@ -301,7 +317,7 @@ const TaskUI = {
         }
 
         const user = window.getCurrentUser();
-        TaskSystem.createTask(tid, title, deadline, note, user.schoolId || 'SCH_MABLUD', user.userId);
+        TaskSystem.createTask(tid, title, deadline, note, user.schoolId || 'SCH_MABLUD', user.userId, baseScore);
 
         this.closeCreateModal();
         if (window.HUD_NOTIFY) HUD_NOTIFY.toast('TASK_PUSHED', 'ส่ง Task ไปยังครูทุกคนแล้ว', 'success');
@@ -318,6 +334,17 @@ const TaskUI = {
             this.renderAll();
         } else {
             if (window.HUD_NOTIFY) HUD_NOTIFY.toast('SUBMIT_FAILED', 'ไม่สามารถส่งงานได้ กรุณาตรวจสอบข้อมูล', 'error');
+        }
+    },
+
+    requestExtension(taskId) {
+        const user = window.getCurrentUser();
+        if (confirm("ยืนยันการขอเลื่อนกำหนดการส่งงาน? ผู้บังคับบัญชาจะต้องอนุมัติคำขอนี้")) {
+            const success = TaskSystem.requestExtension(taskId, user.userId);
+            if (success) {
+                if (window.HUD_NOTIFY) HUD_NOTIFY.toast('EXTENSION_REQUESTED', 'ส่งคำขอพิจารณาเลื่อนกำหนดแล้ว', 'accent');
+                this.renderAll();
+            }
         }
     }
 };

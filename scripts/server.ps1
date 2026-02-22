@@ -33,47 +33,59 @@ try {
         $request = $context.Request
         $response = $context.Response
         
-        $path = $request.Url.LocalPath
-        if ($path -eq "/") { $path = "/index.html" }
-        
-        $filePath = Join-Path (Get-Location) $path.TrimStart('/')
-        
-        if (Test-Path $filePath -PathType Leaf) {
-            $extension = [System.IO.Path]::GetExtension($filePath).ToLower()
-            $mimeType = switch ($extension) {
-                ".html" { "text/html" }
-                ".css" { "text/css" }
-                ".js" { "application/javascript" }
-                ".png" { "image/png" }
-                ".jpg" { "image/jpeg" }
-                ".svg" { "image/svg+xml" }
-                ".json" { "application/json" }
-                default { "application/octet-stream" }
+        try {
+            $path = $request.Url.LocalPath
+            if ($path -eq "/") { $path = "/index.html" }
+            
+            # Use raw strings and replace forward slashes to avoid illegal char exceptions in Join-Path
+            $rawPath = $path.TrimStart('/').Replace('/', '\')
+            $filePath = "$PWD\$rawPath"
+            
+            if (Test-Path $filePath -PathType Leaf) {
+                $extension = [System.IO.Path]::GetExtension($filePath).ToLower()
+                $mimeType = switch ($extension) {
+                    ".html" { "text/html" }
+                    ".css" { "text/css" }
+                    ".js" { "application/javascript" }
+                    ".png" { "image/png" }
+                    ".jpg" { "image/jpeg" }
+                    ".svg" { "image/svg+xml" }
+                    ".json" { "application/json" }
+                    default { "application/octet-stream" }
+                }
+                
+                # Final Safeguard for Thai Text Inheritance
+                if ($mimeType -eq "text/html") {
+                    $mimeType = "text/html; charset=utf-8"
+                }
+                
+                $response.ContentType = $mimeType
+                
+                # Prevent browser caching during development
+                $response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate")
+                $response.Headers.Add("Pragma", "no-cache")
+                $response.Headers.Add("Expires", "0")
+                
+                $bytes = [System.IO.File]::ReadAllBytes($filePath)
+                $response.ContentLength64 = $bytes.Length
+                $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                
+                Write-Host "[200 OK] $path" -ForegroundColor DarkGray
             }
-            
-            # Final Safeguard for Thai Text Inheritance
-            if ($mimeType -eq "text/html") {
-                $mimeType = "text/html; charset=utf-8"
+            else {
+                $response.StatusCode = 404
+                Write-Host "[404 NF] $path" -ForegroundColor DarkRed
             }
-            
-            $response.ContentType = $mimeType
-            
-            # Prevent browser caching during development
-            $response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate")
-            $response.Headers.Add("Pragma", "no-cache")
-            $response.Headers.Add("Expires", "0")
-            
-            $bytes = [System.IO.File]::ReadAllBytes($filePath)
-            $response.ContentLength64 = $bytes.Length
-            $response.OutputStream.Write($bytes, 0, $bytes.Length)
-            
-            Write-Host "[200 OK] $path" -ForegroundColor DarkGray
         }
-        else {
-            $response.StatusCode = 404
-            Write-Host "[404 NF] $path" -ForegroundColor DarkRed
+        catch {
+            $response.StatusCode = 500
+            Write-Host "[500 ERR] Bad Request / Parse Error: $path" -ForegroundColor Red
         }
-        $response.Close()
+        finally {
+            if ($response -ne $null) {
+                $response.Close()
+            }
+        }
     }
 }
 catch {

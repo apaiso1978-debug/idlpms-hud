@@ -15,7 +15,7 @@
 <body class="bg-[var(--vs-bg-deep)] px-6 overflow-x-hidden font-['Sarabun'] antialiased">
 
     <!-- Header -->
-    <div class="max-w-[1400px] mx-auto space-y-6">
+    <div class="w-full space-y-6">
 
         <div class="flex items-center justify-between">
             <div>
@@ -25,24 +25,24 @@
             </div>
             <div class="flex items-center">
                 <div id="stats-pending"
-                    class="px-4 rounded-[3px] bg-[rgba(251,191,36,0.1)] border border-[rgba(251,191,36,0.3)] text-[13px] font-light text-amber-400">
+                    class="px-4 rounded-[var(--vs-radius)] bg-[rgba(251,191,36,0.1)] border border-[rgba(251,191,36,0.3)] text-[13px] font-light text-amber-400">
                     <i class="icon i-clock h-4 w-4 inline-block mr-1"></i> ??????: <span id="count-pending">0</span>
                 </div>
                 <div id="stats-reviewed"
-                    class="px-4 rounded-[3px] bg-[rgba(52,211,153,0.1)] border border-[rgba(52,211,153,0.3)] text-[13px] font-light text-emerald-400">
+                    class="px-4 rounded-[var(--vs-radius)] bg-[rgba(52,211,153,0.1)] border border-[rgba(52,211,153,0.3)] text-[13px] font-light text-emerald-400">
                     <i class="icon i-check h-4 w-4 inline-block mr-1"></i> ????????: <span id="count-reviewed">0</span>
                 </div>
             </div>
         </div>
 
         <!-- Filter Tabs -->
-        <div class="flex items-center gap-2 border-b border-[var(--vs-border)] pb-3">
+        <div class="flex items-center gap-2 border-b border-[rgba(63,63,70,0.5)] pb-3">
             <button onclick="TeacherGrading.setFilter('all')" id="filter-all"
-                class="grading-filter active px-4 rounded-[3px] text-[13px] font-light transition-all">???????</button>
+                class="grading-filter active px-4 rounded-[var(--vs-radius)] text-[13px] font-light transition-all">???????</button>
             <button onclick="TeacherGrading.setFilter('pending')" id="filter-pending"
-                class="grading-filter px-4 rounded-[3px] text-[13px] font-light transition-all">??????</button>
+                class="grading-filter px-4 rounded-[var(--vs-radius)] text-[13px] font-light transition-all">??????</button>
             <button onclick="TeacherGrading.setFilter('reviewed')" id="filter-reviewed"
-                class="grading-filter px-4 rounded-[3px] text-[13px] font-light transition-all">????????</button>
+                class="grading-filter px-4 rounded-[var(--vs-radius)] text-[13px] font-light transition-all">????????</button>
         </div>
 
         <!-- Submissions List -->

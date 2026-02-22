@@ -120,12 +120,12 @@ let lines = [];
 // ========== PRINCIPAL ==========
 lines.push(`        // ═══ โรงเรียนวัดมาบชลูด — ข้อมูลจริง ปีการศึกษา 2568 ═══`);
 lines.push(`        // ═══ ผู้อำนวยการ ═══`);
-lines.push(`        DIR_MABLUD: {`);
+lines.push(`        11111111-1111-4111-8111-111111111111: {`);
 lines.push(`            role: 'SCHOOL_DIR',`);
 lines.push(`            fullName: 'นายบุญเรือง ถ้ำมณี',`);
 lines.push(`            name: 'ผอ.โรงเรียนวัดมาบชลูด',`);
 lines.push(`            org: 'โรงเรียนวัดมาบชลูด สพป.ระยอง เขต 1',`);
-lines.push(`            schoolId: 'SCH_MABLUD',`);
+lines.push(`            schoolId: '99999999-9999-4999-8999-999999999999',`);
 lines.push(`            districtId: 'ESA_01',`);
 lines.push(`            avatar: 'BT',`);
 lines.push(`            color: 'id-dir',`);
@@ -134,10 +134,10 @@ lines.push(`        },`);
 
 // ========== SPECIAL TEACHER: WORACHAI ==========
 lines.push(`        // ═══ ครูพิเศษ / Developer / Admin / Founder ═══`);
-lines.push(`        TEA_WORACHAI: {`);
+lines.push(`        22222222-2222-4222-8222-222222222222: {`);
 lines.push(`            role: 'TEACHER',`);
 lines.push(`            fullName: 'นายวรชัย อภัยโส',`);
-lines.push(`            schoolId: 'SCH_MABLUD',`);
+lines.push(`            schoolId: '99999999-9999-4999-8999-999999999999',`);
 lines.push(`            avatar: 'WA',`);
 lines.push(`            color: 'id-dir',`);
 lines.push(`            specialRoles: ['SPECIAL_TEACHER', 'DEVELOPER', 'ADMIN', 'FOUNDER'],`);
@@ -154,7 +154,7 @@ lines.push(`        // ═══ ครูประจำชั้น (14 คน
 for (const [key, name, homeroom, color] of TEACHERS) {
     const av = initials(name);
     lines.push(`        ${key}: {`);
-    lines.push(`            role: 'TEACHER', fullName: '${name}', schoolId: 'SCH_MABLUD', avatar: '${av}', color: '${color}',`);
+    lines.push(`            role: 'TEACHER', fullName: '${name}', schoolId: '99999999-9999-4999-8999-999999999999', avatar: '${av}', color: '${color}',`);
     lines.push(`            homeroomClass: '${homeroom}', maxPeriodsPerDay: 6, maxPeriodsPerWeek: 25,`);
     lines.push(`            canTeachSubjects: ['GUIDE', 'SCOUT', 'PRAY', 'RILS', 'SOCIAL', 'CLUB', 'PLC'],`);
     lines.push(`            workloadRoles: ['homeroom'],`);
@@ -171,7 +171,7 @@ for (const [className, students] of Object.entries(STUDENTS)) {
         const key = `STU_M_${String(stuIdx).padStart(3, '0')}`;
         const av = initials(name);
         const isActive = !note.includes('ย้ายออก');
-        lines.push(`        ${key}: { role: 'STUDENT', fullName: '${name}', schoolId: 'SCH_MABLUD', classId: '${classId}', gradeLevel: ${grade}, avatar: '${av}', color: 'cyan', insforgeStudentCode: '${code}', citizenId: '${cid}'${!isActive ? ", status: 'WITHDRAWN'" : ''} },`);
+        lines.push(`        ${key}: { role: 'STUDENT', fullName: '${name}', schoolId: '99999999-9999-4999-8999-999999999999', classId: '${classId}', gradeLevel: ${grade}, avatar: '${av}', color: 'cyan', insforgeStudentCode: '${code}', citizenId: '${cid}'${!isActive ? ", status: 'WITHDRAWN'" : ''} },`);
     }
 }
 

@@ -51,13 +51,15 @@
         }
 
         .status-complete {
-            background: var(--vs-success);
-            box-shadow: 0 0 6px rgba(34, 197, 94, 0.4);
+            background-color: transparent;
+            border: 1px solid var(--vs-success);
+            box-shadow: inset 0 0 4px rgba(34, 197, 94, 0.2), 0 0 6px rgba(34, 197, 94, 0.4);
         }
 
         .status-partial {
-            background: var(--vs-warning);
-            box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+            background-color: transparent;
+            border: 1px solid var(--vs-warning);
+            box-shadow: inset 0 0 4px rgba(245, 158, 11, 0.2), 0 0 6px rgba(245, 158, 11, 0.4);
         }
 
         .status-empty {
@@ -78,11 +80,11 @@
 
 <body
     class="p-6 bg-transparent text-[var(--vs-text-body)] font-light Thai-Rule overflow-y-auto vs-scrollbar font-['Sarabun']">
-    <div class="max-w-[1600px] space-y-6">
+    <div class="w-full space-y-6">
 
         <!-- ① HEADER BAR -->
         <header class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2">
                 <div class="test-icon-box" style="background: rgba(var(--sj-pe-rgb), 0.12); color: var(--sj-pe);">
                     <i class="icon i-heart h-5 w-5"></i>
                 </div>
@@ -94,9 +96,9 @@
             </div>
             <div class="flex items-center gap-2">
                 <span
-                    class="hud-badge-micro bg-[rgba(var(--sj-pe-rgb),0.15)] text-[var(--sj-pe)] px-2 py-0.5 rounded-[3px] text-[13px] font-light">กิจการนักเรียน</span>
+                    class="hud-badge-micro bg-[rgba(var(--sj-pe-rgb),0.15)] text-[var(--sj-pe)] px-2 py-0.5 rounded-[var(--vs-radius)] text-[13px] font-light">กิจการนักเรียน</span>
                 <span
-                    class="hud-badge-micro bg-white/5 text-[var(--vs-text-muted)] px-2 py-0.5 rounded-[3px] text-[13px] font-light">GROUP
+                    class="hud-badge-micro bg-white/5 text-[var(--vs-text-muted)] px-2 py-0.5 rounded-[var(--vs-radius)] text-[13px] font-light">GROUP
                     3</span>
             </div>
         </header>
@@ -110,7 +112,7 @@
                     ทดสอบ 3 ด้าน (เกณฑ์กรมพลศึกษา 2562):
                 </span>
             </div>
-            <div class="flex flex-wrap gap-4 ml-6 text-[13px] font-light text-[var(--vs-text-muted)]">
+            <div class="flex flex-wrap gap-2 ml-6 text-[13px] font-light text-[var(--vs-text-muted)]">
                 <span class="flex items-center gap-1.5"><i class="icon i-hand-raised h-3.5 w-3.5"
                         style="color:var(--sj-pe);"></i> <strong class="text-[var(--vs-text-title)]">นั่งงอตัว</strong>
                     — ความอ่อนตัว (Flexibility)</span>
@@ -124,13 +126,13 @@
         </div>
 
         <!-- ② MAIN GRID: 9 col + 3 col -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-2 items-start">
 
             <!-- WORKSPACE (col-9) -->
-            <div class="lg:col-span-9 space-y-6">
+            <div class="lg:col-span-12 space-y-6">
 
                 <!-- KPI CARDS -->
-                <div id="kpi-section" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div id="kpi-section" class="grid grid-cols-2 md:grid-cols-4 gap-2">
                     <!-- Populated by JS -->
                 </div>
 
@@ -168,7 +170,7 @@
             </div>
 
             <!-- ③ DELEGATION PANEL (col-3) -->
-            <div class="lg:col-span-3" id="delegation-panel"></div>
+
         </div>
     </div>
 
@@ -183,10 +185,10 @@
 
             // หาครูประจำชั้นทุกคน (มี homeroomClass)
             Object.entries(IDLPMS_DATA.users).forEach(([teacherId, user]) => {
-                if (user.role === 'TEACHER' && user.schoolId === 'SCH_MABLUD' && user.homeroomClass) {
+                if (user.role === 'TEACHER' && user.schoolId === '99999999-9999-4999-8999-999999999999' && user.homeroomClass) {
                     // นับนักเรียนในชั้นนี้
                     const studentCount = Object.values(IDLPMS_DATA.users)
-                        .filter(u => u.role === 'STUDENT' && u.classId === user.homeroomClass && u.schoolId === 'SCH_MABLUD')
+                        .filter(u => u.role === 'STUDENT' && u.classId === user.homeroomClass && u.schoolId === '99999999-9999-4999-8999-999999999999')
                         .length;
 
                     classes.push({
@@ -225,7 +227,7 @@
 
             // หานักเรียนจริงในชั้นนี้จาก IDLPMS_DATA
             const classStudents = Object.entries(IDLPMS_DATA.users)
-                .filter(([_, u]) => u.role === 'STUDENT' && u.classId === classId && u.schoolId === 'SCH_MABLUD');
+                .filter(([_, u]) => u.role === 'STUDENT' && u.classId === classId && u.schoolId === '99999999-9999-4999-8999-999999999999');
 
             const classStudentIds = classStudents.map(([id]) => id);
             const age = typeof FitnessGrading !== 'undefined' ? FitnessGrading.estimateAgeFromClass(classId) : 10;
@@ -426,7 +428,7 @@
             let html = `
                 <table style="width:100%; border-collapse: collapse; font-size:13px; font-weight:300;">
                 <thead>
-                    <tr style="background: rgba(255,255,255,0.03);" class="border-b border-[var(--vs-border)]">
+                    <tr style="background: rgba(255,255,255,0.03);" class="border-b border-[rgba(63,63,70,0.5)]">
                         <th style="padding:8px 12px; text-align:left; font-weight:300; color:var(--vs-text-title);">ชั้นเรียน</th>
                         <th style="padding:8px 12px; text-align:center; font-weight:300; color:var(--vs-text-title);">จำนวน<br><span style="font-weight:300;color:var(--vs-text-muted);">ทั้งหมด</span></th>
                         <th style="padding:8px 12px; text-align:center; font-weight:300; color:var(--vs-text-title);">ทดสอบ<br><span style="font-weight:300;color:var(--vs-text-muted);">(A)</span></th>
@@ -463,7 +465,7 @@
                 const pctColor = gRecorded === 0 ? 'var(--vs-text-muted)' : pct >= 80 ? 'var(--vs-success)' : pct >= 50 ? 'var(--sj-pe)' : 'var(--vs-danger)';
 
                 html += `
-                    <tr class="border-b border-[var(--vs-border)]">
+                    <tr class="border-b border-[rgba(63,63,70,0.5)]">
                         <td style="padding:6px 12px; font-weight:300; color:var(--vs-text-body);">${grade.label}</td>
                         <td style="padding:6px 12px; text-align:center; color:var(--vs-text-muted);">${gTotal}</td>
                         <td style="padding:6px 12px; text-align:center; color:var(--vs-text-body);">${gRecorded || '<span style="opacity:0.3">—</span>'}</td>
@@ -479,7 +481,7 @@
             html += `
                 </tbody>
                 <tfoot>
-                    <tr style="background: rgba(255,255,255,0.05);" class="border-t border-[var(--vs-border)]">
+                    <tr style="background: rgba(255,255,255,0.05);" class="border-t border-[rgba(63,63,70,0.5)]">
                         <td style="padding:8px 12px; font-weight:300; color:var(--vs-text-title);">รวม</td>
                         <td style="padding:8px 12px; text-align:center; font-weight:300; color:var(--vs-text-title);">${sumTotal}</td>
                         <td style="padding:8px 12px; text-align:center; font-weight:300; color:var(--vs-text-title);">${sumRecorded}</td>
@@ -506,11 +508,7 @@
 
             // ③ Render Delegation Panel
             if (window.DelegationPanel) {
-                DelegationPanel.render('delegation-panel', {
-                    moduleId: 'FITNESS_TEST',
-                    moduleTitle: 'ทดสอบสมรรถภาพทางกาย',
-                    moduleIcon: 'i-heart'
-                });
+
             }
         });
     </script>

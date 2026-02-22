@@ -8,8 +8,8 @@
     "type": "module",
     "main": "index.html",
     "scripts": {
-        "start": "powershell -ExecutionPolicy Bypass -File server.ps1",
-        "server": "powershell -ExecutionPolicy Bypass -File server.ps1",
+        "start": "powershell -ExecutionPolicy Bypass -File scripts/server.ps1",
+        "server": "powershell -ExecutionPolicy Bypass -File scripts/server.ps1",
         "test": "vitest run",
         "test:watch": "vitest",
         "test:coverage": "vitest run --coverage",
@@ -29,6 +29,8 @@
     },
     "devDependencies": {
         "@vitest/coverage-v8": "^1.6.0",
+        "axios": "^1.13.5",
+        "cheerio": "^1.2.0",
         "eslint": "^8.57.0",
         "fake-indexeddb": "^5.0.2",
         "pdf-parse": "^2.4.5",

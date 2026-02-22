@@ -133,7 +133,7 @@ Check-Rule `
 # ─── Rule 8: Border 100% Opacity (must be 50%) ──────────────────────────
 Check-Rule `
     -Name "Border 100% Opacity (should be rgba 50%)" `
-    -Pattern "border.*solid\s+var\(--vs-border\)" `
+    -Pattern "border.*solid\s+var\(--vs-border\)|border-\[var\(--vs-border\)\]" `
     -Severity "WARNING"
 
 # ─── Rule 9: Letter Spacing ─────────────────────────────────────────────

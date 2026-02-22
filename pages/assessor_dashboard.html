@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Assessor | IDLPMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/theme.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <script src="../assets/js/data.js"></script>
+    <script src="../src/services/DataService.js"></script>
+    <script src="../src/services/InsForgeDataService.js"></script>
+    <script src="../src/services/SyncEngine.js"></script>
+    <script src="../assets/js/engines/PerformanceAssessor.js"></script>
+    <style>
+        .assessor-card {
+            background: var(--vs-bg-panel);
+            border: 1px solid rgba(63, 63, 70, 0.5);
+            border-radius: var(--vs-radius);
+            transition: all 0.3s ease;
+        }
+
+        .assessor-card:hover {
+            border-color: rgba(34, 211, 238, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .metric-bar-bg {
+            background: rgba(255, 255, 255, 0.05);
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .metric-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-[var(--vs-bg-base)] text-[var(--vs-text-body)] font-['Sarabun'] antialiased min-h-screen relative overflow-x-hidden">
+
+    <!-- Top Navigation / Header -->
+    <header
+        class="h-16 border-b border-[rgba(255,255,255,0.1)] bg-[rgba(24,24,27,0.8)] backdrop-blur flex items-center justify-between px-6 sticky top-0 z-10">
+        <div class="flex items-center gap-4">
+            <div
+                class="w-8 h-8 rounded bg-[rgba(34,211,238,0.1)] border border-[rgba(34,211,238,0.3)] flex items-center justify-center">
+                <i class="icon i-chart-pie h-4 w-4 text-[var(--vs-accent)]"></i>
+            </div>
+            <div>
+                <h1 class="text-[13px] text-[var(--vs-text-title)] font-light">PERFORMANCE ASSESSOR
+                    (KPA+)</h1>
+                <p class="text-[13px] text-[var(--vs-text-muted)] opacity-70 uppercase">Master Evaluator
+                    Module</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <button onclick="window.print()"
+                class="text-[13px] text-[var(--vs-text-muted)] hover:text-[var(--vs-text-title)] transition-colors flex items-center gap-2 px-3 py-1.5 rounded bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] hover:border-[rgba(255,255,255,0.2)]">
+                <i class="icon i-printer w-4 h-4"></i> Export PA Report
+            </button>
+        </div>
+    </header>
+
+    <main class="p-6 sm:p-8 max-w-7xl mx-auto space-y-8 pb-32">
+
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-4 gap-4">
+            <div>
+                <h2 class="text-xl text-[var(--vs-text-title)] font-light Thai-Rule">กระดานประเมินผลการปฏิบัติงาน (PA /
+                    Salary Evaluation)</h2>
+                <p class="text-[13px] text-[var(--vs-text-muted)] font-light mt-1">
+                    ระบบดึงข้อมูลอัตโนมัติจากกระเป๋าผลงาน (Work Passport), การรับ/ส่งงานตามระบบ (Delegations),
+                    ความตรงต่อเวลา (SLA Timeliness), และคะแนนจิตพิสัย (Gamification Points)
+                    นำมาสังเคราะห์เป็นเกรดตัดประเมิน.
+                </p>
+            </div>
+        </div>
+
+        <!-- Evaluation Grid -->
+        <div id="evaluation-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Loading State -->
+            <div
+                class="col-span-full py-12 text-center text-[var(--vs-text-muted)] font-light text-[13px] animate-pulse">
+                <i class="icon i-refresh h-6 w-6 mx-auto mb-3 opacity-50 block animate-spin"></i>
+                กำลังประมวลผลอัลกอริทึม KPA+ (Aggregating Multi-Role Statistics)...
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mock authentication setup
+            setTimeout(() => {
+                const viewerId = localStorage.getItem('idlpms_active_user_id') || 'DIR_MABLUD';
+                const idlpmsData = window.IDLPMS_DATA || (window.parent && window.parent.IDLPMS_DATA);
+                const viewerRole = idlpmsData?.users[viewerId]?.role || 'SCHOOL_DIR';
+
+                // Engage the Assessor Engine
+                if (window.PerformanceAssessor) {
+                    const results = window.PerformanceAssessor.evaluateWorkforce(viewerId, viewerRole);
+                    renderEvaluationBoard(results);
+                }
+            }, 500); // Artificial delay to simulate heavy PA processing
+        });
+
+        function renderEvaluationBoard(results) {
+            const grid = document.getElementById('evaluation-grid');
+            grid.innerHTML = '';
+
+            if (!results || results.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-12 text-center text-[var(--vs-text-muted)] font-light text-[13px] border border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)]">
+                    <i class="icon i-document-text h-6 w-6 mx-auto mb-3 opacity-50 block"></i>
+                    ไม่พบประวัติผลงานในศูนย์ข้อมูลการประเมินภายใต้สายงานของคุณ
+                </div>`;
+                return;
+            }
+
+            results.forEach((subject, idx) => {
+                const m = subject.metrics;
+                const a = subject.assessment;
+                const avatarImage = subject.avatar
+                    ? `<img src="${subject.avatar}" class="w-full h-full object-cover">`
+                    : `<i class="icon i-user w-6 h-6 opacity-30"></i>`;
+
+                const cardHtml = `
+                    <div class="assessor-card relative overflow-hidden group">
+                        <!-- Rank Ribbon -->
+                        <div class="absolute top-0 right-0 px-4 py-1 rounded-bl-[var(--vs-radius)] text-[13px] font-light bg-[rgba(255,255,255,0.05)] border-l border-b border-[rgba(255,255,255,0.05)] text-[var(--vs-text-muted)]">
+                            Rank #${idx + 1}
+                        </div>
+                        
+                        <div class="p-6">
+                            <!-- Header -->
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-12 h-12 flex-shrink-0 rounded-[var(--vs-radius)] border border-[rgba(255,255,255,0.1)] bg-[var(--vs-bg-deep)] overflow-hidden flex items-center justify-center">
+                                    ${avatarImage}
+                                </div>
+                                <div>
+                                    <div class="text-[13px] text-[var(--vs-text-title)] font-light mb-1">${subject.name}</div>
+                                    <div class="text-[13px] text-[var(--vs-text-muted)] opacity-80 uppercase">${subject.position}</div>
+                                </div>
+                            </div>
+
+                            <!-- Final Assessment Tier -->
+                            <div class="text-center p-4 rounded-[var(--vs-radius)] border ${a.tierClass} mb-6">
+                                <div class="text-[28px] font-light leading-none mb-2">${a.finalScore}<span class="text-[13px] opacity-60">%</span></div>
+                                <div class="text-[13px] font-light Thai-Rule">${a.tierName}</div>
+                            </div>
+
+                            <!-- KPI Breakdown (KPA+ 3 Pillars) -->
+                            <div class="space-y-4">
+                                <!-- Pillar 1: World-Class Agile Delivery (40%) -->
+                                <div>
+                                    <div class="flex justify-between items-center text-[13px] font-light mb-1.5 text-[var(--vs-text-title)] uppercase">
+                                        <span class="flex items-center gap-1.5"><i class="icon i-lightning-bolt text-yellow-400"></i> Agile Delivery (40%)</span>
+                                        <span>${Math.round((a.completionRate * 0.25) + (a.timelinessRate * 0.15))}/40 pts</span>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <div class="w-1/2">
+                                            <div class="flex justify-between text-[13px] text-[var(--vs-text-muted)] mb-1">
+                                                <span>Task Completion</span><span>${a.completionRate}%</span>
+                                            </div>
+                                            <div class="metric-bar-bg"><div class="metric-bar-fill bg-[rgba(59,130,246,0.8)]" style="width: ${a.completionRate}%"></div></div>
+                                        </div>
+                                        <div class="w-1/2">
+                                            <div class="flex justify-between text-[13px] text-[var(--vs-text-muted)] mb-1">
+                                                <span>SLA Timeliness</span><span>${a.timelinessRate}%</span>
+                                            </div>
+                                            <div class="metric-bar-bg"><div class="metric-bar-fill bg-[rgba(96,165,250,0.8)]" style="width: ${a.timelinessRate}%"></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Pillar 2: Learner Outcomes / 5-Axis DNA (40%) -->
+                                <div>
+                                    <div class="flex justify-between items-center text-[13px] font-light mb-1.5 text-[var(--vs-text-title)] uppercase">
+                                        <span class="flex items-center gap-1.5"><i class="icon i-academic-cap text-emerald-400"></i> Learner DNA (40%)</span>
+                                        <span>${Math.round(a.dnaOutcomes * 0.40)}/40 pts</span>
+                                    </div>
+                                    <div class="metric-bar-bg mb-1">
+                                        <div class="metric-bar-fill bg-emerald-500/80" style="width: ${a.dnaOutcomes}%"></div>
+                                    </div>
+                                    <div class="text-[13px] text-[var(--vs-text-muted)] opacity-60 text-right">Avg. 5-Axis DNA of enrolled students</div>
+                                </div>
+
+                                <!-- Pillar 3: Self-Development (20%) -->
+                                <div>
+                                    <div class="flex justify-between items-center text-[13px] font-light mb-1.5 text-[var(--vs-text-title)] uppercase">
+                                        <span class="flex items-center gap-1.5"><i class="icon i-star text-amber-400"></i> Self-Development (20%)</span>
+                                        <span>${Math.round(a.selfDevRate * 0.20)}/20 pts</span>
+                                    </div>
+                                    <div class="metric-bar-bg mb-1">
+                                        <div class="metric-bar-fill bg-amber-500/80" style="width: ${a.selfDevRate}%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-[13px] text-[var(--vs-text-muted)] opacity-80 mt-1">
+                                         <span>${m.earnedGamificationPts.toLocaleString()} Gamification Pts</span>
+                                         <span class="text-[var(--vs-warning)]">${Array.from({ length: Math.min(5, m.passportCredits) }, () => '★').join('')} Passport Badges</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions & Explorer Sync -->
+                        <div class="px-6 py-3 bg-[rgba(255,255,255,0.02)] border-t border-[rgba(255,255,255,0.05)] flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button class="text-[13px] text-[var(--vs-accent)] hover:text-white flex items-center gap-1.5 transition-colors" onclick="alert('Routing to Activity Explorer: Viewing neural signals for ${subject.name}')">
+                                <i class="icon i-search h-3 w-3"></i> View in Explorer
+                            </button>
+                            <button class="text-[13px] text-[var(--vs-success)] bg-[rgba(34,197,94,0.1)] px-3 py-1 rounded-[var(--vs-radius)] border border-[rgba(34,197,94,0.3)] hover:bg-[rgba(34,197,94,0.15)] transition-colors">
+                                Approve PA &rarr;
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.insertAdjacentHTML('beforeend', cardHtml);
+            });
+        }
+    </script>
+</body>
+
+</html>

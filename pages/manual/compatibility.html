@@ -10,175 +10,230 @@
     <link rel="stylesheet" href="../../assets/css/styles.css" />
 </head>
 
-<body class="bg-[var(--vs-bg-deep)] px-8 pt-8 pb-24 font-['Sarabun'] antialiased overflow-y-auto">
-    <div class="min-h-screen flex flex-col">
-        <div class="max-w-[1200px] mx-auto w-full space-y-6">
-            <!-- Page Header -->
-            <header
-                class="h-12 px-6 flex items-center justify-between rounded-[var(--vs-radius)] bg-[rgba(var(--vs-bg-panel-rgb),0.4)] border border-[var(--vs-border)]">
-                <h1 class="text-[13px] font-light text-[var(--vs-text-title)] uppercase flex items-center gap-2">
-                    <i class="icon i-shield-check h-4 w-4 text-[var(--vs-accent)]"></i>
-                    HLS Security Protocol & Compatibility
-                </h1>
-                <span class="hud-badge-micro">Manual_Ver: 1.1.1</span>
-            </header>
+<body class="bg-transparent overflow-hidden font-['Sarabun'] antialiased vs-scrollbar" style="height: 100vh;">
+    <div class="vs-page-frame animate-in fade-in zoom-in-95 duration-500">
+        <main class="vs-page-content vs-scrollbar">
+            <div class="w-full space-y-6">
 
-            <!-- Overview Section -->
-            <section
-                class="p-8 rounded-[var(--vs-radius)] bg-[rgba(var(--vs-bg-panel-rgb),0.4)] hud-border-white-05 relative overflow-hidden">
-                <div class="absolute top-0 right-0 p-8 opacity-5">
-                    <i class="icon i-exclamation-circle h-32 w-32"></i>
-                </div>
-                <h2 class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase mb-6 flex items-center gap-2">
-                    <span class="w-1.5 h-1.5 rounded-[3px] bg-[var(--vs-accent)]"></span>
-                    ปัญหา CORS คืออะไร?
-                </h2>
-                <div class="space-y-4 max-w-3xl relative z-10">
-                    <p class="text-[13px] text-[var(--vs-text-body)] leading-relaxed Thai-Rule">
-                        <span>CORS (Cross-Origin Resource Sharing)</span>
-                        คือระบบความปลอดภัยของเว็บเบราว์เซอร์ที่ป้องกันไม่ให้เว็บไซต์หนึ่งแอบไปดึงข้อมูลจากอีกเว็บไซต์หนึ่ง
-                        ในกรณีนี้ Server ของ <span>DLTV</span> มีการตั้งค่าไว้ว่า
-                        "อนุญาตให้แสดงผลเฉพาะบนเว็บ dltv.ac.th เท่านั้น"
-                    </p>
-                    <p class="text-[13px] text-[var(--vs-text-body)] leading-relaxed Thai-Rule">
-                        เมื่อคุณรันโปรเจกต์บน <code
-                            class="bg-black/50 px-2 py-0.5 rounded-[var(--vs-radius)] hud-border-white-05 text-[var(--vs-accent)] font-mono">localhost</code>
-                        เบราว์เซอร์จึงบล็อกการโหลดวิดีโอเพื่อความปลอดภัยตามมาตรฐานสากล
-                    </p>
-                </div>
-            </section>
-
-            <!-- Solution Section -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Option 1: Development Fix -->
+                <!-- Overview Section -->
                 <section
-                    class="p-6 rounded-[var(--vs-radius)] bg-[rgba(var(--vs-bg-panel-rgb),0.4)] border border-[var(--vs-border)] hover:border-white/30 transition-all duration-300">
-                    <div class="text-[13px] text-[var(--vs-accent)] font-light uppercase mb-4 flex items-center gap-2">
-                        <i class="icon i-adjustments h-4 w-4"></i>
-                        Solution 01: Dev Overrider
+                    class="p-8 rounded-[var(--vs-radius)] bg-[rgba(var(--vs-bg-panel-rgb),0.4)] hud-border-white-05 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-8 opacity-5">
+                        <i class="icon i-exclamation-circle h-32 w-32"></i>
                     </div>
-                    <h3 class="text-[13px] font-light text-white mb-4 Thai-Rule">ใช้ Extension ปลดบล็อก (แนะนำ)</h3>
-                    <p class="text-[13px] text-[var(--vs-text-muted)] mb-6 Thai-Rule">
-                        คลิกปุ่มด้านล่างเพื่อไปยังหน้า Store:
-                    </p>
-
-                    <div class="space-y-4 mb-8">
-                        <!-- Universal Chromium Action -->
-                        <a href="https://chromewebstore.google.com/detail/moesif-origincors-changer/digfbfaphojjndkpccljibejjbppifbc"
-                            target="_blank"
-                            class="flex items-center justify-between p-6 bg-[var(--vs-bg-deep)] border border-white/20 rounded-[var(--vs-radius)] hover:bg-white/5 transition-all group scale-[1.01]">
-                            <div class="flex items-center gap-4">
-                                <div
-                                    class="w-12 h-12 rounded-[var(--vs-radius)] bg-[var(--vs-accent)] flex items-center justify-center border border-black/10">
-                                    <i class="icon i-cube h-6 w-6 text-black"></i>
-                                </div>
-                                <div>
-                                    <span class="text-[13px] text-white font-light block leading-tight">Install
-                                        Moesif
-                                        CORS Changer</span>
-                                    <span class="hud-badge-micro opacity-80" style="color: var(--vs-accent)">Chrome,
-                                        Edge, Brave, Vivaldi</span>
-                                </div>
-                            </div>
-                            <div
-                                class="flex items-center gap-2 text-white font-light text-[13px] bg-black/40 px-4 py-2 rounded-[var(--vs-radius)] hud-border-white-05 group-hover:bg-[var(--vs-accent)] group-hover:text-black transition-all">
-                                Get Now
-                                <i class="icon i-external-link h-4 w-4"></i>
-                            </div>
-                        </a>
-
-                        <!-- Edge Native Alternative -->
-                        <div class="flex justify-center">
-                            <a href="https://microsoftedge.microsoft.com/addons/detail/cors-unblock/hkjklmhkbkdhlgnnfbbcihcajofmjgbh"
-                                target="_blank"
-                                class="hud-badge-micro text-zinc-500 hover:text-[var(--vs-accent)] transition-colors flex items-center gap-2">
-                                <i class="icon i-globe h-3 w-3"></i>
-                                Edge Add-ons Alternative
-                            </a>
-                        </div>
-                    </div>
-
-                    <ul class="space-y-6">
-                        <li class="flex items-start gap-4">
-                            <span
-                                class="w-8 h-8 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] hud-border-white-10 text-[var(--vs-accent)] flex items-center justify-center text-[13px] font-light shrink-0">01</span>
-                            <div>
-                                <p class="text-[13px] text-white mb-1 Thai-Rule font-light">ติดตั้งส่วนเสริม (Add to
-                                    Browser)</p>
-                                <p class="text-[13px] text-[var(--vs-text-muted)] Thai-Rule leading-relaxed">
-                                    ใช้ลิงก์ด้านบนเพื่อไปยังหน้า Store และกดปุ่ม <span class="text-white">"Add to
-                                        Chrome"</span> หรือ <span class="text-white">"Get"</span>
-                                </p>
-                            </div>
-                        </li>
-                        <li class="flex items-start gap-4">
-                            <span
-                                class="w-8 h-8 rounded-[var(--vs-radius)] bg-zinc-800 hud-border-white-10 text-[var(--vs-accent)] flex items-center justify-center text-[13px] font-light shrink-0">02</span>
-                            <div>
-                                <p class="text-[13px] text-white mb-1 Thai-Rule font-light">เปิดใช้งาน (Toggle
-                                    Active)
-                                </p>
-                                <p class="text-[13px] text-[var(--vs-text-muted)] Thai-Rule leading-relaxed">
-                                    คลิกไอคอนรูป <span class="text-white">กุญแจ</span> แล้วปรับสถานะเป็น <span
-                                        class="text-[var(--vs-accent)]">Active</span>
-                                </p>
-                            </div>
-                        </li>
-                        <li class="flex items-start gap-4">
-                            <span
-                                class="w-8 h-8 rounded-[var(--vs-radius)] bg-zinc-800 hud-border-white-10 text-[var(--vs-accent)] flex items-center justify-center text-[13px] font-light shrink-0">03</span>
-                            <div>
-                                <p class="text-[13px] text-white mb-1 Thai-Rule font-light">รีเฟรชหน้าจอ (F5)</p>
-                                <p class="text-[13px] text-[var(--vs-text-muted)] Thai-Rule leading-relaxed">
-                                    กลับมาที่ Dashboard และกด Refresh วิดีโอจะเล่นได้ทันที
-                                </p>
-                            </div>
-                        </li>
-                    </ul>
-                </section>
-
-                <!-- Option 2: Production Safe -->
-                <section
-                    class="p-6 rounded-[var(--vs-radius)] bg-[rgba(var(--vs-bg-panel-rgb),0.4)] border border-[var(--vs-border)] hover:hud-border-white-10 transition-all duration-300">
-                    <div
-                        class="text-[13px] text-[var(--vs-text-muted)] font-light uppercase mb-4 flex items-center gap-2">
-                        <i class="icon i-external-link h-4 w-4"></i>
-                        Solution 02: Native Player
-                    </div>
-                    <h3 class="text-[13px] font-light text-white mb-4 Thai-Rule">รับชมผ่าน Official Player</h3>
-                    <p class="text-[13px] text-[var(--vs-text-muted)] mb-6 Thai-Rule">
-                        หากไม่สะดวกติดตั้งส่วนเสริม คุณสามารถใช้ปุ่ม <span>"Open Official Player"</span> บนหน้าจอได้
-                    </p>
-                    <div class="p-4 bg-black/40 rounded-[var(--vs-radius)] hud-border-white-05">
-                        <div class="flex items-center gap-3 mb-2">
-                            <div class="w-2 h-2 rounded-[3px] bg-[var(--vs-success)] animate-pulse"></div>
-                            <span class="hud-badge-micro text-zinc-500">Recommended for Users</span>
-                        </div>
-                        <p class="text-[13px] text-zinc-500 Thai-Rule italic">
-                            *ระบบจะทำการเก็บ Progress ให้อัตโนมัติ
+                    <h2
+                        class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase mb-6 flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-[var(--vs-radius)] bg-[var(--vs-accent)]"></span>
+                        ปัญหา CORS คืออะไร?
+                    </h2>
+                    <div class="space-y-4 relative z-10 w-full">
+                        <p class="text-[13px] text-[var(--vs-text-body)] leading-relaxed Thai-Rule">
+                            <span>CORS (Cross-Origin Resource Sharing)</span>
+                            คือระบบความปลอดภัยของเว็บเบราว์เซอร์ที่ป้องกันไม่ให้เว็บไซต์หนึ่งแอบไปดึงข้อมูลจากอีกเว็บไซต์หนึ่ง
+                            ในกรณีนี้ Server ของ <span>DLTV</span> มีการตั้งค่าไว้ว่า
+                            "อนุญาตให้แสดงผลเฉพาะบนเว็บ dltv.ac.th เท่านั้น"
+                        </p>
+                        <p class="text-[13px] text-[var(--vs-text-body)] leading-relaxed Thai-Rule">
+                            เมื่อคุณรันโปรเจกต์บน <code
+                                class="bg-black/50 px-2 py-0.5 rounded-[var(--vs-radius)] hud-border-white-05 text-[var(--vs-accent)] font-mono">localhost</code>
+                            เบราว์เซอร์จึงบล็อกการโหลดวิดีโอเพื่อความปลอดภัยตามมาตรฐานสากล
                         </p>
                     </div>
                 </section>
-            </div>
 
-            <!-- Warning Box -->
-            <section class="p-4 hud-bg-rose hud-border-rose rounded-[var(--vs-radius)] flex items-center gap-4">
-                <i class="icon i-exclamation-circle h-6 w-6 text-rose-500 shrink-0"></i>
-                <p class="text-[13px] text-rose-400/80 Thai-Rule leading-relaxed">
-                    <span>คำเตือน:</span> การเปิดใช้งาน Extension ควรกระทำเฉพาะตอนพัฒนาโปรแกรม
-                    และปิดเมื่อใช้งานเว็บไซต์ธนาคาร
-                </p>
-            </section>
+                <!-- Solution Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <!-- Option 1: Development Fix -->
+                    <section
+                        class="p-6 rounded-[var(--vs-radius)] bg-[rgba(var(--vs-bg-panel-rgb),0.4)] border border-[rgba(63,63,70,0.5)] hover:border-white/30 transition-all duration-300">
+                        <div
+                            class="text-[13px] text-[var(--vs-accent)] font-light uppercase mb-4 flex items-center gap-2">
+                            <i class="icon i-adjustments h-4 w-4"></i>
+                            Solution 01: Dev Overrider
+                        </div>
+                        <h3 class="text-[13px] font-light text-white mb-4 Thai-Rule">ใช้ Extension ปลดบล็อก (แนะนำ)</h3>
+                        <p class="text-[13px] text-[var(--vs-text-muted)] mb-6 Thai-Rule">
+                            คลิกปุ่มด้านล่างเพื่อไปยังหน้า Store:
+                        </p>
 
-            <!-- Footer -->
-            <footer class="text-center py-6 border-t border-[var(--vs-border)]">
-                <button onclick="window.close()"
-                    class="px-8 py-2 bg-[var(--vs-bg-panel)] text-[13px] font-light uppercase rounded-[var(--vs-radius)] hover:bg-zinc-700 transition-all text-white hud-border-white-10">
-                    Return to Mission Control
-                </button>
-            </footer>
-        </div>
+                        <div class="space-y-4 mb-8">
+                            <!-- Universal Chromium Action -->
+                            <a href="https://chromewebstore.google.com/detail/moesif-origincors-changer/digfbfaphojjndkpccljibejjbppifbc"
+                                target="_blank"
+                                class="flex items-center justify-between p-6 bg-[var(--vs-bg-deep)] border border-white/20 rounded-[var(--vs-radius)] hover:bg-white/5 transition-all group scale-[1.01]">
+                                <div class="flex items-center gap-2">
+                                    <div
+                                        class="w-12 h-12 rounded-[var(--vs-radius)] bg-[var(--vs-accent)] flex items-center justify-center border border-black/10">
+                                        <i class="icon i-cube h-6 w-6 text-black"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-[13px] text-white font-light block leading-tight">Install
+                                            Moesif
+                                            CORS Changer</span>
+                                        <span class="hud-badge-micro opacity-80" style="color: var(--vs-accent)">Chrome,
+                                            Edge, Brave, Vivaldi</span>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center gap-2 text-white font-light text-[13px] bg-black/40 px-4 py-2 rounded-[var(--vs-radius)] hud-border-white-05 group-hover:bg-[var(--vs-accent)] group-hover:text-black transition-all">
+                                    Get Now
+                                    <i class="icon i-external-link h-4 w-4"></i>
+                                </div>
+                            </a>
+
+                            <!-- Edge Native Alternative -->
+                            <div class="flex justify-center">
+                                <a href="https://microsoftedge.microsoft.com/addons/detail/cors-unblock/hkjklmhkbkdhlgnnfbbcihcajofmjgbh"
+                                    target="_blank"
+                                    class="hud-badge-micro text-zinc-500 hover:text-[var(--vs-accent)] transition-colors flex items-center gap-2">
+                                    <i class="icon i-globe h-3 w-3"></i>
+                                    Edge Add-ons Alternative
+                                </a>
+                            </div>
+                        </div>
+
+                        <ul class="space-y-6">
+                            <li class="flex items-start gap-2">
+                                <span
+                                    class="w-8 h-8 rounded-[var(--vs-radius)] bg-[var(--vs-bg-panel)] hud-border-white-10 text-[var(--vs-accent)] flex items-center justify-center text-[13px] font-light shrink-0">01</span>
+                                <div>
+                                    <p class="text-[13px] text-white mb-1 Thai-Rule font-light">ติดตั้งส่วนเสริม (Add to
+                                        Browser)</p>
+                                    <p class="text-[13px] text-[var(--vs-text-muted)] Thai-Rule leading-relaxed">
+                                        ใช้ลิงก์ด้านบนเพื่อไปยังหน้า Store และกดปุ่ม <span class="text-white">"Add to
+                                            Chrome"</span> หรือ <span class="text-white">"Get"</span>
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span
+                                    class="w-8 h-8 rounded-[var(--vs-radius)] bg-zinc-800 hud-border-white-10 text-[var(--vs-accent)] flex items-center justify-center text-[13px] font-light shrink-0">02</span>
+                                <div>
+                                    <p class="text-[13px] text-white mb-1 Thai-Rule font-light">เปิดใช้งาน (Toggle
+                                        Active)
+                                    </p>
+                                    <p class="text-[13px] text-[var(--vs-text-muted)] Thai-Rule leading-relaxed">
+                                        คลิกไอคอนรูป <span class="text-white">กุญแจ</span> แล้วปรับสถานะเป็น <span
+                                            class="text-[var(--vs-accent)]">Active</span>
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span
+                                    class="w-8 h-8 rounded-[var(--vs-radius)] bg-zinc-800 hud-border-white-10 text-[var(--vs-accent)] flex items-center justify-center text-[13px] font-light shrink-0">03</span>
+                                <div>
+                                    <p class="text-[13px] text-white mb-1 Thai-Rule font-light">รีเฟรชหน้าจอ (F5)</p>
+                                    <p class="text-[13px] text-[var(--vs-text-muted)] Thai-Rule leading-relaxed">
+                                        กลับมาที่ Dashboard และกด Refresh วิดีโอจะเล่นได้ทันที
+                                    </p>
+                                </div>
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+
+                <!-- Option 2: Production Safe -->
+                <div class="grid grid-cols-1 gap-2">
+                    <section
+                        class="p-6 rounded-[var(--vs-radius)] bg-[rgba(var(--vs-bg-panel-rgb),0.4)] border border-[rgba(63,63,70,0.5)] hover:hud-border-white-10 transition-all duration-300">
+                        <div
+                            class="text-[13px] text-[var(--vs-text-muted)] font-light uppercase mb-4 flex items-center gap-2">
+                            <i class="icon i-external-link h-4 w-4"></i>
+                            Solution 02: Native Player
+                        </div>
+                        <h3 class="text-[13px] font-light text-white mb-4 Thai-Rule">รับชมผ่าน Official Player</h3>
+                        <p class="text-[13px] text-[var(--vs-text-muted)] mb-6 Thai-Rule">
+                            หากไม่สะดวกติดตั้งส่วนเสริม คุณสามารถใช้ปุ่ม <span>"Open Official Player"</span> บนหน้าจอได้
+                        </p>
+                        <div class="p-4 bg-black/40 rounded-[var(--vs-radius)] hud-border-white-05">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="w-2 h-2 rounded-[var(--vs-radius)] bg-[var(--vs-success)] animate-pulse">
+                                </div>
+                                <span class="hud-badge-micro text-zinc-500">Recommended for Users</span>
+                            </div>
+                            <p class="text-[13px] text-zinc-500 Thai-Rule italic">
+                                *ระบบจะทำการเก็บ Progress ให้อัตโนมัติ
+                            </p>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Device Rendering Specifications -->
+                <section class="space-y-4">
+                    <h2
+                        class="text-[13px] font-light text-[var(--vs-text-muted)] uppercase mb-4 flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-[var(--vs-radius)] bg-[var(--vs-accent)]"></span>
+                        Device Rendering Specifications (UI Compatibility)
+                    </h2>
+                    <div
+                        class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] overflow-x-auto vs-scrollbar">
+                        <div class="mermaid flex justify-center w-full">
+                            graph TD
+                            classDef mobile fill:rgba(244, 63, 94, 0.1),stroke:rgba(244, 63, 94, 0.5),color:#fb7185;
+                            classDef tablet fill:rgba(251, 191, 36, 0.1),stroke:rgba(251, 191, 36, 0.5),color:#fbbf24;
+                            classDef desktop fill:rgba(16, 185, 129, 0.1),stroke:rgba(16, 185, 129, 0.5),color:#34d399;
+
+                            Device[Client Device] --> Check{Viewport Width}
+
+                            Check -- "< 768px" --> Mobile[Mobile Layout]
+                                Check -- "768px - 1024px" --> Tablet[Tablet Layout]
+                                Check -- "> 1024px" --> Desktop[Desktop HUD]
+
+                                Mobile --> M1[Stack Components vertically]
+                                Mobile --> M2[Hide Sidebar Navigation]
+
+                                Tablet --> T1[Collapse Sidebar to Icons]
+                                Tablet --> T2[2-Column Flexible Grids]
+
+                                Desktop --> D1[Full Edge-to-Edge Grid]
+                                Desktop --> D2[Expanded Sentinel Panel]
+
+                                class Mobile,M1,M2 mobile;
+                                class Tablet,T1,T2 tablet;
+                                class Desktop,D1,D2 desktop;
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Warning Box -->
+                <section class="p-4 hud-bg-rose hud-border-rose rounded-[var(--vs-radius)] flex items-center gap-2">
+                    <i class="icon i-exclamation-circle h-6 w-6 text-rose-500 shrink-0"></i>
+                    <p class="text-[13px] text-rose-400/80 Thai-Rule leading-relaxed">
+                        <span>คำเตือน:</span> การเปิดใช้งาน Extension ควรกระทำเฉพาะตอนพัฒนาโปรแกรม
+                        และปิดเมื่อใช้งานเว็บไซต์ธนาคาร
+                    </p>
+                </section>
+
+                <!-- Footer -->
+                <footer class="text-center py-6 border-t border-[rgba(63,63,70,0.5)]">
+                    <button onclick="window.close()"
+                        class="px-8 py-2 bg-[var(--vs-bg-panel)] text-[13px] font-light uppercase rounded-[var(--vs-radius)] hover:bg-zinc-700 transition-all text-white hud-border-white-10">
+                        Return to Mission Control
+                    </button>
+                </footer>
+        </main>
     </div>
+
+    <!-- Tabler Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+    <!-- Mermaid.js -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                background: 'transparent',
+                primaryColor: 'rgba(39, 39, 42, 0.5)',
+                primaryTextColor: '#a1a1aa',
+                primaryBorderColor: 'rgba(63, 63, 70, 0.8)',
+                lineColor: '#52525b',
+                secondaryColor: 'rgba(34, 211, 238, 0.1)',
+                tertiaryColor: 'rgba(34, 211, 238, 0.2)'
+            }
+        });
+    </script>
 </body>
 
 </html>

@@ -1005,14 +1005,14 @@
             }
         }
 
-        function initiateTransfer() {
+        async function initiateTransfer() {
             const type = document.getElementById('transfer_type')?.value;
             const date = document.getElementById('transfer_date')?.value;
             const dest = document.getElementById('transfer_dest_school')?.value;
             const note = document.getElementById('transfer_note')?.value;
 
             if (!date) {
-                alert('กรุณาระบุวันที่เริ่มดำเนินการ');
+                if (window.HUD_NOTIFY) HUD_NOTIFY.toast('ข้อมูลไม่ครบ', 'กรุณาระบุวันที่เริ่มดำเนินการ', 'warning');
                 return;
             }
 
@@ -1021,7 +1021,8 @@
 
             const msg = `ยืนยันย้ายนักเรียนออก\nประเภท: ${type}\nวันที่: ${date}${dest ? '\nโรงเรียนปลายทาง: ' + dest : ''}${note ? '\nหมายเหตุ: ' + note : ''}\n\nระบบจะแจ้ง ผอ. อัตโนมัติ`;
 
-            if (confirm(msg)) {
+            const confirmed = window.HUD_NOTIFY ? await HUD_NOTIFY.confirm('ยืนยันย้ายนักเรียน', msg, 'warning') : confirm(msg);
+            if (confirmed) {
                 if (typeof showNotification === 'function') {
                     showNotification('ดำเนินการย้ายเรียบร้อย — แจ้ง ผอ. อัตโนมัติ', 'success');
                 }

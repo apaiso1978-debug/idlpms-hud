@@ -13,10 +13,13 @@
     <script src="../assets/js/components/dna_bar_chart.js"></script>
 </head>
 
-<body class="bg-transparent p-6 overflow-y-auto overflow-x-hidden font-['Sarabun'] antialiased vs-scrollbar"
-    style="height: auto; min-height: 100vh;">
-    <div id="dashboard-content" class="max-w-[1600px] space-y-6 animate-in fade-in zoom-in-95 duration-500">
-        <!-- Dynamic Content injected by JS -->
+<body class="bg-transparent overflow-hidden font-['Sarabun'] antialiased vs-scrollbar" style="height: 100vh;">
+    <div class="vs-page-frame animate-in fade-in zoom-in-95 duration-500">
+        <main class="vs-page-content vs-scrollbar">
+            <div id="dashboard-content" class="w-full space-y-6">
+                <!-- Dynamic Content injected by JS -->
+            </div>
+        </main>
     </div>
 
     <script>
@@ -52,27 +55,28 @@
         }
 
         function renderDashboard(user) {
+            const headerTitle = document.getElementById('dynamic-header-title');
+            const headerMeta = document.getElementById('dynamic-header-meta');
             const container = document.getElementById('dashboard-content');
-            container.innerHTML = `
-                <!-- Header Section -->
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <span class="role-badge role-badge-admin">Admin</span>
-                        <h1 class="text-xl font-light text-[var(--vs-text-title)] uppercase">${schoolData.name}</h1>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="text-[13px] text-[var(--vs-text-muted)] font-light">
-                            <span class="text-[var(--vs-accent)]">${schoolData.totalStudents}</span> นักเรียน | 
-                            <span class="text-[var(--vs-accent)]">${schoolData.totalClasses}</span> ห้องเรียน
-                        </div>
-                    </div>
-                </div>
 
+            headerTitle.innerHTML = `
+                <span class="role-badge role-badge-admin">Admin</span>
+                <h1 class="text-[13px] font-light text-[var(--vs-text-title)] uppercase">${schoolData.name}</h1>
+            `;
+
+            headerMeta.innerHTML = `
+                <div class="text-[13px] text-[var(--vs-text-muted)] font-light">
+                    <span class="text-[var(--vs-accent)]">${schoolData.totalStudents}</span> นักเรียน | 
+                    <span class="text-[var(--vs-accent)]">${schoolData.totalClasses}</span> ห้องเรียน
+                </div>
+            `;
+
+            container.innerHTML = `
                 <!-- Main Grid -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-2">
                     <!-- Left: School Aggregate -->
                     <div class="lg:col-span-2">
-                        <div class="dna-zone p-6">
+                        <div class="dna-zone p-6 h-full flex flex-col">
                             <div class="dna-zone-header">
                                 <div class="flex items-center gap-2">
                                     <h2 class="dna-zone-title">School Intelligence DNA</h2>
@@ -82,22 +86,22 @@
                                 <span class="role-badge role-badge-admin">Aggregate</span>
                             </div>
                             
-                            <div class="dna-zone-content flex-col gap-4 mt-4">
-                                <div id="bar-chart-container" class="w-full min-h-[280px]">
+                            <div class="dna-zone-content flex-col gap-2 mt-4 flex-1">
+                                <div id="bar-chart-container" class="w-full flex-1 min-h-[280px]">
                                     <!-- Injected by JS -->
                                 </div>
 
                                 <!-- Summary Stats -->
-                                <div class="grid grid-cols-3 gap-4 mt-4">
-                                    <div class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] text-center">
+                                <div class="grid grid-cols-3 gap-2 mt-4">
+                                    <div class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] text-center">
                                         <div class="text-[13px] text-[var(--vs-text-muted)] uppercase mb-1">Average</div>
                                         <div id="stat-avg" class="text-2xl font-light text-[var(--vs-accent)]">-</div>
                                     </div>
-                                    <div class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] text-center">
+                                    <div class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] text-center">
                                         <div class="text-[13px] text-[var(--vs-text-muted)] uppercase mb-1">Highest</div>
                                         <div id="stat-max" class="text-2xl font-light text-emerald-400">-</div>
                                     </div>
-                                    <div class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)] text-center">
+                                    <div class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] text-center">
                                         <div class="text-[13px] text-[var(--vs-text-muted)] uppercase mb-1">Lowest</div>
                                         <div id="stat-min" class="text-2xl font-light text-rose-400">-</div>
                                     </div>
@@ -108,28 +112,34 @@
 
                     <!-- Right: Classroom Breakdown -->
                     <div class="lg:col-span-1">
-                        <div class="dna-zone p-4">
+                        <div class="dna-zone p-6 h-full flex flex-col">
                             <div class="dna-zone-header">
                                 <h2 class="dna-zone-title">Classrooms</h2>
                                 <span class="text-[13px] text-[var(--vs-text-muted)]">${classroomBreakdown.length} ห้อง</span>
                             </div>
-                            <div class="dna-zone-content flex-col items-stretch gap-2 mt-4 max-h-[450px] overflow-y-auto vs-scrollbar">
+                            <div class="dna-zone-content flex-col items-stretch gap-2 mt-6 flex-1 overflow-y-auto vs-scrollbar">
                                 ${classroomBreakdown.map(cls => {
                 const avgScore = Math.round(Object.values(cls.avgDNA).reduce((a, b) => a + b, 0) / 5);
-                const statusColor = avgScore >= 70 ? 'text-emerald-400' : avgScore >= 60 ? 'text-amber-400' : 'text-rose-400';
+                const statusColor = avgScore >= 70 ? 'text-[var(--vs-success)]' : avgScore >= 60 ? 'text-[var(--vs-warning)]' : 'text-[var(--vs-danger)]';
+                const progressColor = avgScore >= 70 ? 'vs-progress-fill-success' : avgScore >= 60 ? 'vs-progress-fill-warning' : 'vs-progress-fill-danger';
                 return `
-                                    <div class="p-3 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] hover:bg-[var(--vs-bg-card)] cursor-pointer transition-colors group border border-transparent hover:border-[var(--vs-border)]"
-                                         onclick="viewClassroom('${cls.id}')">
-                                        <div class="flex items-center justify-between mb-2">
-                                            <span class="text-[13px] text-[var(--vs-text-title)] font-light">${cls.name}</span>
+                                    <div class="relative bg-[var(--vs-bg-card)] border border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] p-6 hover:border-[rgba(var(--vs-accent-rgb),0.5)] transition-all duration-300 group cursor-pointer overflow-hidden" onclick="viewClassroom('${cls.id}')">
+                                        <!-- Hover Glow Effect -->
+                                        <div class="absolute inset-0 bg-gradient-to-br from-[rgba(var(--vs-accent-rgb),0.03)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                                        
+                                        <div class="flex items-center justify-between mb-3 relative z-10">
+                                            <span class="text-[13px] text-[var(--vs-text-title)] font-light uppercase">${cls.name}</span>
                                             <span class="text-[13px] font-light ${statusColor}">${avgScore}%</span>
                                         </div>
-                                        <div class="flex items-center justify-between text-[13px] text-[var(--vs-text-muted)]">
-                                            <span class="Thai-Rule">${cls.teacher}</span>
-                                            <span>${cls.students} คน</span>
+                                        
+                                        <div class="flex items-center justify-between mt-1 mb-4 text-[13px] text-[var(--vs-text-muted)] font-light Thai-Rule relative z-10">
+                                            <span>${cls.teacher}</span>
+                                            <span class="px-2 py-0.5 bg-[rgba(var(--vs-bg-main-rgb),0.5)] rounded-[var(--vs-radius)] border border-[rgba(63,63,70,0.5)] text-[13px]">${cls.students} คน</span>
                                         </div>
-                                        <div class="mt-2 vs-progress-track">
-                                            <div class="vs-progress-fill opacity-60" style="width: ${avgScore}%"></div>
+
+                                        <!-- Official 3px Precision Progress Track -->
+                                        <div class="vs-progress-track mt-2 relative z-10">
+                                            <div class="vs-progress-fill ${progressColor} opacity-80" style="width: ${avgScore}%"></div>
                                         </div>
                                     </div>
                                 `}).join('')}

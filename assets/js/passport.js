@@ -52,7 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!user) return;
 
     populateProfileHeader(user);
-    populateBasicTab(user);
+    populatePersonalTab(user);
+    populateRoleTab(user); // New tab
+    populateHealthTab(user); // New tab
     populateWorkflowTab(user);
     populateSettingsTab(user);
     initPassportTabs();
@@ -106,11 +108,21 @@ function populateProfileHeader(user) {
     if (orgBadge) orgBadge.innerText = user.org || user.schoolId || 'N/A';
 }
 
-// ── Basic Tab ──────────────────────────────────────────────────────
-function populateBasicTab(user) {
+// ── Personal Tab (Single Identity Sync) ──────────────────────────────────
+function populatePersonalTab(user) {
+    let fullName = user.fullName || '';
+    let citizenId = user.citizenId || '1-XXXX-XXXXX-XX-X';
+
+    // Feature: Pull real identity from Person-First schema
+    if (user.personId && typeof IDLPMS_DATA !== 'undefined' && IDLPMS_DATA.persons && IDLPMS_DATA.persons[user.personId]) {
+        const person = IDLPMS_DATA.persons[user.personId];
+        fullName = `${person.firstName} ${person.lastName}`;
+        citizenId = person.citizenId || citizenId;
+    }
+
     const fields = {
-        'in-name': user.fullName || '',
-        'in-citizen': user.citizenId || '1-XXXX-XXXXX-XX-X',
+        'in-name': fullName,
+        'in-citizen': citizenId,
         'in-email': user.email || `${(user.id || 'user').toLowerCase()}@idlpms.moe.go.th`,
         'in-phone': user.phone || '',
         'in-address': user.address || '',
@@ -120,6 +132,10 @@ function populateBasicTab(user) {
         const el = document.getElementById(id);
         if (el) el.value = val;
     });
+}
+
+// ── Role Tab ───────────────────────────────────────────────────────
+function populateRoleTab(user) {
 
     // Role Metrics
     const metricsGrid = document.getElementById('metrics-grid');
@@ -160,19 +176,183 @@ function populateBasicTab(user) {
     }
 
     metricsGrid.innerHTML = metrics.map(m => `
-        <div class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[var(--vs-border)]">
+        <div class="p-4 rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)]">
             <div class="text-[13px] text-[var(--vs-text-muted)] uppercase mb-2">${m.label}</div>
             <div class="text-2xl font-light text-[var(--vs-text-title)]">${m.value}</div>
         </div>
     `).join('');
 }
 
-// ── Workflow Tab ───────────────────────────────────────────────────
+function populateHealthTab(user) {
+    if (user.role !== 'STUDENT') {
+        const healthContainer = document.getElementById('panel-health');
+        if (healthContainer) {
+            healthContainer.innerHTML = `
+                <section class="p-6 rounded-[var(--vs-radius)] bg-[var(--vs-bg-card)] hud-border text-center">
+                    <i class="icon i-heart h-8 w-8 text-[var(--vs-text-muted)] mb-4 inline-block"></i>
+                    <h3 class="text-lg font-light text-[var(--vs-text-title)]">Health Records</h3>
+                    <p class="text-[13px] text-[var(--vs-text-muted)] mt-2">Physical fitness tracking and DNA Dashboards are specifically tailored for student profiles.</p>
+                </section>`;
+        }
+        return;
+    }
+
+    if (typeof DNACoreService === 'undefined' || typeof DNASpider === 'undefined') return;
+
+    // 1. Fetch DNA Profile (Optional, as Widget fetches its own but we can pass ID)
+    const dna = DNACoreService.getStudentDNA(user.id);
+
+    // 2. Render Component-Based DNA Radar Widget
+    const spiderContainer = document.getElementById('student-spider-container');
+    if (spiderContainer) {
+        // Set the props attribute so the registry knows which student to render
+        spiderContainer.setAttribute('data-props', JSON.stringify({ studentId: user.id }));
+
+        // If the ComponentRegistry is already available and the element is mounted,
+        // we can forcibly re-init it with the new props.
+        if (window.ComponentRegistry) {
+            const instanceId = spiderContainer.getAttribute('data-instance-id');
+            if (instanceId && window.ComponentRegistry.activeInstances.has(instanceId)) {
+                const widget = window.ComponentRegistry.activeInstances.get(instanceId);
+                widget.studentId = user.id;
+                widget.init();
+            } else {
+                // Not mounted yet, tell registry to mount it
+                window.ComponentRegistry.mount(spiderContainer, 'DNA_RadarWidget', { studentId: user.id });
+            }
+        }
+    }
+
+    // 3. Render Fitness Metrics (P-Axis Source)
+    const metricsContainer = document.getElementById('fitness-metrics-container');
+    if (metricsContainer) {
+        let fitnessData = null;
+        if (typeof FitnessService !== 'undefined') {
+            const results = FitnessService.getLocalResults();
+            fitnessData = results[user.id];
+        }
+
+        if (fitnessData && fitnessData.sitReach != null) {
+            metricsContainer.innerHTML = `
+                <div class="flex items-center justify-between p-3 rounded-[var(--vs-radius)] bg-[rgba(255,255,255,0.02)] border border-[rgba(63,63,70,0.5)]">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded bg-[rgba(var(--sj-pe-rgb),0.1)] text-[var(--sj-pe)] flex items-center justify-center">
+                            <i class="icon i-hand-raised h-4 w-4"></i>
+                        </div>
+                        <div>
+                            <div class="text-[12px] text-[var(--vs-text-muted)] uppercase">Sit & Reach (cm)</div>
+                            <div class="text-[14px] text-[var(--vs-text-title)]">${fitnessData.sitReach} cm</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between p-3 rounded-[var(--vs-radius)] bg-[rgba(255,255,255,0.02)] border border-[rgba(63,63,70,0.5)]">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded bg-[rgba(var(--sj-pe-rgb),0.1)] text-[var(--sj-pe)] flex items-center justify-center">
+                            <i class="icon i-bolt h-4 w-4"></i>
+                        </div>
+                        <div>
+                            <div class="text-[12px] text-[var(--vs-text-muted)] uppercase">Push-Ups (30s)</div>
+                            <div class="text-[14px] text-[var(--vs-text-title)]">${fitnessData.pushUp} reps</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between p-3 rounded-[var(--vs-radius)] bg-[rgba(255,255,255,0.02)] border border-[rgba(63,63,70,0.5)]">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded bg-[rgba(var(--sj-pe-rgb),0.1)] text-[var(--sj-pe)] flex items-center justify-center">
+                            <i class="icon i-heart h-4 w-4"></i>
+                        </div>
+                        <div>
+                            <div class="text-[12px] text-[var(--vs-text-muted)] uppercase">Step-Ups (3m)</div>
+                            <div class="text-[14px] text-[var(--vs-text-title)]">${fitnessData.stepUp} reps</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-[rgba(63,63,70,0.5)] flex items-center justify-between">
+                    <div class="text-[13px] text-[var(--vs-text-muted)]">Calculated P-Axis Score:</div>
+                    <div class="text-lg text-[var(--dna-p, #60a5fa)] font-bold">${dna.p}</div>
+                </div>
+            `;
+        } else {
+            metricsContainer.innerHTML = `
+                <div class="text-[13px] text-[var(--vs-text-muted)] p-6 text-center border border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] bg-[rgba(255,255,255,0.02)]">
+                    <i class="icon i-document-text h-6 w-6 mx-auto mb-2 opacity-50 text-[var(--sj-pe)]"></i>
+                    No physical fitness data recorded for this academic year. 
+                    <br><span class="text-[11px] mt-1 inline-block">Estimated Base Score: ${dna.p} Pts</span>
+                </div>
+                <div class="mt-2 text-right">
+                    <a href="fitness_input.html" class="text-[12px] text-[var(--vs-accent)] hover:underline">Record Fitness Data &rarr;</a>
+                </div>
+            `;
+        }
+    }
+}
+
+// ── Workflow Tab (Lifelong Timeline) ───────────────────────────────────
 function populateWorkflowTab(user) {
     const timeline = document.getElementById('workflow-timeline');
     if (!timeline) return;
 
-    const entries = PASSPORT_WORKFLOWS[user.role] || PASSPORT_WORKFLOWS.DEFAULT;
+    let entries = [];
+
+    // Feature: Lifelong Identity (Person-First) - Aggregate workflows across all roles
+    if (user.availableRoles && typeof IDLPMS_DATA !== 'undefined' && IDLPMS_DATA.users) {
+        user.availableRoles.forEach(roleId => {
+            const roleData = IDLPMS_DATA.users[roleId];
+            if (roleData) {
+                const roleWorkflows = PASSPORT_WORKFLOWS[roleData.role] || [];
+                const roleName = IDLPMS_DATA.roles[roleData.role]?.name || roleData.role;
+                entries = entries.concat(roleWorkflows.map(wf => ({
+                    ...wf,
+                    title: `[${roleName}] ${wf.title}`
+                })));
+            }
+        });
+    }
+
+    if (entries.length === 0) {
+        entries = PASSPORT_WORKFLOWS[user.role] || PASSPORT_WORKFLOWS.DEFAULT;
+        // Make a copy so we don't mutate the constant
+        entries = [...entries];
+    }
+
+    // Feature: Merge dynamic completed tasks from Delegation Panel (Transparency Sync)
+    try {
+        const storage = window.localStorage || (window.parent && window.parent.localStorage);
+        const rawDel = storage.getItem('idlpms_delegations_v1');
+        if (rawDel) {
+            const delegations = JSON.parse(rawDel);
+            const myCompletedTasks = delegations.filter(d =>
+                (d.assignee === user.id || d.assignee === user.role) &&
+                d.status === 'COMPLETED'
+            );
+
+            myCompletedTasks.forEach((task, idx) => {
+                const year = task.completedAt ? new Date(task.completedAt).getFullYear() + 543 : new Date().getFullYear() + 543;
+
+                // Construct score/detail string
+                let extraDetails = '';
+                if (task.score !== undefined && task.score !== null) {
+                    extraDetails += ` [Score: ${task.score}${task.maxScore ? '/' + task.maxScore : ''}]`;
+                }
+
+                entries.push({
+                    id: `del_${task.id || idx}`,
+                    year: year,
+                    masterCategory: 'achievement',
+                    title: `Mission Accomplished: ${task.moduleTitle}${extraDetails}`,
+                    org: 'IDLPMS Delegation System',
+                    verifyStatus: 'VERIFIED',
+                    verifiedBy: task.assignedByName || 'System Administrator'
+                });
+            });
+        }
+    } catch (err) {
+        console.warn('[Work Passport] Failed to merge delegation tasks:', err);
+    }
+
+    // Sort entries by year descending to create a coherent lifelong timeline
+    entries.sort((a, b) => b.year - a.year);
+
     renderTimeline(timeline, entries);
 
     // Update stats
@@ -188,43 +368,69 @@ function populateWorkflowTab(user) {
 function renderTimeline(container, entries) {
     if (entries.length === 0) {
         container.innerHTML = `
-            <div class="passport-empty">
-                <i class="icon i-clipboard-check h-8 w-8"></i>
-                <div class="text-[13px] font-light mt-2">No workflow entries yet</div>
+            <div class="flex flex-col items-center justify-center py-12 text-center text-[var(--vs-text-muted)] border border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] bg-[var(--vs-bg-deep)]">
+                <i class="icon i-clipboard-document-check h-8 w-8 mb-3 opacity-50"></i>
+                <div class="text-[13px] font-light">ยังไม่มีประวัติการทำงานในระบบ</div>
             </div>`;
         return;
     }
 
-    container.innerHTML = entries.map(entry => {
-        const statusHTML = getVerifyBadge(entry.verifyStatus);
+    let html = `<div class="relative pl-6 ml-4 mt-4 pb-8 before:absolute before:inset-y-0 before:-left-px before:w-px before:bg-[rgba(63,63,70,0.5)]">`;
+
+    html += entries.map(entry => {
         const catInfo = CATEGORY_MAP[entry.masterCategory] || { iconClass: 'i-document', label: 'Other' };
 
+        // Strict Neon Aesthetic Badges (Rule 6)
+        let statusBadge = '';
+        if (entry.verifyStatus === 'VERIFIED') {
+            statusBadge = `<div class="flex items-center gap-1.5 px-3 py-1 flex-shrink-0 rounded-[var(--vs-radius)] bg-[rgba(34,197,94,0.1)] border border-[rgba(34,197,94,0.3)] text-[var(--vs-success)] text-[13px] uppercase"><i class="icon i-check h-3 w-3"></i> Verified</div>`;
+        } else if (entry.verifyStatus === 'PENDING') {
+            statusBadge = `<div class="flex items-center gap-1.5 px-3 py-1 flex-shrink-0 rounded-[var(--vs-radius)] bg-[rgba(234,179,8,0.1)] border border-[rgba(234,179,8,0.3)] text-[var(--vs-warning)] text-[13px] uppercase"><i class="icon i-clock h-3 w-3"></i> Pending</div>`;
+        } else if (entry.verifyStatus === 'REJECTED') {
+            statusBadge = `<div class="flex items-center gap-1.5 px-3 py-1 flex-shrink-0 rounded-[var(--vs-radius)] bg-[rgba(239,68,68,0.1)] border border-[rgba(239,68,68,0.3)] text-[var(--vs-danger)] text-[13px] uppercase"><i class="icon i-x h-3 w-3"></i> Rejected</div>`;
+        }
+
         return `
-        <div class="timeline-entry" data-category="${entry.masterCategory}">
-            <div class="timeline-year">${entry.year}</div>
-            <div class="flex-shrink-0">
-                <i class="icon ${catInfo.iconClass} h-4 w-4" style="color: var(--vs-accent);"></i>
+        <div class="relative mb-6 group timeline-entry animate-fade-in" data-category="${entry.masterCategory}">
+            <!-- Razor-Sharp Node Dot (No Blur, No Solid Fill) -->
+            <div class="absolute -left-[30px] top-[18px] h-[7px] w-[7px] border border-[rgba(34,211,238,0.5)] bg-[rgba(34,211,238,0.1)] transition-all duration-300 group-hover:bg-[rgba(34,211,238,0.25)] group-hover:border-[var(--vs-accent)] group-hover:shadow-[0_0_8px_rgba(34,211,238,0.1)]"></div>
+            
+            <!-- Horizontal Branch Line -->
+            <div class="absolute -left-[23px] top-[21px] w-[15px] h-px bg-[rgba(63,63,70,0.5)] transition-colors duration-300 group-hover:bg-[rgba(34,211,238,0.3)]"></div>
+            
+            <!-- Razor-Sharp Flat Panel (Rule 4, 5) -->
+            <div class="bg-[var(--vs-bg-deep)] border border-[rgba(63,63,70,0.5)] rounded-[var(--vs-radius)] p-4 transition-all duration-300 hover:bg-[var(--vs-bg-panel)] relative">
+                
+                <div class="flex flex-col md:flex-row justify-between md:items-start gap-4">
+                    <div class="flex-1 min-w-0">
+                        <!-- Meta Header -->
+                        <div class="flex items-center flex-wrap gap-2 mb-2">
+                            <i class="icon ${catInfo.iconClass} h-4 w-4 text-[var(--vs-accent)]"></i>
+                            <span class="text-[13px] text-[var(--vs-text-title)] font-light px-2 py-0.5 rounded-[var(--vs-radius)] border border-[rgba(63,63,70,0.5)] bg-[var(--vs-bg-card)]">${entry.year}</span>
+                            <span class="text-[13px] text-[var(--vs-text-muted)] opacity-50">•</span>
+                            <span class="text-[13px] text-[var(--vs-text-muted)] uppercase opacity-80">${catInfo.label}</span>
+                        </div>
+                        
+                        <!-- Title -->
+                        <div class="text-[13px] text-[var(--vs-text-title)] font-light mb-2 leading-relaxed">${entry.title}</div>
+                        
+                        <!-- Details Footer (Icon-Text Rule 16) -->
+                        <div class="text-[13px] text-[var(--vs-text-muted)] flex flex-wrap gap-x-4 gap-y-2 items-center">
+                            <span class="flex items-center gap-1.5 whitespace-nowrap"><i class="icon i-building-office h-3 w-3 opacity-60"></i> ${entry.org}</span>
+                            ${entry.verifiedBy ? `<span class="flex items-center gap-1.5 whitespace-nowrap"><i class="icon i-user-check h-3 w-3 opacity-60"></i> Verified by: ${entry.verifiedBy}</span>` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="flex-shrink-0 mt-2 md:mt-0">
+                        ${statusBadge}
+                    </div>
+                </div>
             </div>
-            <div class="timeline-content">
-                <div class="timeline-title">${entry.title}</div>
-                <div class="timeline-meta">${entry.org}${entry.verifiedBy ? ' — ' + entry.verifiedBy : ''}</div>
-            </div>
-            <div class="timeline-status">${statusHTML}</div>
         </div>`;
     }).join('');
-}
 
-function getVerifyBadge(status) {
-    switch (status) {
-        case 'VERIFIED':
-            return `<span class="verify-badge verified"><i class="icon i-check h-3 w-3"></i></span>`;
-        case 'PENDING':
-            return `<span class="verify-badge pending"><i class="icon i-clock h-3 w-3"></i></span>`;
-        case 'REJECTED':
-            return `<span class="verify-badge rejected"><i class="icon i-x h-3 w-3"></i></span>`;
-        default:
-            return '';
-    }
+    html += `</div>`;
+    container.innerHTML = html;
 }
 
 // ── Category Filters ──────────────────────────────────────────────
