@@ -159,8 +159,8 @@ const DelegationPanel = {
         modal.className = "Thai-Rule";
         modal.style.cssText = `
             background: var(--vs-bg-deep); border: 1px solid rgba(63,63,70,0.5);
-            border-top: 2px solid ${colorVar}; border-radius: var(--vs-radius); padding: 20px 24px;
-            width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            border-top: 1px solid rgba(${rgbVar}, 0.5); border-radius: var(--vs-radius); padding: 20px 24px;
+            width: 320px; box-shadow: 0 0 30px rgba(0,0,0,0.5), inset 0 0 15px rgba(${rgbVar}, 0.05);
             transform: translateY(20px) scale(0.95); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         `;
 
