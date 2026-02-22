@@ -510,16 +510,28 @@ const DelegationPanel = {
                     </select>
                 </div>
 
-                <!-- Score Points -->
+                <!-- Score Points (T-Shirt Presets) -->
                 <div style="margin-bottom:12px;">
-                    <label style="color:var(--vs-text-muted);font-size:12px;font-weight:300;display:block;margin-bottom:6px;text-transform:uppercase;">
-                        น้ำหนักงาน (Score Point)
-                    </label>
-                    <input id="deleg-score" type="number" placeholder="-- ระบุคะแนน --" min="1" max="100" autocomplete="off"
-                        style="width:100%;padding:10px 12px;background:var(--vs-bg-deep);border:none;
-                               border-radius:var(--vs-radius);color:var(--vs-text-body);font-size:13px;font-weight:300;
-                               outline:none;transition:box-shadow 0.2s;box-sizing:border-box;"
-                        onfocus="this.style.boxShadow='inset 0 0 0 1px rgba(var(--vs-accent-rgb),0.5)'" onblur="this.style.boxShadow='none'" />
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                        <label style="color:var(--vs-text-muted);font-size:12px;font-weight:300;text-transform:uppercase;">
+                            น้ำหนักงาน (Score Point)
+                        </label>
+                        <span id="deleg-score-display" style="color:var(--vs-text-body);font-size:12px;font-weight:300;">-</span>
+                    </div>
+                    <input type="hidden" id="deleg-score" value="" />
+                    <div style="display:flex;gap:6px;">
+                        <button type="button" class="neon-btn neon-btn-success deleg-score-btn" data-score="10" style="flex:1;justify-content:center;padding:6px 0;">S</button>
+                        <button type="button" class="neon-btn neon-btn-warning deleg-score-btn" data-score="20" style="flex:1;justify-content:center;padding:6px 0;">M</button>
+                        <button type="button" class="neon-btn neon-btn-primary deleg-score-btn" data-score="50" style="flex:1;justify-content:center;padding:6px 0;">L</button>
+                        <button type="button" class="neon-btn neon-btn-danger deleg-score-btn" data-score="100" style="flex:1;justify-content:center;padding:6px 0;">XL</button>
+                    </div>
+                    <div id="deleg-score-custom-wrap" style="display:none;margin-top:8px;">
+                        <input id="deleg-score-custom" type="number" placeholder="ระบุคะแนนเอง..." min="1" max="100" autocomplete="off"
+                            style="width:100%;padding:8px 12px;background:var(--vs-bg-deep);border:none;
+                                   border-radius:var(--vs-radius);color:var(--vs-text-body);font-size:13px;font-weight:300;
+                                   outline:none;transition:box-shadow 0.2s;box-sizing:border-box;"
+                            onfocus="this.style.boxShadow='inset 0 0 0 1px rgba(var(--vs-accent-rgb),0.5)'" onblur="this.style.boxShadow='none'" />
+                    </div>
                 </div>
 
                 <!-- SLA Deadline -->
@@ -736,6 +748,31 @@ const DelegationPanel = {
                 this.render();
             });
         });
+
+        // Score Preset Buttons
+        const scoreInput = container.querySelector('#deleg-score');
+        const scoreDisplay = container.querySelector('#deleg-score-display');
+        const scoreBtns = container.querySelectorAll('.deleg-score-btn');
+        scoreBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Reset all
+                scoreBtns.forEach(b => {
+                    b.style.boxShadow = 'none';
+                    b.style.opacity = '0.5';
+                });
+                // Highlight active
+                btn.style.boxShadow = `0 0 8px ${window.getComputedStyle(btn).color}`;
+                btn.style.opacity = '1';
+
+                // Set value
+                const score = btn.dataset.score;
+                if (scoreInput) scoreInput.value = score;
+                if (scoreDisplay) scoreDisplay.textContent = `${score} pts`;
+            });
+        });
+
+        // Initial state for score buttons (dim them)
+        scoreBtns.forEach(b => b.style.opacity = '0.5');
 
         // Teacher select → enable/disable submit
         const select = container.querySelector('#deleg-teacher-select');
