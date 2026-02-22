@@ -512,25 +512,23 @@ const DelegationPanel = {
 
                 <!-- Score Points (T-Shirt Presets) -->
                 <div style="margin-bottom:12px;">
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-                        <label style="color:var(--vs-text-muted);font-size:12px;font-weight:300;text-transform:uppercase;">
-                            น้ำหนักงาน (Score Point)
-                        </label>
-                        <span id="deleg-score-display" style="color:var(--vs-text-body);font-size:12px;font-weight:300;">-</span>
-                    </div>
-                    <input type="hidden" id="deleg-score" value="" />
-                    <div class="vs-tab-bar">
-                        <button type="button" class="vs-tab-bar-btn deleg-score-btn" data-score="10">S (10)</button>
-                        <button type="button" class="vs-tab-bar-btn deleg-score-btn" data-score="20">M (20)</button>
-                        <button type="button" class="vs-tab-bar-btn deleg-score-btn" data-score="50">L (50)</button>
-                        <button type="button" class="vs-tab-bar-btn deleg-score-btn" data-score="100">XL (100)</button>
-                    </div>
-                    <div id="deleg-score-custom-wrap" style="display:none;margin-top:8px;">
-                        <input id="deleg-score-custom" type="number" placeholder="ระบุคะแนนเอง..." min="1" max="100" autocomplete="off"
-                            style="width:100%;padding:8px 12px;background:var(--vs-bg-deep);border:none;
+                    <label style="color:var(--vs-text-muted);font-size:12px;font-weight:300;display:block;margin-bottom:6px;text-transform:uppercase;">
+                        น้ำหนักงาน (Score Point)
+                    </label>
+                    <div style="position:relative;">
+                        <i class="icon i-chart-bar" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:rgba(255,255,255,0.4);pointer-events:none;z-index:2;"></i>
+                        <select id="deleg-score"
+                            style="width:100%;padding:10px 12px 10px 34px;background:var(--vs-bg-deep);border:none;
                                    border-radius:var(--vs-radius);color:var(--vs-text-body);font-size:13px;font-weight:300;
-                                   outline:none;transition:box-shadow 0.2s;box-sizing:border-box;"
-                            onfocus="this.style.boxShadow='inset 0 0 0 1px rgba(var(--vs-accent-rgb),0.5)'" onblur="this.style.boxShadow='none'" />
+                                   outline:none;transition:box-shadow 0.2s;box-sizing:border-box;cursor:pointer;
+                                   appearance:none;background-image:url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%2212%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M2%204l4%204%204-4%22%20fill%3D%22none%22%20stroke%3D%22%23999%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E');background-repeat:no-repeat;background-position:right%2012px%20center;"
+                            onfocus="this.style.boxShadow='inset 0 0 0 1px rgba(var(--vs-accent-rgb),0.5)'" onblur="this.style.boxShadow='none'">
+                            <option value="">-- เลือกน้ำหนักคะแนน --</option>
+                            <option value="10">10 Points — 🟢 งานด่วน (S)</option>
+                            <option value="20">20 Points — 🟡 งานทั่วไป (M)</option>
+                            <option value="50">50 Points — 🟠 โปรเจกต์ (L)</option>
+                            <option value="100">100 Points — 🔴 งานระดับโรงเรียน (XL)</option>
+                        </select>
                     </div>
                 </div>
 
@@ -749,43 +747,7 @@ const DelegationPanel = {
             });
         });
 
-        // Score Preset Buttons
-        const scoreInput = container.querySelector('#deleg-score');
-        const scoreDisplay = container.querySelector('#deleg-score-display');
-        const scoreBtns = container.querySelectorAll('.deleg-score-btn');
-        scoreBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Reset all
-                scoreBtns.forEach(b => {
-                    b.classList.remove('active');
-                    b.style.color = '';
-                    b.style.boxShadow = '';
-                });
-
-                // Highlight active
-                btn.classList.add('active');
-
-                // Determine color based on T-Shirt size
-                const score = btn.dataset.score;
-                if (score === '10') {
-                    btn.style.color = 'var(--vs-success)';
-                    btn.style.boxShadow = '0 1px 3px rgba(0,0,0,0.3), 0 0 0 1px rgba(34,197,94,0.15)';
-                } else if (score === '20') {
-                    btn.style.color = 'var(--vs-warning)';
-                    btn.style.boxShadow = '0 1px 3px rgba(0,0,0,0.3), 0 0 0 1px rgba(234,179,8,0.15)';
-                } else if (score === '50') {
-                    btn.style.color = 'var(--vs-accent)';
-                    btn.style.boxShadow = '0 1px 3px rgba(0,0,0,0.3), 0 0 0 1px rgba(34,211,238,0.15)';
-                } else if (score === '100') {
-                    btn.style.color = 'var(--vs-danger)';
-                    btn.style.boxShadow = '0 1px 3px rgba(0,0,0,0.3), 0 0 0 1px rgba(239,68,68,0.15)';
-                }
-
-                // Set value
-                if (scoreInput) scoreInput.value = score;
-                if (scoreDisplay) scoreDisplay.textContent = `${score} pts`;
-            });
-        });
+        // Score is natively handled by the <select id="deleg-score"> element.
 
         // Teacher select → enable/disable submit
         const select = container.querySelector('#deleg-teacher-select');
