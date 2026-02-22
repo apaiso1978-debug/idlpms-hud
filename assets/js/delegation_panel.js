@@ -458,7 +458,15 @@ const DelegationPanel = {
             const wl = this.getWorkload(t.id);
             const wlc = this.getWorkloadColor(wl);
             const classInfo = t.homeroomClass ? ` (${t.homeroomClass})` : '';
-            return `<option value="${t.id}" data-name="${t.name}">${t.name}${classInfo} — ภาระ: ${wl}</option>`;
+            return `
+                <div class="deleg-teacher-opt" data-val="${t.id}" data-txt="${t.name}"
+                     style="padding:8px 12px;cursor:pointer;font-size:13px;font-weight:300;color:var(--vs-text-body);border-radius:3px;border:1px solid transparent;transition:border-color 0.2s, background 0.2s;" 
+                     onmouseover="this.style.background='rgba(255,255,255,0.05)';this.style.borderColor='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent';this.style.borderColor='transparent'">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>${t.name}${classInfo}</span>
+                        <span style="color:${wlc}; font-size:11px;">ภาระ: ${wl}</span>
+                    </div>
+                </div>`;
         }).join('');
 
         const isAdHoc = this._mode === 'ADHOC';
@@ -497,17 +505,30 @@ const DelegationPanel = {
                 </div>
                 ` : ''}
 
-                <div style="margin-bottom:8px;">
+                <!-- Teacher Custom Dropdown -->
+                <div style="margin-bottom:8px; position:relative;" id="deleg-teacher-wrapper">
                     <label style="color:var(--vs-text-muted);font-size:13px;font-weight:300;display:block;margin-bottom:4px;">
                         มอบหมายให้
                     </label>
-                    <select id="deleg-teacher-select"
-                        style="width:100%;padding:8px 12px;background:var(--vs-bg-deep);border:none;
-                               border-radius:3px;color:var(--vs-text-body);font-size:13px;font-weight:300;
-                               outline:none;color-scheme:dark;box-sizing:border-box;cursor:pointer;">
-                        <option value="">-- เลือกครู --</option>
-                        ${teacherOptions}
-                    </select>
+                    <div style="position:relative;">
+                        <i class="icon i-user" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:rgba(255,255,255,0.4);pointer-events:none;z-index:2;"></i>
+                        <input id="deleg-teacher-display_input" type="text" placeholder="-- เลือกครู --" autocomplete="off" readonly
+                            style="width:100%;padding:10px 12px 10px 34px;background:var(--vs-bg-deep);border:none;
+                                   border-radius:var(--vs-radius);color:var(--vs-text-body);font-size:13px;font-weight:300;
+                                   outline:none;transition:box-shadow 0.2s;box-sizing:border-box;cursor:pointer;"
+                            onfocus="this.style.boxShadow='inset 0 0 0 1px rgba(var(--vs-accent-rgb),0.5)'" onblur="this.style.boxShadow='none'">
+                        <input type="hidden" id="deleg-teacher-select" value="">
+                        
+                        <!-- Custom Menu -->
+                        <div id="deleg-teacher-menu" style="display:none; position:absolute; top:100%; left:0; right:0; margin-top:4px;
+                            background:var(--vs-bg-deep); border:1px solid var(--vs-border); border-radius:var(--vs-radius); padding:12px; z-index:100;
+                            box-sizing:border-box; max-height:200px; overflow-y:auto;">
+                            
+                            <div style="display:flex;flex-direction:column;gap:4px;">
+                                ${teacherOptions}
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Score Points Custom Dropdown -->
@@ -808,6 +829,43 @@ const DelegationPanel = {
             document.addEventListener('click', (e) => {
                 if (!scoreWrapper.contains(e.target)) {
                     scoreMenu.style.display = 'none';
+                }
+            });
+        }
+
+        // Custom Teacher Dropdown
+        const teacherWrapper = container.querySelector('#deleg-teacher-wrapper');
+        const teacherInputDisplay = container.querySelector('#deleg-teacher-display_input');
+        const teacherMenu = container.querySelector('#deleg-teacher-menu');
+        const teacherHidden = container.querySelector('#deleg-teacher-select');
+
+        if (teacherWrapper && teacherInputDisplay && teacherMenu && teacherHidden) {
+            // Toggle menu on input click
+            teacherInputDisplay.addEventListener('click', (e) => {
+                e.stopPropagation();
+                teacherMenu.style.display = teacherMenu.style.display === 'none' ? 'block' : 'none';
+            });
+
+            // Handle option click
+            const topts = teacherMenu.querySelectorAll('.deleg-teacher-opt');
+            topts.forEach(opt => {
+                opt.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const val = opt.dataset.val;
+                    const txt = opt.dataset.txt;
+                    teacherHidden.value = val;
+                    teacherInputDisplay.value = txt;
+                    teacherMenu.style.display = 'none';
+
+                    // Manually trigger the validation logic that used to be on 'change' event
+                    teacherHidden.dispatchEvent(new Event('change'));
+                });
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!teacherWrapper.contains(e.target)) {
+                    teacherMenu.style.display = 'none';
                 }
             });
         }
