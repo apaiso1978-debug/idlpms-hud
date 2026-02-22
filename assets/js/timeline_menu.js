@@ -83,6 +83,7 @@ window.TimelineMenu = {
                 <div class="timeline-node"></div>
                 <i class="icon ${item.icon || 'i-chevron-right'}"></i>
                 <span>${item.name}</span>
+                ${item.statusIndicator ? item.statusIndicator : ''}
                 ${item.badge ? `<span class="vs-count">${window.formatNumberStandard(item.badge)}</span>` : ''}
                 ${lockBadge}
             </button>

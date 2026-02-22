@@ -986,9 +986,9 @@ window.ManagementEngine = {
                         const isAdhoc = task.moduleId && String(task.moduleId).startsWith('ADHOC');
                         const isPending = task.status === 'PENDING';
 
-                        let badgeStr = '';
-                        if (isPending) badgeStr = 'ACCEPT';
-                        else if (task.status === 'IN_PROGRESS') badgeStr = 'IN PROG';
+                        let statusIndicator = '';
+                        if (isPending) statusIndicator = `<div style="width:8px;height:8px;border-radius:50%;background:var(--vs-success);box-shadow:0 0 8px var(--vs-success);margin-left:auto;margin-right:8px;flex-shrink:0;"></div>`;
+                        else if (task.status === 'IN_PROGRESS') statusIndicator = `<div style="width:8px;height:8px;border-radius:50%;background:var(--vs-warning);box-shadow:0 0 8px var(--vs-warning);margin-left:auto;margin-right:8px;flex-shrink:0;"></div>`;
 
                         let pageRoute = `__SYSTEM_TASK__${task.moduleId}`;
                         if (isPending && !isAdhoc) {
@@ -1002,7 +1002,7 @@ window.ManagementEngine = {
                             icon: isAdhoc ? 'i-chat-bubble-left-ellipsis' : 'i-lightning',
                             page: pageRoute,
                             action: task.moduleId, // Trigger the action if defined
-                            badge: badgeStr
+                            statusIndicator: statusIndicator
                         };
                     });
 

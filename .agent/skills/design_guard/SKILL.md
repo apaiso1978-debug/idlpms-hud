@@ -348,6 +348,21 @@ On dark backgrounds (`--vs-bg-card` ≈ `#333338` / `--vs-bg-deep` ≈ `#1e1e22`
 </div>
 ```
 
+### Rule 26 — The Custom Floating Select and Calendar Standard (Banned Native Selects)
+- **Iron Rule**: The native HTML `<select>` element is **BANNED** on all functional pages. System menus, dropdowns, and date pickers MUST use the `vs-dropdown-menu` and `vs-dropdown-wrapper` global aesthetic to guarantee visual parity across the entire app.
+- **Visual Standard**: The popup menu MUST utilize `background: var(--vs-bg-deep); border: 1px solid var(--vs-border); padding: 12px; border-radius: var(--vs-radius); margin-top: 4px;` EXACTLY as seen in `idlpms_calendar.js`.
+- **Auto-Collapse**: All floating components (Dropdowns, Calendars) MUST implement an Auto-Collapse mechanism (`closeAllDropdowns()`) where clicking one explicitly hides the others and correctly resets structural `z-index`. Stacked menus are forbidden.
+- **HTML Structure**:
+```html
+<div class="vs-dropdown-wrapper" style="position:relative; z-index:1;">
+    <input type="text" class="vs-dropdown-display" readonly placeholder="-- เลือก --" />
+    <input type="hidden" class="vs-dropdown-value" />
+    <div class="vs-dropdown-menu" style="display:none; position:absolute; top:100%; left:0; right:0; margin-top:4px; background:var(--vs-bg-deep); border:1px solid var(--vs-border); border-radius:var(--vs-radius); padding:12px; z-index:100;">
+        <div class="vs-dropdown-opt" data-val="..." style="padding:8px 12px; cursor:pointer;">Option Text</div>
+    </div>
+</div>
+```
+
 ---
 
 ## Workflow Mandate

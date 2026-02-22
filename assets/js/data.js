@@ -841,7 +841,7 @@ const IDLPMS_DATA = {
         STU_001: {
             role: 'STUDENT',
             fullName: 'ติณณภพ อินทรฉ่ำ',
-            schoolId: '99999999-9999-4999-8999-999999999999',
+            schoolId: 'SCH_001',
             classId: 'ป.3',
             avatar: 'TP',
             color: 'cyan',
@@ -1134,7 +1134,7 @@ const IDLPMS_DATA = {
         TEA_001: {
             role: 'TEACHER',
             fullName: 'ครูวรชัย อภัยโส',
-            schoolId: '99999999-9999-4999-8999-999999999999',
+            schoolId: 'SCH_001',
             teacherType: 'SPECIAL_TEACHER',
             subject: 'สังคมศึกษา',
             subjectId: 'SOC',
@@ -1147,7 +1147,7 @@ const IDLPMS_DATA = {
         TEA_002: {
             role: 'TEACHER',
             fullName: 'ครูนิติพร โฆเกียรติมานนท์',
-            schoolId: '99999999-9999-4999-8999-999999999999',
+            schoolId: 'SCH_001',
             teacherType: 'CLASS_TEACHER',
             subject: 'ภาษาไทย',
             subjectId: 'THAI',

@@ -173,6 +173,65 @@ select.form-input {
     padding-right: 32px;
 }
 
+/* ─── CUSTOM DROPDOWN (Iron Rule 26) ───────────────────────────────────── */
+/* Replaces native <select> for visual parity with idlpms_calendar.js       */
+
+.vs-dropdown-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.vs-dropdown-display {
+    width: 100%;
+    padding: 10px 12px 10px 34px;
+    background: var(--vs-bg-deep);
+    border: none;
+    border-radius: var(--vs-radius);
+    color: var(--vs-text-body);
+    font-size: 13px;
+    font-weight: 300;
+    outline: none;
+    transition: box-shadow 0.2s;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.vs-dropdown-display:focus {
+    box-shadow: inset 0 0 0 1px rgba(var(--vs-accent-rgb), 0.5);
+}
+
+.vs-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 4px;
+    background: var(--vs-bg-deep);
+    border: 1px solid var(--vs-border);
+    border-radius: var(--vs-radius);
+    padding: 12px;
+    z-index: 100;
+    box-sizing: border-box;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.vs-dropdown-opt {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--vs-text-body);
+    border-radius: var(--vs-radius);
+    border: 1px solid transparent;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.vs-dropdown-opt:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
 /* ─── CARDS ────────────────────────────────────────────────────────────── */
 /* Usage: <div class="vs-card">...</div>                                   */
 

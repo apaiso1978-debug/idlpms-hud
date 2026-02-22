@@ -61,7 +61,6 @@ const DelegationPanel = {
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(list));
     },
 
-    // ── Get current user ──
     _getCurrentUser() {
         try {
             // Try CURRENT_USER first
@@ -71,14 +70,29 @@ const DelegationPanel = {
                 if (parsed && parsed.role) return parsed;
             }
             // Fallback: reconstruct from individual keys
-            const userId = localStorage.getItem('current_user_id');
-            const role = localStorage.getItem('current_role');
+            const userId = localStorage.getItem('current_user_id') || localStorage.getItem('idlpms_active_user_id');
+            const role = localStorage.getItem('current_role') || localStorage.getItem('idlpms_active_role');
+
             if (userId || role) {
-                return { id: userId || 'DIR_MABLUD', role: role || 'SCHOOL_DIR' };
+                let inferredRole = role;
+                if (!inferredRole && userId) {
+                    if (userId.startsWith('TEA_')) inferredRole = 'TEACHER';
+                    else if (userId.startsWith('STU_')) inferredRole = 'STUDENT';
+                    else if (userId.startsWith('DIR_')) inferredRole = 'SCHOOL_DIR';
+                }
+                let fullName = userId || 'ผอ.';
+                try {
+                    const localData = window.IDLPMS_DATA || {};
+                    const users = localData.users || {};
+                    if (users[userId]) {
+                        fullName = users[userId].fullName || userId;
+                    }
+                } catch (e) { }
+
+                return { id: userId, role: inferredRole || 'SCHOOL_DIR', fullName };
             }
-            // Final fallback: check URL / page context
-            return { id: 'DIR_MABLUD', role: 'SCHOOL_DIR' };
-        } catch { return { id: 'DIR_MABLUD', role: 'SCHOOL_DIR' }; }
+            return { id: 'DIR_MABLUD', role: 'SCHOOL_DIR', fullName: 'ผอ. มาบลัด' };
+        } catch { return { id: 'DIR_MABLUD', role: 'SCHOOL_DIR', fullName: 'ผอ. มาบลัด' }; }
     },
 
     // ── Get current module context from HUD ──
@@ -106,7 +120,9 @@ const DelegationPanel = {
                     if (cClass) colorClass = cClass;
                 }
 
-                return { title, id, icon: iconClass, colorClass };
+                const pageRoute = activeSidebarItem.getAttribute('data-page') || '';
+
+                return { title, id, icon: iconClass, colorClass, pageRoute };
             }
         }
 
@@ -259,27 +275,27 @@ const DelegationPanel = {
     //  ASSIGN + SYNC
     // ═══════════════════════════════════════════
 
-    assign(teacherId, teacherName, moduleTitle, moduleId, ctx = {}) {
+    assign(assigneeId, assigneeName, moduleTitle, moduleId, ctx = {}) {
         const user = this._getCurrentUser();
         const list = this.getAllDelegations();
 
         // 🚨 PREVENT DUPES: Iron Rule - Single Active Assignment per Task per Person
         const isDuplicate = list.some(d =>
-            d.assignee === teacherId &&
+            d.assignee === assigneeId &&
             d.moduleId === moduleId &&
             (d.status === 'PENDING' || d.status === 'IN_PROGRESS')
         );
 
         if (isDuplicate) {
-            console.warn(`[Delegation Guard] Blocked duplicate assignment of ${moduleId} to ${teacherId}`);
+            console.warn(`[Delegation Guard] Blocked duplicate assignment of ${moduleId} to ${assigneeId}`);
             if (window.HUD_NOTIFY) {
                 HUD_NOTIFY.toast(
                     'การมอบหมายซ้ำซ้อน (Blocked)',
-                    `คุณได้มอบหมายงาน <b>${moduleTitle}</b> ให้ <b>${teacherName}</b> ไปแล้ว และงานนี้ยังอยู่ระหว่างดำเนินการ`,
+                    `คุณได้มอบหมายงาน <b>${moduleTitle}</b> ให้ <b>${assigneeName}</b> ไปแล้ว และงานนี้ยังอยู่ระหว่างดำเนินการ`,
                     'warning'
                 );
             }
-            this.showAlert('ปฏิเสธการมอบหมาย', `${teacherName} กำลังดำเนินการภารกิจนี้อยู่แล้ว`, 'warning');
+            this.showAlert('ปฏิเสธการมอบหมาย', `${assigneeName} กำลังดำเนินการภารกิจนี้อยู่แล้ว`, 'warning');
             return null; // Stop execution
         }
 
@@ -288,10 +304,11 @@ const DelegationPanel = {
             type: this._mode,
             moduleTitle,
             moduleId,
+            moduleRoute: ctx.pageRoute || '', // Explicitly store exact snapshot of the routed page
             icon: ctx.icon || 'i-command-line', // Store icon
             colorClass: ctx.colorClass || 'text-[var(--vs-accent)]', // Store color
-            assignee: teacherId,
-            assigneeName: teacherName,
+            assignee: assigneeId,
+            assigneeName: assigneeName,
             assignedBy: user.id || 'DIR_MABLUD',
             assignedByName: user.fullName || 'ผอ.',
             timestamp: new Date().toISOString(),
@@ -358,43 +375,61 @@ const DelegationPanel = {
     //  TEACHER LOADING (3-tier fallback)
     // ═══════════════════════════════════════════
 
-    async _loadTeachers() {
-        // Tier 1: DataService
+    async _loadHierarchyTargets() {
+        this._hierarchyTargets = [];
         try {
-            if (window.DataServiceFactory) {
-                const ds = await DataServiceFactory.getInstance();
-                const user = this._getCurrentUser();
-                const schoolId = user.schoolId || 'SCH_MABLUD';
-                const allUsers = await ds.getUsersBySchool(schoolId);
-                const teachers = allUsers.filter(u => u.role === 'TEACHER');
-                if (teachers.length > 0) {
-                    this._teachers = teachers.map(t => ({
-                        id: t.id || t.personId,
-                        name: t.fullName || t.id,
-                        homeroomClass: t.homeroomClass || ''
-                    }));
-                    console.log(`[DelegationPanel] Loaded ${this._teachers.length} teachers from DataService`);
-                    return;
-                }
+            const dataService = await this._getDataService();
+            if (dataService) {
+                // If we get an advanced API, we could query it here.
             }
         } catch (e) {
             console.warn('[DelegationPanel] DataService load failed:', e.message);
         }
 
-        // Tier 2: data.js (IDLPMS_DATA)
+        const currentUser = this._getCurrentUser();
+        const currentId = currentUser.id || 'DIR_MABLUD';
+        const currentRole = currentUser.role || 'SCHOOL_DIR';
+        let foundTargets = [];
+
         try {
             const localData = window.IDLPMS_DATA || {};
             const users = localData.users || {};
-            const teachers = Object.entries(users)
-                .filter(([, u]) => u.role === 'TEACHER')
-                .map(([id, u]) => ({
-                    id,
-                    name: u.fullName || id,
-                    homeroomClass: u.homeroomClass || ''
-                }));
-            if (teachers.length > 0) {
-                this._teachers = teachers;
-                console.log(`[DelegationPanel] Loaded ${this._teachers.length} teachers from data.js`);
+
+            const me = users[currentId] || {};
+            const mySchoolId = me.schoolId || currentUser.schoolId || '99999999-9999-4999-8999-999999999999';
+            const myClassId = me.classId || me.homeroomClass;
+            const myDistrictId = me.districtId || currentUser.districtId || 'ESA_01';
+
+            // Reusable finder
+            const findUsersByRole = (roleTarget, filterFn) => Object.entries(users)
+                .filter(([, u]) => u.role === roleTarget && (filterFn ? filterFn(u) : true))
+                .map(([id, u]) => ({ id, name: u.fullName || id, role: u.role, metadata: u.homeroomClass || u.classId || '' }));
+
+            if (currentRole === 'SCHOOL_DIR') {
+                foundTargets = [
+                    ...findUsersByRole('ESA_DIR', u => !u.districtId || u.districtId === myDistrictId), // Superior
+                    ...findUsersByRole('TEACHER', u => u.schoolId === mySchoolId)  // Subordinate
+                ];
+            } else if (currentRole === 'TEACHER') {
+                foundTargets = [
+                    ...findUsersByRole('SCHOOL_DIR', u => u.schoolId === mySchoolId), // Superior
+                    ...findUsersByRole('STUDENT', u => u.schoolId === mySchoolId && (!myClassId || u.classId === myClassId)) // Subordinate
+                ];
+            } else if (currentRole === 'STUDENT') {
+                foundTargets = [
+                    ...findUsersByRole('TEACHER', u => u.schoolId === mySchoolId && (!myClassId || u.homeroomClass === myClassId))     // Superior
+                ];
+            } else {
+                // Fallback for ESA / MOE etc
+                foundTargets = [
+                    ...findUsersByRole('SCHOOL_DIR', u => !u.districtId || u.districtId === myDistrictId),
+                    ...findUsersByRole('TEACHER', u => u.schoolId === mySchoolId)
+                ];
+            }
+
+            if (foundTargets.length > 0) {
+                this._hierarchyTargets = foundTargets.filter(t => t.id !== currentId); // Don't assign to self
+                console.log(`[DelegationPanel] Loaded ${this._hierarchyTargets.length} hierarchy targets for ${currentRole} (Scope: ${mySchoolId} ${myClassId || ''})`);
                 return;
             }
         } catch (e) {
@@ -402,12 +437,12 @@ const DelegationPanel = {
         }
 
         // Tier 3: Hardcoded fallback
-        this._teachers = [
-            { id: 'TEA_WORACHAI', name: 'นายวรชัย อภัยโส', homeroomClass: '' },
-            { id: 'TEA_M_01', name: 'นางนิติพร โฆเกียรติมานนท์', homeroomClass: 'อนุบาล 2' },
-            { id: 'TEA_M_02', name: 'นางสุภาภรณ์ ชุ่มแอ่น', homeroomClass: 'อนุบาล 3' }
-        ];
-        console.warn('[DelegationPanel] Using hardcoded fallback teachers');
+        this._hierarchyTargets = [
+            { id: 'DIR_MABLUD', name: 'ผอ. มาบลัด', role: 'SCHOOL_DIR', metadata: '' },
+            { id: 'TEA_WORACHAI', name: 'นายวรชัย อภัยโส', role: 'TEACHER', metadata: '' },
+            { id: 'STU_1', name: 'ด.ช. นักเรียน ตัวอย่าง 1', role: 'STUDENT', metadata: '' }
+        ].filter(t => t.id !== currentId);
+        console.warn('[DelegationPanel] Using hardcoded fallback targets');
     },
 
     // ═══════════════════════════════════════════
@@ -418,17 +453,16 @@ const DelegationPanel = {
         const container = document.getElementById(containerId);
         if (!container) return;
 
-        await this._loadTeachers();
+        await this._loadHierarchyTargets();
         const ctx = this._getModuleContext();
         const user = this._getCurrentUser();
-        const isDirector = !user.role || user.role === 'SCHOOL_DIR' || user.role === 'ESA_DIR' || user.role === 'OBEC' || user.role === 'MOE';
 
         container.innerHTML = `
             <div class="deleg-v3" style="display:flex;flex-direction:column;height:100%;font-size:13px;font-weight:300;">
                 ${this._renderHeader()}
-                ${isDirector ? this._renderAssignForm(ctx) : ''}
+                ${this._renderAssignForm(ctx)}
                 ${this._renderViewTabs()}
-                ${this._renderDelegationList()}
+                ${this._renderDelegationList(false)}
             </div>
         `;
 
@@ -454,17 +488,54 @@ const DelegationPanel = {
     _renderToggle() { return ''; },
 
     _renderAssignForm(ctx) {
-        const teacherOptions = this._teachers.map(t => {
-            const wl = this.getWorkload(t.id);
-            const wlc = this.getWorkloadColor(wl);
-            const classInfo = t.homeroomClass ? ` (${t.homeroomClass})` : '';
+        const getRoleColor = (role) => {
+            switch (role) {
+                case 'SCHOOL_DIR': return 'var(--id-dir)';
+                case 'TEACHER': return 'var(--id-tea)';
+                case 'STUDENT': return 'var(--id-stu)';
+                case 'ESA_DIR': return 'var(--id-esa)';
+                case 'OBEC': return 'var(--id-obec)';
+                case 'MOE': return 'var(--id-moe)';
+                case 'PARENT': return 'var(--id-parent)';
+                default: return 'var(--id-def)';
+            }
+        };
+
+        const getRoleAbbr = (role) => {
+            switch (role) {
+                case 'SCHOOL_DIR': return 'DIR';
+                case 'TEACHER': return 'TEA';
+                case 'STUDENT': return 'STU';
+                case 'ESA_DIR': return 'ESA';
+                case 'OBEC': return 'OBC';
+                case 'MOE': return 'MOE';
+                case 'PARENT': return 'PAR';
+                default: return role.substring(0, 3).toUpperCase();
+            }
+        };
+
+        const targetOptions = this._hierarchyTargets.map(t => {
+            const roleColor = getRoleColor(t.role);
+            const roleAbbr = getRoleAbbr(t.role);
+            // Only calc workload for teachers to keep UI clean for Admins/Students
+            let extensionHtml = '';
+            if (t.role === 'TEACHER') {
+                const wl = this.getWorkload(t.id);
+                const wlc = this.getWorkloadColor(wl);
+                extensionHtml = `
+                    <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+                        <span style="color:${wlc.cls === 'success' ? 'var(--vs-success)' : (wlc.cls === 'warning' ? 'var(--vs-warning)' : 'var(--vs-danger)')}; font-size:11px;">WL: ${wl}</span>
+                        <span style="color:${roleColor}; font-size:11px; opacity:0.9; font-weight:400;">${roleAbbr}</span>
+                    </div>`;
+            } else {
+                extensionHtml = `<span style="color:${roleColor}; font-size:11px; opacity:0.9; flex-shrink:0; font-weight:400;">${roleAbbr}</span>`;
+            }
+            const metaInfo = t.metadata ? ` (${t.metadata})` : '';
             return `
-                <div class="deleg-teacher-opt" data-val="${t.id}" data-txt="${t.name}"
-                     style="padding:8px 12px;cursor:pointer;font-size:13px;font-weight:300;color:var(--vs-text-body);border-radius:3px;border:1px solid transparent;transition:border-color 0.2s, background 0.2s;" 
-                     onmouseover="this.style.background='rgba(255,255,255,0.05)';this.style.borderColor='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent';this.style.borderColor='transparent'">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span>${t.name}${classInfo}</span>
-                        <span style="color:${wlc}; font-size:11px;">ภาระ: ${wl}</span>
+                <div class="vs-dropdown-opt deleg-teacher-opt" data-val="${t.id}" data-txt="${t.name}">
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; width:100%;">
+                        <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1;" title="${t.name}${metaInfo}">${t.name}${metaInfo}</span>
+                        ${extensionHtml}
                     </div>
                 </div>`;
         }).join('');
@@ -505,70 +576,48 @@ const DelegationPanel = {
                 </div>
                 ` : ''}
 
-                <!-- Teacher Custom Dropdown -->
-                <div style="margin-bottom:8px; position:relative;" id="deleg-teacher-wrapper">
+                <!-- Hierarchy Target Custom Dropdown -->
+                <div class="vs-dropdown-wrapper" style="margin-bottom:8px;" id="deleg-teacher-wrapper">
                     <label style="color:var(--vs-text-muted);font-size:13px;font-weight:300;display:block;margin-bottom:4px;">
-                        มอบหมายให้
+                        มอบหมายให้เป้าหมาย
                     </label>
                     <div style="position:relative;">
                         <i class="icon i-user" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:rgba(255,255,255,0.4);pointer-events:none;z-index:2;"></i>
-                        <input id="deleg-teacher-display_input" type="text" placeholder="-- เลือกครู --" autocomplete="off" readonly
-                            style="width:100%;padding:10px 12px 10px 34px;background:var(--vs-bg-deep);border:none;
-                                   border-radius:var(--vs-radius);color:var(--vs-text-body);font-size:13px;font-weight:300;
-                                   outline:none;transition:box-shadow 0.2s;box-sizing:border-box;cursor:pointer;"
-                            onfocus="this.style.boxShadow='inset 0 0 0 1px rgba(var(--vs-accent-rgb),0.5)'" onblur="this.style.boxShadow='none'">
+                        <input id="deleg-teacher-display_input" class="vs-dropdown-display" type="text" placeholder="-- เลือกผู้รับมอบหมาย --" autocomplete="off" readonly>
                         <input type="hidden" id="deleg-teacher-select" value="">
                         
                         <!-- Custom Menu -->
-                        <div id="deleg-teacher-menu" style="display:none; position:absolute; top:100%; left:0; right:0; margin-top:4px;
-                            background:var(--vs-bg-deep); border:1px solid var(--vs-border); border-radius:var(--vs-radius); padding:12px; z-index:100;
-                            box-sizing:border-box; max-height:200px; overflow-y:auto;">
-                            
+                        <div id="deleg-teacher-menu" class="vs-dropdown-menu" style="display:none;">
                             <div style="display:flex;flex-direction:column;gap:4px;">
-                                ${teacherOptions}
+                                ${targetOptions}
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Score Points Custom Dropdown -->
-                <div style="margin-bottom:12px; position:relative;" id="deleg-score-wrapper">
+                <div class="vs-dropdown-wrapper" style="margin-bottom:12px;" id="deleg-score-wrapper">
                     <label style="color:var(--vs-text-muted);font-size:12px;font-weight:300;display:block;margin-bottom:6px;text-transform:uppercase;">
                         น้ำหนักงาน (Score Point)
                     </label>
                     <div style="position:relative;">
                         <i class="icon i-chart-bar" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:rgba(255,255,255,0.4);pointer-events:none;z-index:2;"></i>
-                        <input id="deleg-score-display_input" type="text" placeholder="-- เลือกน้ำหนักคะแนน --" autocomplete="off" readonly
-                            style="width:100%;padding:10px 12px 10px 34px;background:var(--vs-bg-deep);border:none;
-                                   border-radius:var(--vs-radius);color:var(--vs-text-body);font-size:13px;font-weight:300;
-                                   outline:none;transition:box-shadow 0.2s;box-sizing:border-box;cursor:pointer;"
-                            onfocus="this.style.boxShadow='inset 0 0 0 1px rgba(var(--vs-accent-rgb),0.5)'" onblur="this.style.boxShadow='none'">
+                        <input id="deleg-score-display_input" class="vs-dropdown-display" type="text" placeholder="-- เลือกน้ำหนักคะแนน --" autocomplete="off" readonly>
                         <input type="hidden" id="deleg-score" value="">
                         
                         <!-- Custom Menu -->
-                        <div id="deleg-score-menu" style="display:none; position:absolute; top:100%; left:0; right:0; margin-top:4px;
-                            background:var(--vs-bg-deep); border:1px solid var(--vs-border); border-radius:var(--vs-radius); padding:12px; z-index:100;
-                            box-sizing:border-box;">
-                            
+                        <div id="deleg-score-menu" class="vs-dropdown-menu" style="display:none;">
                             <div style="display:flex;flex-direction:column;gap:4px;">
-                                <div class="deleg-score-opt" data-val="10" data-txt="10 Points — งานด่วน (S)" 
-                                     style="padding:8px 12px;cursor:pointer;font-size:13px;font-weight:300;color:var(--vs-text-body);border-radius:3px;border:1px solid transparent;transition:border-color 0.2s, background 0.2s;" 
-                                     onmouseover="this.style.background='rgba(var(--vs-success-rgb),0.05)';this.style.borderColor='rgba(var(--vs-success-rgb),0.3)'" onmouseout="this.style.background='transparent';this.style.borderColor='transparent'">
+                                <div class="vs-dropdown-opt deleg-score-opt" data-val="10" data-txt="10 Points — งานด่วน (S)">
                                     10 Points — <span style="color:var(--vs-success);">งานด่วน (S)</span>
                                 </div>
-                                <div class="deleg-score-opt" data-val="20" data-txt="20 Points — งานทั่วไป (M)" 
-                                     style="padding:8px 12px;cursor:pointer;font-size:13px;font-weight:300;color:var(--vs-text-body);border-radius:3px;border:1px solid transparent;transition:border-color 0.2s, background 0.2s;" 
-                                     onmouseover="this.style.background='rgba(var(--vs-warning-rgb),0.05)';this.style.borderColor='rgba(var(--vs-warning-rgb),0.3)'" onmouseout="this.style.background='transparent';this.style.borderColor='transparent'">
+                                <div class="vs-dropdown-opt deleg-score-opt" data-val="20" data-txt="20 Points — งานทั่วไป (M)">
                                     20 Points — <span style="color:var(--vs-warning);">งานทั่วไป (M)</span>
                                 </div>
-                                <div class="deleg-score-opt" data-val="50" data-txt="50 Points — โปรเจกต์ (L)" 
-                                     style="padding:8px 12px;cursor:pointer;font-size:13px;font-weight:300;color:var(--vs-text-body);border-radius:3px;border:1px solid transparent;transition:border-color 0.2s, background 0.2s;" 
-                                     onmouseover="this.style.background='rgba(var(--vs-accent-rgb),0.05)';this.style.borderColor='rgba(var(--vs-accent-rgb),0.3)'" onmouseout="this.style.background='transparent';this.style.borderColor='transparent'">
+                                <div class="vs-dropdown-opt deleg-score-opt" data-val="50" data-txt="50 Points — โปรเจกต์ (L)">
                                     50 Points — <span style="color:var(--vs-accent);">โปรเจกต์ (L)</span>
                                 </div>
-                                <div class="deleg-score-opt" data-val="100" data-txt="100 Points — งานระดับโรงเรียน (XL)" 
-                                     style="padding:8px 12px;cursor:pointer;font-size:13px;font-weight:300;color:var(--vs-text-body);border-radius:3px;border:1px solid transparent;transition:border-color 0.2s, background 0.2s;" 
-                                     onmouseover="this.style.background='rgba(var(--vs-danger-rgb),0.05)';this.style.borderColor='rgba(var(--vs-danger-rgb),0.3)'" onmouseout="this.style.background='transparent';this.style.borderColor='transparent'">
+                                <div class="vs-dropdown-opt deleg-score-opt" data-val="100" data-txt="100 Points — งานระดับโรงเรียน (XL)">
                                     100 Points — <span style="color:var(--vs-danger);">งานระดับโรงเรียน (XL)</span>
                                 </div>
                             </div>
@@ -622,39 +671,60 @@ const DelegationPanel = {
 
         return `
             <div style="height:48px;min-height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;
-                        background:var(--vs-bg-panel);border-bottom:1px solid var(--vs-border);">
+                        border-bottom:1px solid var(--vs-border);background:var(--vs-bg-deep);">
                 <div style="display:flex;align-items:center;gap:8px;">
                     <i class="icon ${iconClass}" style="width:16px;height:16px;color:${colorClass};"></i>
-                    <span style="color:var(--vs-text-title);text-transform:uppercase;font-size:13px;font-weight:300;">${title}</span>
+                    <span style="color:var(--vs-text-title);font-size:13px;font-weight:300;">${title}</span>
                 </div>
-                <button class="vs-toggle deleg-view-tab${dispActive ? '' : ' active'}" data-tab="${nextMode}"></button>
+                <!-- Mini Pill Toggle inside header -->
+                <div style="display:flex;background:rgba(255,255,255,0.05);border-radius:12px;padding:2px;">
+                    <button class="deleg-tab-btn ${dispActive ? 'active' : ''}" data-tab="DISPATCHED"
+                        style="padding:4px 12px;border-radius:10px;font-size:11px;font-weight:300;border:none;cursor:pointer;
+                               background:${dispActive ? 'var(--vs-bg-panel)' : 'transparent'};
+                               color:${dispActive ? 'var(--vs-text-title)' : 'var(--vs-text-muted)'};
+                               box-shadow:${dispActive ? '0 2px 4px rgba(0,0,0,0.2)' : 'none'};
+                               transition:all 0.2s;">
+                        ส่งแล้ว
+                    </button>
+                    <button class="deleg-tab-btn ${!dispActive ? 'active' : ''}" data-tab="INBOX"
+                        style="padding:4px 12px;border-radius:10px;font-size:11px;font-weight:300;border:none;cursor:pointer;
+                               background:${!dispActive ? 'var(--vs-bg-panel)' : 'transparent'};
+                               color:${!dispActive ? 'var(--vs-text-title)' : 'var(--vs-text-muted)'};
+                               box-shadow:${!dispActive ? '0 2px 4px rgba(0,0,0,0.2)' : 'none'};
+                               transition:all 0.2s;">
+                        รับเข้า
+                    </button>
+                </div>
             </div>`;
     },
 
-    _renderDelegationList() {
+    _renderDelegationList(isDirector = true) {
+        let listHtml = '';
         const allDel = this.getAllDelegations();
         const user = this._getCurrentUser();
-        const userId = user.id || 'DIR_MABLUD';
 
-        let items;
-        if (this._viewTab === 'DISPATCHED') {
-            items = allDel.filter(d => d.assignedBy === userId);
+        // 1. Filter raw list based on role & mode
+        let currentList = [];
+        const isInbox = !isDirector || this._viewTab === 'INBOX'; // Teachers always inbox
+
+        if (isInbox) {
+            currentList = allDel.filter(d => d.assignee === user.id);
         } else {
-            items = allDel.filter(d => d.assignee === userId);
+            currentList = allDel.filter(d => d.assignedBy === user.id);
         }
 
         // Sort by newest first
-        items.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        currentList.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-        if (items.length === 0) {
+        if (currentList.length === 0) {
             return `
                 <div style="flex:1;display:flex;align-items:center;justify-content:center;
                             color:var(--vs-text-muted);font-size:13px;font-weight:300;padding:24px;">
-                    ${this._viewTab === 'DISPATCHED' ? 'ยังไม่มีงานที่ส่ง' : 'ยังไม่มีงานที่ได้รับ'}
+                    ${isInbox ? 'ยังไม่มีงานที่ได้รับ' : 'ยังไม่มีงานที่ส่ง'}
                 </div>`;
         }
 
-        const listHtml = items.slice(0, 50).map(d => {
+        listHtml = currentList.slice(0, 50).map(d => {
             const isRevoked = d.status === 'REVOKED';
             const statusColor = isRevoked ? 'var(--vs-danger)' :
                 (d.status === 'COMPLETED' ? 'var(--vs-success)' :
@@ -671,18 +741,6 @@ const DelegationPanel = {
             // Strikethrough logic
             const textStyle = isRevoked ? 'text-decoration:line-through;opacity:0.5;' : '';
 
-            // Revoke Button (only show if dispatched and pending/in_progress)
-            const showRevoke = this._viewTab === 'DISPATCHED' && !isRevoked && d.status !== 'COMPLETED';
-            const revokeBtnHtml = showRevoke ? `
-                <button class="deleg-revoke-btn" data-id="${d.id}"
-                    style="margin-left:8px;background:none;border:none;color:var(--vs-danger);cursor:pointer;
-                           padding:2px;display:flex;align-items:center;opacity:0.7;transition:all 0.2s;"
-                    onmouseover="this.style.opacity='1'; this.style.transform='scale(1.1)';"
-                    onmouseout="this.style.opacity='0.7'; this.style.transform='scale(1)';">
-                    <i class="icon i-x" style="width:14px;height:14px;"></i>
-                </button>
-            ` : '';
-
             return `
                 <div style="padding:12px 16px;border-bottom:1px solid var(--vs-border);
                             transition:background 0.15s;cursor:default;"
@@ -693,29 +751,38 @@ const DelegationPanel = {
                             <i class="icon ${d.icon || 'i-command-line'} ${d.colorClass || 'text-[var(--vs-text-title)]'}" style="width:14px;height:14px;flex-shrink:0;"></i>
                             <span style="color:var(--vs-text-title);font-size:13px;font-weight:300;">${d.moduleTitle}</span>
                         </span>
-                        <div style="display:flex;align-items:center;">
-                            ${revokeBtnHtml}
-                        </div>
-                    </div>
-                    <!-- Line 2: Person + Badge -->
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-                        <span style="color:var(--vs-text-muted);font-size:13px;font-weight:300;${textStyle}">
-                            ${this._viewTab === 'DISPATCHED' ? '→' : '←'} ${person}
-                        </span>
-                        <span style="font-size:12px;font-weight:300;padding:1px 6px;border-radius:3px;
-                                     background:rgba(34,211,238,0.1);color:var(--vs-accent);
-                                     border:1px solid rgba(34,211,238,0.15);${textStyle}">
-                            ${typeBadge}
-                        </span>
-                    </div>
-                    <!-- Line 3: Time + Status -->
-                    <div style="display:flex;align-items:center;justify-content:space-between;">
-                        <div style="color:var(--vs-text-muted);font-size:12px;font-weight:300;opacity:0.6;">
-                            ${time}
-                        </div>
                         <div style="display:flex;align-items:center;gap:6px;">
                             <span style="width:6px;height:6px;border-radius:50%;background:${statusColor};display:inline-block;"></span>
                             <span style="color:var(--vs-text-muted);font-size:13px;font-weight:300;">${statusLabel}</span>
+                        </div>
+                    </div>
+                    
+                    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:8px;">
+                        <div style="display:flex;flex-direction:column;gap:4px;">
+                            ${isInbox ?
+                    `<span style="color:var(--vs-text-muted);font-size:11px;">จาก: ${d.assignedByName}</span>` :
+                    `<span style="color:var(--vs-text-muted);font-size:11px;">→ ${d.assigneeName}</span>`
+                }
+                            <span style="color:var(--vs-text-muted);font-size:10px;">${this._formatTime(d.timestamp)}</span>
+                            ${d.deadline ? `<span style="color:var(--vs-danger);font-size:10px;">
+                                <i class="icon i-clock" style="width:10px;height:10px;vertical-align:middle;opacity:0.8;"></i> 
+                                หมดเขต: ${d.deadline}
+                            </span>` : ''}
+                        </div>
+                        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+                            <span style="color:var(--vs-text-title);font-size:11px;background:rgba(255,255,255,0.05);padding:1px 6px;border-radius:8px;">
+                                ${d.score || 0} pts
+                            </span>
+                            ${(!isInbox && this._viewTab === 'DISPATCHED' && !isRevoked && !['COMPLETED'].includes(d.status))
+                    ? `<button class="deleg-revoke-btn" data-id="${d.id}"
+                                    style="background:transparent;border:none;color:var(--vs-danger);font-size:11px;
+                                           font-weight:300;cursor:pointer;padding:2px 8px;border-radius:3px;
+                                           border:1px solid rgba(var(--vs-danger-rgb),0.3);transition:all 0.2s;"
+                                    onmouseover="this.style.background='rgba(var(--vs-danger-rgb),0.1)'" onmouseout="this.style.background='transparent'">
+                                    <i class="icon i-x" style="width:10px;height:10px;vertical-align:middle;"></i> ยกเลิก
+                                   </button>`
+                    : ''
+                }
                         </div>
                     </div>
                 </div>`;
@@ -747,6 +814,39 @@ const DelegationPanel = {
                 }
             }
         );
+    },
+
+    markTaskInProgress(taskId) {
+        const list = this.getAllDelegations();
+        const d = list.find(x => x.id === taskId);
+        if (d && d.status === 'PENDING') {
+            d.status = 'IN_PROGRESS';
+            this._saveDelegations(list);
+            this.render();
+            this._syncToBackend({ ...d, status: 'IN_PROGRESS' });
+        }
+    },
+
+    submitWork(taskId, score, maxScore, details) {
+        const list = this.getAllDelegations();
+        const d = list.find(x => x.id === taskId);
+        if (d) {
+            d.status = 'COMPLETED';
+            d.completedAt = new Date().toISOString();
+            if (score !== null) d.achievedScore = score;
+            if (maxScore !== null) d.maxScore = maxScore;
+            if (details) d.submitDetails = details;
+
+            this._saveDelegations(list);
+            this.render();
+            this._syncToBackend({ ...d, status: 'COMPLETED' });
+
+            if (window.HUD_NOTIFY) {
+                HUD_NOTIFY.toast('ส่งมอบงานสำเร็จ', 'ระบบได้บันทึกผลการปฏิบัติงานของคุณแล้ว', 'success');
+            } else {
+                this.showAlert('ส่งมอบงานสำเร็จ', 'ระบบบันทึกผลเรียบร้อยแล้ว', 'success');
+            }
+        }
     },
 
     _formatTime(iso) {
@@ -958,17 +1058,18 @@ const DelegationPanel = {
     },
 
     _handleSubmit(container) {
-        // Validation 1: Teacher Selection
+        // Validation 1: Target Selection
         const select = container.querySelector('#deleg-teacher-select');
         if (!select || !select.value) {
-            const msg = 'กรุณาเลือกบุคลากรเป้าหมายก่อนมอบหมายงาน';
+            const msg = 'กรุณาเลือกเป้าหมายก่อนมอบหมายงาน';
             if (window.HUD_NOTIFY) HUD_NOTIFY.toast('ข้อมูลไม่ครบถ้วน', msg, 'error');
             this.showAlert('ข้อมูลไม่ครบถ้วน', msg, 'error');
             return;
         }
 
-        const teacherId = select.value;
-        const teacherName = select.options[select.selectedIndex]?.dataset?.name || teacherId;
+        const targetId = select.value;
+        const displayInput = container.querySelector('#deleg-teacher-display_input');
+        const targetName = displayInput ? displayInput.value : targetId;
 
         let moduleTitle, moduleId, moduleDesc;
         let finalCtx = {};
@@ -994,17 +1095,19 @@ const DelegationPanel = {
 
         // Capture Score and Deadline
         const scoreInput = container.querySelector('#deleg-score');
-        const deadlineInput = container.querySelector('#deleg-deadline');
-        const score = scoreInput ? parseInt(scoreInput.value) || 0 : 0;
-        const deadline = deadlineInput ? deadlineInput.value : null;
+        // 2) Optional Deadline
+        const deadlineInput = container.querySelector('#deleg-deadline_input');
+        if (deadlineInput && deadlineInput.value.trim() !== '') {
+            finalCtx.deadlineDate = deadlineInput.value.trim();
+        }
 
-        // Create delegation (duplicate validation inside assign)
-        const delegation = this.assign(teacherId, teacherName, moduleTitle, moduleId, finalCtx);
+        const score = scoreInput ? parseInt(scoreInput.value) || 0 : 0;
+        const delegation = this.assign(targetId, targetName, moduleTitle, moduleId, finalCtx);
         if (!delegation) return; // Blocked by duplicate guard
 
         // Attach extended payload
         delegation.score = score;
-        if (deadline) delegation.deadline = deadline;
+        if (finalCtx.deadlineDate) delegation.deadline = finalCtx.deadlineDate;
         if (this._mode === 'ADHOC' && moduleDesc) {
             delegation.description = moduleDesc;
         }
