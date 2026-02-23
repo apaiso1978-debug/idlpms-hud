@@ -171,7 +171,7 @@
             { id: 'WORK', name: 'การงานอาชีพ', color: '#64748b' }
         ];
 
-        // Simulate reading from local storage (connected to Harvester skill)
+        // Read from local storage (connected to Harvester skill)
         function getHarvesterData() {
             let data = {};
             try {
@@ -179,45 +179,34 @@
                 if (stored) {
                     data = JSON.parse(stored);
                 } else {
-                    // Generate Mock Data for display purposes initially
-                    console.log("No harvested data found, generating visual mock data for Pipeline.");
-                    data = generateMockPipelineData();
+                    // Initialize empty state
+                    console.log("No harvested data found, initializing empty pipeline.");
+                    data = generateEmptyPipelineData();
                 }
             } catch (e) {
                 console.error("Error parsing harvester data", e);
-                data = generateMockPipelineData();
+                data = generateEmptyPipelineData();
             }
             return data;
         }
 
-        function generateMockPipelineData() {
-            const mock = {};
+        function generateEmptyPipelineData() {
+            const emptyData = {};
             SUBJECTS.forEach(sub => {
-                mock[sub.id] = {};
+                emptyData[sub.id] = {};
                 for (let sem = 1; sem <= 2; sem++) {
-                    mock[sub.id][sem] = {};
+                    emptyData[sub.id][sem] = {};
                     for (let unit = 1; unit <= 20; unit++) {
-                        // Random status: 0 (Pending), 1 (Harvested), 2 (Ready)
-                        // Bias towards early units being ready
-                        let status = 0;
-                        if (unit <= 5) status = 2; // Ready
-                        else if (unit <= 10) status = Math.random() > 0.5 ? 2 : 1;
-                        else if (unit <= 15) status = Math.random() > 0.3 ? 1 : 0;
-                        else status = 0;
-
-                        mock[sub.id][sem][unit] = {
-                            status: status,
-                            name: `บทเรียนที่ ${unit}`,
-                            harvestDate: status > 0 ? '2026-02-23' : null,
-                            sectionsCount: status === 2 ? Math.floor(Math.random() * 3) + 3 : 0
+                        emptyData[sub.id][sem][unit] = {
+                            status: 0,
+                            name: null,
+                            harvestDate: null,
+                            sectionsCount: 0
                         };
                     }
                 }
             });
-            // Let's make SOC totally empty to show what it looks like
-            mock['SOC'][1] = {}; mock['SOC'][2] = {};
-            for (let i = 1; i <= 20; i++) { mock['SOC'][1][i] = { status: 0 }; mock['SOC'][2][i] = { status: 0 }; }
-            return mock;
+            return emptyData;
         }
 
         function renderPipeline() {
