@@ -9,7 +9,29 @@ You are the guardian of the **Institutional Chain of Command**. This skill ensur
 
 ## 🛡️ Core Directives
 
-### 1. Identity & Naming Standards
+### 1. The "Single Superior" Iron Rule (Delegation & Data Access)
+To prevent administrative confusion, every unit or individual must report to **exactly one** direct superior node. This applies universally to Task Delegation, Chat, and Analytics Dashboards.
+
+**The Strict Reporting Map:**
+*   **Student:** Reports *only* to their specific `Class Teacher` (determined by `homeroomClass`).
+*   **Teacher:** Reports *only* to the `School Director` of their school.
+*   **School Director (1 per School):** Reports *only* to the `ESA Director` of their district.
+*   **ESA Director:** Reports *only* to the central `Secretary General of OBEC` (สพฐ.).
+*   **Secretary General (e.g. OBEC_001):** Reports *only* to the `Ministry of Education (MOE)` command node.
+
+**The MOE Branching Structure (Top-Level):**
+The MOE is the overarching umbrella. Beneath it, there are several equivalent parallel authorities. An ESA Director must map strictly to their respective national commission.
+*   **OBEC (สพฐ.):** Office of the Basic Education Commission (General K-12)
+*   **OVEC (สอศ.):** Office of the Vocational Education Commission (Vocational)
+*   **OHEC (สกอ.):** Office of the Higher Education Commission (Universities)
+
+**Systemic Implications:**
+*   A Teacher cannot assign tasks to or view data of Students in other homerooms.
+*   A School Director cannot assign tasks directly to Students; they must cascade through the Teacher.
+*   There can only be **One** active School Director per `schoolId` node.
+*   Cross-branch delegation (e.g., OVEC assigning tasks to an OBEC school) must be explicitly authorized via the MOE super-node.
+
+### 2. Identity & Naming Standards
 All User IDs in `data.js` must follow the strict role-based prefixing rule:
 | Role | ID Prefix | Example |
 | :--- | :--- | :--- |
@@ -21,20 +43,13 @@ All User IDs in `data.js` must follow the strict role-based prefixing rule:
 | Student | `STU_` | `STU_001` |
 | Parent | `PAR_` | `PAR_001` |
 
-### 2. Entity & Structural IDs
+### 3. Entity & Structural IDs
 Entity IDs must follow these patterns to ensure clarity in relations:
 - **District (ESA):** `ESA_` (e.g., `ESA_01`)
 - **School:** `SCH_` (e.g., `SCH_001`)
 - **Group/Channel:** `GRP_` or `BR_` (e.g., `GRP_001`, `BR_SCHOOL_001`)
 
-### 2. The "Single Superior" Iron Rule
-To prevent administrative confusion, every unit or individual must report to **exactly one** direct superior node.
-- **Teacher:** Must report to the specific `School Director` of their school.
-- **School Director:** Must report to the specific `ESA Director` of their district.
-- **ESA Director:** Must report to the `OBEC Secretary General` (`OBEC_001`).
-- **Student/Parent:** Must report to their `Class Teacher` (determined by `classId` and `responsibilities.classTeacherOf`).
-
-### 3. Communication Protocol
+### 4. Communication Protocol
 The `chat.js` filtering logic must reflect the following authoritative circles:
 - **COMMAND AUTHORITY:** Upward link to the single direct superior.
 - **DIRECT REPORTS:** Downward link to all immediate subordinates (e.g., Director seeing their Teachers).
