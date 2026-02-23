@@ -257,8 +257,50 @@ IF objective.type == 'A' (เจตคติ)
    - [ ] `objectives` มีครบ K, P, A
    - [ ] `indicator` ไม่ว่าง
    - [ ] **HTML Tag Integrity**: ห้ามมี space ใน angle brackets (`< div >` ❌ → `<div>` ✅) — ดู Design Guard Iron Rule #12
-2. Save to InsForge `lesson_packs` table
-3. Log progress: unit X/N complete
+2. Save full payload to InsForge `lesson_packs` table
+3. **MANDATORY**: Update LocalStorage Tracker `idlpms_lesson_packs` (ดูหัวข้อถัดไป)
+4. Log progress: unit X/N complete
+
+---
+
+## 🚦 Content Pipeline Tracker Integration (LocalStorage)
+
+> [!CAUTION]
+> การ Harvest ถือว่า **ไม่สมบูรณ์** หากไม่ทำการ Update LocalStorage Tracker! 
+> Dashboard "Content Engineering Pipeline" ดึงข้อมูลจากจุดนี้เพื่อแสดงผลความคืบหน้า (Progress) แก่ Admin แบบ Real-time
+
+หลังจากได้ข้อมูล Lesson Pack และบันทึกเข้า Database (InsForge) เรียบร้อยแล้ว **ต้อง** วาง Code สำหรับหน้า UI ทันที:
+
+```javascript
+// Data Structure in LocalStorage: 'idlpms_lesson_packs'
+// Format: { [subjectId]: { [semester]: { [unitId]: { status, name, harvestDate, ... } } } }
+
+function updateHarvesterTracker(subjectId, semester, unitId, unitName, contentSectionsCount) {
+    let tracker = {};
+    try {
+        const stored = localStorage.getItem('idlpms_lesson_packs');
+        if (stored) tracker = JSON.parse(stored);
+    } catch(e) {}
+
+    // Initialize paths if missing
+    if (!tracker[subjectId]) tracker[subjectId] = {};
+    if (!tracker[subjectId][semester]) tracker[subjectId][semester] = {};
+
+    // Determine status (0: Pending, 1: Harvested/Draft, 2: Ready for 7-Steps)
+    const status = contentSectionsCount >= 3 ? 2 : 1; 
+
+    // Update the unit cell
+    tracker[subjectId][semester][unitId] = {
+        status: status,
+        name: unitName,
+        harvestDate: new Date().toISOString().split('T')[0],
+        sectionsCount: contentSectionsCount
+    };
+
+    localStorage.setItem('idlpms_lesson_packs', JSON.stringify(tracker));
+    console.log(`[DLTV Briw] Tracker updated for ${subjectId} / Sem: ${semester} / Unit: ${unitId} -> Status: ${status}`);
+}
+```
 
 ---
 
