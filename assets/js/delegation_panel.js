@@ -98,7 +98,7 @@ const DelegationPanel = {
     // ── Get current module context from HUD ──
     _getModuleContext() {
         // Try active sidebar item first (Mission Control / Explorer)
-        const activeSidebarItem = document.querySelector('.timeline-child-item.active, .vs-menu-item.active');
+        const activeSidebarItem = document.querySelector('.timeline-child-item.active, .timeline-parent-item.active, .vs-menu-item.active');
         if (activeSidebarItem) {
             const iconNode = activeSidebarItem.querySelector('.icon');
             const textNode = activeSidebarItem.querySelector('span');
@@ -726,15 +726,25 @@ const DelegationPanel = {
             // Strikethrough logic
             const textStyle = isRevoked ? 'text-decoration:line-through;opacity:0.5;' : '';
 
+            // Clickable link for the assigned module
+            const canExecute = isInbox && !isRevoked && !['COMPLETED'].includes(d.status) && d.moduleRoute;
+            const titleHTML = canExecute
+                ? `<a href="${d.moduleRoute}" style="color:var(--vs-text-title);font-size:13px;font-weight:300;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--vs-accent)'" onmouseout="this.style.color='var(--vs-text-title)'">${d.moduleTitle}</a>`
+                : `<span style="color:var(--vs-text-title);font-size:13px;font-weight:300;">${d.moduleTitle}</span>`;
+
+            // Row click action
+            const rowClick = canExecute ? `onclick="window.location.href='${d.moduleRoute}'" style="cursor:pointer;"` : `style="cursor:default;"`;
+
             return `
                 <div style="padding:12px 16px;border-bottom:1px solid var(--vs-border);
-                            transition:background 0.15s;cursor:default;"
+                            transition:background 0.15s;"
+                     ${rowClick}
                      onmouseenter="this.style.background='var(--vs-bg-card)'"
                      onmouseleave="this.style.background='transparent'">
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
                         <span style="display:flex;align-items:center;gap:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px;${textStyle}">
                             <i class="icon ${d.icon || 'i-command-line'} ${d.colorClass || 'text-[var(--vs-text-title)]'}" style="width:14px;height:14px;flex-shrink:0;"></i>
-                            <span style="color:var(--vs-text-title);font-size:13px;font-weight:300;">${d.moduleTitle}</span>
+                            ${titleHTML}
                         </span>
                         <div style="display:flex;align-items:center;gap:6px;">
                             <span style="width:6px;height:6px;border-radius:50%;background:${statusColor};display:inline-block;"></span>
@@ -766,6 +776,16 @@ const DelegationPanel = {
                                     onmouseover="this.style.background='rgba(var(--vs-danger-rgb),0.1)'" onmouseout="this.style.background='transparent'">
                                     <i class="icon i-x" style="width:10px;height:10px;vertical-align:middle;"></i> ยกเลิก
                                    </button>`
+                    : ''
+                }
+                            ${canExecute
+                    ? `<a href="${d.moduleRoute}" 
+                                   style="display:inline-block;background:rgba(34,211,238,0.1);color:var(--vs-accent);
+                                          font-size:11px;font-weight:300;text-decoration:none;padding:2px 8px;
+                                          border-radius:3px;border:1px solid rgba(34,211,238,0.3);transition:all 0.2s;"
+                                   onmouseover="this.style.background='rgba(34,211,238,0.2)'" onmouseout="this.style.background='rgba(34,211,238,0.1)'">
+                                    <i class="icon i-play" style="width:10px;height:10px;vertical-align:middle;"></i> ทำภารกิจ
+                               </a>`
                     : ''
                 }
                         </div>
@@ -853,10 +873,10 @@ const DelegationPanel = {
     _bindEvents(container) {
         // Initialize Calendar for Deadline Input
         const deadlineInput = container.querySelector('#deleg-deadline');
-        if (deadlineInput && typeof E-OSCalendar !== 'undefined') {
+        if (deadlineInput && typeof E - OSCalendar !== 'undefined') {
             // Re-initialize to avoid duplicate calendars if already created
             if (!deadlineInput._calendarInstance) {
-                deadlineInput._calendarInstance = new E-OSCalendar(deadlineInput);
+                deadlineInput._calendarInstance = new E - OSCalendar(deadlineInput);
             }
         }
 
