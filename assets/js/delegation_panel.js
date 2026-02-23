@@ -294,6 +294,36 @@ const DelegationPanel = {
     //  ASSIGN + SYNC
     // ═══════════════════════════════════════════
 
+    showAdHocDetails(encodedTitle, encodedDesc) {
+        const title = decodeURIComponent(encodedTitle);
+        const desc = decodeURIComponent(encodedDesc).replace(/\n/g, '<br>');
+
+        const modalHtml = `
+            <div id="adhoc-details-modal" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);z-index:99999;display:flex;align-items:center;justify-content:center;">
+                <div style="background:var(--vs-bg-panel);width:100%;max-width:500px;border-radius:var(--vs-radius);border:1px solid rgba(var(--vs-accent-rgb), 0.3);box-shadow:0 0 30px rgba(0,0,0,0.5);overflow:hidden;animation:slideDown 0.3s ease-out;">
+                    <div style="background:rgba(var(--vs-accent-rgb), 0.1);padding:16px 20px;border-bottom:1px solid rgba(var(--vs-accent-rgb), 0.2);display:flex;align-items:center;gap:12px;">
+                        <i class="icon i-lightning-bolt text-amber-400" style="width:24px;height:24px;"></i>
+                        <h2 class="Thai-Rule" style="margin:0;color:var(--vs-text-title);font-size:18px;font-weight:400;flex:1;">${title}</h2>
+                        <button onclick="document.getElementById('adhoc-details-modal').remove()" style="background:transparent;border:none;color:var(--vs-text-muted);cursor:pointer;padding:4px;display:flex;align-items:center;justify-content:center;">
+                            <i class="icon i-x" style="width:20px;height:20px;"></i>
+                        </button>
+                    </div>
+                    <div style="padding:24px 20px;color:var(--vs-text-primary);font-size:14px;line-height:1.6;font-weight:300;">
+                        ${desc}
+                    </div>
+                    <div style="padding:16px 20px;border-top:1px solid var(--vs-border);background:var(--vs-bg-card);display:flex;justify-content:flex-end;">
+                        <button onclick="document.getElementById('adhoc-details-modal').remove()" 
+                                style="background:rgba(255,255,255,0.1);color:var(--vs-text-title);border:1px solid rgba(255,255,255,0.2);
+                                       padding:8px 24px;border-radius:4px;font-size:13px;font-weight:300;cursor:pointer;transition:all 0.2s;"
+                                onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                            ปิดหน้าต่าง
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    },
+
     assign(assigneeId, assigneeName, moduleTitle, moduleId, ctx = {}) {
         const user = this._getCurrentUser();
         const list = this.getAllDelegations();
@@ -763,17 +793,74 @@ const DelegationPanel = {
             const time = this._formatTime(d.timestamp);
             const person = this._viewTab === 'DISPATCHED' ? d.assigneeName : d.assignedByName;
 
-            // Strikethrough logic
+            // Strikethrough logic for revoked tasks
             const textStyle = isRevoked ? 'text-decoration:line-through;opacity:0.5;' : '';
 
-            // Clickable link for the assigned module
-            const canExecute = isInbox && !isRevoked && !['COMPLETED'].includes(d.status) && d.moduleRoute;
-            const titleHTML = canExecute
+            // 1. Acceptance Gate Logic (The user must accept the task first)
+            const isPending = d.status === 'PENDING';
+            const isActive = d.status === 'IN_PROGRESS';
+
+            // 2. Clickable link logic for the assigned module title
+            // You can only click the title if it's IN_PROGRESS and it's a SYSTEM modular task
+            const canJumpToModule = isInbox && isActive && !isRevoked && d.type !== 'ADHOC' && d.moduleRoute;
+            const titleHTML = canJumpToModule
                 ? `<a href="${d.moduleRoute}" style="color:var(--vs-text-title);font-size:13px;font-weight:300;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--vs-accent)'" onmouseout="this.style.color='var(--vs-text-title)'">${d.moduleTitle}</a>`
                 : `<span style="color:var(--vs-text-title);font-size:13px;font-weight:300;">${d.moduleTitle}</span>`;
 
-            // Row click action
-            const rowClick = canExecute ? `onclick="window.location.href='${d.moduleRoute}'" style="cursor:pointer;"` : `style="cursor:default;"`;
+            // Row click action (Only jump if active and system)
+            const rowClick = canJumpToModule ? `onclick="window.location.href='${d.moduleRoute}'" style="cursor:pointer;"` : `style="cursor:default;"`;
+
+            // 3. Action Button Logic
+            let actionButtonsHtml = '';
+
+            if (isInbox && !isRevoked && d.status !== 'COMPLETED') {
+                if (isPending) {
+                    // GATE 1: Needs Acceptance
+                    actionButtonsHtml = `
+                        <button onclick="window.DelegationPanel.markTaskInProgress('${d.id}')"
+                                style="display:inline-block;background:rgba(var(--vs-warning-rgb),0.1);color:var(--vs-warning);
+                                       font-size:11px;font-weight:300;text-decoration:none;padding:2px 8px;
+                                       border-radius:3px;border:1px solid rgba(var(--vs-warning-rgb),0.3);transition:all 0.2s;cursor:pointer;"
+                                onmouseover="this.style.background='rgba(var(--vs-warning-rgb),0.2)'" onmouseout="this.style.background='rgba(var(--vs-warning-rgb),0.1)'">
+                            <i class="icon i-check" style="width:10px;height:10px;vertical-align:middle;"></i> ยอมรับภารกิจ
+                        </button>`;
+                } else if (isActive) {
+                    // GATE 2: Ready to execute
+                    if (d.type === 'ADHOC') {
+                        // Ad-Hoc tasks open a reading modal
+                        actionButtonsHtml = `
+                            <button onclick="window.DelegationPanel.showAdHocDetails('${encodeURIComponent(d.moduleTitle)}', '${encodeURIComponent(d.description || 'ไม่มีรายละเอียดเพิ่มเติม')}')"
+                                    style="display:inline-block;background:rgba(var(--vs-success-rgb),0.1);color:var(--vs-success);
+                                           font-size:11px;font-weight:300;text-decoration:none;padding:2px 8px;
+                                           border-radius:3px;border:1px solid rgba(var(--vs-success-rgb),0.3);transition:all 0.2s;cursor:pointer;"
+                                    onmouseover="this.style.background='rgba(var(--vs-success-rgb),0.2)'" onmouseout="this.style.background='rgba(var(--vs-success-rgb),0.1)'">
+                                <i class="icon i-eye" style="width:10px;height:10px;vertical-align:middle;"></i> อ่านรายละเอียด
+                            </button>`;
+                    } else if (d.moduleRoute) {
+                        // System tasks jump to module
+                        actionButtonsHtml = `
+                            <a href="${d.moduleRoute}" 
+                               style="display:inline-block;background:rgba(34,211,238,0.1);color:var(--vs-accent);
+                                      font-size:11px;font-weight:300;text-decoration:none;padding:2px 8px;
+                                      border-radius:3px;border:1px solid rgba(34,211,238,0.3);transition:all 0.2s;"
+                               onmouseover="this.style.background='rgba(34,211,238,0.2)'" onmouseout="this.style.background='rgba(34,211,238,0.1)'">
+                                <i class="icon i-play" style="width:10px;height:10px;vertical-align:middle;"></i> ทำภารกิจ
+                            </a>`;
+                    }
+                }
+            }
+
+            // Sender/Director abilities (Revoke button)
+            if (!isInbox && this._viewTab === 'DISPATCHED' && !isRevoked && d.status !== 'COMPLETED') {
+                actionButtonsHtml += `
+                    <button class="deleg-revoke-btn" data-id="${d.id}"
+                            style="background:transparent;border:none;color:var(--vs-danger);font-size:11px;
+                                   font-weight:300;cursor:pointer;padding:2px 8px;border-radius:3px;
+                                   border:1px solid rgba(var(--vs-danger-rgb),0.3);transition:all 0.2s;"
+                            onmouseover="this.style.background='rgba(var(--vs-danger-rgb),0.1)'" onmouseout="this.style.background='transparent'">
+                        <i class="icon i-x" style="width:10px;height:10px;vertical-align:middle;"></i> ยกเลิก
+                    </button>`;
+            }
 
             return `
                 <div style="padding:12px 16px;border-bottom:1px solid var(--vs-border);
@@ -808,26 +895,7 @@ const DelegationPanel = {
                             <span style="color:var(--vs-text-title);font-size:11px;background:rgba(255,255,255,0.05);padding:1px 6px;border-radius:8px;">
                                 ${d.score || 0} pts
                             </span>
-                            ${(!isInbox && this._viewTab === 'DISPATCHED' && !isRevoked && !['COMPLETED'].includes(d.status))
-                    ? `<button class="deleg-revoke-btn" data-id="${d.id}"
-                                    style="background:transparent;border:none;color:var(--vs-danger);font-size:11px;
-                                           font-weight:300;cursor:pointer;padding:2px 8px;border-radius:3px;
-                                           border:1px solid rgba(var(--vs-danger-rgb),0.3);transition:all 0.2s;"
-                                    onmouseover="this.style.background='rgba(var(--vs-danger-rgb),0.1)'" onmouseout="this.style.background='transparent'">
-                                    <i class="icon i-x" style="width:10px;height:10px;vertical-align:middle;"></i> ยกเลิก
-                                   </button>`
-                    : ''
-                }
-                            ${canExecute
-                    ? `<a href="${d.moduleRoute}" 
-                                   style="display:inline-block;background:rgba(34,211,238,0.1);color:var(--vs-accent);
-                                          font-size:11px;font-weight:300;text-decoration:none;padding:2px 8px;
-                                          border-radius:3px;border:1px solid rgba(34,211,238,0.3);transition:all 0.2s;"
-                                   onmouseover="this.style.background='rgba(34,211,238,0.2)'" onmouseout="this.style.background='rgba(34,211,238,0.1)'">
-                                    <i class="icon i-play" style="width:10px;height:10px;vertical-align:middle;"></i> ทำภารกิจ
-                               </a>`
-                    : ''
-                }
+                            ${actionButtonsHtml}
                         </div>
                     </div>
                 </div>`;
