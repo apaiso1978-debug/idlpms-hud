@@ -97,8 +97,26 @@ const DelegationPanel = {
 
     // ── Get current module context from HUD ──
     _getModuleContext() {
-        // Try active sidebar item first (Mission Control / Explorer)
-        const activeSidebarItem = document.querySelector('.timeline-child-item.active, .timeline-parent-item.active, .vs-menu-item.active');
+        // Find visible active items first. 
+        // Order of precedence: 
+        // 1. Visible child node (deepest active selection)
+        // 2. Visible parent node
+        // 3. Fallback to any active menu item
+        let activeSidebarItem = null;
+
+        const prioritySelectors = [
+            '.vs-sidebar-panel:not(.hidden) .timeline-child-item.active',
+            '.vs-sidebar-panel:not(.hidden) .timeline-parent-item.active',
+            '.timeline-child-item.active',
+            '.timeline-parent-item.active',
+            '.vs-menu-item.active'
+        ];
+
+        for (const selector of prioritySelectors) {
+            activeSidebarItem = document.querySelector(selector);
+            if (activeSidebarItem) break;
+        }
+
         if (activeSidebarItem) {
             const iconNode = activeSidebarItem.querySelector('.icon');
             const textNode = activeSidebarItem.querySelector('span');
@@ -141,7 +159,8 @@ const DelegationPanel = {
             title: moduleTitle || iframeTitle || 'งานทั่วไป',
             id: moduleTitle ? moduleTitle.replace(/\s+/g, '_').toUpperCase() : 'GENERAL',
             icon: 'i-command-line', // fallback icon
-            colorClass: 'text-[var(--vs-accent)]'
+            colorClass: 'text-[var(--vs-accent)]',
+            pageRoute: ''
         };
     },
 
@@ -280,22 +299,34 @@ const DelegationPanel = {
         const list = this.getAllDelegations();
 
         // 🚨 PREVENT DUPES: Iron Rule - Single Active Assignment per Task per Person
-        const isDuplicate = list.some(d =>
+        const duplicateTask = list.find(d =>
             d.assignee === assigneeId &&
             d.moduleId === moduleId &&
             (d.status === 'PENDING' || d.status === 'IN_PROGRESS')
         );
 
-        if (isDuplicate) {
+        if (duplicateTask) {
             console.warn(`[Delegation Guard] Blocked duplicate assignment of ${moduleId} to ${assigneeId}`);
+
+            const isMine = duplicateTask.assignedBy === (user.id || 'DIR_MABLUD');
+            const assignedByName = duplicateTask.assignedByName || duplicateTask.assignedBy;
+
+            const toastMsg = isMine
+                ? `คุณได้มอบหมายงาน <b>${moduleTitle}</b> ให้ <b>${assigneeName}</b> ไปแล้ว`
+                : `<b>${assignedByName}</b> ได้มอบหมายงานนี้ให้ <b>${assigneeName}</b> ไปแล้ว`;
+
+            const alertMsg = isMine
+                ? `คุณได้ทำการมอบหมายงานนี้ให้ ${assigneeName} ไปก่อนหน้านี้แล้ว สามารถตรวจสอบได้ในแท็บ "งานที่ส่ง"`
+                : `ไม่สามารถมอบหมายซ้ำซ้อนได้ เนื่องจาก ${assignedByName} ได้มอบหมายงานนี้ให้ผู้รับรายนี้ไปแล้ว`;
+
             if (window.HUD_NOTIFY) {
                 HUD_NOTIFY.toast(
                     'การมอบหมายซ้ำซ้อน (Blocked)',
-                    `คุณได้มอบหมายงาน <b>${moduleTitle}</b> ให้ <b>${assigneeName}</b> ไปแล้ว และงานนี้ยังอยู่ระหว่างดำเนินการ`,
+                    toastMsg,
                     'warning'
                 );
             }
-            this.showAlert('ปฏิเสธการมอบหมาย', `${assigneeName} กำลังดำเนินการภารกิจนี้อยู่แล้ว`, 'warning');
+            this.showAlert('ปฏิเสธการมอบหมาย', alertMsg, 'warning');
             return null; // Stop execution
         }
 
