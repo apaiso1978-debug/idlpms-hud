@@ -1,6 +1,6 @@
 ---
 name: System Architecture Guard
-description: Iron Rules for IDLPMS Database Schema, UI Fluidity, Notifications, and Sync Architecture. Read before designing new features.
+description: Iron Rules for E-OS Database Schema, UI Fluidity, Notifications, and Sync Architecture. Read before designing new features.
 ---
 
 # System Architecture Guard — The 4 Core Commandments
@@ -24,7 +24,7 @@ Before designing a new module or database table, verify:
 
 ## 1. Database Commandment: "Person-First" Schema
 
-The IDLPMS operates on a Lifelong Education model. Users change roles (Student -> Alumni -> Teacher -> Director), but their identity remains fixed.
+The E-OS operates on a Lifelong Education model. Users change roles (Student -> Alumni -> Teacher -> Director), but their identity remains fixed.
 
 ### 🚫 BANNED PATTERN (Role-First)
 Do NOT design fragmented root tables based on temporary status:
@@ -57,7 +57,7 @@ CREATE TABLE user_roles (
 
 ## 2. Layout Commandment: Edge-to-Edge Fluidity
 
-The IDLPMS HUD is a "Command Center," not a consumer magazine. It must maximize screen real-estate.
+The E-OS HUD is a "Command Center," not a consumer magazine. It must maximize screen real-estate.
 
 *   **Rule 21 (Fluidity):** NEVER use `max-w-7xl`, `max-w-[1200px]`, or `container` on functional pages (dashboards, tables, forms). Modules must scale to `w-full`.
 *   **Rule 20 (Horizontal Unity):** The outermost padding for content MUST ALWAYS be `px-6` (24px). This aligns the content edges precisely with the Shell Breadcrumbs and Delegation Buttons regardless of screen width.
@@ -79,7 +79,7 @@ The system maintains a high-fidelity aesthetic. Native browser dialogues break t
 
 ## 4. State Commandment: Offline-First & Sync Engine
 
-IDLPMS is designed for Thai rural schools with intermittent connectivity.
+E-OS is designed for Thai rural schools with intermittent connectivity.
 
 ### 🚫 BANNED PATTERN (Synchronous API Calls)
 Do NOT block the UI waiting for a remote database response.

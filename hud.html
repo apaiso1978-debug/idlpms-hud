@@ -45,8 +45,14 @@
     <div class="flex h-screen overflow-hidden border border-[var(--vs-border)]">
         <!-- Activity Bar (Icons Only) -->
         <aside class="vs-activity-bar z-50">
-            <div class="h-[48px] flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity">
-                <i class="icon i-academic h-6 w-6 text-[var(--vs-accent)]"></i>
+            <!-- E-OS Minimal Logo -->
+            <div class="h-[48px] flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                style="color: var(--vs-accent);">
+                <svg viewBox="0 0 24 24" fill="none" class="w-6 h-6 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 22 8 22 16 12 22 2 16 2 8" />
+                    <circle cx="12" cy="12" r="3" fill="currentColor" />
+                </svg>
             </div>
             <div class="flex-1 flex flex-col">
                 <div class="activity-item active" data-tooltip="สำรวจข้อมูล" data-view="explorer">
@@ -139,6 +145,26 @@
                             <span style="color: var(--vs-text-title) !important;"
                                 class="font-light">ความโปร่งใสองค์กร</span>
                         </button>
+                    </div>
+
+                    <!-- Separator & New Section: Content Engineering (Admin/Dev) -->
+                    <div id="content-engineering-section" style="display: none;">
+                        <div class="pt-4 pb-2 px-3">
+                            <div
+                                class="text-[10px] font-bold tracking-wider text-[var(--vs-text-muted)] uppercase Thai-Rule">
+                                Content Engineering</div>
+                        </div>
+
+                        <!-- Harvester Progress Tracker -->
+                        <div class="timeline-menu-container">
+                            <button class="timeline-parent-item" data-page="pages/content_pipeline.html"
+                                data-name="Content Harvester Engine">
+                                <i
+                                    class="icon i-academic-cap text-cyan-400 group-hover:scale-110 transition-transform"></i>
+                                <span style="color: var(--vs-text-title) !important;" class="font-light">สกัดเนื้อหา
+                                    DLTV & 7-Steps</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -478,6 +504,42 @@
 
     <div id="vs-toast-container"></div>
 
+    <!-- 🛡️ FORCE PASSWORD RESET MODAL (Vuln 4 Mitigation) -->
+    <div id="force-password-modal" style="display:none;"
+        class="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div
+            class="bg-[var(--vs-bg-panel)] w-full max-w-md border border-rose-500/50 rounded-[var(--vs-radius)] overflow-hidden shadow-[0_0_40px_rgba(244,63,94,0.15)] flex flex-col">
+            <div class="h-1 bg-gradient-to-r from-rose-500 to-orange-500 w-full"></div>
+            <div class="p-6 flex flex-col items-center text-center">
+                <div
+                    class="w-16 h-16 rounded-full bg-rose-500/10 flex items-center justify-center mb-4 border border-rose-500/20">
+                    <i class="icon i-shield-exclamation text-rose-500 w-8 h-8"></i>
+                </div>
+                <h2 class="text-xl font-medium text-white Thai-Rule mb-2">แจ้งเตือนความปลอดภัยสูงสุด</h2>
+                <p class="text-[14px] text-[var(--vs-text-muted)] leading-relaxed mb-6">
+                    ตรวจพบการเข้าสู่ระบบด้วยรหัสผ่านเริ่มต้น <strong class="text-rose-400">password123</strong><br>
+                    เพื่อความปลอดภัยของข้อมูลในระบบ IDLPMS กรุณาตั้งรหัสผ่านใหม่ของคุณทันที
+                </p>
+                <div class="w-full text-left bg-black/40 p-4 rounded border border-[var(--vs-border)] mb-6">
+                    <p
+                        class="text-[12px] text-[var(--vs-text-muted)] mb-3 Thai-Rule opacity-80 uppercase tracking-widest text-center">
+                        <i class="icon i-information-circle w-3 h-3 inline-block -mt-1 mr-1"></i>
+                        การตั้งรหัสผ่านชั่วคราว (Simulation)
+                    </p>
+                    <div class="flex items-center gap-2">
+                        <input type="password" id="new-password-input"
+                            placeholder="พิมพ์รหัสผ่านใหม่อย่างน้อย 8 ตัวอักษร"
+                            class="flex-1 bg-black/50 border border-[var(--vs-border)] rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-rose-500 transition-colors">
+                    </div>
+                </div>
+                <button id="btn-force-password"
+                    class="w-full bg-rose-600 hover:bg-rose-500 text-white font-medium py-3 rounded transition-colors flex items-center justify-center gap-2 Thai-Rule">
+                    <i class="icon i-check w-5 h-5"></i>
+                    บันทึกรหัสผ่านใหม่และเข้าสู่ระบบ
+                </button>
+            </div>
+        </div>
+    </div>
     <script src="assets/js/components/tooltip.js?v=2.2"></script>
     <script src="assets/js/notifications.js?v=2.5"></script>
     <script src="assets/js/submenu.js?v=2.4"></script>

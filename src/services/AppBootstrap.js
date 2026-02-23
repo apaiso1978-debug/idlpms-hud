@@ -44,6 +44,9 @@ class AppBootstrap {
 
         console.group('[AppBootstrap] Initializing Services');
 
+        // Migrate legacy IDLPMS data keys to EOS keys before any service boots
+        this._migrateLegacyStorage();
+
         this._initPromise = (async () => {
             try {
                 // 1. Initialize DataService (Dependent for others)
@@ -82,6 +85,35 @@ class AppBootstrap {
         })();
 
         return this._initPromise;
+    }
+
+    /**
+     * E-OS Rebranding: Migrate legacy IDLPMS data keys to new eos_* keys
+     * Ensures users do not lose their login sessions or offline databases
+     */
+    _migrateLegacyStorage() {
+        try {
+            const legacyKeys = {
+                'idlpms_database': 'eos_database',
+                'idlpms_auth_token': 'eos_auth_token',
+                'idlpms_lesson_packs': 'eos_lesson_packs',
+                'idlpms_dynamic_data': 'eos_dynamic_data'
+            };
+            let migratedCount = 0;
+            for (const [oldKey, newKey] of Object.entries(legacyKeys)) {
+                const storedValue = localStorage.getItem(oldKey);
+                if (storedValue !== null && !localStorage.getItem(newKey)) {
+                    localStorage.setItem(newKey, storedValue);
+                    console.log(`[E-OS Migration] Successfully migrated ${oldKey} -> ${newKey}`);
+                    migratedCount++;
+                }
+            }
+            if (migratedCount > 0) {
+                console.log(`[E-OS Migration] Rebranding migration complete. Migrated ${migratedCount} keys.`);
+            }
+        } catch (e) {
+            console.warn('[E-OS Migration] Non-critical error migrating legacy storage:', e);
+        }
     }
 
     /**
