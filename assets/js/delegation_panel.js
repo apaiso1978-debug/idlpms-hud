@@ -14,8 +14,8 @@
 const DelegationPanel = {
 
     // ── Storage ──
-    STORAGE_KEY: 'idlpms_delegations_v1',
-    PASSPORT_PREFIX: 'idlpms_passport_',
+    STORAGE_KEY: 'eos_delegations_v1',
+    PASSPORT_PREFIX: 'eos_passport_',
 
     // ── State ──
     _cache: null,
@@ -70,8 +70,8 @@ const DelegationPanel = {
                 if (parsed && parsed.role) return parsed;
             }
             // Fallback: reconstruct from individual keys
-            const userId = localStorage.getItem('current_user_id') || localStorage.getItem('idlpms_active_user_id');
-            const role = localStorage.getItem('current_role') || localStorage.getItem('idlpms_active_role');
+            const userId = localStorage.getItem('current_user_id') || localStorage.getItem('eos_active_user_id');
+            const role = localStorage.getItem('current_role') || localStorage.getItem('eos_active_role');
 
             if (userId || role) {
                 let inferredRole = role;
@@ -82,7 +82,7 @@ const DelegationPanel = {
                 }
                 let fullName = userId || 'ผอ.';
                 try {
-                    const localData = window.IDLPMS_DATA || {};
+                    const localData = window.EOS_DATA || {};
                     const users = localData.users || {};
                     if (users[userId]) {
                         fullName = users[userId].fullName || userId;
@@ -392,7 +392,7 @@ const DelegationPanel = {
         let foundTargets = [];
 
         try {
-            const localData = window.IDLPMS_DATA || {};
+            const localData = window.EOS_DATA || {};
             const users = localData.users || {};
 
             const me = users[currentId] || {};
@@ -456,13 +456,14 @@ const DelegationPanel = {
         await this._loadHierarchyTargets();
         const ctx = this._getModuleContext();
         const user = this._getCurrentUser();
+        const isDirector = !user.role || ['SCHOOL_DIR', 'ESA_DIR', 'OBEC', 'MOE'].includes(user.role);
 
         container.innerHTML = `
             <div class="deleg-v3" style="display:flex;flex-direction:column;height:100%;font-size:13px;font-weight:300;">
                 ${this._renderHeader()}
                 ${this._renderAssignForm(ctx)}
                 ${this._renderViewTabs()}
-                ${this._renderDelegationList(false)}
+                ${this._renderDelegationList()}
             </div>
         `;
 
@@ -665,52 +666,36 @@ const DelegationPanel = {
         const inbox = allDel.filter(d => d.assignee === (user.id || 'DIR_MABLUD'));
 
         const title = dispActive ? `งานที่ส่ง (${dispatched.length})` : `งานที่ได้รับ (${inbox.length})`;
-        const nextMode = dispActive ? 'INBOX' : 'DISPATCHED';
         const iconClass = dispActive ? 'i-paper-airplane' : 'i-inbox';
         const colorClass = dispActive ? 'var(--vs-accent)' : 'var(--vs-success)';
 
         return `
             <div style="height:48px;min-height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;
-                        border-bottom:1px solid var(--vs-border);background:var(--vs-bg-deep);">
+                        border-bottom:1px solid var(--vs-border);background:var(--vs-bg-panel);">
                 <div style="display:flex;align-items:center;gap:8px;">
                     <i class="icon ${iconClass}" style="width:16px;height:16px;color:${colorClass};"></i>
                     <span style="color:var(--vs-text-title);font-size:13px;font-weight:300;">${title}</span>
                 </div>
-                <!-- Mini Pill Toggle inside header -->
-                <div style="display:flex;background:rgba(255,255,255,0.05);border-radius:12px;padding:2px;">
-                    <button class="deleg-tab-btn ${dispActive ? 'active' : ''}" data-tab="DISPATCHED"
-                        style="padding:4px 12px;border-radius:10px;font-size:11px;font-weight:300;border:none;cursor:pointer;
-                               background:${dispActive ? 'var(--vs-bg-panel)' : 'transparent'};
-                               color:${dispActive ? 'var(--vs-text-title)' : 'var(--vs-text-muted)'};
-                               box-shadow:${dispActive ? '0 2px 4px rgba(0,0,0,0.2)' : 'none'};
-                               transition:all 0.2s;">
-                        ส่งแล้ว
-                    </button>
-                    <button class="deleg-tab-btn ${!dispActive ? 'active' : ''}" data-tab="INBOX"
-                        style="padding:4px 12px;border-radius:10px;font-size:11px;font-weight:300;border:none;cursor:pointer;
-                               background:${!dispActive ? 'var(--vs-bg-panel)' : 'transparent'};
-                               color:${!dispActive ? 'var(--vs-text-title)' : 'var(--vs-text-muted)'};
-                               box-shadow:${!dispActive ? '0 2px 4px rgba(0,0,0,0.2)' : 'none'};
-                               transition:all 0.2s;">
-                        รับเข้า
-                    </button>
-                </div>
+                <!-- Graphic Toggle for Sent / Inbox aligned to right -->
+                <button class="vs-toggle deleg-target-btn ${dispActive ? '' : 'active'}" data-tab="${dispActive ? 'INBOX' : 'DISPATCHED'}"></button>
             </div>`;
     },
 
-    _renderDelegationList(isDirector = true) {
+    _renderDelegationList() {
         let listHtml = '';
         const allDel = this.getAllDelegations();
         const user = this._getCurrentUser();
+        const isDirector = !user.role || ['SCHOOL_DIR', 'ESA_DIR', 'OBEC', 'MOE'].includes(user.role);
 
         // 1. Filter raw list based on role & mode
         let currentList = [];
         const isInbox = !isDirector || this._viewTab === 'INBOX'; // Teachers always inbox
+        const currentUserId = user.id || user.userId || 'DIR_MABLUD';
 
         if (isInbox) {
-            currentList = allDel.filter(d => d.assignee === user.id);
+            currentList = allDel.filter(d => d.assignee === currentUserId);
         } else {
-            currentList = allDel.filter(d => d.assignedBy === user.id);
+            currentList = allDel.filter(d => d.assignedBy === currentUserId);
         }
 
         // Sort by newest first
@@ -720,7 +705,7 @@ const DelegationPanel = {
             return `
                 <div style="flex:1;display:flex;align-items:center;justify-content:center;
                             color:var(--vs-text-muted);font-size:13px;font-weight:300;padding:24px;">
-                    ${isInbox ? 'ยังไม่มีงานที่ได้รับ' : 'ยังไม่มีงานที่ส่ง'}
+                    <!-- Empty state text removed as per request -->
                 </div>`;
         }
 
@@ -868,26 +853,30 @@ const DelegationPanel = {
     _bindEvents(container) {
         // Initialize Calendar for Deadline Input
         const deadlineInput = container.querySelector('#deleg-deadline');
-        if (deadlineInput && typeof IDLPMSCalendar !== 'undefined') {
+        if (deadlineInput && typeof E-OSCalendar !== 'undefined') {
             // Re-initialize to avoid duplicate calendars if already created
             if (!deadlineInput._calendarInstance) {
-                deadlineInput._calendarInstance = new IDLPMSCalendar(deadlineInput);
+                deadlineInput._calendarInstance = new E-OSCalendar(deadlineInput);
             }
         }
 
-        // Toggle mode buttons
+        // Toggle mode buttons (System / Adhoc header toggle)
         container.querySelectorAll('.deleg-toggle-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 this._mode = btn.dataset.mode;
-                this.render();
+                this.render(container.id);
             });
         });
 
-        // View tabs
-        container.querySelectorAll('.deleg-view-tab').forEach(btn => {
-            btn.addEventListener('click', () => {
-                this._viewTab = btn.dataset.tab;
-                this.render();
+        // 4. View Tabs Toggle (Sent/Inbox Graphic Toggle)
+        container.querySelectorAll('.deleg-target-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const targetTab = e.currentTarget.dataset.tab;
+                if (targetTab !== this._viewTab) {
+                    this._viewTab = targetTab;
+                    this._selectedTeacherId = null;
+                    this.render(container.id);
+                }
             });
         });
 

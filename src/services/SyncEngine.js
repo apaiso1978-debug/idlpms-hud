@@ -1,5 +1,5 @@
 /**
- * IDLPMS SyncEngine - Background Sync Mechanism
+ * E-OS SyncEngine - Background Sync Mechanism
  * ==============================================
  * Handles offline-to-online synchronization with:
  * - Automatic background sync when connection restored
@@ -9,7 +9,7 @@
  * - Service Worker integration ready
  *
  * @version 2.0.0
- * @author IDLPMS Development Team
+ * @author E-OS Development Team
  */
 
 // ============================================================================
@@ -673,10 +673,10 @@ class SyncEngine {
     }
 
     _getDeviceId() {
-        let deviceId = localStorage.getItem('idlpms_device_id');
+        let deviceId = localStorage.getItem('eos_device_id');
         if (!deviceId) {
             deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('idlpms_device_id', deviceId);
+            localStorage.setItem('eos_device_id', deviceId);
         }
         return deviceId;
     }

@@ -39,8 +39,8 @@ class DNACoreService {
 
             if (studentFitness && studentFitness.sitReach != null && studentFitness.pushUp != null && studentFitness.stepUp != null) {
                 // We have complete data. Let's grade it.
-                if (typeof FitnessGrading !== 'undefined' && typeof IDLPMS_DATA !== 'undefined' && IDLPMS_DATA.users[studentId]) {
-                    const user = IDLPMS_DATA.users[studentId];
+                if (typeof FitnessGrading !== 'undefined' && typeof EOS_DATA !== 'undefined' && EOS_DATA.users[studentId]) {
+                    const user = EOS_DATA.users[studentId];
                     const age = FitnessGrading.estimateAgeFromClass(user.classId);
                     const gender = FitnessGrading.detectGender(user.fullName);
 
@@ -57,7 +57,7 @@ class DNACoreService {
                     };
 
                     if (grades && grades.overall) {
-                        fitnessGrade = levelScores[grades.overall.level] || 50;
+                        fitnessGrade = levelScores[grades.overall.levelIndex] || 50;
                     }
                 } else {
                     // Fallback if Grading logic missing but data exists
@@ -92,10 +92,10 @@ class DNACoreService {
      * @returns {Object}
      */
     static getClassAverageDNA(classId) {
-        if (typeof IDLPMS_DATA === 'undefined' || !IDLPMS_DATA.users) return null;
+        if (typeof EOS_DATA === 'undefined' || !EOS_DATA.users) return null;
 
-        const students = Object.entries(IDLPMS_DATA.users)
-            .filter(([_, u]) => u.role === 'STUDENT' && u.classId === classId && u.schoolId === 'SCH_MABLUD')
+        const students = Object.entries(EOS_DATA.users)
+            .filter(([_, u]) => u.role === 'STUDENT' && u.classId === classId && u.schoolId === '99999999-9999-4999-8999-999999999999')
             .map(([id]) => id);
 
         if (students.length === 0) return { k: 0, p: 0, a: 0, e: 0, d: 0 };
@@ -125,10 +125,10 @@ class DNACoreService {
      * @returns {Object}
      */
     static getSchoolAverageDNA() {
-        if (typeof IDLPMS_DATA === 'undefined' || !IDLPMS_DATA.users) return null;
+        if (typeof EOS_DATA === 'undefined' || !EOS_DATA.users) return null;
 
-        const students = Object.entries(IDLPMS_DATA.users)
-            .filter(([_, u]) => u.role === 'STUDENT' && u.schoolId === 'SCH_MABLUD')
+        const students = Object.entries(EOS_DATA.users)
+            .filter(([_, u]) => u.role === 'STUDENT' && u.schoolId === '99999999-9999-4999-8999-999999999999')
             .map(([id]) => id);
 
         if (students.length === 0) return { k: 0, p: 0, a: 0, e: 0, d: 0 };

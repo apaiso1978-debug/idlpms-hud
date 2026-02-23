@@ -1,5 +1,5 @@
 /**
- * IDLPMS AdminMetricsService
+ * E-OS AdminMetricsService
  * ===========================
  * Dedicated service for the Admin Dashboard to fetch system-wide telemetry.
  * Connects to:
@@ -45,7 +45,7 @@ class AdminMetricsService {
      */
     loadConfig() {
         if (typeof localStorage !== 'undefined') {
-            const storedConfigStr = localStorage.getItem('idlpms_admin_config');
+            const storedConfigStr = localStorage.getItem('eos_admin_config');
             if (storedConfigStr) {
                 try {
                     const storedConfig = JSON.parse(storedConfigStr);
@@ -70,7 +70,7 @@ class AdminMetricsService {
     async dispatchWebhookAlert(source, pct, message) {
         if (!this.config.webhookUrl && (!this.config.lineChannelToken || !this.config.lineTargetId)) return; // No webhook or LINE configured
 
-        const sessionKey = `idlpms_alert_sent_${source}`;
+        const sessionKey = `eos_alert_sent_${source}`;
         if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem(sessionKey)) {
             // Already sent an alert for this source in the current session
             return;
@@ -82,8 +82,8 @@ class AdminMetricsService {
         if (this.config.webhookUrl) {
             try {
                 const payload = {
-                    content: `🚨 **IDLPMS CRITICAL ALERT: ${source.toUpperCase()}** 🚨\n${message}\nCurrent Usage: **${pct}%**\n<@here> Please investigate immediately.`,
-                    username: "IDLPMS System Sentinel",
+                    content: `🚨 **E-OS CRITICAL ALERT: ${source.toUpperCase()}** 🚨\n${message}\nCurrent Usage: **${pct}%**\n<@here> Please investigate immediately.`,
+                    username: "E-OS System Sentinel",
                     avatar_url: "https://auth.insforge.com/assets/images/logo_icon.png" // Replace with valid avatar if needed
                 };
 
@@ -105,7 +105,7 @@ class AdminMetricsService {
         // 2. Send LINE Messaging API Webhook via Netlify Proxy
         if (this.config.lineChannelToken && this.config.lineTargetId) {
             try {
-                const lineMessage = `🚨 IDLPMS อาการน่าเป็นห่วง: ${source.toUpperCase()}\n${message}\n📈 การใช้งานปัจจุบัน: ${pct}%\nกรุณาเข้าตรวจสอบระบบด่วนครับ`;
+                const lineMessage = `🚨 E-OS อาการน่าเป็นห่วง: ${source.toUpperCase()}\n${message}\n📈 การใช้งานปัจจุบัน: ${pct}%\nกรุณาเข้าตรวจสอบระบบด่วนครับ`;
 
                 // Using Netlify Serverless function to proxy to LINE API and bypass CORS
                 const response = await fetch('/.netlify/functions/line-messaging', {

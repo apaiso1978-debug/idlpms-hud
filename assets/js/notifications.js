@@ -1,5 +1,5 @@
 /**
- * IDLPMS - Smart HUD Notification Engine
+ * E-OS - Smart HUD Notification Engine
  */
 
 window.HUD_NOTIFY = {

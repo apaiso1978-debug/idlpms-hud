@@ -259,18 +259,18 @@
 
     <script>
         // ══════════════════════════════════════════
-        // BUILD STUDENT LIST FROM IDLPMS_DATA (insforge)
+        // BUILD STUDENT LIST FROM EOS_DATA (insforge)
         // ══════════════════════════════════════════
 
         const params = new URLSearchParams(window.location.search);
         const currentClassId = params.get('class') || 'ป.1/1';
 
         function getStudents() {
-            if (typeof IDLPMS_DATA === 'undefined' || !IDLPMS_DATA.users) return [];
+            if (typeof EOS_DATA === 'undefined' || !EOS_DATA.users) return [];
 
             const students = [];
-            Object.entries(IDLPMS_DATA.users).forEach(([id, u]) => {
-                if (u.role === 'STUDENT' && u.classId === currentClassId && u.schoolId === 'SCH_MABLUD') {
+            Object.entries(EOS_DATA.users).forEach(([id, u]) => {
+                if (u.role === 'STUDENT' && u.classId === currentClassId && u.schoolId === '99999999-9999-4999-8999-999999999999') {
                     // Detect gender from fullName prefix
                     const name = u.fullName || '';
                     let gender = 'M';
@@ -325,7 +325,7 @@
                     <tr>
                         <td colspan="7" class="text-center py-8 text-[var(--vs-text-muted)]">
                             <p class="text-[13px]">ไม่พบนักเรียนในชั้น ${currentClassId}</p>
-                            <p class="text-[13px] mt-1 opacity-50">ตรวจสอบข้อมูลใน IDLPMS_DATA.users</p>
+                            <p class="text-[13px] mt-1 opacity-50">ตรวจสอบข้อมูลใน EOS_DATA.users</p>
                         </td>
                     </tr>`;
                 return;
@@ -474,7 +474,7 @@
                     const result = await FitnessService.save(studentId, { ...data, ...gradeData }, {
                         classId: currentClassId,
                         recordedBy: 'CURRENT_TEACHER',
-                        schoolId: 'SCH_MABLUD',
+                        schoolId: '99999999-9999-4999-8999-999999999999',
                     });
                     if (result.cloud) {
                         updateCloudStatus(true);
@@ -546,7 +546,7 @@
                             const r = await FitnessService.save(stu.id, d, {
                                 classId: currentClassId,
                                 recordedBy: 'CURRENT_TEACHER',
-                                schoolId: 'SCH_MABLUD',
+                                schoolId: '99999999-9999-4999-8999-999999999999',
                             });
                             if (r.cloud) syncCount++;
                         } catch (e) { /* continue */ }

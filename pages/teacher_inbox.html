@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>กล่องงานที่ได้รับมอบหมาย | IDLPMS</title>
+    <title>กล่องงานที่ได้รับมอบหมาย | E-OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../assets/css/theme.css">
     <link rel="stylesheet" href="../assets/css/components.css">
@@ -98,7 +98,7 @@
 
                 let allDelegations = [];
                 try {
-                    const raw = localStorage.getItem('idlpms_delegations_v1');
+                    const raw = localStorage.getItem('eos_delegations_v1');
                     if (raw) allDelegations = JSON.parse(raw);
                 } catch (e) { console.warn('Failed to parse delegations'); }
 

@@ -52,15 +52,21 @@ class DNA_RadarWidget {
     }
 
     _fetchStudentDNA(id) {
+        // Core DNA Integration
+        if (typeof DNACoreService !== 'undefined' && id) {
+            const dna = DNACoreService.getStudentDNA(id);
+            if (dna) return dna;
+        }
+
         // Fallback to global mock data for now
-        const localData = window.IDLPMS_DATA || {};
+        const localData = window.EOS_DATA || {};
         const students = localData.persons || localData.users || {};
         const student = students[id];
 
         if (!student) return null;
 
-        // Default to a 5-Axis mapping if DNA object doesn't exist
-        const defaultDna = { logic: 50, creativity: 50, communication: 50, leadership: 50, physical: 50 };
+        // Default to a 5-Axis KPA+ mapping if DNA object doesn't exist
+        const defaultDna = { k: 50, p: 50, a: 50, e: 50, d: 50 };
         return student.dna || defaultDna;
     }
 
@@ -105,15 +111,15 @@ class DNA_RadarWidget {
         this.chartInstance = new Chart(ctx, {
             type: 'radar',
             data: {
-                labels: ['Logic (L)', 'Creativity (C)', 'Communication (M)', 'Leadership (E)', 'Physical (P)'],
+                labels: ['Knowledge (K)', 'Process/Skill (P)', 'Attitude (A)', 'Effort (E)', 'Discipline (D)'],
                 datasets: [{
                     label: 'DNA Signature',
                     data: [
-                        dnaData.logic || 0,
-                        dnaData.creativity || 0,
-                        dnaData.communication || 0,
-                        dnaData.leadership || 0,
-                        dnaData.physical || 0
+                        dnaData.k || 0,
+                        dnaData.p || 0,
+                        dnaData.a || 0,
+                        dnaData.e || 0,
+                        dnaData.d || 0
                     ],
                     backgroundColor: 'rgba(34, 211, 238, 0.1)', // Translucent fill
                     borderColor: accentHex,                     // Neon border

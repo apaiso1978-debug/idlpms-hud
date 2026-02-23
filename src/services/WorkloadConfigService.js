@@ -1,7 +1,7 @@
 /**
  * WorkloadConfigService — Smart Default + Manual Override
  * ========================================================
- * Universal configuration system for IDLPMS.
+ * Universal configuration system for E-OS.
  * Every configurable value has:
  *   - mode: "locked" | "auto" | "manual"
  *   - default: system-calculated smart default
@@ -10,7 +10,7 @@
  * Legal references: กคศ. ว9/2564, ว21/2564
  */
 class WorkloadConfigService {
-    static STORAGE_KEY = 'IDLPMS_WorkloadConfig_';
+    static STORAGE_KEY = 'EOS_WorkloadConfig_';
 
     // ─── Workload Role Definitions ──────────────────────────────────
     // Each role maps to a domain (2-4) and a default hours/week

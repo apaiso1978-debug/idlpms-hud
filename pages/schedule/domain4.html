@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Domain 4: งานตอบสนองนโยบาย | IDLPMS</title>
+    <title>Domain 4: งานตอบสนองนโยบาย | E-OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../../assets/css/theme.css" />
     <link rel="stylesheet" href="../../assets/css/styles.css?v=1.2" />
@@ -52,12 +52,12 @@
     </div>
 
     <script>
-        const DOMAIN_STORAGE_KEY = 'IDLPMS_DomainInputs_';
+        const DOMAIN_STORAGE_KEY = 'EOS_DomainInputs_';
         const DAY_LABELS = ['', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์'];
 
         function getCurrentSchoolId() {
             try {
-                const session = JSON.parse(localStorage.getItem('IDLPMS_Session') || '{}');
+                const session = JSON.parse(localStorage.getItem('EOS_Session') || '{}');
                 return session.schoolId || 'SCH_MABLUD';
             } catch { return 'SCH_MABLUD'; }
         }

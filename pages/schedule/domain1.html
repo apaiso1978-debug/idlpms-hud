@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Domain 1: ชั่วโมงตามตารางสอน | IDLPMS</title>
+    <title>Domain 1: ชั่วโมงตามตารางสอน | E-OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../../assets/css/theme.css" />
     <link rel="stylesheet" href="../../assets/css/styles.css?v=1.2" />
@@ -54,9 +54,9 @@
 
         function renderDomain1Panel() {
             const container = document.getElementById('d1-subject-matrix');
-            if (!container || typeof IDLPMS_DATA === 'undefined' || !IDLPMS_DATA.subjects) return;
+            if (!container || typeof EOS_DATA === 'undefined' || !EOS_DATA.subjects) return;
 
-            const subjects = Object.values(IDLPMS_DATA.subjects).filter(s => s.periodsPerWeek && Object.keys(s.periodsPerWeek).length > 0);
+            const subjects = Object.values(EOS_DATA.subjects).filter(s => s.periodsPerWeek && Object.keys(s.periodsPerWeek).length > 0);
 
             let html = `<table class="w-full text-[13px]">
                 <thead>

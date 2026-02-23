@@ -6,7 +6,7 @@ description: กระบวนการดึงข้อมูลจาก DLT
 # DLTV Briw (Harvest) Skill
 
 ## Overview
-กระบวนการ "Briw" หรือ "Harvest" คือการดึงข้อมูลจากระบบ DLTV/DLIT ของกระทรวงศึกษาธิการ เพื่อนำมาใช้ในระบบ IDLPMS 7 Steps Learning Model โดยมีการเสริมเนื้อหาจาก PDF + Web Search + AI ให้ครบถ้วนก่อนเก็บเข้าระบบ
+กระบวนการ "Briw" หรือ "Harvest" คือการดึงข้อมูลจากระบบ DLTV/DLIT ของกระทรวงศึกษาธิการ เพื่อนำมาใช้ในระบบ E-OS 7 Steps Learning Model โดยมีการเสริมเนื้อหาจาก PDF + Web Search + AI ให้ครบถ้วนก่อนเก็บเข้าระบบ
 
 ## Entry Point
 **BASE URL**: `https://dltv.ac.th/teachplan/lists/5/18000`
@@ -258,7 +258,7 @@ IF objective.type == 'A' (เจตคติ)
    - [ ] `indicator` ไม่ว่าง
    - [ ] **HTML Tag Integrity**: ห้ามมี space ใน angle brackets (`< div >` ❌ → `<div>` ✅) — ดู Design Guard Iron Rule #12
 2. Save full payload to InsForge `lesson_packs` table
-3. **MANDATORY**: Update LocalStorage Tracker `idlpms_lesson_packs` (ดูหัวข้อถัดไป)
+3. **MANDATORY**: Update LocalStorage Tracker `eos_lesson_packs` (ดูหัวข้อถัดไป)
 4. Log progress: unit X/N complete
 
 ---
@@ -272,13 +272,13 @@ IF objective.type == 'A' (เจตคติ)
 หลังจากได้ข้อมูล Lesson Pack และบันทึกเข้า Database (InsForge) เรียบร้อยแล้ว **ต้อง** วาง Code สำหรับหน้า UI ทันที:
 
 ```javascript
-// Data Structure in LocalStorage: 'idlpms_lesson_packs'
+// Data Structure in LocalStorage: 'eos_lesson_packs'
 // Format: { [subjectId]: { [semester]: { [unitId]: { status, name, harvestDate, ... } } } }
 
 function updateHarvesterTracker(subjectId, semester, unitId, unitName, contentSectionsCount) {
     let tracker = {};
     try {
-        const stored = localStorage.getItem('idlpms_lesson_packs');
+        const stored = localStorage.getItem('eos_lesson_packs');
         if (stored) tracker = JSON.parse(stored);
     } catch(e) {}
 
@@ -297,7 +297,7 @@ function updateHarvesterTracker(subjectId, semester, unitId, unitName, contentSe
         sectionsCount: contentSectionsCount
     };
 
-    localStorage.setItem('idlpms_lesson_packs', JSON.stringify(tracker));
+    localStorage.setItem('eos_lesson_packs', JSON.stringify(tracker));
     console.log(`[DLTV Briw] Tracker updated for ${subjectId} / Sem: ${semester} / Unit: ${unitId} -> Status: ${status}`);
 }
 ```

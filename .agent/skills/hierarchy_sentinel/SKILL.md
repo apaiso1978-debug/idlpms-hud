@@ -1,6 +1,6 @@
 ---
 name: Hierarchy & Protocol Sentinel
-description: Enforce institutional integrity, single-superior protocols, and authoritative communication loops for the IDLPMS system.
+description: Enforce institutional integrity, single-superior protocols, and authoritative communication loops for the E-OS system.
 ---
 
 # Hierarchy & Protocol Sentinel

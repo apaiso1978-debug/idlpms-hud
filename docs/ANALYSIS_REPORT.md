@@ -1,7 +1,7 @@
-# Master Technical Disclosure: IDLPMS HUD System Architecture Analysis
+# Master Technical Disclosure: E-OS HUD System Architecture Analysis
 
 ## 1. Executive Summary
-The **IDLPMS HUD (Integrated Digital Learning Platform Management System)** is a mission-centric management platform built on a "VS Code HUD" aesthetic. It leverages a multi-identity role model, a strict "Iron Rule" typography system, and a decentralized-sharding data strategy designed to scale to 10 million users.
+The **E-OS HUD (Integrated Digital Learning Platform Management System)** is a mission-centric management platform built on a "VS Code HUD" aesthetic. It leverages a multi-identity role model, a strict "Iron Rule" typography system, and a decentralized-sharding data strategy designed to scale to 10 million users.
 
 ## 2. Interface Layer (The "Iron Rules")
 The UI is governed by a set of immutable rules to ensure high-fidelity "HUD" aesthetics:
@@ -41,7 +41,7 @@ Role-based communication is strictly hierarchical:
 - **Synchronization**: The system maintains a `FIFO` notification buffer to prevent UI stutter during high-traffic updates.
 
 ## 5. Data & Scaling Strategy (10M User Goal)
-To handle 10 million students, IDLPMS employs a **Sharded Node Management** strategy:
+To handle 10 million students, E-OS employs a **Sharded Node Management** strategy:
 - **Client-Side Data (`data.js`)**: Acts as a "Hot Cache" for current session entities.
 - **Sharding**: Data is partitioned by **ESA (Educational Service Area)** and **School ID**.
 - **Smart Ceiling**: Local memory is capped using a FIFO eviction policy for non-essential entity metadata.

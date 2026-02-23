@@ -76,7 +76,7 @@ class Fitness_DataEntryWidget {
                         </div>
                         <div>
                             <h3 class="text-[15px] font-light text-[var(--vs-text-title)] uppercase tracking-wide">Physical Fitness Entry</h3>
-                            <div class="text-[11px] text-[var(--vs-text-muted)] font-mono opacity-60">IDLPMS P-Axis Synchronization</div>
+                            <div class="text-[11px] text-[var(--vs-text-muted)] font-mono opacity-60">E-OS P-Axis Synchronization</div>
                         </div>
                     </div>
                 </div>

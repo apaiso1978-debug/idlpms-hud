@@ -8,7 +8,8 @@ class ComponentRegistry {
     constructor() {
         this.registeredComponents = new Map();
         this.activeInstances = new Map();
-        this.basePath = 'assets/js/components/';
+        // Use root-relative absolute path so it resolves anywhere (hud.html or pages/xyz.html)
+        this.basePath = '/assets/js/components/';
     }
 
     /**

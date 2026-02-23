@@ -1,5 +1,5 @@
 /**
- * TASK UI — IDLPMS Tactical HUD Rendering
+ * TASK UI — E-OS Tactical HUD Rendering
  * Enforcing Iron Rules: text-[13px], font-weight: 300, rounded-[3px]
  */
 
@@ -53,7 +53,7 @@ const TaskUI = {
         board.className = 'space-y-3 px-1';
 
         report.forEach(task => {
-            const template = IDLPMS_DATA.taskTemplates[task.templateId] || {};
+            const template = EOS_DATA.taskTemplates[task.templateId] || {};
             const item = document.createElement('div');
             item.className = 'vs-glass border border-[rgba(255,255,255,0.05)] p-3 rounded-[var(--vs-radius)] group hover:border-[rgba(var(--vs-accent-rgb),0.3)] transition-all';
 
@@ -130,7 +130,7 @@ const TaskUI = {
         inbox.className = 'space-y-3 px-1';
 
         tasks.forEach(task => {
-            const template = IDLPMS_DATA.taskTemplates[task.templateId] || {};
+            const template = EOS_DATA.taskTemplates[task.templateId] || {};
             const completion = TaskSystem.getClassCompletionStatus(task.myAssignment.classId, template.dataKey);
 
             const item = document.createElement('div');
@@ -242,7 +242,7 @@ const TaskUI = {
                         <div class="space-y-1">
                             <label class="text-[13px] text-[var(--vs-text-muted)] uppercase">ประเภทงาน</label>
                             <select id="task-template" class="w-full text-[13px] p-2 vs-setup-input" onchange="TaskUI.onTemplateChange()">
-                                ${Object.values(IDLPMS_DATA.taskTemplates).map(t => `
+                                ${Object.values(EOS_DATA.taskTemplates).map(t => `
                                     <option value="${t.id}">${t.title}</option>
                                 `).join('')}
                             </select>
@@ -290,7 +290,7 @@ const TaskUI = {
 
     onTemplateChange() {
         const tid = document.getElementById('task-template').value;
-        const template = IDLPMS_DATA.taskTemplates[tid];
+        const template = EOS_DATA.taskTemplates[tid];
         if (template) {
             document.getElementById('task-title').value = template.title;
         }
@@ -299,7 +299,7 @@ const TaskUI = {
 
     updateTargetCount() {
         const schoolId = 'SCH_MABLUD';
-        const teachers = Object.values(IDLPMS_DATA.users).filter(u => u.role === 'TEACHER' && u.schoolId === schoolId && u.homeroomClass);
+        const teachers = Object.values(EOS_DATA.users).filter(u => u.role === 'TEACHER' && u.schoolId === schoolId && u.homeroomClass);
         const el = document.getElementById('target-count');
         if (el) el.innerText = `${teachers.length} คน`;
     },

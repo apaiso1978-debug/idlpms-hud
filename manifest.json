@@ -1,6 +1,6 @@
 {
-    "name": "IDLPMS HUD - ระบบบริหารจัดการการเรียนรู้ดิจิทัล",
-    "short_name": "IDLPMS",
+    "name": "E-OS HUD - ระบบบริหารจัดการการเรียนรู้ดิจิทัล",
+    "short_name": "E-OS",
     "description": "Integrated Digital Learning Platform Management System - ระบบบริหารจัดการแพลตฟอร์มการเรียนรู้ดิจิทัลแบบบูรณาการ",
     "start_url": "/index.html",
     "display": "standalone",
@@ -108,7 +108,7 @@
             "sizes": "1920x1080",
             "type": "image/png",
             "form_factor": "wide",
-            "label": "IDLPMS Dashboard - Desktop View"
+            "label": "E-OS Dashboard - Desktop View"
         },
         {
             "src": "assets/screenshots/desktop-missions.png",
@@ -122,7 +122,7 @@
             "sizes": "750x1334",
             "type": "image/png",
             "form_factor": "narrow",
-            "label": "IDLPMS Dashboard - Mobile View"
+            "label": "E-OS Dashboard - Mobile View"
         }
     ],
     "related_applications": [],

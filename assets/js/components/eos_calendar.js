@@ -1,5 +1,5 @@
 /**
- * IDLPMS Custom Calendar Engine (9-Grid Zoom-In)
+ * E-OS Custom Calendar Engine (9-Grid Zoom-In)
  * ═══════════════════════════════════════════════════════
  * Strict Iron Rules compliant date picker.
  * Features:
@@ -9,7 +9,7 @@
  * - Sunken panel aesthetic (Level -1)
  */
 
-class IDLPMSCalendar {
+class E-OSCalendar {
     constructor(inputElement) {
         this.input = typeof inputElement === 'string' ? document.querySelector(inputElement) : inputElement;
         if (!this.input) return;
@@ -403,4 +403,4 @@ class IDLPMSCalendar {
 }
 
 // Global Export
-window.IDLPMSCalendar = IDLPMSCalendar;
+window.E-OSCalendar = E-OSCalendar;

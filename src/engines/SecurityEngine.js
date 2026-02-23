@@ -1,11 +1,11 @@
 /**
- * IDLPMS Security Engine (Anti-Guessing)
+ * E-OS Security Engine (Anti-Guessing)
  * ========================================
  * Monitors for suspicious behavioral patterns (clicking fast, repeating answers).
  * Enforces cooldowns and lockouts to ensure learning integrity.
  *
  * @version 2.0.0
- * @author IDLPMS Development Team
+ * @author E-OS Development Team
  */
 
 class SecurityEngine {

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IDLPMS - Content Pipeline Engine</title>
+    <title>E-OS - Content Pipeline Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../assets/css/theme.css?v=2.4" />
     <script src="../assets/js/data.js"></script>
@@ -175,7 +175,7 @@
         function getHarvesterData() {
             let data = {};
             try {
-                const stored = localStorage.getItem('idlpms_lesson_packs');
+                const stored = localStorage.getItem('eos_lesson_packs');
                 if (stored) {
                     data = JSON.parse(stored);
                 } else {

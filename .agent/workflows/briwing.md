@@ -4,7 +4,7 @@ description: Harvest pedagogical data from DLTV for curriculum integration
 
 # DLTV Briwing Workflow (Data Harvesting Protocol)
 
-This workflow extracts pedagogical data from DLTV (Distance Learning Television) to populate the IDLPMS curriculum database with rich, enriched lesson content following the 6-Phase harvest pipeline.
+This workflow extracts pedagogical data from DLTV (Distance Learning Television) to populate the E-OS curriculum database with rich, enriched lesson content following the 6-Phase harvest pipeline.
 
 > [!IMPORTANT]
 > Before starting, read the full skill: `.agent/skills/dltv_briw/SKILL.md`

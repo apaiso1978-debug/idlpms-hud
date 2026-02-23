@@ -38,15 +38,15 @@ const FitnessService = {
         localStorage.setItem(this.STORAGE_KEY, JSON.stringify(results));
 
         // --- PHASE 9: OUTPUT TO PERSON-FIRST HEALTH_RECORDS SCHEMA ---
-        if (typeof IDLPMS_DATA !== 'undefined' && IDLPMS_DATA.healthRecords && IDLPMS_DATA.users[studentId]) {
-            const user = IDLPMS_DATA.users[studentId];
+        if (typeof EOS_DATA !== 'undefined' && EOS_DATA.healthRecords && EOS_DATA.users[studentId]) {
+            const user = EOS_DATA.users[studentId];
 
             // Look up corresponding Person ID from studentProfile relation if possible, else legacy ID
             let personId = studentId; // fallback
 
             // Try to resolve person_id from studentProfiles
-            if (IDLPMS_DATA.studentProfiles) {
-                for (const [profId, profData] of Object.entries(IDLPMS_DATA.studentProfiles)) {
+            if (EOS_DATA.studentProfiles) {
+                for (const [profId, profData] of Object.entries(EOS_DATA.studentProfiles)) {
                     // Check if this studentProfile points to the legacy role ID or matches name/etc.
                     // For now, if the person_id mapping exists elsewhere we'd use it.
                     // But in our mock, we just use the ID we know or fallback.
@@ -60,8 +60,8 @@ const FitnessService = {
 
             // Emulate health_record ID structure: H_{studentId}
             const recordId = 'H_' + studentId;
-            IDLPMS_DATA.healthRecords[recordId] = {
-                ...(IDLPMS_DATA.healthRecords[recordId] || {}),
+            EOS_DATA.healthRecords[recordId] = {
+                ...(EOS_DATA.healthRecords[recordId] || {}),
                 person_id: personId,
                 record_date: new Date().toISOString().split('T')[0],
                 term: `${this.SEMESTER}/${this.ACADEMIC_YEAR}`,
@@ -156,7 +156,7 @@ const FitnessService = {
 
     /**
      * Save a student's fitness result — dual write to localStorage + cloud
-     * @param {string} studentId   — IDLPMS student ID (e.g. 'STU_M_100')
+     * @param {string} studentId   — E-OS student ID (e.g. 'STU_M_100')
      * @param {object} data        — { sitReach, pushUp, stepUp }
      * @param {object} context     — { classId, recordedBy, schoolId }
      * @returns {object} { local: true, cloud: true|false, error?: string }
@@ -180,7 +180,7 @@ const FitnessService = {
 
         // 2. Try to save to cloud (async, non-blocking on failure)
         try {
-            // Resolve person UUID from IDLPMS_DATA if available
+            // Resolve person UUID from EOS_DATA if available
             const personUuid = this._resolvePersonId(studentId);
             const schoolUuid = context.schoolId || 'SCH_MABLUD';
 
@@ -236,8 +236,8 @@ const FitnessService = {
         const localResults = this.getLocalResults();
         const filteredData = {};
 
-        if (typeof IDLPMS_DATA !== 'undefined' && IDLPMS_DATA.users) {
-            Object.entries(IDLPMS_DATA.users).forEach(([stuId, u]) => {
+        if (typeof EOS_DATA !== 'undefined' && EOS_DATA.users) {
+            Object.entries(EOS_DATA.users).forEach(([stuId, u]) => {
                 if (u.role === 'STUDENT' && u.classId === classId && localResults[stuId]) {
                     filteredData[stuId] = { ...localResults[stuId], source: 'local' };
                 }
@@ -252,22 +252,22 @@ const FitnessService = {
     // ══════════════════════════════════════════
 
     /**
-     * Resolve IDLPMS student ID to InsForge person UUID
+     * Resolve E-OS student ID to InsForge person UUID
      * For now: uses citizenId as person lookup key
-     * If no UUID mapping, sends the IDLPMS ID as-is
+     * If no UUID mapping, sends the E-OS ID as-is
      */
     _resolvePersonId(studentId) {
-        // Table uses string columns — send IDLPMS ID directly (e.g. STU_M_069)
+        // Table uses string columns — send E-OS ID directly (e.g. STU_M_069)
         return studentId;
     },
 
     /**
-     * Reverse-resolve: InsForge person_id → IDLPMS student ID
+     * Reverse-resolve: InsForge person_id → E-OS student ID
      */
     _resolveStudentId(personUuid) {
-        if (typeof IDLPMS_DATA === 'undefined') return null;
+        if (typeof EOS_DATA === 'undefined') return null;
         // Search by citizenId or insforgeStudentCode
-        for (const [id, u] of Object.entries(IDLPMS_DATA.users)) {
+        for (const [id, u] of Object.entries(EOS_DATA.users)) {
             if (u.citizenId === personUuid || u.insforgeStudentCode === personUuid || id === personUuid) {
                 return id;
             }

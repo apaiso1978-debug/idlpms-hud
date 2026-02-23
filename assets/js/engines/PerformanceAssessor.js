@@ -1,5 +1,5 @@
 /**
- * Phase 18: IDLPMS Performance Assessor Module (PA Evaluator)
+ * Phase 18: E-OS Performance Assessor Module (PA Evaluator)
  * 
  * Master Engine for aggregating points, ranking personnel, and functioning as a Sandbox
  * PA (Performance Agreement) and Salary Evaluation tool customized for Thai Context.
@@ -28,7 +28,7 @@ const PerformanceAssessor = {
      * @param {string} commanderRole - 'ESA_DIR' or 'SCHOOL_DIR'
      */
     evaluateWorkforce(commanderId, commanderRole) {
-        const idlpmsData = window.IDLPMS_DATA || (window.parent && window.parent.IDLPMS_DATA);
+        const idlpmsData = window.EOS_DATA || (window.parent && window.parent.EOS_DATA);
         if (!idlpmsData || !idlpmsData.users) return [];
 
         let targetRole = commanderRole === 'ESA_DIR' ? 'SCHOOL_DIR' : 'TEACHER';
@@ -56,7 +56,7 @@ const PerformanceAssessor = {
 
         // 2. Ingest Delegation Data (Workload & Timeliness)
         const storage = window.localStorage || (window.parent && window.parent.localStorage);
-        const rawDel = storage.getItem('idlpms_delegations_v1');
+        const rawDel = storage.getItem('eos_delegations_v1');
         if (rawDel) {
             const delegations = JSON.parse(rawDel);
             delegations.forEach(del => {
@@ -90,7 +90,7 @@ const PerformanceAssessor = {
 
         // 3. Ingest Passport Credits (Achievements & Training)
         targetPersonnel.forEach(subject => {
-            const passportKey = `idlpms_passport_${subject.id}`;
+            const passportKey = `eos_passport_${subject.id}`;
             const rawPassport = storage.getItem(passportKey);
             if (rawPassport) {
                 const passportData = JSON.parse(rawPassport);
@@ -211,7 +211,7 @@ const PerformanceAssessor = {
     _logToActivityExplorer(commanderId, rankings) {
         try {
             const storage = window.localStorage || (window.parent && window.parent.localStorage);
-            const key = 'idlpms_activity_signals_v1';
+            const key = 'eos_activity_signals_v1';
             const raw = storage.getItem(key);
             let signals = raw ? JSON.parse(raw) : [];
 

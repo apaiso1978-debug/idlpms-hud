@@ -4,14 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Waiting for Confirmation | IDLPMS</title>
+    <title>Waiting for Confirmation | E-OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../assets/css/theme.css">
     <link rel="stylesheet" href="../assets/css/components.css">
     <script src="../assets/js/data.js"></script>
     <script src="../src/services/DataService.js"></script>
-    <script src="../src/services/InsForgeDataService.js"></script>
-    <script src="../src/services/SyncEngine.js"></script>
+    <script src="../src/services/AuthService.js"></script>
 
     <!-- Native HUD Styles -->
     <style>
@@ -25,21 +24,21 @@
     </style>
 </head>
 
-<body class="p-6 Thai-Rule bg-transparent animate-in fade-in zoom-in-95 duration-300">
+<body class="p-8 Thai-Rule bg-[var(--vs-bg-deep)] text-[var(--vs-text-body)] font-light min-h-screen">
 
     <!-- Header -->
     <div
         class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[rgba(63,63,70,0.5)] pb-4">
         <div class="flex items-center gap-2">
             <div
-                class="w-10 h-10 rounded-[var(--vs-radius)] bg-[rgba(16,185,129,0.1)] border border-[rgba(16,185,129,0.3)] flex items-center justify-center shrink-0">
+                class="w-10 h-10 rounded-[var(--vs-radius)] bg-[rgba(var(--vs-success-rgb),0.1)] border border-[rgba(var(--vs-success-rgb),0.3)] flex items-center justify-center shrink-0">
                 <i class="icon i-command-line w-5 h-5 text-[var(--vs-success)]"></i>
             </div>
             <div>
                 <h1 class="text-[15px] font-light text-[var(--vs-text-title)] flex items-center gap-2">
                     รอการยืนยันรับภารกิจ
                     <span
-                        class="text-[13px] px-2 py-0.5 rounded-[var(--vs-radius)] bg-[rgba(234,179,8,0.1)] border border-[rgba(234,179,8,0.3)] text-[var(--vs-warning)] uppercase font-light">PENDING</span>
+                        class="text-[13px] px-2 py-0.5 rounded-[var(--vs-radius)] bg-[rgba(var(--vs-warning-rgb),0.1)] border border-[rgba(var(--vs-warning-rgb),0.3)] text-[var(--vs-warning)] uppercase font-light">PENDING</span>
                 </h1>
                 <div class="text-[13px] text-[var(--vs-text-muted)] mt-0.5">
                     Mission Directive Payload
@@ -55,7 +54,7 @@
             </button>
             <div id="additional-buttons-container" class="flex items-center gap-2">
                 <button onclick="acceptMission()" id="btn-accept"
-                    class="px-5 py-2 rounded-[var(--vs-radius)] bg-[rgba(34,197,94,0.1)] text-[var(--vs-success)] border border-[rgba(34,197,94,0.3)] hover:bg-[rgba(34,197,94,0.15)] hover:border-[rgba(34,197,94,0.5)] transition-all flex items-center gap-1.5 text-[13px] font-light Thai-Rule">
+                    class="px-5 py-2 rounded-[var(--vs-radius)] bg-[rgba(var(--vs-success-rgb),0.1)] text-[var(--vs-success)] border border-[rgba(var(--vs-success-rgb),0.3)] hover:bg-[rgba(var(--vs-success-rgb),0.15)] hover:border-[rgba(var(--vs-success-rgb),0.5)] transition-all flex items-center gap-1.5 text-[13px] font-light Thai-Rule">
                     <i class="icon i-check w-4 h-4"></i>
                     ยืนยันรับภารกิจ (Accept)
                 </button>
@@ -94,13 +93,13 @@
             class="p-5 rounded-[var(--vs-radius)] bg-white/[0.02] border border-[rgba(63,63,70,0.5)] flex flex-col justify-between">
             <div>
                 <div class="detail-label">Class / ประเภท</div>
-                <div class="text-[13px] text-[var(--vs-warning)] font-light bg-[rgba(234,179,8,0.1)] inline-block px-2.5 py-1 rounded-[var(--vs-radius)] border border-[rgba(234,179,8,0.3)] mt-1"
+                <div class="text-[13px] text-[var(--vs-warning)] font-light bg-[rgba(var(--vs-warning-rgb),0.1)] inline-block px-2.5 py-1 rounded-[var(--vs-radius)] border border-[rgba(var(--vs-warning-rgb),0.3)] mt-1"
                     id="task-type">
                     SYSTEM DIRECTIVE
                 </div>
             </div>
             <div
-                class="mt-4 text-[13px] text-[var(--vs-text-muted)] font-light leading-relaxed bg-[rgba(234,179,8,0.05)] p-3 rounded-[var(--vs-radius)] border border-[rgba(234,179,8,0.15)] flex items-start gap-2">
+                class="mt-4 text-[13px] text-[var(--vs-text-muted)] font-light leading-relaxed bg-[rgba(var(--vs-warning-rgb),0.05)] p-3 rounded-[var(--vs-radius)] border border-[rgba(var(--vs-warning-rgb),0.15)] flex items-start gap-2">
                 <i class="icon i-information-circle w-3.5 h-3.5 text-[var(--vs-warning)] mt-0.5 shrink-0"></i>
                 <div class="opacity-80">
                     ถ้ายืนยันรับภารกิจ ระบบจะส่งสถานะ 'กำลังดำเนินการ' กลับไปยังผู้สั่งการ เพื่อเริ่มนับเวลา Countdown
@@ -171,7 +170,7 @@
 
             // 2. Fetch Delegation Data from localStorage
             try {
-                const raw = localStorage.getItem('idlpms_delegations_v1');
+                const raw = localStorage.getItem('eos_delegations_v1');
                 if (raw) {
                     const allTasks = JSON.parse(raw);
                     currentTask = allTasks.find(t => t.id === taskId);
@@ -195,27 +194,36 @@
             }
 
             if (currentTask.status !== 'PENDING') {
-                document.getElementById('status-stamp').innerText = currentTask.status;
-                if (currentTask.status === 'COMPLETED') {
-                    document.getElementById('status-stamp').style.color = 'var(--vs-success)';
-                    document.getElementById('additional-buttons-container').innerHTML = ''; // Clear buttons
-                } else if (currentTask.status === 'IN_PROGRESS') {
-                    document.getElementById('status-stamp').style.color = 'var(--vs-accent)';
+                const statusStamp = document.getElementById('task-type');
+                if (statusStamp) {
+                    statusStamp.innerText = currentTask.status;
+                    if (currentTask.status === 'COMPLETED') {
+                        statusStamp.style.color = 'var(--vs-success)';
+                        statusStamp.style.borderColor = 'var(--vs-success)';
+                        statusStamp.style.backgroundColor = 'rgba(34,197,94,0.1)';
+                        document.getElementById('additional-buttons-container').innerHTML = ''; // Clear buttons
+                    } else if (currentTask.status === 'IN_PROGRESS') {
+                        statusStamp.style.color = 'var(--vs-accent)';
+                        statusStamp.style.borderColor = 'var(--vs-accent)';
+                        statusStamp.style.backgroundColor = 'rgba(34,211,238,0.1)';
 
-                    const btnContainer = document.getElementById('additional-buttons-container');
-                    btnContainer.innerHTML = `
-                        <button onclick="toggleSubmitForm()"
-                            class="w-full sm:w-auto px-6 py-2 rounded-[var(--vs-radius)] bg-[rgba(34,197,94,0.1)] text-[var(--vs-success)] border border-[rgba(34,197,94,0.3)] hover:bg-[rgba(34,197,94,0.15)] hover:border-[rgba(34,197,94,0.5)] transition-all flex items-center justify-center gap-1.5 text-[13px] font-light Thai-Rule shadow-[0_0_8px_rgba(34,197,94,0.1)]">
-                            <i class="icon i-document-text w-4 h-4"></i>
-                            ส่งมอบงาน (กรอกคะแนน)
-                        </button>
-                        <button onclick="acceptMission()" id="btn-accept"
-                            class="w-full sm:w-auto px-6 py-2 rounded-[var(--vs-radius)] bg-[rgba(34,211,238,0.1)] text-[var(--vs-accent)] border border-[rgba(34,211,238,0.3)] hover:bg-[rgba(34,211,238,0.15)] hover:border-[rgba(34,211,238,0.5)] transition-all flex items-center justify-center gap-1.5 text-[13px] font-light Thai-Rule shadow-[0_0_8px_rgba(34,211,238,0.1)]">
-                            <i class="icon i-switch-horizontal w-4 h-4"></i>
-                            หน้าต่างทำงานเป้าหมาย
-                        </button>
-                    `;
-                    document.getElementById('btn-cancel').innerText = 'กลับไปยังหน้าหลัก';
+                        const btnContainer = document.getElementById('additional-buttons-container');
+                        if (btnContainer) {
+                            btnContainer.innerHTML = `
+                                 <button onclick="toggleSubmitForm()"
+                                     class="w-full sm:w-auto px-6 py-2 rounded-[var(--vs-radius)] bg-[rgba(34,197,94,0.1)] text-[var(--vs-success)] border border-[rgba(34,197,94,0.3)] hover:bg-[rgba(34,197,94,0.15)] hover:border-[rgba(34,197,94,0.5)] transition-all flex items-center justify-center gap-1.5 text-[13px] font-light Thai-Rule shadow-[0_0_8px_rgba(34,197,94,0.1)]">
+                                     <i class="icon i-document-text w-4 h-4"></i>
+                                     ส่งมอบงาน (กรอกคะแนน)
+                                 </button>
+                                 <button onclick="acceptMission()" id="btn-accept"
+                                     class="w-full sm:w-auto px-6 py-2 rounded-[var(--vs-radius)] bg-[rgba(34,211,238,0.1)] text-[var(--vs-accent)] border border-[rgba(34,211,238,0.3)] hover:bg-[rgba(34,211,238,0.15)] hover:border-[rgba(34,211,238,0.5)] transition-all flex items-center justify-center gap-1.5 text-[13px] font-light Thai-Rule shadow-[0_0_8px_rgba(34,211,238,0.1)]">
+                                     <i class="icon i-switch-horizontal w-4 h-4"></i>
+                                     หน้าต่างทำงานเป้าหมาย
+                                 </button>
+                             `;
+                        }
+                        document.getElementById('btn-cancel').innerText = 'กลับไปยังหน้าหลัก';
+                    }
                 }
             }
         });

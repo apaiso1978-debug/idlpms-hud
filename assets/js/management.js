@@ -1,5 +1,5 @@
 /**
- * IDLPMS Management Hub - Coordinator
+ * E-OS Management Hub - Coordinator
  * =====================================
  * Orchestrates the specialized learning engines:
  * - QuizEngine (State & Progression)
@@ -132,7 +132,7 @@ window.ManagementEngine = {
         PUBLIC_MIND: 89,
     },
 
-    // 7 Steps Mastery Flow (IDLPMS Learning Model)
+    // 7 Steps Mastery Flow (E-OS Learning Model)
     masterySteps: [
         {
             id: 'KNOW',
@@ -366,7 +366,7 @@ window.ManagementEngine = {
     },
 
     init() {
-        console.log('Mission Control [IDLPMS 7-Step Learning] Initialized...');
+        console.log('Mission Control [E-OS 7-Step Learning] Initialized...');
         this.resetNeuralBuffer(); // Initialize buffer
         this.setupFocusGuard();
         this.setupAntiGuessing();
@@ -499,7 +499,7 @@ window.ManagementEngine = {
             });
         }
 
-        console.log('[IDLPMS] DNA Global Observer Initialized');
+        console.log('[E-OS] DNA Global Observer Initialized');
     },
 
     broadcastDNAUpdate() {
@@ -971,8 +971,8 @@ window.ManagementEngine = {
 
         // --- INJECT MISSION: DIRECTIVE ---
         try {
-            const userId = localStorage.getItem('idlpms_active_user_id') || localStorage.getItem('current_user_id');
-            const raw = localStorage.getItem('idlpms_delegations_v1');
+            const userId = localStorage.getItem('eos_active_user_id') || localStorage.getItem('current_user_id');
+            const raw = localStorage.getItem('eos_delegations_v1');
             if (raw && userId) {
                 const delegations = JSON.parse(raw);
                 // Inbox Zero: Only show PENDING and IN_PROGRESS tasks.
@@ -1331,13 +1331,13 @@ window.ManagementEngine = {
      */
     renderSubjectHUD(subjectId) {
         const currentUser = window.getCurrentUser();
-        const subject = IDLPMS_DATA.curriculum[subjectId.replace('SUB_', '')] || {
+        const subject = EOS_DATA.curriculum[subjectId.replace('SUB_', '')] || {
             name: 'Unknown Subject',
             color: 'var(--vs-text-muted)',
         };
 
         // Find teacher for this subject in the same school
-        const teacher = Object.values(IDLPMS_DATA.users).find(
+        const teacher = Object.values(EOS_DATA.users).find(
             (u) =>
                 u.role === 'TEACHER' &&
                 u.schoolId === currentUser.schoolId &&
@@ -1431,7 +1431,7 @@ window.ManagementEngine = {
 
     submitActiveMission() {
         // 1. Check if there's an active Mission Context stored globally
-        const activeTaskId = window.ManagementEngine.currentActiveTaskId || sessionStorage.getItem('IDLPMS_ACTIVE_TASK_ID');
+        const activeTaskId = window.ManagementEngine.currentActiveTaskId || sessionStorage.getItem('EOS_ACTIVE_TASK_ID');
 
         if (!activeTaskId) {
             if (window.HUD_NOTIFY) HUD_NOTIFY.toast('ไม่พบภารกิจรอดำเนินการ', 'กรุณาเลือกงานจาก Inbox เพื่อเริ่มดำเนินการก่อน', 'warning');
@@ -1468,7 +1468,7 @@ window.ManagementEngine = {
 
             // Clear Context
             window.ManagementEngine.currentActiveTaskId = null;
-            sessionStorage.removeItem('IDLPMS_ACTIVE_TASK_ID');
+            sessionStorage.removeItem('EOS_ACTIVE_TASK_ID');
 
             // Optionally route back
             try { this.handleMenuClick('MISSION_INBOX', 'pages/teacher_inbox.html'); } catch (e) { }
@@ -2057,7 +2057,7 @@ window.ManagementEngine = {
 
             // Update breadcrumb to show we are inside a mission
             const subjectId = this.currentSubjectID.replace('SUB_', '');
-            const subject = IDLPMS_DATA.curriculum[subjectId] || { name: 'Active Mission' };
+            const subject = EOS_DATA.curriculum[subjectId] || { name: 'Active Mission' };
             const breadcrumbPage = document.getElementById('header-page-name');
             if (breadcrumbPage) {
                 breadcrumbPage.innerHTML = `<span class="text-[var(--vs-accent)]">${subject.name}</span> <span class="opacity-30">/</span> MASTERY EXECUTION`;
@@ -2143,7 +2143,7 @@ window.ManagementEngine = {
 
     /**
      * Get Unified DNA Dimensions based on Role & Archetype
-     * Ensures "Unity" across the IDLPMS ecosystem.
+     * Ensures "Unity" across the E-OS ecosystem.
      */
     getRoleDimensions(user) {
         const role = user.role || 'STUDENT';
@@ -2281,7 +2281,7 @@ window.ManagementEngine = {
         }
 
         const step = this.masterySteps[this.currentStep - 1];
-        const subject = IDLPMS_DATA.curriculum[this.currentSubjectID?.replace('SUB_', '')] || { name: 'วิชาทั่วไป' };
+        const subject = EOS_DATA.curriculum[this.currentSubjectID?.replace('SUB_', '')] || { name: 'วิชาทั่วไป' };
 
         // Flatten all lessons into a single array
         const allLessons = [];
@@ -2475,7 +2475,7 @@ window.ManagementEngine = {
     },
 
     renderStepContent() {
-        const subject = IDLPMS_DATA.curriculum[this.currentSubjectID?.replace('SUB_', '')];
+        const subject = EOS_DATA.curriculum[this.currentSubjectID?.replace('SUB_', '')];
 
         // Flatten lessons for lookup (consistent with renderMasteryFlow)
         const allLessons = [];
@@ -2900,7 +2900,7 @@ window.ManagementEngine = {
 
     // ─── Quiz Answer Handler (Pre-test: NO ANSWER REVEAL) ───
     submitQuizAnswer(selectedIndex) {
-        const subject = IDLPMS_DATA.curriculum[this.currentSubjectID?.replace('SUB_', '')];
+        const subject = EOS_DATA.curriculum[this.currentSubjectID?.replace('SUB_', '')];
         const allLessons = [];
         subject?.units?.forEach(unit => {
             unit.lessons.forEach(l => allLessons.push(l));
@@ -3369,7 +3369,7 @@ window.ManagementEngine = {
             const subjectKey = MasteryAIAuditor.subjectKeyMap[rawKey] || rawKey;
             console.log('[REFLECT] rawKey:', rawKey, '-> mapped to:', subjectKey);
 
-            const subject = IDLPMS_DATA?.curriculum?.[subjectKey] || {};
+            const subject = EOS_DATA?.curriculum?.[subjectKey] || {};
             console.log('[REFLECT] subject:', subject.name || 'NOT FOUND');
 
             const allLessons = [];
@@ -3449,7 +3449,7 @@ window.ManagementEngine = {
             // Get lesson context
             const rawKey = this.currentSubjectID?.replace('SUB_', '') || '';
             const subjectKey = MasteryAIAuditor.subjectKeyMap[rawKey] || rawKey;
-            const subject = IDLPMS_DATA?.curriculum?.[subjectKey] || {};
+            const subject = EOS_DATA?.curriculum?.[subjectKey] || {};
             const allLessons = [];
             subject.units?.forEach(unit => unit.lessons?.forEach(l => allLessons.push(l)));
             const lesson = allLessons[this.currentLessonIndex] || {};
@@ -3722,7 +3722,7 @@ window.ManagementEngine = {
         // Get current subject's lessons
         const rawKey = this.currentSubjectID?.replace('SUB_', '') || '';
         const subjectKey = MasteryAIAuditor.subjectKeyMap[rawKey] || rawKey;
-        const subject = IDLPMS_DATA?.curriculum?.[subjectKey] || {};
+        const subject = EOS_DATA?.curriculum?.[subjectKey] || {};
 
         const allLessons = [];
         subject.units?.forEach(unit => unit.lessons?.forEach(l => allLessons.push(l)));
@@ -3814,7 +3814,7 @@ window.ManagementEngine = {
                 characteristics: this.characteristics,
                 lastUpdated: new Date().toISOString()
             };
-            localStorage.setItem(`IDLPMS_MASTERY_${lessonId}`, JSON.stringify(data));
+            localStorage.setItem(`EOS_MASTERY_${lessonId}`, JSON.stringify(data));
             console.log(`[STANDALONE] Data persisted for ${lessonId}`);
         } catch (e) {
             console.warn('[STANDALONE] Persistence failed:', e);
@@ -3856,7 +3856,7 @@ window.ManagementEngine = {
             || (window.frames['main-frame']?.contentDocument?.getElementById('dltv-hls-player'));
         if (!video) return;
 
-        const subject = IDLPMS_DATA.curriculum[this.currentSubjectID?.replace('SUB_', '')];
+        const subject = EOS_DATA.curriculum[this.currentSubjectID?.replace('SUB_', '')];
 
         // Flatten lessons for lookup (consistent with renderStepContent and renderMasteryFlow)
         const allLessons = [];
@@ -3984,7 +3984,7 @@ window.ManagementEngine = {
         if (!this.devBypassEnabled) {
             // Step 1 (Pre-test): Must complete all quiz questions
             if (this.currentStep === 1) {
-                const subject = IDLPMS_DATA.curriculum[this.currentSubjectID?.replace('SUB_', '')];
+                const subject = EOS_DATA.curriculum[this.currentSubjectID?.replace('SUB_', '')];
                 const allLessons = [];
                 subject?.units?.forEach(unit => { unit.lessons.forEach(l => allLessons.push(l)); });
                 const lesson = allLessons[this.currentLessonIndex] || allLessons[0];
@@ -4019,7 +4019,7 @@ window.ManagementEngine = {
             // Step 5 (PRIME): Handled by PRIME submission
             // Step 6 (Post-test): Must complete all quiz questions
             if (this.currentStep === 6) {
-                const subject = IDLPMS_DATA.curriculum[this.currentSubjectID?.replace('SUB_', '')];
+                const subject = EOS_DATA.curriculum[this.currentSubjectID?.replace('SUB_', '')];
                 const allLessons = [];
                 subject?.units?.forEach(unit => { unit.lessons.forEach(l => allLessons.push(l)); });
                 const lesson = allLessons[this.currentLessonIndex] || allLessons[0];
@@ -4069,7 +4069,7 @@ window.ManagementEngine = {
             // 1. Resolve lesson info
             const rawKey = this.currentSubjectID?.replace('SUB_', '') || '';
             const subjectKey = MasteryAIAuditor.subjectKeyMap[rawKey] || rawKey;
-            const subject = IDLPMS_DATA?.curriculum?.[subjectKey] || {};
+            const subject = EOS_DATA?.curriculum?.[subjectKey] || {};
             const allLessons = [];
             subject.units?.forEach(unit => unit.lessons?.forEach(l => allLessons.push(l)));
             const lesson = allLessons[this.currentLessonIndex] || { name: 'บทเรียน' };

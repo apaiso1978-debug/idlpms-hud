@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Dashboard | IDLPMS</title>
+    <title>Admin Dashboard | E-OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../assets/css/theme.css" />
     <link rel="stylesheet" href="../assets/css/styles.css" />
@@ -16,6 +16,14 @@
 <body class="bg-transparent overflow-hidden font-['Sarabun'] antialiased vs-scrollbar" style="height: 100vh;">
     <div class="vs-page-frame animate-in fade-in zoom-in-95 duration-500">
         <main class="vs-page-content vs-scrollbar">
+            <!-- Header section required by JS -->
+            <div class="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div id="dynamic-header-title" class="flex flex-col gap-1"></div>
+                </div>
+                <div id="dynamic-header-meta" class="flex items-center gap-4"></div>
+            </div>
+
             <div id="dashboard-content" class="w-full space-y-6">
                 <!-- Dynamic Content injected by JS -->
             </div>

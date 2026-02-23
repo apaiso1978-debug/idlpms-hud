@@ -1,6 +1,6 @@
 /**
  * ══════════════════════════════════════════════════════════════
- * LeaveService.js — Leave Management for IDLPMS HUD
+ * LeaveService.js — Leave Management for E-OS HUD
  * ══════════════════════════════════════════════════════════════
  * ระบบใบลาบุคลากร: ครูยื่น → ผอ.อนุมัติ
  * อ้างอิง: ระเบียบสำนักนายกรัฐมนตรี ว่าด้วยการลาของข้าราชการ พ.ศ. 2555
@@ -8,8 +8,8 @@
 const LeaveService = (() => {
     'use strict';
 
-    const STORAGE_KEY = 'IDLPMS_LEAVE_REQUESTS';
-    const PERSONNEL_KEY = 'IDLPMS_PERSONNEL';
+    const STORAGE_KEY = 'EOS_LEAVE_REQUESTS';
+    const PERSONNEL_KEY = 'EOS_PERSONNEL';
 
     // ─── Leave Types with Thai Regulation Guide ─────────────────
     const LEAVE_TYPES = {
@@ -237,7 +237,7 @@ const LeaveService = (() => {
     };
 
     // ─── Quick Out (ออกธุระชั่วคราว) ────────────────────────────
-    const QUICKOUT_KEY = 'IDLPMS_QUICKOUTS';
+    const QUICKOUT_KEY = 'EOS_QUICKOUTS';
 
     const QUICKOUT_REASONS = [
         { code: 'BANK', name: 'ไปธนาคาร', icon: 'i-database' },

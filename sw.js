@@ -1,5 +1,5 @@
 /**
- * IDLPMS Service Worker - Offline Support & Caching
+ * E-OS Service Worker - Offline Support & Caching
  * ==================================================
  * Provides:
  * - Offline capability for critical pages
@@ -8,7 +8,7 @@
  * - Push notification support (preparation)
  *
  * @version 2.0.0
- * @author IDLPMS Development Team
+ * @author E-OS Development Team
  */
 
 // ============================================================================
@@ -427,7 +427,7 @@ function createOfflineHTML() {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Offline | IDLPMS</title>
+    <title>Offline | E-OS</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -573,7 +573,7 @@ self.addEventListener('push', (event) => {
     console.log('[SW] Push notification received');
 
     let data = {
-        title: 'IDLPMS',
+        title: 'E-OS',
         body: 'คุณมีการแจ้งเตือนใหม่',
         icon: '/assets/icons/icon-192x192.png',
         badge: '/assets/icons/badge-72x72.png',

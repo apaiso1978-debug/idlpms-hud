@@ -1,5 +1,5 @@
 /**
- * IDLPMS CacheService - IndexedDB Wrapper for Offline Support
+ * E-OS CacheService - IndexedDB Wrapper for Offline Support
  * ===========================================================
  * Provides persistent client-side caching using IndexedDB
  * Features:
@@ -9,7 +9,7 @@
  * - Storage quota management
  *
  * @version 2.0.0
- * @author IDLPMS Development Team
+ * @author E-OS Development Team
  */
 
 // ============================================================================
@@ -17,7 +17,7 @@
 // ============================================================================
 
 const CacheServiceConfig = {
-    dbName: 'IDLPMS_Cache',
+    dbName: 'EOS_Cache',
     dbVersion: 1,
 
     // Store names

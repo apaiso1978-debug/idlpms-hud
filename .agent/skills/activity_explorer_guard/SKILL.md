@@ -4,7 +4,7 @@ description: Iron Rule for ensuring every newly developed module is immediately 
 ---
 
 # 🔰 Iron Rule: Activity Explorer Integration Guard
-**Context:** The IDLPMS system has numerous standalone modules (like DNA, Fitness, Leave, etc.). Without a centralized hub, these pages become "orphaned" and inaccessible to end-users unless they manually type the URL.
+**Context:** The E-OS system has numerous standalone modules (like DNA, Fitness, Leave, etc.). Without a centralized hub, these pages become "orphaned" and inaccessible to end-users unless they manually type the URL.
 
 **The Rule ("สัญญาใจ"):** 
 Every time a new module or page is developed, the developer MUST explicitly integrate it into the system's core navigation hubs before the task is considered complete.

@@ -1,6 +1,6 @@
-# 🔍 IDLPMS System Analysis Report (Update 2026-02-22)
+# 🔍 E-OS System Analysis Report (Update 2026-02-22)
 
-**Project:** Integrated Digital Learning Platform Management System (IDLPMS)
+**Project:** Integrated Digital Learning Platform Management System (E-OS)
 **Status:** In Active Development (Pre-production Integration Phase)
 **Core Concept:** "Instructional Operating System" (Educational OS that feels like a professional IDE / VS Code)
 
@@ -19,7 +19,7 @@
 
 ## 2. กฎการออกแบบ UI และ CSS (Razor-Sharp Design Guard)
 
-IDLPMS ใช้โครงสร้างแบบ **Vanila HTML/JS + CSS Custom Properties** (ไม่มี React/Vue) เพื่อประสิทธิภาพสูงสุด กฎของ UI เข้มงวดมาก:
+E-OS ใช้โครงสร้างแบบ **Vanila HTML/JS + CSS Custom Properties** (ไม่มี React/Vue) เพื่อประสิทธิภาพสูงสุด กฎของ UI เข้มงวดมาก:
 
 ### 2.1 โครงสร้างและระยะ (Structure & Alignment)
 - **48px Vertical Rule:** Header ของ Main Stage, Sidebar Panel สูง 48px เสมอ

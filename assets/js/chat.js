@@ -1,13 +1,13 @@
 /**
- * IDLPMS - HUD Chat Engine
+ * E-OS - HUD Chat Engine
  * Implements strict role-based hierarchy for communications.
  */
 
 window.ChatEngine = {
     init() {
         console.log("Chat Engine Initializing...");
-        if (typeof IDLPMS_DATA === 'undefined') {
-            console.error("ChatEngine: IDLPMS_DATA not found. Retrying in 100ms...");
+        if (typeof EOS_DATA === 'undefined') {
+            console.error("ChatEngine: EOS_DATA not found. Retrying in 100ms...");
             setTimeout(() => this.init(), 100);
             return;
         }
@@ -19,10 +19,10 @@ window.ChatEngine = {
         if (!currentUser) return {};
 
         const currentId = currentUser.id;
-        const currentData = IDLPMS_DATA.users[currentId];
+        const currentData = EOS_DATA.users[currentId];
         if (!currentData) return {};
 
-        const participants = Object.entries(IDLPMS_DATA.users)
+        const participants = Object.entries(EOS_DATA.users)
             .filter(([id, user]) => {
                 if (id === currentId) return false;
 
@@ -42,13 +42,13 @@ window.ChatEngine = {
                 }
 
                 if (role === 'PARENT') {
-                    const myChild = IDLPMS_DATA.users[currentData.studentId];
+                    const myChild = EOS_DATA.users[currentData.studentId];
                     if (!myChild) return false;
 
                     if (targetRole === 'STUDENT' && id === currentData.studentId) return true;
                     // Peers: Other parents in the same school/class
                     if (targetRole === 'PARENT') {
-                        const targetChild = IDLPMS_DATA.users[user.studentId];
+                        const targetChild = EOS_DATA.users[user.studentId];
                         if (targetChild && targetChild.schoolId === myChild.schoolId && targetChild.classId === myChild.classId) return true;
                     }
                     // Superior: child's CLASS TEACHER
@@ -66,14 +66,14 @@ window.ChatEngine = {
                 }
 
                 if (role === 'SCHOOL_DIR') {
-                    const mySchool = IDLPMS_DATA.structure.schools[currentData.schoolId];
+                    const mySchool = EOS_DATA.structure.schools[currentData.schoolId];
                     const myDistrictId = mySchool ? mySchool.districtId : currentData.districtId;
 
                     if (targetRole === 'TEACHER' && user.schoolId === currentData.schoolId) return true;
                     // Superior: ONLY the head of their specific district
                     if (targetRole === 'ESA_DIR' && user.districtId === myDistrictId && id.includes('_DIR_001')) return true;
                     if (targetRole === 'SCHOOL_DIR') {
-                        const targetSchool = IDLPMS_DATA.structure.schools[user.schoolId];
+                        const targetSchool = EOS_DATA.structure.schools[user.schoolId];
                         const targetDistrictId = targetSchool ? targetSchool.districtId : user.districtId;
                         if (targetDistrictId === myDistrictId) return true;
                     }
@@ -83,7 +83,7 @@ window.ChatEngine = {
                 if (role === 'ESA_DIR') {
                     const myDistrictId = currentData.districtId;
                     if (targetRole === 'SCHOOL_DIR') {
-                        const targetSchool = IDLPMS_DATA.structure.schools[user.schoolId];
+                        const targetSchool = EOS_DATA.structure.schools[user.schoolId];
                         const targetDistrictId = targetSchool ? targetSchool.districtId : user.districtId;
                         if (targetDistrictId === myDistrictId) return true;
                     }
@@ -104,11 +104,11 @@ window.ChatEngine = {
                 return false;
             })
             .map(([id, user]) => {
-                const roleCfg = IDLPMS_DATA.roles[user.role];
+                const roleCfg = EOS_DATA.roles[user.role];
                 const role = currentUser.role;
                 let displayOrg = '';
-                if (user.schoolId) displayOrg = IDLPMS_DATA.structure.schools[user.schoolId]?.name;
-                else if (user.districtId) displayOrg = IDLPMS_DATA.structure.districts[user.districtId]?.name;
+                if (user.schoolId) displayOrg = EOS_DATA.structure.schools[user.schoolId]?.name;
+                else if (user.districtId) displayOrg = EOS_DATA.structure.districts[user.districtId]?.name;
                 else displayOrg = user.org;
 
                 // --- Intelligent Hierarchy Linking (Direct Supervisor Detection) ---
@@ -118,7 +118,7 @@ window.ChatEngine = {
                     isDirectLink = (user.role === 'TEACHER' && user.teacherType === 'CLASS_TEACHER' &&
                         user.schoolId === currentData.schoolId && user.responsibilities?.classTeacherOf === currentData.classId);
                 } else if (role === 'PARENT') {
-                    const myChild = IDLPMS_DATA.users[currentData.studentId];
+                    const myChild = EOS_DATA.users[currentData.studentId];
                     if (myChild) {
                         isDirectLink = (user.role === 'TEACHER' && user.teacherType === 'CLASS_TEACHER' &&
                             user.schoolId === myChild.schoolId && user.responsibilities?.classTeacherOf === myChild.classId);
@@ -127,7 +127,7 @@ window.ChatEngine = {
                     isDirectLink = (user.role === 'SCHOOL_DIR' && user.schoolId === currentData.schoolId);
                 } else if (role === 'SCHOOL_DIR') {
                     // Find out which district the school belongs to
-                    const school = IDLPMS_DATA.structure.schools[currentData.schoolId];
+                    const school = EOS_DATA.structure.schools[currentData.schoolId];
                     const myDistrictId = school ? school.districtId : currentData.districtId;
                     isDirectLink = (user.role === 'ESA_DIR' && (user.districtId === myDistrictId || id === 'ESA_DIR_001'));
                 } else if (role === 'ESA_DIR') {
@@ -136,7 +136,7 @@ window.ChatEngine = {
                     isDirectLink = (user.role === 'MOE');
                 }
 
-                return { ...roleCfg, ...user, id, org: displayOrg || 'IDLPMS', isDirectLink };
+                return { ...roleCfg, ...user, id, org: displayOrg || 'E-OS', isDirectLink };
             });
 
         const ROLE_RANK = { 'MOE': 7, 'OBEC': 6, 'ESA_DIR': 5, 'SCHOOL_DIR': 4, 'TEACHER': 3, 'PARENT': 2, 'STUDENT': 1 };
@@ -162,7 +162,7 @@ window.ChatEngine = {
                 color: 'id-moe'
             });
         } else if (myRole === 'ESA_DIR') {
-            const district = IDLPMS_DATA.structure.districts[currentData.districtId];
+            const district = EOS_DATA.structure.districts[currentData.districtId];
             groups['BROADCAST CHANNELS'].push({
                 id: `BR_DISTRICT_${currentData.districtId}`,
                 name: `Announcement: District School Directors (${district?.name || 'ESA'})`,
@@ -172,10 +172,10 @@ window.ChatEngine = {
                 color: 'id-esa'
             });
         } else if (myRole === 'SCHOOL_DIR') {
-            const school = IDLPMS_DATA.structure.schools[currentData.schoolId];
+            const school = EOS_DATA.structure.schools[currentData.schoolId];
             groups['BROADCAST CHANNELS'].push({
                 id: `BR_SCHOOL_${currentData.schoolId}`,
-                name: `Announcement: Faculty (${school?.name || 'IDLPMS'})`,
+                name: `Announcement: Faculty (${school?.name || 'E-OS'})`,
                 type: 'BROADCAST',
                 isGroup: true,
                 avatar: 'SB',
@@ -195,7 +195,7 @@ window.ChatEngine = {
         }
 
         // --- Add Static Group Channels (Based on Role Access) ---
-        Object.entries(IDLPMS_DATA.groups || {}).forEach(([gid, gdata]) => {
+        Object.entries(EOS_DATA.groups || {}).forEach(([gid, gdata]) => {
             const isMember = gdata.members.includes(currentId);
             if (isMember) {
                 groups['COMMAND CHANNELS'].push({
@@ -320,7 +320,7 @@ window.ChatEngine = {
         mainFrame.src = `pages/chat.html?userId=${userId}${isGroup ? '&isGroup=true' : ''}`;
 
         if (breadcrumbPage) {
-            let target = isGroup ? IDLPMS_DATA.groups[userId] : IDLPMS_DATA.users[userId];
+            let target = isGroup ? EOS_DATA.groups[userId] : EOS_DATA.users[userId];
 
             // Handle Virtual Broadcast Channels
             if (isGroup && !target && userId.startsWith('BR_')) {

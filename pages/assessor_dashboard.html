@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Performance Assessor | IDLPMS</title>
+    <title>Performance Assessor | E-OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../assets/css/theme.css">
     <link rel="stylesheet" href="../assets/css/components.css">
@@ -97,8 +97,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Mock authentication setup
             setTimeout(() => {
-                const viewerId = localStorage.getItem('idlpms_active_user_id') || 'DIR_MABLUD';
-                const idlpmsData = window.IDLPMS_DATA || (window.parent && window.parent.IDLPMS_DATA);
+                const viewerId = localStorage.getItem('eos_active_user_id') || 'DIR_MABLUD';
+                const idlpmsData = window.EOS_DATA || (window.parent && window.parent.EOS_DATA);
                 const viewerRole = idlpmsData?.users[viewerId]?.role || 'SCHOOL_DIR';
 
                 // Engage the Assessor Engine

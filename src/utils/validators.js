@@ -1,5 +1,5 @@
 /**
- * IDLPMS Validators - Utility Functions for Validation
+ * E-OS Validators - Utility Functions for Validation
  * =====================================================
  * Comprehensive validation functions for:
  * - Basic data type checks
@@ -9,7 +9,7 @@
  * - Educational data validations
  *
  * @version 2.0.0
- * @author IDLPMS Development Team
+ * @author E-OS Development Team
  */
 
 // ============================================================================
@@ -482,7 +482,7 @@ function gregorianToBuddhist(gregorianYear) {
 // ============================================================================
 
 /**
- * Valid IDLPMS roles
+ * Valid E-OS roles
  */
 const VALID_ROLES = ['STUDENT', 'PARENT', 'TEACHER', 'SCHOOL_DIR', 'ESA_DIR', 'OBEC', 'MOE'];
 
@@ -616,7 +616,7 @@ function isValidAttendanceStatus(status) {
 // ============================================================================
 
 /**
- * Validate IDLPMS user ID format
+ * Validate E-OS user ID format
  * @param {string} userId - User ID to validate
  * @returns {boolean}
  */
@@ -629,7 +629,7 @@ function isValidUserId(userId) {
 }
 
 /**
- * Validate IDLPMS school ID format
+ * Validate E-OS school ID format
  * @param {string} schoolId - School ID to validate
  * @returns {boolean}
  */
@@ -641,7 +641,7 @@ function isValidSchoolId(schoolId) {
 }
 
 /**
- * Validate IDLPMS ESA ID format
+ * Validate E-OS ESA ID format
  * @param {string} esaId - ESA ID to validate
  * @returns {boolean}
  */
@@ -653,7 +653,7 @@ function isValidEsaId(esaId) {
 }
 
 /**
- * Validate IDLPMS subject ID format
+ * Validate E-OS subject ID format
  * @param {string} subjectId - Subject ID to validate
  * @returns {boolean}
  */

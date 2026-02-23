@@ -1,4 +1,4 @@
-# IDLPMS — UI Architecture Blueprint
+# E-OS — UI Architecture Blueprint
 > เอกสารนี้ใช้สำหรับให้ AI อ่านเป็น Context ในการพัฒนา UI ต่อ
 > Version: 2.0 | อัปเดตหลัง Full CSS Audit (theme + curriculum + passport + notifications + student_input + submenu + timeline_menu + styles)
 
@@ -6,7 +6,7 @@
 
 ## 1. ภาพรวมระบบ (System Overview)
 
-IDLPMS (Instructional Data-driven Learning Platform Management System) คือ **Instructional OS** สำหรับการศึกษาไทย ประกอบด้วย 7 Role ใน Hierarchy และ Core Feature คือ **7-Step Learning Flow** + **Intelligence DNA (KPAED Model)**
+E-OS (Instructional Data-driven Learning Platform Management System) คือ **Instructional OS** สำหรับการศึกษาไทย ประกอบด้วย 7 Role ใน Hierarchy และ Core Feature คือ **7-Step Learning Flow** + **Intelligence DNA (KPAED Model)**
 
 ### Role Hierarchy (7 ระดับ)
 ```

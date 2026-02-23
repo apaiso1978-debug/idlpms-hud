@@ -79,221 +79,225 @@
 </head>
 
 <body
-    class="p-6 bg-transparent text-[var(--vs-text-body)] font-light Thai-Rule overflow-y-auto vs-scrollbar font-['Sarabun']">
-    <div class="w-full space-y-6">
+    class="p-6 bg-[var(--vs-bg-main)] text-[var(--vs-text-title)] overflow-y-auto font-['Sarabun'] antialiased vs-scrollbar"
+    style="height: 100vh;">
+    <div class="vs-page-frame">
+        <div class="w-full space-y-6">
 
-        <!-- ① HEADER BAR -->
-        <header class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <div class="test-icon-box" style="background: rgba(var(--sj-pe-rgb), 0.12); color: var(--sj-pe);">
-                    <i class="icon i-heart h-5 w-5"></i>
+            <!-- ① HEADER BAR -->
+            <header class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="test-icon-box" style="background: rgba(var(--sj-pe-rgb), 0.12); color: var(--sj-pe);">
+                        <i class="icon i-heart h-5 w-5"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl text-[var(--vs-text-title)] font-light Thai-Rule">สมรรถภาพทางกาย</h1>
+                        <p class="text-[13px] text-[var(--vs-text-muted)] Thai-Rule">Physical Fitness Test — ปีการศึกษา
+                            2568</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="text-xl text-[var(--vs-text-title)] font-light Thai-Rule">สมรรถภาพทางกาย</h1>
-                    <p class="text-[13px] text-[var(--vs-text-muted)] Thai-Rule">Physical Fitness Test — ปีการศึกษา
-                        2568</p>
+                <div class="flex items-center gap-2">
+                    <span
+                        class="hud-badge-micro bg-[rgba(var(--sj-pe-rgb),0.15)] text-[var(--sj-pe)] px-2 py-0.5 rounded-[var(--vs-radius)] text-[13px] font-light">กิจการนักเรียน</span>
+                    <span
+                        class="hud-badge-micro bg-white/5 text-[var(--vs-text-muted)] px-2 py-0.5 rounded-[var(--vs-radius)] text-[13px] font-light">GROUP
+                        3</span>
                 </div>
-            </div>
-            <div class="flex items-center gap-2">
-                <span
-                    class="hud-badge-micro bg-[rgba(var(--sj-pe-rgb),0.15)] text-[var(--sj-pe)] px-2 py-0.5 rounded-[var(--vs-radius)] text-[13px] font-light">กิจการนักเรียน</span>
-                <span
-                    class="hud-badge-micro bg-white/5 text-[var(--vs-text-muted)] px-2 py-0.5 rounded-[var(--vs-radius)] text-[13px] font-light">GROUP
-                    3</span>
-            </div>
-        </header>
+            </header>
 
-        <!-- Info Banner — สมรรถภาพทางกายที่สัมพันธ์กับสุขภาพ -->
-        <div
-            class="flex flex-col gap-2 px-4 py-3 rounded-[var(--vs-radius)] border border-[rgba(var(--sj-pe-rgb),0.2)] bg-[rgba(var(--sj-pe-rgb),0.05)]">
-            <div class="flex items-center gap-2">
-                <i class="icon i-information-circle h-4 w-4" style="color: var(--sj-pe);"></i>
-                <span class="text-[13px] font-light text-[var(--vs-text-muted)]">
-                    ทดสอบ 3 ด้าน (เกณฑ์กรมพลศึกษา 2562):
-                </span>
+            <!-- Info Banner — สมรรถภาพทางกายที่สัมพันธ์กับสุขภาพ -->
+            <div
+                class="flex flex-col gap-2 px-4 py-3 rounded-[var(--vs-radius)] border border-[rgba(var(--sj-pe-rgb),0.2)] bg-[rgba(var(--sj-pe-rgb),0.05)]">
+                <div class="flex items-center gap-2">
+                    <i class="icon i-information-circle h-4 w-4" style="color: var(--sj-pe);"></i>
+                    <span class="text-[13px] font-light text-[var(--vs-text-muted)]">
+                        ทดสอบ 3 ด้าน (เกณฑ์กรมพลศึกษา 2562):
+                    </span>
+                </div>
+                <div class="flex flex-wrap gap-2 ml-6 text-[13px] font-light text-[var(--vs-text-muted)]">
+                    <span class="flex items-center gap-1.5"><i class="icon i-hand-raised h-3.5 w-3.5"
+                            style="color:var(--sj-pe);"></i> <strong
+                            class="text-[var(--vs-text-title)]">นั่งงอตัว</strong>
+                        — ความอ่อนตัว (Flexibility)</span>
+                    <span class="flex items-center gap-1.5"><i class="icon i-bolt h-3.5 w-3.5"
+                            style="color:var(--sj-pe);"></i> <strong class="text-[var(--vs-text-title)]">ดันพื้น
+                            30s</strong> — ความอดทนกล้ามเนื้อ (Muscle Endurance)</span>
+                    <span class="flex items-center gap-1.5"><i class="icon i-heart h-3.5 w-3.5"
+                            style="color:var(--sj-pe);"></i> <strong class="text-[var(--vs-text-title)]">ก้าวขึ้นลง 3
+                            นาที</strong> — ความอดทนระบบหัวใจ (Cardiovascular Endurance)</span>
+                </div>
             </div>
-            <div class="flex flex-wrap gap-2 ml-6 text-[13px] font-light text-[var(--vs-text-muted)]">
-                <span class="flex items-center gap-1.5"><i class="icon i-hand-raised h-3.5 w-3.5"
-                        style="color:var(--sj-pe);"></i> <strong class="text-[var(--vs-text-title)]">นั่งงอตัว</strong>
-                    — ความอ่อนตัว (Flexibility)</span>
-                <span class="flex items-center gap-1.5"><i class="icon i-bolt h-3.5 w-3.5"
-                        style="color:var(--sj-pe);"></i> <strong class="text-[var(--vs-text-title)]">ดันพื้น
-                        30s</strong> — ความอดทนกล้ามเนื้อ (Muscle Endurance)</span>
-                <span class="flex items-center gap-1.5"><i class="icon i-heart h-3.5 w-3.5"
-                        style="color:var(--sj-pe);"></i> <strong class="text-[var(--vs-text-title)]">ก้าวขึ้นลง 3
-                        นาที</strong> — ความอดทนระบบหัวใจ (Cardiovascular Endurance)</span>
+
+            <!-- ② MAIN GRID: 9 col + 3 col -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-2 items-start">
+
+                <!-- WORKSPACE (col-9) -->
+                <div class="lg:col-span-12 space-y-6">
+
+                    <!-- KPI CARDS -->
+                    <div id="kpi-section" class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <!-- CLASS OVERVIEW TABLE -->
+                    <div>
+                        <h2 class="text-[13px] text-[var(--vs-text-muted)] mb-3 flex items-center gap-2 font-light">
+                            <div class="w-1.5 h-4" style="background: var(--sj-pe);"></div>
+                            ผลทดสอบรายชั้นเรียน
+                        </h2>
+                        <div id="class-overview" class="fitness-card">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- SCHOOL SUMMARY TABLE (แบบรายงานรวมโรงเรียน) -->
+                    <div>
+                        <h2 class="text-[13px] text-[var(--vs-text-muted)] mb-3 flex items-center gap-2 font-light">
+                            <div class="w-1.5 h-4" style="background: var(--vs-success);"></div>
+                            สรุปผลการทดสอบสมรรถภาพทางกายนักเรียน (รายชั้นและภาพรวมโรงเรียน)
+                        </h2>
+                        <div id="school-summary" class="fitness-card">
+                            <!-- Populated by JS -->
+                        </div>
+                        <div class="mt-2 px-3 text-[13px] text-[var(--vs-text-muted)] space-y-0.5">
+                            <div>หมายเหตุ: 1. ระดับสมรรถภาพที่ผ่านเกณฑ์ คือ ระดับ <strong
+                                    class="text-[var(--vs-text-body)]">ปานกลาง ดี</strong> หรือ <strong
+                                    class="text-[var(--vs-text-body)]">ดีมาก</strong></div>
+                            <div>2. ผ่านเกณฑ์สมรรถภาพ คือ <strong class="text-[var(--vs-text-body)]">ผ่านครบทั้ง 3
+                                    ด้าน</strong></div>
+                            <div>3. เกณฑ์มาตรฐานสมรรถภาพทางกาย ของกรมพลศึกษา <strong
+                                    class="text-[var(--vs-text-body)]">ปี
+                                    2562</strong></div>
+                            <div>ร้อยละผ่าน = B/A × 100 · ร้อยละไม่ผ่าน = C/A × 100</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ③ DELEGATION PANEL (col-3) -->
+
             </div>
         </div>
 
-        <!-- ② MAIN GRID: 9 col + 3 col -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-2 items-start">
+        <script>
+            // ══════════════════════════════════════════
+            // BUILD CLASS DATA FROM EOS_DATA.users (insforge)
+            // ══════════════════════════════════════════
+            function buildClassData() {
+                if (typeof EOS_DATA === 'undefined' || !EOS_DATA.users) return [];
 
-            <!-- WORKSPACE (col-9) -->
-            <div class="lg:col-span-12 space-y-6">
+                const classes = [];
 
-                <!-- KPI CARDS -->
-                <div id="kpi-section" class="grid grid-cols-2 md:grid-cols-4 gap-2">
-                    <!-- Populated by JS -->
-                </div>
+                // หาครูประจำชั้นทุกคน (มี homeroomClass)
+                Object.entries(EOS_DATA.users).forEach(([teacherId, user]) => {
+                    if (user.role === 'TEACHER' && user.schoolId === '99999999-9999-4999-8999-999999999999' && user.homeroomClass) {
+                        // นับนักเรียนในชั้นนี้
+                        const studentCount = Object.values(EOS_DATA.users)
+                            .filter(u => u.role === 'STUDENT' && u.classId === user.homeroomClass && u.schoolId === '99999999-9999-4999-8999-999999999999')
+                            .length;
 
-                <!-- CLASS OVERVIEW TABLE -->
-                <div>
-                    <h2 class="text-[13px] text-[var(--vs-text-muted)] mb-3 flex items-center gap-2 font-light">
-                        <div class="w-1.5 h-4" style="background: var(--sj-pe);"></div>
-                        ผลทดสอบรายชั้นเรียน
-                    </h2>
-                    <div id="class-overview" class="fitness-card">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
+                        classes.push({
+                            id: user.homeroomClass,
+                            teacher: user.fullName,
+                            teacherId: teacherId,
+                            students: studentCount,
+                            avatar: user.avatar || teacherId.slice(0, 2),
+                            color: user.color || 'sj-pe',
+                        });
+                    }
+                });
 
-                <!-- SCHOOL SUMMARY TABLE (แบบรายงานรวมโรงเรียน) -->
-                <div>
-                    <h2 class="text-[13px] text-[var(--vs-text-muted)] mb-3 flex items-center gap-2 font-light">
-                        <div class="w-1.5 h-4" style="background: var(--vs-success);"></div>
-                        สรุปผลการทดสอบสมรรถภาพทางกายนักเรียน (รายชั้นและภาพรวมโรงเรียน)
-                    </h2>
-                    <div id="school-summary" class="fitness-card">
-                        <!-- Populated by JS -->
-                    </div>
-                    <div class="mt-2 px-3 text-[13px] text-[var(--vs-text-muted)] space-y-0.5">
-                        <div>หมายเหตุ: 1. ระดับสมรรถภาพที่ผ่านเกณฑ์ คือ ระดับ <strong
-                                class="text-[var(--vs-text-body)]">ปานกลาง ดี</strong> หรือ <strong
-                                class="text-[var(--vs-text-body)]">ดีมาก</strong></div>
-                        <div>2. ผ่านเกณฑ์สมรรถภาพ คือ <strong class="text-[var(--vs-text-body)]">ผ่านครบทั้ง 3
-                                ด้าน</strong></div>
-                        <div>3. เกณฑ์มาตรฐานสมรรถภาพทางกาย ของกรมพลศึกษา <strong class="text-[var(--vs-text-body)]">ปี
-                                2562</strong></div>
-                        <div>ร้อยละผ่าน = B/A × 100 · ร้อยละไม่ผ่าน = C/A × 100</div>
-                    </div>
-                </div>
-            </div>
+                // เรียงตามลำดับชั้น
+                const ORDER = ['อนุบาล 2', 'อนุบาล 3', 'ป.1/1', 'ป.1/2', 'ป.2/1', 'ป.2/2', 'ป.3', 'ป.4/1', 'ป.4/2', 'ป.5/1', 'ป.5/2', 'ป.6/1', 'ป.6/2'];
+                classes.sort((a, b) => {
+                    const ai = ORDER.indexOf(a.id);
+                    const bi = ORDER.indexOf(b.id);
+                    return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
+                });
 
-            <!-- ③ DELEGATION PANEL (col-3) -->
+                return classes;
+            }
 
-        </div>
-    </div>
+            const CLASSES = buildClassData();
+            const STORAGE_KEY = 'fitness_results_v1';
 
-    <script>
-        // ══════════════════════════════════════════
-        // BUILD CLASS DATA FROM IDLPMS_DATA.users (insforge)
-        // ══════════════════════════════════════════
-        function buildClassData() {
-            if (typeof IDLPMS_DATA === 'undefined' || !IDLPMS_DATA.users) return [];
+            // ── Helpers ──
+            function getResults() {
+                try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+                catch (e) { return {}; }
+            }
 
-            const classes = [];
+            function getClassStats(classId, totalStudents) {
+                const results = getResults();
 
-            // หาครูประจำชั้นทุกคน (มี homeroomClass)
-            Object.entries(IDLPMS_DATA.users).forEach(([teacherId, user]) => {
-                if (user.role === 'TEACHER' && user.schoolId === '99999999-9999-4999-8999-999999999999' && user.homeroomClass) {
-                    // นับนักเรียนในชั้นนี้
-                    const studentCount = Object.values(IDLPMS_DATA.users)
-                        .filter(u => u.role === 'STUDENT' && u.classId === user.homeroomClass && u.schoolId === '99999999-9999-4999-8999-999999999999')
-                        .length;
+                // หานักเรียนจริงในชั้นนี้จาก EOS_DATA
+                const classStudents = Object.entries(EOS_DATA.users)
+                    .filter(([_, u]) => u.role === 'STUDENT' && u.classId === classId && u.schoolId === '99999999-9999-4999-8999-999999999999');
 
-                    classes.push({
-                        id: user.homeroomClass,
-                        teacher: user.fullName,
-                        teacherId: teacherId,
-                        students: studentCount,
-                        avatar: user.avatar || teacherId.slice(0, 2),
-                        color: user.color || 'sj-pe',
-                    });
-                }
-            });
+                const classStudentIds = classStudents.map(([id]) => id);
+                const age = typeof FitnessGrading !== 'undefined' ? FitnessGrading.estimateAgeFromClass(classId) : 10;
 
-            // เรียงตามลำดับชั้น
-            const ORDER = ['อนุบาล 2', 'อนุบาล 3', 'ป.1/1', 'ป.1/2', 'ป.2/1', 'ป.2/2', 'ป.3', 'ป.4/1', 'ป.4/2', 'ป.5/1', 'ป.5/2', 'ป.6/1', 'ป.6/2'];
-            classes.sort((a, b) => {
-                const ai = ORDER.indexOf(a.id);
-                const bi = ORDER.indexOf(b.id);
-                return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
-            });
+                let recorded = 0, passed = 0, failed = 0;
 
-            return classes;
-        }
+                classStudentIds.forEach(id => {
+                    const r = results[id];
+                    if (r && r.sitReach != null && r.pushUp != null && r.stepUp != null) {
+                        recorded++;
 
-        const CLASSES = buildClassData();
-        const STORAGE_KEY = 'fitness_results_v1';
-
-        // ── Helpers ──
-        function getResults() {
-            try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
-            catch (e) { return {}; }
-        }
-
-        function getClassStats(classId, totalStudents) {
-            const results = getResults();
-
-            // หานักเรียนจริงในชั้นนี้จาก IDLPMS_DATA
-            const classStudents = Object.entries(IDLPMS_DATA.users)
-                .filter(([_, u]) => u.role === 'STUDENT' && u.classId === classId && u.schoolId === '99999999-9999-4999-8999-999999999999');
-
-            const classStudentIds = classStudents.map(([id]) => id);
-            const age = typeof FitnessGrading !== 'undefined' ? FitnessGrading.estimateAgeFromClass(classId) : 10;
-
-            let recorded = 0, passed = 0, failed = 0;
-
-            classStudentIds.forEach(id => {
-                const r = results[id];
-                if (r && r.sitReach != null && r.pushUp != null && r.stepUp != null) {
-                    recorded++;
-
-                    // Grade and check pass/fail
-                    if (typeof FitnessGrading !== 'undefined') {
-                        const user = IDLPMS_DATA.users[id];
-                        const gender = FitnessGrading.detectGender(user ? user.fullName : '');
-                        const grades = FitnessGrading.gradeAll(r, age, gender);
-                        if (FitnessGrading.isPassed(grades)) {
-                            passed++;
-                        } else {
-                            failed++;
+                        // Grade and check pass/fail
+                        if (typeof FitnessGrading !== 'undefined') {
+                            const user = EOS_DATA.users[id];
+                            const gender = FitnessGrading.detectGender(user ? user.fullName : '');
+                            const grades = FitnessGrading.gradeAll(r, age, gender);
+                            if (FitnessGrading.isPassed(grades)) {
+                                passed++;
+                            } else {
+                                failed++;
+                            }
                         }
                     }
-                }
-            });
+                });
 
-            return {
-                recorded,
-                passed,
-                failed,
-                total: classStudentIds.length,
-                percent: classStudentIds.length > 0 ? Math.round((recorded / classStudentIds.length) * 100) : 0,
-                passPercent: recorded > 0 ? Math.round((passed / recorded) * 100) : 0,
-            };
-        }
+                return {
+                    recorded,
+                    passed,
+                    failed,
+                    total: classStudentIds.length,
+                    percent: classStudentIds.length > 0 ? Math.round((recorded / classStudentIds.length) * 100) : 0,
+                    passPercent: recorded > 0 ? Math.round((passed / recorded) * 100) : 0,
+                };
+            }
 
-        // ── KPI Cards ──
-        function renderKPIs() {
-            const results = getResults();
-            const totalStudents = CLASSES.reduce((sum, c) => sum + c.students, 0);
+            // ── KPI Cards ──
+            function renderKPIs() {
+                const results = getResults();
+                const totalStudents = CLASSES.reduce((sum, c) => sum + c.students, 0);
 
-            let totalRecorded = 0, totalPassed = 0, totalFailed = 0;
-            let sumSitReach = 0, sumPushUp = 0, sumStepUp = 0, countWithData = 0;
+                let totalRecorded = 0, totalPassed = 0, totalFailed = 0;
+                let sumSitReach = 0, sumPushUp = 0, sumStepUp = 0, countWithData = 0;
 
-            Object.entries(IDLPMS_DATA.users).forEach(([stuId, u]) => {
-                if (u.role !== 'STUDENT' || u.schoolId !== 'SCH_MABLUD') return;
-                const r = results[stuId];
-                if (r && r.sitReach != null && r.pushUp != null && r.stepUp != null) {
-                    totalRecorded++;
-                    sumSitReach += Number(r.sitReach) || 0;
-                    sumPushUp += Number(r.pushUp) || 0;
-                    sumStepUp += Number(r.stepUp) || 0;
-                    countWithData++;
+                Object.entries(EOS_DATA.users).forEach(([stuId, u]) => {
+                    if (u.role !== 'STUDENT' || u.schoolId !== 'SCH_MABLUD') return;
+                    const r = results[stuId];
+                    if (r && r.sitReach != null && r.pushUp != null && r.stepUp != null) {
+                        totalRecorded++;
+                        sumSitReach += Number(r.sitReach) || 0;
+                        sumPushUp += Number(r.pushUp) || 0;
+                        sumStepUp += Number(r.stepUp) || 0;
+                        countWithData++;
 
-                    if (typeof FitnessGrading !== 'undefined') {
-                        const age = FitnessGrading.estimateAgeFromClass(u.classId);
-                        const gender = FitnessGrading.detectGender(u.fullName);
-                        const grades = FitnessGrading.gradeAll(r, age, gender);
-                        if (FitnessGrading.isPassed(grades)) totalPassed++;
-                        else totalFailed++;
+                        if (typeof FitnessGrading !== 'undefined') {
+                            const age = FitnessGrading.estimateAgeFromClass(u.classId);
+                            const gender = FitnessGrading.detectGender(u.fullName);
+                            const grades = FitnessGrading.gradeAll(r, age, gender);
+                            if (FitnessGrading.isPassed(grades)) totalPassed++;
+                            else totalFailed++;
+                        }
                     }
-                }
-            });
+                });
 
-            const passRate = countWithData > 0 ? Math.round((totalPassed / countWithData) * 100) : 0;
+                const passRate = countWithData > 0 ? Math.round((totalPassed / countWithData) * 100) : 0;
 
-            document.getElementById('kpi-section').innerHTML = `
+                document.getElementById('kpi-section').innerHTML = `
                 <div class="fitness-card">
                     <div class="text-[13px] text-[var(--vs-text-muted)] uppercase flex items-center gap-1.5">
                         <i class="icon i-users h-3.5 w-3.5"></i>
@@ -337,13 +341,13 @@
                     <div class="text-[13px] text-[var(--vs-text-muted)] mt-1">B/A × 100 = ${totalPassed}/${countWithData || 1} × 100</div>
                 </div>
             `;
-        }
+            }
 
-        // ── Class Overview Table ──
-        function renderClassOverview() {
-            const el = document.getElementById('class-overview');
+            // ── Class Overview Table ──
+            function renderClassOverview() {
+                const el = document.getElementById('class-overview');
 
-            let html = `
+                let html = `
                 <div class="class-row text-[13px] text-[var(--vs-text-muted)] font-light pb-1">
                     <span></span>
                     <span>ชั้นเรียน / ครูประจำชั้น</span>
@@ -355,23 +359,23 @@
                 </div>
             `;
 
-            if (CLASSES.length === 0) {
-                html += `
+                if (CLASSES.length === 0) {
+                    html += `
                     <div class="text-center py-8 text-[var(--vs-text-muted)]">
                         <i class="icon i-inbox w-6 h-6 opacity-30 mx-auto block mb-2"></i>
                         <p class="text-[13px]">ไม่พบข้อมูลครูประจำชั้น</p>
                     </div>`;
-                el.innerHTML = html;
-                return;
-            }
+                    el.innerHTML = html;
+                    return;
+                }
 
-            CLASSES.forEach(cls => {
-                const stats = getClassStats(cls.id, cls.students);
-                const statusClass = stats.percent === 100 ? 'status-complete'
-                    : stats.percent > 0 ? 'status-partial'
-                        : 'status-empty';
+                CLASSES.forEach(cls => {
+                    const stats = getClassStats(cls.id, cls.students);
+                    const statusClass = stats.percent === 100 ? 'status-complete'
+                        : stats.percent > 0 ? 'status-partial'
+                            : 'status-empty';
 
-                html += `
+                    html += `
                     <div class="class-row">
                         <div class="flex items-center justify-center">
                             <div class="status-dot ${statusClass}"></div>
@@ -403,29 +407,29 @@
                         </div>
                     </div>
                 `;
-            });
+                });
 
-            el.innerHTML = html;
-        }
+                el.innerHTML = html;
+            }
 
-        // ── School Summary Table (แบบรายงานรวมโรงเรียน) ──
-        function renderSchoolSummary() {
-            const el = document.getElementById('school-summary');
-            if (!el) return;
+            // ── School Summary Table (แบบรายงานรวมโรงเรียน) ──
+            function renderSchoolSummary() {
+                const el = document.getElementById('school-summary');
+                if (!el) return;
 
-            // Group classes by grade level (ป.1, ป.2, etc.)
-            const gradeLevels = [
-                { label: 'อนุบาล 2', classes: ['อนุบาล 2'] },
-                { label: 'อนุบาล 3', classes: ['อนุบาล 3'] },
-                { label: 'ประถมศึกษาปีที่ 1', classes: ['ป.1/1', 'ป.1/2'] },
-                { label: 'ประถมศึกษาปีที่ 2', classes: ['ป.2/1', 'ป.2/2'] },
-                { label: 'ประถมศึกษาปีที่ 3', classes: ['ป.3'] },
-                { label: 'ประถมศึกษาปีที่ 4', classes: ['ป.4/1', 'ป.4/2'] },
-                { label: 'ประถมศึกษาปีที่ 5', classes: ['ป.5/1', 'ป.5/2'] },
-                { label: 'ประถมศึกษาปีที่ 6', classes: ['ป.6/1', 'ป.6/2'] },
-            ];
+                // Group classes by grade level (ป.1, ป.2, etc.)
+                const gradeLevels = [
+                    { label: 'อนุบาล 2', classes: ['อนุบาล 2'] },
+                    { label: 'อนุบาล 3', classes: ['อนุบาล 3'] },
+                    { label: 'ประถมศึกษาปีที่ 1', classes: ['ป.1/1', 'ป.1/2'] },
+                    { label: 'ประถมศึกษาปีที่ 2', classes: ['ป.2/1', 'ป.2/2'] },
+                    { label: 'ประถมศึกษาปีที่ 3', classes: ['ป.3'] },
+                    { label: 'ประถมศึกษาปีที่ 4', classes: ['ป.4/1', 'ป.4/2'] },
+                    { label: 'ประถมศึกษาปีที่ 5', classes: ['ป.5/1', 'ป.5/2'] },
+                    { label: 'ประถมศึกษาปีที่ 6', classes: ['ป.6/1', 'ป.6/2'] },
+                ];
 
-            let html = `
+                let html = `
                 <table style="width:100%; border-collapse: collapse; font-size:13px; font-weight:300;">
                 <thead>
                     <tr style="background: rgba(255,255,255,0.03);" class="border-b border-[rgba(63,63,70,0.5)]">
@@ -440,31 +444,31 @@
                 <tbody>
             `;
 
-            let sumTotal = 0, sumRecorded = 0, sumPassed = 0, sumFailed = 0;
+                let sumTotal = 0, sumRecorded = 0, sumPassed = 0, sumFailed = 0;
 
-            gradeLevels.forEach(grade => {
-                let gTotal = 0, gRecorded = 0, gPassed = 0, gFailed = 0;
+                gradeLevels.forEach(grade => {
+                    let gTotal = 0, gRecorded = 0, gPassed = 0, gFailed = 0;
 
-                grade.classes.forEach(classId => {
-                    const cls = CLASSES.find(c => c.id === classId);
-                    if (cls) {
-                        const stats = getClassStats(classId, cls.students);
-                        gTotal += stats.total;
-                        gRecorded += stats.recorded;
-                        gPassed += stats.passed;
-                        gFailed += stats.failed;
-                    }
-                });
+                    grade.classes.forEach(classId => {
+                        const cls = CLASSES.find(c => c.id === classId);
+                        if (cls) {
+                            const stats = getClassStats(classId, cls.students);
+                            gTotal += stats.total;
+                            gRecorded += stats.recorded;
+                            gPassed += stats.passed;
+                            gFailed += stats.failed;
+                        }
+                    });
 
-                sumTotal += gTotal;
-                sumRecorded += gRecorded;
-                sumPassed += gPassed;
-                sumFailed += gFailed;
+                    sumTotal += gTotal;
+                    sumRecorded += gRecorded;
+                    sumPassed += gPassed;
+                    sumFailed += gFailed;
 
-                const pct = gRecorded > 0 ? Math.round((gPassed / gRecorded) * 100) : 0;
-                const pctColor = gRecorded === 0 ? 'var(--vs-text-muted)' : pct >= 80 ? 'var(--vs-success)' : pct >= 50 ? 'var(--sj-pe)' : 'var(--vs-danger)';
+                    const pct = gRecorded > 0 ? Math.round((gPassed / gRecorded) * 100) : 0;
+                    const pctColor = gRecorded === 0 ? 'var(--vs-text-muted)' : pct >= 80 ? 'var(--vs-success)' : pct >= 50 ? 'var(--sj-pe)' : 'var(--vs-danger)';
 
-                html += `
+                    html += `
                     <tr class="border-b border-[rgba(63,63,70,0.5)]">
                         <td style="padding:6px 12px; font-weight:300; color:var(--vs-text-body);">${grade.label}</td>
                         <td style="padding:6px 12px; text-align:center; color:var(--vs-text-muted);">${gTotal}</td>
@@ -474,11 +478,11 @@
                         <td style="padding:6px 12px; text-align:center; font-weight:300; color:${pctColor};">${gRecorded > 0 ? pct + '%' : '—'}</td>
                     </tr>
                 `;
-            });
+                });
 
-            // Footer totals
-            const totalPct = sumRecorded > 0 ? Math.round((sumPassed / sumRecorded) * 100) : 0;
-            html += `
+                // Footer totals
+                const totalPct = sumRecorded > 0 ? Math.round((sumPassed / sumRecorded) * 100) : 0;
+                html += `
                 </tbody>
                 <tfoot>
                     <tr style="background: rgba(255,255,255,0.05);" class="border-t border-[rgba(63,63,70,0.5)]">
@@ -493,25 +497,25 @@
                 </table>
             `;
 
-            el.innerHTML = html;
-        }
-
-        function viewClassDetail(classId) {
-            window.location.href = `fitness_input.html?class=${encodeURIComponent(classId)}`;
-        }
-
-        // ── Initialize ──
-        document.addEventListener('DOMContentLoaded', () => {
-            renderKPIs();
-            renderClassOverview();
-            renderSchoolSummary();
-
-            // ③ Render Delegation Panel
-            if (window.DelegationPanel) {
-
+                el.innerHTML = html;
             }
-        });
-    </script>
+
+            function viewClassDetail(classId) {
+                window.location.href = `fitness_input.html?class=${encodeURIComponent(classId)}`;
+            }
+
+            // ── Initialize ──
+            document.addEventListener('DOMContentLoaded', () => {
+                renderKPIs();
+                renderClassOverview();
+                renderSchoolSummary();
+
+                // ③ Render Delegation Panel
+                if (window.DelegationPanel) {
+
+                }
+            });
+        </script>
 </body>
 
 </html>

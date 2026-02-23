@@ -1,5 +1,5 @@
 /**
- * Phase 17: IDLPMS Transparency Ledger Engine
+ * Phase 17: E-OS Transparency Ledger Engine
  * Handles Dynamic Countdowns, Gamified Scoring logic, and Leaderboard Generation.
  */
 
@@ -26,13 +26,13 @@ const TransparencyLedger = {
         if (!container) return;
 
         // Secure extraction of Auth and System Data
-        const idlpmsData = window.IDLPMS_DATA || (window.parent && window.parent.IDLPMS_DATA);
+        const idlpmsData = window.EOS_DATA || (window.parent && window.parent.EOS_DATA);
 
         let currentUser = null;
         try {
             // Priority 1: Unified Auth Key
             const storage = window.localStorage || (window.parent && window.parent.localStorage);
-            const activeUserId = storage.getItem('idlpms_active_user_id') || storage.getItem('idlpms_active_role');
+            const activeUserId = storage.getItem('eos_active_user_id') || storage.getItem('eos_active_role');
 
             if (activeUserId && idlpmsData && idlpmsData.users[activeUserId]) {
                 currentUser = idlpmsData.users[activeUserId];
@@ -163,7 +163,7 @@ const TransparencyLedger = {
         // Pull delegated tasks (Mission: Directive / ภารกิจพิเศษ) from localStorage
         try {
             const storage = window.localStorage || (window.parent && window.parent.localStorage);
-            const rawDel = storage.getItem('idlpms_delegations_v1');
+            const rawDel = storage.getItem('eos_delegations_v1');
             if (rawDel) {
                 const delegatedTasks = JSON.parse(rawDel);
                 delegatedTasks.forEach(del => {

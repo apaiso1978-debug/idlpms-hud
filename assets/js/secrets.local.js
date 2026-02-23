@@ -9,7 +9,7 @@ window.LOCAL_SECRETS = {
     // InsForge API Key for Database access
     INSFORGE_API_KEY: 'ik_e9ac09dcf4f6732689dd5558fe889c0a',
 
-    // LINE Messaging API Tokens (IDLPMS Alerts channel)
+    // LINE Messaging API Tokens (E-OS Alerts channel)
     LINE_CHANNEL_TOKEN: 'khxlUfwZtVqIYdP9Xe+CBJoeWkyV5ElBndaWiwYcWG+6PHWRyU8BfpalkDtyLfPUwPmGUHAHFVEjtpmnTfSAPbDxDvtQn//pTezdmOnax/dicLpwCRgE1a74yR0O8dO7gtfI83dynNeN47z6/I+TCgdB04t89/1O/w1cDnyilFU=',
     LINE_TARGET_ID: 'U2be6b5ab002d97491ba4827832f15125',
 

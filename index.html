@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IDLPMS | Instructional OS</title>
+    <title>E-OS | Instructional OS</title>
 
     <!-- Tailwind CSS (via CDN for development, controlled via theme.css in prod) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -221,7 +221,7 @@
                 document.getElementById('telemetry-storage').textContent = `${kb} KB`;
 
                 // 2. Count Loaded Persons from dynamic_data if exists
-                const dbDump = localStorage.getItem('idlpms_database') || localStorage.getItem('idlpms_dynamic_data');
+                const dbDump = localStorage.getItem('eos_database') || localStorage.getItem('eos_dynamic_data');
                 if (dbDump) {
                     const db = JSON.parse(dbDump);
                     if (db.persons) {

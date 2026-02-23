@@ -1,5 +1,5 @@
 /**
- * Teacher Schedule Grid Component (IDLPMS Unity Standard)
+ * Teacher Schedule Grid Component (E-OS Unity Standard)
  * Weekly schedule with Manual/Principal-Assigned modes
  * Supports Drag & Drop for subject reordering
  * Integrated with Subject Card Bank
@@ -39,13 +39,13 @@ class TeacherScheduleGrid {
         this.container = document.getElementById(containerId);
 
         // Get active user ID for specific storage
-        const activeUserId = localStorage.getItem('idlpms_active_user_id') || 'default_user';
+        const activeUserId = localStorage.getItem('eos_active_user_id') || 'default_user';
 
         this.options = {
             mode: 'manual', // 'manual' | 'principal'
             editable: true,
-            storageKey: `idlpms_schedule_${activeUserId}`,
-            bankKey: `idlpms_bank_${activeUserId}`,
+            storageKey: `eos_schedule_${activeUserId}`,
+            bankKey: `eos_bank_${activeUserId}`,
             ...options
         };
 

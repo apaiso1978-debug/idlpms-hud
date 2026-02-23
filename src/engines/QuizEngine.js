@@ -1,10 +1,10 @@
 /**
- * IDLPMS Quiz Engine
+ * E-OS Quiz Engine
  * ===================
  * Manages the state and logic for lessons, quizzes, and mastery assessments.
  *
  * @version 2.0.0
- * @author IDLPMS Development Team
+ * @author E-OS Development Team
  */
 
 class QuizEngine {

@@ -1,11 +1,11 @@
 /**
- * IDLPMS Mastery AI Auditor
+ * E-OS Mastery AI Auditor
  * ==========================
  * Local Semantic Heuristic Engine for auditing student answers.
  * Detects relevance, depth, and anti-copying patterns.
  *
  * @version 2.0.0
- * @author IDLPMS Development Team
+ * @author E-OS Development Team
  */
 
 class MasteryAIAuditor {

@@ -1,4 +1,4 @@
-# IDLPMS — Student Profile Design Document
+# E-OS — Student Profile Design Document
 ## Version 0.1 (Prototype) | สำหรับ AI Agent อ่านต่อ
 
 ---
@@ -321,4 +321,4 @@ persons (1)
 
 ---
 
-*IDLPMS v2.0.0 | Design Document v0.1 | Prototype — อยู่ระหว่างพัฒนา*
+*E-OS v2.0.0 | Design Document v0.1 | Prototype — อยู่ระหว่างพัฒนา*

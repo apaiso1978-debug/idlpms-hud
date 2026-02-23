@@ -1,7 +1,7 @@
-# Master Comprehensive Analysis: IDLPMS HUD (Integrated Digital Learning Platform Management System)
+# Master Comprehensive Analysis: E-OS HUD (Integrated Digital Learning Platform Management System)
 
 ## 1. Architectural Philosophy: The "VS Code" HUD
-The IDLPMS is not just a website; it is an **Instructional Operating System** modeled after professional IDEs like VS Code. 
+The E-OS is not just a website; it is an **Instructional Operating System** modeled after professional IDEs like VS Code. 
 
 ### Core Layout:
 - **Activity Bar (48px Rail)**: Primary navigation icons.
@@ -12,7 +12,7 @@ The IDLPMS is not just a website; it is an **Instructional Operating System** mo
 ---
 
 ## 2. Scalability Architecture (The 10M Node Strategy)
-A traditional monolithic database fails at 10 million users. IDLPMS uses **Sharded Node Management**:
+A traditional monolithic database fails at 10 million users. E-OS uses **Sharded Node Management**:
 
 - **Abstract Data Layer (`DataService.js`)**: Decouples the UI from the persistence engine.
 - **ESA-Based Sharding**: Each Educational Service Area (ESA) operates its own data shard. 

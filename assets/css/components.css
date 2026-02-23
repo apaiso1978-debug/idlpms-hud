@@ -174,7 +174,7 @@ select.form-input {
 }
 
 /* ─── CUSTOM DROPDOWN (Iron Rule 26) ───────────────────────────────────── */
-/* Replaces native <select> for visual parity with idlpms_calendar.js       */
+/* Replaces native <select> for visual parity with eos_calendar.js       */
 
 .vs-dropdown-wrapper {
     position: relative;

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Scheduling Hub | IDLPMS</title>
+    <title>AI Scheduling Hub | E-OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../assets/css/theme.css" />
     <link rel="stylesheet" href="../assets/css/styles.css?v=1.2" />
@@ -254,7 +254,7 @@
         //  4-DOMAIN DIRECTOR INPUT PANELS — JavaScript
         // ═══════════════════════════════════════════════════════════════
 
-        const DOMAIN_STORAGE_KEY = 'IDLPMS_DomainInputs_';
+        const DOMAIN_STORAGE_KEY = 'EOS_DomainInputs_';
         const DAY_LABELS = ['', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์'];
         const GRADE_LEVELS = ['ป.1', 'ป.2', 'ป.3', 'ป.4', 'ป.5', 'ป.6'];
 
@@ -447,7 +447,7 @@
         // ═══════════════════════════════════════════════════════════
         function saveEngineResult(result) {
             try {
-                const key = `idlpms_engine_result_${currentSchoolId}`;
+                const key = `eos_engine_result_${currentSchoolId}`;
                 localStorage.setItem(key, JSON.stringify(result));
                 console.log(`💾 [ENGINE] Saved result to ${key}`);
             } catch (e) {
@@ -457,7 +457,7 @@
 
         function restoreLastEngineResult() {
             try {
-                const key = `idlpms_engine_result_${currentSchoolId}`;
+                const key = `eos_engine_result_${currentSchoolId}`;
                 const raw = localStorage.getItem(key);
                 if (!raw) return;
 
@@ -579,8 +579,8 @@
                 const scheduleData = { mode: 'principal', schedule: gridSchedule };
                 const bankData = Object.values(bankMap);
 
-                localStorage.setItem(`idlpms_schedule_${teacherId}`, JSON.stringify(scheduleData));
-                localStorage.setItem(`idlpms_bank_${teacherId}`, JSON.stringify(bankData));
+                localStorage.setItem(`eos_schedule_${teacherId}`, JSON.stringify(scheduleData));
+                localStorage.setItem(`eos_bank_${teacherId}`, JSON.stringify(bankData));
                 teacherCount++;
             }
 

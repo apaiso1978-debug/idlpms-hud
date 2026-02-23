@@ -1,10 +1,10 @@
 ﻿/**
- * IDLPMS - System Data Model
+ * E-OS - System Data Model
  * Primary data source for users, roles, and curriculum.
  * Encoding: UTF-8
  */
 
-const IDLPMS_DATA = {
+const EOS_DATA = {
     // 7 Core Roles Definition
     roles: {
         STUDENT: {
@@ -56,6 +56,13 @@ const IDLPMS_DATA = {
             icon: 'i-globe',
             level: 'National',
             permissions: ['full_system_access', 'national_analytics'],
+        },
+        ADMIN: {
+            id: 'admin',
+            name: 'ผู้ดูแลระบบส่วนกลาง',
+            icon: 'i-shield-exclamation',
+            level: 'System',
+            permissions: ['full_system_access', 'developer_tools'],
         },
     },
 
@@ -327,6 +334,16 @@ const IDLPMS_DATA = {
     },
 
     // Expanded 7-Role Mock Users (Explicitly Linked)
+    // Feature: Special Exception for Multi-Role Cross-persona Identity
+    persons: {
+        'PERSON_WORACHAI': {
+            id: 'PERSON_WORACHAI',
+            citizenId: '1234567890123',
+            name: 'นายวรชัย อภัยโส',
+            roles: ['22222222-2222-4222-8222-222222222222', 'SYS_ADMIN_001']
+        }
+    },
+
     users: {
         // ═══ โรงเรียนวัดมาบชลูด — ข้อมูลจริง ปีการศึกษา 2568 ═══
         // ═══ ผู้อำนวยการ ═══
@@ -341,19 +358,18 @@ const IDLPMS_DATA = {
             color: 'id-dir',
             status: 'ONLINE',
         },
-        // ═══ ครูพิเศษ / Developer / Admin / Founder ═══
+        // ═══ ครูวิทยฐานะพิเศษ / Founder (TEACHER PERSONA) ═══
         '22222222-2222-4222-8222-222222222222': {
             role: 'TEACHER',
             fullName: 'นายวรชัย อภัยโส',
             schoolId: '99999999-9999-4999-8999-999999999999',
             avatar: 'WA',
             color: 'id-dir',
-            specialRoles: ['SPECIAL_TEACHER', 'DEVELOPER', 'ADMIN', 'FOUNDER'],
+            specialRoles: ['SPECIAL_TEACHER', 'FOUNDER'],
             email: 'Apaiso1978@gmail.com',
-            credentials: { email: 'Apaiso1978@gmail.com', password: 'Yuri@04032526' },
             canTeachSubjects: ['ICT', 'SCI', 'SCI_PLUS', 'GUIDE', 'SCOUT', 'PRAY', 'RILS', 'SOCIAL', 'CLUB', 'PLC'],
             maxPeriodsPerDay: 6, maxPeriodsPerWeek: 25,
-            workloadRoles: ['system_admin', 'developer', 'founder'],
+            workloadRoles: ['founder'],
             status: 'ONLINE',
         },
         // ═══ ครูประจำชั้น (14 คน) ═══
@@ -1722,10 +1738,10 @@ const IDLPMS_DATA = {
         // --- SYSTEM ADMIN ---
         SYS_ADMIN_001: {
             role: 'ADMIN',
-            fullName: 'ผู้ดูแลระบบส่วนกลาง (System Admin)',
-            name: 'IDLPMS Admin',
+            fullName: 'นายวรชัย อภัยโส (ADMIN)',
+            name: 'E-OS Admin',
             org: 'Central Administration',
-            avatar: 'SA',
+            avatar: 'WA',
             color: 'vs-accent',
             specialRoles: ['ADMIN', 'DEVELOPER']
         }
@@ -3598,16 +3614,16 @@ const IDLPMS_DATA = {
 // Helper for UI synchronization
 function getCurrentUser() {
     // Standardize: Look for specific User ID key first, fallback to legacy role key
-    const userId = localStorage.getItem('idlpms_active_user_id') ||
-        localStorage.getItem('idlpms_active_role') ||
+    const userId = localStorage.getItem('eos_active_user_id') ||
+        localStorage.getItem('eos_active_role') ||
         'MOE_001';
 
-    if (typeof IDLPMS_DATA === 'undefined' || !IDLPMS_DATA.users) return null;
+    if (typeof EOS_DATA === 'undefined' || !EOS_DATA.users) return null;
 
-    const userProfile = IDLPMS_DATA.users[userId];
+    const userProfile = EOS_DATA.users[userId];
     if (!userProfile) return null;
 
-    const roleConfig = IDLPMS_DATA.roles[userProfile.role];
+    const roleConfig = EOS_DATA.roles[userProfile.role];
 
     // Safety Spread: Ensure ID is preserved and NOT overwritten by role-level IDs
     return {
@@ -3620,5 +3636,5 @@ function getCurrentUser() {
 
 // Ensure the data object is accessible globally
 if (typeof window !== 'undefined') {
-    window.IDLPMS_DATA = IDLPMS_DATA;
+    window.EOS_DATA = EOS_DATA;
 }

@@ -1,12 +1,12 @@
 // Inject Mock Tasks to test Transparency Ledger
-const TASKS_KEY = 'idlpms_tasks_v1';
+const TASKS_KEY = 'eos_tasks_v1';
 let tasks = JSON.parse(localStorage.getItem(TASKS_KEY) || '{}');
 
 // Determine a valid schoolId
 let schoolId = '99999999-9999-4999-8999-999999999999';
-if (window.IDLPMS_DATA && IDLPMS_DATA.users) {
+if (window.EOS_DATA && EOS_DATA.users) {
     // find the school id of DIR_MABLUD or similar
-    const dir = Object.values(IDLPMS_DATA.users).find(u => u.role === 'SCHOOL_DIR');
+    const dir = Object.values(EOS_DATA.users).find(u => u.role === 'SCHOOL_DIR');
     if (dir) schoolId = dir.schoolId;
 }
 
@@ -18,7 +18,7 @@ const future20Days = new Date(now.getTime() + (20 * 24 * 60 * 60 * 1000)).toISOS
 const future10Hours = new Date(now.getTime() + (10 * 60 * 60 * 1000)).toISOString();
 
 // Find some teachers
-const teachers = Object.entries(window.IDLPMS_DATA ? IDLPMS_DATA.users : {}).filter(([id, u]) => u.role === 'TEACHER' && u.schoolId === schoolId);
+const teachers = Object.entries(window.EOS_DATA ? EOS_DATA.users : {}).filter(([id, u]) => u.role === 'TEACHER' && u.schoolId === schoolId);
 
 if (teachers.length >= 3) {
     const t1 = teachers[0][0]; // Excellent (Early)

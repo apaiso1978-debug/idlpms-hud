@@ -1,5 +1,5 @@
 /**
- * IDLPMS AppBootstrap - Service Orchestrator
+ * E-OS AppBootstrap - Service Orchestrator
  * ==========================================
  * Manages the initialization sequence of all core services:
  * 1. DataService (Source of truth)
@@ -8,7 +8,7 @@
  * 4. SyncEngine (Background persistence)
  *
  * @version 2.0.0
- * @author IDLPMS Development Team
+ * @author E-OS Development Team
  */
 
 class AppBootstrap {
@@ -44,7 +44,7 @@ class AppBootstrap {
 
         console.group('[AppBootstrap] Initializing Services');
 
-        // Migrate legacy IDLPMS data keys to EOS keys before any service boots
+        // Migrate legacy E-OS data keys to EOS keys before any service boots
         this._migrateLegacyStorage();
 
         this._initPromise = (async () => {
@@ -88,16 +88,16 @@ class AppBootstrap {
     }
 
     /**
-     * E-OS Rebranding: Migrate legacy IDLPMS data keys to new eos_* keys
+     * E-OS Rebranding: Migrate legacy E-OS data keys to new eos_* keys
      * Ensures users do not lose their login sessions or offline databases
      */
     _migrateLegacyStorage() {
         try {
             const legacyKeys = {
-                'idlpms_database': 'eos_database',
-                'idlpms_auth_token': 'eos_auth_token',
-                'idlpms_lesson_packs': 'eos_lesson_packs',
-                'idlpms_dynamic_data': 'eos_dynamic_data'
+                'eos_database': 'eos_database',
+                'eos_auth_token': 'eos_auth_token',
+                'eos_lesson_packs': 'eos_lesson_packs',
+                'eos_dynamic_data': 'eos_dynamic_data'
             };
             let migratedCount = 0;
             for (const [oldKey, newKey] of Object.entries(legacyKeys)) {

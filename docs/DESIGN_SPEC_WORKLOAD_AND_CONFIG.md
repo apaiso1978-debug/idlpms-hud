@@ -1,4 +1,4 @@
-# IDLPMS Design Spec: Teacher Workload & Smart Config System
+# E-OS Design Spec: Teacher Workload & Smart Config System
 
 > **Status**: Approved Design — Ready for Implementation
 > **Date**: 2026-02-12

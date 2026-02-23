@@ -3,10 +3,10 @@
  */
 class SchoolConfigService {
     static STORAGE_KEYS = {
-        TEACHER_CONFIG: 'IDLPMS_TeacherConfig_',
-        SUBJECT_CARDS: 'IDLPMS_SubjectCards',
-        DIRECTOR_SUBJECT_BANK: 'IDLPMS_DirectorSubjectBank',  // ← Hierarchy: Director's master catalog
-        TEACHER_SUBJECT_BANK: 'idlpms_subject_bank'            // ← Teacher's personal bank
+        TEACHER_CONFIG: 'EOS_TeacherConfig_',
+        SUBJECT_CARDS: 'EOS_SubjectCards',
+        DIRECTOR_SUBJECT_BANK: 'EOS_DirectorSubjectBank',  // ← Hierarchy: Director's master catalog
+        TEACHER_SUBJECT_BANK: 'eos_subject_bank'            // ← Teacher's personal bank
     };
 
     /**
@@ -42,9 +42,9 @@ class SchoolConfigService {
             // 3. Get Subjects — Priority: data.js > Director Bank > Teacher Bank
             //    Hierarchy: Director's catalog is the authoritative source
             let subjects = [];
-            if (typeof IDLPMS_DATA !== 'undefined' && IDLPMS_DATA.subjects) {
+            if (typeof EOS_DATA !== 'undefined' && EOS_DATA.subjects) {
                 // Use centralized subject bank from data.js
-                subjects = Object.values(IDLPMS_DATA.subjects).map(s => ({
+                subjects = Object.values(EOS_DATA.subjects).map(s => ({
                     id: s.id,
                     name: s.name,
                     color: s.color,
@@ -104,7 +104,7 @@ class SchoolConfigService {
             if (preAssignedSlots.length === 0) {
                 // Fallback: build from Director's Domain 2+4 inputs
                 const sid = schoolId;
-                const domainKey = 'IDLPMS_DomainInputs_';
+                const domainKey = 'EOS_DomainInputs_';
                 try {
                     const d2 = JSON.parse(localStorage.getItem(`${domainKey}${sid}_d2`) || 'null');
                     const d4 = JSON.parse(localStorage.getItem(`${domainKey}${sid}_d4`) || 'null');

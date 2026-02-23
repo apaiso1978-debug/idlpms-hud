@@ -6,7 +6,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Wait a moment to ensure IDLPMS_DATA and dependencies are loaded
+    // 1. Wait a moment to ensure EOS_DATA and dependencies are loaded
     setTimeout(() => {
         initSchoolDNA();
     }, 100);

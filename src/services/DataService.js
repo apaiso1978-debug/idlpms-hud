@@ -1,12 +1,12 @@
 /**
- * IDLPMS DataService - Abstract Data Access Layer
+ * E-OS DataService - Abstract Data Access Layer
  * ================================================
  * Provides unified interface for data operations supporting:
  * - Local static data (data.js) for development/testing
  * - Google Apps Script for production with sharding
  *
  * @version 2.0.0
- * @author IDLPMS Development Team
+ * @author E-OS Development Team
  */
 
 // ============================================================================
@@ -153,28 +153,28 @@ class LocalDataService extends AbstractDataService {
     }
 
     /**
-     * Initialize the service by loading data from IDLPMS_DATA or LocalStorage
+     * Initialize the service by loading data from EOS_DATA or LocalStorage
      */
     async initialize() {
         if (this._initialized) return;
 
-        // Check if IDLPMS_DATA is available (from data.js)
-        if (typeof IDLPMS_DATA === 'undefined') {
-            throw new Error('IDLPMS_DATA not found. Make sure data.js is loaded.');
+        // Check if EOS_DATA is available (from data.js)
+        if (typeof EOS_DATA === 'undefined') {
+            throw new Error('EOS_DATA not found. Make sure data.js is loaded.');
         }
 
         // 🧬 SHADOW PERSISTENCE: Try to load from LocalStorage first
-        const savedData = localStorage.getItem('idlpms_dynamic_data');
+        const savedData = localStorage.getItem('eos_dynamic_data');
         if (savedData) {
             try {
                 this._data = JSON.parse(savedData);
                 console.log('[LocalDataService] Initialized with PERSISTED dynamic data');
             } catch (e) {
                 console.warn('[LocalDataService] Failed to parse saved data, falling back to static mocks');
-                this._data = IDLPMS_DATA;
+                this._data = EOS_DATA;
             }
         } else {
-            this._data = IDLPMS_DATA;
+            this._data = EOS_DATA;
             console.log('[LocalDataService] Initialized with STATIC data');
         }
 
@@ -187,7 +187,7 @@ class LocalDataService extends AbstractDataService {
     _persist() {
         if (!this._data) return;
         try {
-            localStorage.setItem('idlpms_dynamic_data', JSON.stringify(this._data));
+            localStorage.setItem('eos_dynamic_data', JSON.stringify(this._data));
         } catch (e) {
             console.error('[LocalDataService] Persistence failed:', e);
         }
@@ -197,8 +197,8 @@ class LocalDataService extends AbstractDataService {
      * Reset local data to factory settings
      */
     async resetToDefault() {
-        localStorage.removeItem('idlpms_dynamic_data');
-        this._data = IDLPMS_DATA;
+        localStorage.removeItem('eos_dynamic_data');
+        this._data = EOS_DATA;
         this._persist();
         window.location.reload();
     }
@@ -683,7 +683,7 @@ class LocalDataService extends AbstractDataService {
      */
     getTransferAlerts(schoolId) {
         this._ensureInitialized();
-        const users = window.IDLPMS_DATA?.users || {};
+        const users = window.EOS_DATA?.users || {};
         const rules = DataServiceConfig.transferEscalation.thresholds;
         const today = new Date();
         const alerts = [];

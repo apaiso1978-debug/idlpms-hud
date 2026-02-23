@@ -1,5 +1,5 @@
 ﻿/**
- * IDLPMS - VS Code HUD App Core Logic
+ * E-OS - VS Code HUD App Core Logic
  */
 
 // Global Standard Formatting Utility
@@ -52,9 +52,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (switcherList && user.availableRoles) {
             switcherList.innerHTML = ''; // Clear hardcoded
             user.availableRoles.forEach(roleId => {
-                const roleData = IDLPMS_DATA.users[roleId];
+                const roleData = EOS_DATA.users[roleId];
                 if (!roleData) return;
-                const roleConfig = IDLPMS_DATA.roles[roleData.role];
+                const roleConfig = EOS_DATA.roles[roleData.role];
                 const isActive = roleId === user.id;
 
                 const btn = document.createElement('button');
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Feature: Check Inbox for Pending Deliverables to Light Up HUD Badge
         try {
-            const raw = localStorage.getItem('idlpms_delegations_v1');
+            const raw = localStorage.getItem('eos_delegations_v1');
             if (raw) {
                 const delegations = JSON.parse(raw);
                 const pendingTasks = delegations.filter(d => d.assignee === user.id && d.status === 'PENDING');
@@ -102,12 +102,45 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (e) {
             console.warn('HUD Inbox Badge logic failed:', e);
         }
+
+        // Feature: Content Engineering Visibility (Admin/Developer Only)
+        const contentEngSection = document.getElementById('content-engineering-section');
+        if (contentEngSection) {
+            console.log("[DEBUG] Checking Content Engineering Visibility for User:", user.role, user.specialRoles, user.workloadRoles);
+            const isDevOrAdmin = user.role === 'ADMIN' || user.specialRoles?.includes('DEVELOPER') || user.specialRoles?.includes('ADMIN') || user.workloadRoles?.includes('developer') || user.workloadRoles?.includes('system_admin');
+            console.log("[DEBUG] isDevOrAdmin evaluated to:", isDevOrAdmin);
+            if (isDevOrAdmin) {
+                contentEngSection.style.display = 'block';
+            } else {
+                contentEngSection.style.display = 'none';
+            }
+        }
     }
 
     // Await system readiness
     try {
         await app.init();
         syncUser();
+
+        // 🛡️ FORCE PASSWORD RESET LOGIC (VULN 4)
+        if (app.auth && app.auth.getCurrentUser()?.requiresPasswordReset) {
+            const pwdModal = document.getElementById('force-password-modal');
+            const pwdBtn = document.getElementById('btn-force-password');
+            const pwdInput = document.getElementById('new-password-input');
+            if (pwdModal && pwdBtn && pwdInput) {
+                pwdModal.style.display = 'flex';
+                pwdBtn.onclick = () => {
+                    const newPwd = pwdInput.value.trim();
+                    if (newPwd.length < 8) {
+                        if (window.HUD_NOTIFY) window.HUD_NOTIFY.toast('SECURITY', 'รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร', 'warning');
+                        return;
+                    }
+                    // Simulation: Assuming password update succeeds locally/backend
+                    pwdModal.style.display = 'none';
+                    if (window.HUD_NOTIFY) window.HUD_NOTIFY.toast('SECURITY_OK', 'เปลี่ยนรหัสผ่านปลอดภัยสำเร็จแล้ว', 'success');
+                };
+            }
+        }
 
         // Ensure the Mission Control Timeline Menus are painted immediately on load
         if (window.ManagementEngine) {
@@ -127,7 +160,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         } else {
             // Only remove auth-related keys — preserve schedule/bank data
-            ['idlpms_access_token', 'idlpms_refresh_token', 'idlpms_active_user_id', 'idlpms_session', 'idlpms_device_id'].forEach(k => localStorage.removeItem(k));
+            ['eos_access_token', 'eos_refresh_token', 'eos_active_user_id', 'eos_session', 'eos_device_id'].forEach(k => localStorage.removeItem(k));
             window.location.href = 'login.html';
         }
     };

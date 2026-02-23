@@ -1,5 +1,5 @@
 /**
- * IDLPMS - Explorer Engine
+ * E-OS - Explorer Engine
  * Manages the hierarchical subject tree in the sidebar.
  * Encoding: UTF-8
  */

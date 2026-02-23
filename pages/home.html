@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard | IDLPMS</title>
+    <title>Dashboard | E-OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../assets/css/theme.css" />
     <link rel="stylesheet" href="../assets/css/styles.css" />
@@ -158,11 +158,11 @@
                 userFunc = window.parent.getCurrentUser;
             }
 
-            if (!userFunc || typeof IDLPMS_DATA === 'undefined')
+            if (!userFunc || typeof EOS_DATA === 'undefined')
                 return;
 
             const user = userFunc();
-            const data = IDLPMS_DATA;
+            const data = EOS_DATA;
 
             if (user) {
                 // UI Sync

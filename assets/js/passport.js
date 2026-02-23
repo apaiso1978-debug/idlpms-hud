@@ -33,7 +33,7 @@ const PASSPORT_WORKFLOWS = {
         { id: 6, year: 2558, masterCategory: 'position', title: 'Position: Expert Teacher Level 3', org: 'Wat Bang Muang School', verifyStatus: 'VERIFIED', verifiedBy: 'School Director' },
     ],
     DEFAULT: [
-        { id: 1, year: 2568, masterCategory: 'position', title: 'Current Position Active', org: 'IDLPMS', verifyStatus: 'VERIFIED', verifiedBy: 'System' },
+        { id: 1, year: 2568, masterCategory: 'position', title: 'Current Position Active', org: 'E-OS', verifyStatus: 'VERIFIED', verifiedBy: 'System' },
     ]
 };
 
@@ -114,8 +114,8 @@ function populatePersonalTab(user) {
     let citizenId = user.citizenId || '1-XXXX-XXXXX-XX-X';
 
     // Feature: Pull real identity from Person-First schema
-    if (user.personId && typeof IDLPMS_DATA !== 'undefined' && IDLPMS_DATA.persons && IDLPMS_DATA.persons[user.personId]) {
-        const person = IDLPMS_DATA.persons[user.personId];
+    if (user.personId && typeof EOS_DATA !== 'undefined' && EOS_DATA.persons && EOS_DATA.persons[user.personId]) {
+        const person = EOS_DATA.persons[user.personId];
         fullName = `${person.firstName} ${person.lastName}`;
         citizenId = person.citizenId || citizenId;
     }
@@ -295,12 +295,12 @@ function populateWorkflowTab(user) {
     let entries = [];
 
     // Feature: Lifelong Identity (Person-First) - Aggregate workflows across all roles
-    if (user.availableRoles && typeof IDLPMS_DATA !== 'undefined' && IDLPMS_DATA.users) {
+    if (user.availableRoles && typeof EOS_DATA !== 'undefined' && EOS_DATA.users) {
         user.availableRoles.forEach(roleId => {
-            const roleData = IDLPMS_DATA.users[roleId];
+            const roleData = EOS_DATA.users[roleId];
             if (roleData) {
                 const roleWorkflows = PASSPORT_WORKFLOWS[roleData.role] || [];
-                const roleName = IDLPMS_DATA.roles[roleData.role]?.name || roleData.role;
+                const roleName = EOS_DATA.roles[roleData.role]?.name || roleData.role;
                 entries = entries.concat(roleWorkflows.map(wf => ({
                     ...wf,
                     title: `[${roleName}] ${wf.title}`
@@ -318,7 +318,7 @@ function populateWorkflowTab(user) {
     // Feature: Merge dynamic completed tasks from Delegation Panel (Transparency Sync)
     try {
         const storage = window.localStorage || (window.parent && window.parent.localStorage);
-        const rawDel = storage.getItem('idlpms_delegations_v1');
+        const rawDel = storage.getItem('eos_delegations_v1');
         if (rawDel) {
             const delegations = JSON.parse(rawDel);
             const myCompletedTasks = delegations.filter(d =>
@@ -340,7 +340,7 @@ function populateWorkflowTab(user) {
                     year: year,
                     masterCategory: 'achievement',
                     title: `Mission Accomplished: ${task.moduleTitle}${extraDetails}`,
-                    org: 'IDLPMS Delegation System',
+                    org: 'E-OS Delegation System',
                     verifyStatus: 'VERIFIED',
                     verifiedBy: task.assignedByName || 'System Administrator'
                 });

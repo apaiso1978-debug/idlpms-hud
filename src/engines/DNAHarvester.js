@@ -1,10 +1,10 @@
 /**
- * IDLPMS Intelligence DNA Harvester
+ * E-OS Intelligence DNA Harvester
  * =================================
  * Captures learning signals and behavioral data to build a student's Neural DNA.
  *
  * @version 2.0.0
- * @author IDLPMS Development Team
+ * @author E-OS Development Team
  */
 
 class DNAHarvester {

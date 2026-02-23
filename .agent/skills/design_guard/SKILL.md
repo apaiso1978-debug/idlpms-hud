@@ -350,7 +350,7 @@ On dark backgrounds (`--vs-bg-card` ≈ `#333338` / `--vs-bg-deep` ≈ `#1e1e22`
 
 ### Rule 26 — The Custom Floating Select and Calendar Standard (Banned Native Selects)
 - **Iron Rule**: The native HTML `<select>` element is **BANNED** on all functional pages. System menus, dropdowns, and date pickers MUST use the `vs-dropdown-menu` and `vs-dropdown-wrapper` global aesthetic to guarantee visual parity across the entire app.
-- **Visual Standard**: The popup menu MUST utilize `background: var(--vs-bg-deep); border: 1px solid var(--vs-border); padding: 12px; border-radius: var(--vs-radius); margin-top: 4px;` EXACTLY as seen in `idlpms_calendar.js`.
+- **Visual Standard**: The popup menu MUST utilize `background: var(--vs-bg-deep); border: 1px solid var(--vs-border); padding: 12px; border-radius: var(--vs-radius); margin-top: 4px;` EXACTLY as seen in `eos_calendar.js`.
 - **Auto-Collapse**: All floating components (Dropdowns, Calendars) MUST implement an Auto-Collapse mechanism (`closeAllDropdowns()`) where clicking one explicitly hides the others and correctly resets structural `z-index`. Stacked menus are forbidden.
 - **HTML Structure**:
 ```html

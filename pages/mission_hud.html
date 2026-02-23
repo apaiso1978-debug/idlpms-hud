@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Subject HUD | IDLPMS</title>
+    <title>Subject HUD | E-OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../assets/css/theme.css" />
     <link rel="stylesheet" href="../assets/css/styles.css" />
@@ -84,14 +84,14 @@
             }
 
             const rawId = (subjectId || '').replace('SUB_', '');
-            const subject = IDLPMS_DATA.curriculum[rawId] || {
+            const subject = EOS_DATA.curriculum[rawId] || {
                 name: 'วิชาทั่วไป',
                 color: 'var(--vs-accent)',
                 units: []
             };
 
             // Find teacher
-            const teacher = Object.values(IDLPMS_DATA.users).find(
+            const teacher = Object.values(EOS_DATA.users).find(
                 (u) =>
                     u.role === 'TEACHER' &&
                     u.schoolId === user.schoolId &&

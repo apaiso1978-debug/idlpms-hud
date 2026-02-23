@@ -1,6 +1,6 @@
 /**
  * DNASpider: Intelligence DNA Multi-Axis Visualization
- * Part of IDLPMS "Unity" Design System
+ * Part of E-OS "Unity" Design System
  */
 class DNASpider {
     constructor(containerId, options = {}) {

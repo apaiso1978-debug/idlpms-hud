@@ -1,5 +1,5 @@
 /**
- * IDLPMS AuthService - Secure Authentication Service
+ * E-OS AuthService - Secure Authentication Service
  * ==================================================
  * Provides secure token-based authentication with:
  * - JWT token management (preparation for backend)
@@ -9,7 +9,7 @@
  * - Secure logout
  *
  * @version 2.0.0
- * @author IDLPMS Development Team
+ * @author E-OS Development Team
  */
 
 // ============================================================================
@@ -19,11 +19,11 @@
 const AuthServiceConfig = {
     // Storage keys
     storageKeys: {
-        accessToken: 'idlpms_access_token',
-        refreshToken: 'idlpms_refresh_token',
-        userId: 'idlpms_active_user_id',
-        sessionData: 'idlpms_session',
-        deviceId: 'idlpms_device_id'
+        accessToken: 'eos_access_token',
+        refreshToken: 'eos_refresh_token',
+        userId: 'eos_active_user_id',
+        sessionData: 'eos_session',
+        deviceId: 'eos_device_id'
     },
 
     // Token settings
@@ -187,11 +187,11 @@ class AuthService {
      * Load user from local data.js
      */
     async _loadLocalUser(userId) {
-        if (typeof IDLPMS_DATA === 'undefined') {
-            throw new Error('IDLPMS_DATA not available');
+        if (typeof EOS_DATA === 'undefined') {
+            throw new Error('EOS_DATA not available');
         }
 
-        const userData = IDLPMS_DATA.users[userId];
+        const userData = EOS_DATA.users[userId];
         if (!userData) {
             throw new Error('User not found');
         }
@@ -200,15 +200,15 @@ class AuthService {
         let personId = userId;
         let availableRoles = [userId];
 
-        if (IDLPMS_DATA.persons) {
-            const person = Object.values(IDLPMS_DATA.persons).find(p => p.roles && p.roles.includes(userId));
+        if (EOS_DATA.persons) {
+            const person = Object.values(EOS_DATA.persons).find(p => p.roles && p.roles.includes(userId));
             if (person) {
                 personId = person.id;
                 availableRoles = person.roles;
             }
         }
 
-        const roleConfig = IDLPMS_DATA.roles[userData.role];
+        const roleConfig = EOS_DATA.roles[userData.role];
 
         this._currentUser = {
             id: userId,
@@ -288,7 +288,7 @@ class AuthService {
      * Local login (using data.js)
      */
     async _localLogin(authId, securityKey = null) {
-        if (typeof IDLPMS_DATA === 'undefined') {
+        if (typeof EOS_DATA === 'undefined') {
             throw new AuthError('ไม่พบข้อมูลระบบ', 'DATA_NOT_FOUND');
         }
 
@@ -296,12 +296,12 @@ class AuthService {
         let activeUserId = null;
 
         // 1. Check if authId is a Person ID or Citizen ID
-        if (IDLPMS_DATA.persons) {
-            if (IDLPMS_DATA.persons[authId]) {
-                activePerson = IDLPMS_DATA.persons[authId];
+        if (EOS_DATA.persons) {
+            if (EOS_DATA.persons[authId]) {
+                activePerson = EOS_DATA.persons[authId];
                 activeUserId = activePerson.roles[0];
             } else {
-                const person = Object.values(IDLPMS_DATA.persons).find(p => p.citizenId === authId);
+                const person = Object.values(EOS_DATA.persons).find(p => p.citizenId === authId);
                 if (person) {
                     activePerson = person;
                     activeUserId = person.roles[0];
@@ -314,7 +314,7 @@ class AuthService {
             activeUserId = authId;
         }
 
-        const userData = IDLPMS_DATA.users[activeUserId];
+        const userData = EOS_DATA.users[activeUserId];
         if (!userData) {
             throw new AuthError('ไม่พบผู้ใช้งาน', 'USER_NOT_FOUND');
         }
@@ -331,15 +331,15 @@ class AuthService {
         if (activePerson) {
             personId = activePerson.id;
             availableRoles = activePerson.roles;
-        } else if (IDLPMS_DATA.persons) {
-            const person = Object.values(IDLPMS_DATA.persons).find(p => p.roles && p.roles.includes(activeUserId));
+        } else if (EOS_DATA.persons) {
+            const person = Object.values(EOS_DATA.persons).find(p => p.roles && p.roles.includes(activeUserId));
             if (person) {
                 personId = person.id;
                 availableRoles = person.roles;
             }
         }
 
-        const roleConfig = IDLPMS_DATA.roles[userData.role];
+        const roleConfig = EOS_DATA.roles[userData.role];
 
         return {
             id: activeUserId,
@@ -347,7 +347,8 @@ class AuthService {
             availableRoles,
             ...userData,
             roleConfig,
-            permissions: this._buildPermissions(userData.role)
+            permissions: this._buildPermissions(userData.role),
+            requiresPasswordReset: (!userData.securityKey && securityKey === 'password123') // 🛡️ FORCE PASSWORD RESET FLAG
         };
     }
 
@@ -394,9 +395,11 @@ class AuthService {
 
         // Store tokens
         if (data.accessToken) {
+            // TODO: [SECURITY] Move to HttpOnly/Secure Cookie when connecting to real backend (Vuln 3)
             localStorage.setItem(this._config.storageKeys.accessToken, data.accessToken);
         }
         if (data.refreshToken) {
+            // TODO: [SECURITY] Move to HttpOnly/Secure Cookie when connecting to real backend (Vuln 3)
             localStorage.setItem(this._config.storageKeys.refreshToken, data.refreshToken);
         }
 
@@ -724,8 +727,8 @@ class AuthService {
         if (this._currentUser.id === targetUserId) return true;
 
         // Get target user's data (in local mode)
-        if (this._config.mode === 'local' && typeof IDLPMS_DATA !== 'undefined') {
-            const targetUser = IDLPMS_DATA.users[targetUserId];
+        if (this._config.mode === 'local' && typeof EOS_DATA !== 'undefined') {
+            const targetUser = EOS_DATA.users[targetUserId];
             if (!targetUser) return false;
 
             const currentRole = this._currentUser.role;
@@ -744,7 +747,7 @@ class AuthService {
 
             // ESA directors can access anyone in their ESA
             if (currentRole === 'ESA_DIR') {
-                const targetSchool = IDLPMS_DATA.structure.schools[targetUser.schoolId];
+                const targetSchool = EOS_DATA.structure.schools[targetUser.schoolId];
                 if (targetSchool && targetSchool.districtId === currentESA) {
                     return true;
                 }
@@ -924,13 +927,13 @@ async function getAuthService() {
  */
 function getCurrentUser() {
     // Standardize: Look for specific User ID key first, fallback to legacy role key
-    const userId = localStorage.getItem('idlpms_active_user_id') ||
-        localStorage.getItem('idlpms_active_role');
+    const userId = localStorage.getItem('eos_active_user_id') ||
+        localStorage.getItem('eos_active_role');
     if (!userId) return null;
 
-    if (typeof IDLPMS_DATA !== 'undefined' && IDLPMS_DATA.users[userId]) {
-        const user = IDLPMS_DATA.users[userId];
-        const roleConfig = IDLPMS_DATA.roles[user.role];
+    if (typeof EOS_DATA !== 'undefined' && EOS_DATA.users[userId]) {
+        const user = EOS_DATA.users[userId];
+        const roleConfig = EOS_DATA.roles[user.role];
         return {
             ...roleConfig,
             ...user,

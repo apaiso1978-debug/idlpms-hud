@@ -1,12 +1,12 @@
 // ═══════════════════════════════════════════════
-// TASK SYSTEM — IDLPMS v1.0
+// TASK SYSTEM — E-OS v1.0
 // Iron Rule: ทุก function ทำงานบน localStorage 100%
 // ═══════════════════════════════════════════════
 
 const TaskSystem = {
 
     // ── Storage Keys ──
-    TASKS_KEY: 'idlpms_tasks_v1',
+    TASKS_KEY: 'eos_tasks_v1',
 
     // ── Read All Tasks ──
     getAllTasks() {
@@ -49,8 +49,8 @@ const TaskSystem = {
 
         // หาครูทุกคนใน school ที่มี homeroomClass (ครูประจำชั้น)
         const assignments = {};
-        if (typeof IDLPMS_DATA !== 'undefined' && IDLPMS_DATA.users) {
-            Object.entries(IDLPMS_DATA.users).forEach(([userId, user]) => {
+        if (typeof EOS_DATA !== 'undefined' && EOS_DATA.users) {
+            Object.entries(EOS_DATA.users).forEach(([userId, user]) => {
                 if (
                     user.role === 'TEACHER' &&
                     user.schoolId === schoolId &&
@@ -161,7 +161,7 @@ const TaskSystem = {
         if (tasks[taskId]?.assignments[teacherId]) {
             // Logic enforcement check if completion is 100%
             const templateId = tasks[taskId].templateId;
-            const template = IDLPMS_DATA.taskTemplates[templateId];
+            const template = EOS_DATA.taskTemplates[templateId];
             if (template?.dataKey) {
                 const completion = this.getClassCompletionStatus(tasks[taskId].assignments[teacherId].classId, template.dataKey);
                 if (!completion.isComplete) {
@@ -205,7 +205,7 @@ const TaskSystem = {
             const results = JSON.parse(localStorage.getItem(dataKey) || '{}');
 
             // หานักเรียนทุกคนในชั้น
-            const classStudents = Object.entries(IDLPMS_DATA.users)
+            const classStudents = Object.entries(EOS_DATA.users)
                 .filter(([_, u]) => u.role === 'STUDENT' && u.classId === classId)
                 .map(([id]) => id);
 

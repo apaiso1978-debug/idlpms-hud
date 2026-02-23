@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chat Interface | IDLPMS</title>
+    <title>Chat Interface | E-OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../assets/css/theme.css" />
     <link rel="stylesheet" href="../assets/css/styles.css" />
@@ -390,8 +390,8 @@
                     : null;
 
         let targetUser = null;
-        if (userId && typeof IDLPMS_DATA !== 'undefined') {
-            targetUser = IDLPMS_DATA.users[userId] || IDLPMS_DATA.groups?.[userId];
+        if (userId && typeof EOS_DATA !== 'undefined') {
+            targetUser = EOS_DATA.users[userId] || EOS_DATA.groups?.[userId];
         }
 
         const broadcasts = [
@@ -640,7 +640,7 @@
                 document.getElementById('flyoutRole').innerText = targetUser.role || 'User';
                 document.getElementById('flyoutRank').innerText = meta.rank;
                 document.getElementById('flyoutOrg').innerText = targetUser.org || 'Department of Education';
-                document.getElementById('flyoutLocation').innerText = targetUser.schoolId ? IDLPMS_DATA.structure.schools[targetUser.schoolId]?.name : 'Regional HQ';
+                document.getElementById('flyoutLocation').innerText = targetUser.schoolId ? EOS_DATA.structure.schools[targetUser.schoolId]?.name : 'Regional HQ';
             }
             personnelFlyout.classList.toggle('hidden');
         });

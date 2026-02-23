@@ -130,53 +130,8 @@ window.TimelineMenu = {
                 });
                 item.classList.add('active');
 
-                // Handle navigation
-                if (page && page !== '#') {
-                    const mainFrame = document.getElementById('main-frame');
-                    if (mainFrame) {
-                        let loadPath = page;
-
-                        // Handle System Tasks (Delegation Inbox)
-                        if (loadPath.startsWith('__SYSTEM_TASK__')) {
-                            const sysModuleId = loadPath.replace('__SYSTEM_TASK__', '');
-                            if (window.ManagementEngine) {
-                                const sysItem = window.ManagementEngine.findMenuItem(sysModuleId);
-                                if (sysItem && (sysItem.page || sysItem.path)) {
-                                    loadPath = sysItem.page || sysItem.path;
-                                } else {
-                                    // Fuzzy recovery for old corrupted tasks in localStorage
-                                    const rawId = String(sysModuleId).trim();
-                                    const upperId = rawId.toUpperCase();
-
-                                    if (upperId.includes('FITNESS') || upperId.includes('สมรรถภาพ') || rawId === '100' || rawId === 'fitness-test') {
-                                        loadPath = 'pages/fitness_test.html';
-                                    } else if (upperId === 'GENERAL') {
-                                        // Ad-Hoc / General tasks should open the inbox logic or detailed view
-                                        loadPath = 'pages/teacher_inbox.html';
-                                    } else {
-                                        loadPath = 'pages/home.html';
-                                    }
-                                }
-                            } else {
-                                loadPath = 'pages/home.html';
-                            }
-                        } else if (loadPath.startsWith('__ACCEPT_MISSION__')) {
-                            const taskId = loadPath.replace('__ACCEPT_MISSION__', '');
-                            loadPath = `pages/mission_accept.html#taskId=${taskId}`;
-                        } else if (loadPath.startsWith('__COMPONENT__')) {
-                            const componentName = loadPath.replace('__COMPONENT__', '');
-                            loadPath = `pages/mission_hud.html#cmp=${componentName}&ctx=DELEGATED`;
-                        }
-
-                        mainFrame.src = loadPath;
-                    }
-
-                    // Update breadcrumb
-                    const breadcrumbPage = document.getElementById('header-page-name');
-                    if (breadcrumbPage) {
-                        breadcrumbPage.innerText = name;
-                    }
-                }
+                // Handle navigation is now exclusively managed by ManagementEngine.handleMenuClick
+                // to prevent double-firing and iframe race conditions (ERR_ABORTED).
 
                 // --- Sync Active Module for Delegation System ---
                 if (window.ManagementEngine) {

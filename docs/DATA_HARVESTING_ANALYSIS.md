@@ -2,7 +2,7 @@
 
 ## 1. กลไกการเก็บข้อมูล (Harvesting Mechanisms)
 
-ระบบ IDLPMS HUD ใช้กลยุทธ์การเก็บข้อมูลแบบ **Multi-layer Harvesting** เพื่อประเมินผู้เรียนในมิติต่างๆ ดังนี้:
+ระบบ E-OS HUD ใช้กลยุทธ์การเก็บข้อมูลแบบ **Multi-layer Harvesting** เพื่อประเมินผู้เรียนในมิติต่างๆ ดังนี้:
 
 ### A. ข้อมูลพฤติกรรม (Micro-behavioral Data)
 *   **Anti-Guessing Engine:** ระบบติดตาม `answerHistory` และ `timeHistory` ของผู้เรียนในทุกข้อสอบ เพื่อตรวจจับรูปแบบการเดา (ก-ข-ค-ง หรือ การตอบข้อเดิมซ้ำๆ)

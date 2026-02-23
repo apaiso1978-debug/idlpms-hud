@@ -1,5 +1,5 @@
 /**
- * IDLPMS — Teacher Grading Engine
+ * E-OS — Teacher Grading Engine
  * ตรวจงานนักเรียน: Dashboard + Review Panel + Override
  */
 

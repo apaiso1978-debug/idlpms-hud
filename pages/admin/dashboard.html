@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>System Telemetry - IDLPMS</title>
+    <title>System Telemetry - E-OS</title>
 
     <!-- Tailwind CSS (via CDN for development, controlled via theme.css in prod) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -590,7 +590,7 @@
         // Settings Modal Logic
         function openSettingsModal() {
             const modal = document.getElementById('telemetry-settings-modal');
-            const configStr = localStorage.getItem('idlpms_admin_config');
+            const configStr = localStorage.getItem('eos_admin_config');
             if (configStr) {
                 try {
                     const cfg = JSON.parse(configStr);
@@ -618,7 +618,7 @@
                 lineChannelToken: document.getElementById('cfg-line-channel').value.trim(),
                 lineTargetId: document.getElementById('cfg-line-target').value.trim(),
             };
-            localStorage.setItem('idlpms_admin_config', JSON.stringify(cfg));
+            localStorage.setItem('eos_admin_config', JSON.stringify(cfg));
             closeSettingsModal();
             // Force refresh of the data
             if (window.AdminMetricsService) {
