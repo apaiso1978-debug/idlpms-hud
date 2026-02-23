@@ -94,10 +94,13 @@ class AppBootstrap {
     _migrateLegacyStorage() {
         try {
             const legacyKeys = {
-                'eos_database': 'eos_database',
-                'eos_auth_token': 'eos_auth_token',
-                'eos_lesson_packs': 'eos_lesson_packs',
-                'eos_dynamic_data': 'eos_dynamic_data'
+                'idlpms_database': 'eos_database',
+                'idlpms_auth_token': 'eos_auth_token',
+                'idlpms_lesson_packs': 'eos_lesson_packs',
+                'idlpms_dynamic_data': 'eos_dynamic_data',
+                'IDLPMS_SESSION': 'EOS_SESSION',
+                'IDLPMS_USER_SESSION': 'EOS_USER_SESSION',
+                'idlpms_offline_mode': 'eos_offline_mode'
             };
             let migratedCount = 0;
             for (const [oldKey, newKey] of Object.entries(legacyKeys)) {
