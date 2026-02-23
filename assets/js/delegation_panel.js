@@ -437,22 +437,31 @@ const DelegationPanel = {
                 .map(([id, u]) => ({ id, name: u.fullName || id, role: u.role, metadata: u.homeroomClass || u.classId || '' }));
 
             if (currentRole === 'SCHOOL_DIR') {
+                // ผอ. ขึ้นตรงต่อ ESA และสั่งครูทุกคนในโรงเรียนตนเองได้
                 foundTargets = [
-                    ...findUsersByRole('ESA_DIR', u => !u.districtId || u.districtId === myDistrictId), // Superior
-                    ...findUsersByRole('TEACHER', u => u.schoolId === mySchoolId)  // Subordinate
+                    ...findUsersByRole('ESA_DIR', u => !myDistrictId || u.districtId === myDistrictId), // Superior
+                    ...findUsersByRole('TEACHER', u => u.schoolId === mySchoolId)  // Subordinates
                 ];
             } else if (currentRole === 'TEACHER') {
+                // ครู ขึ้นตรงต่อ ผอ. โรงเรียนตัวเอง และสั่งงานเฉพาะนักเรียนในห้องประจำชั้นของตนเองเท่านั้น (Strict)
                 foundTargets = [
                     ...findUsersByRole('SCHOOL_DIR', u => u.schoolId === mySchoolId), // Superior
-                    ...findUsersByRole('STUDENT', u => u.schoolId === mySchoolId && (!myClassId || u.classId === myClassId)) // Subordinate
+                    ...findUsersByRole('STUDENT', u => u.schoolId === mySchoolId && myClassId && (u.classId === myClassId || u.homeroomClass === myClassId)) // Subordinates
                 ];
             } else if (currentRole === 'STUDENT') {
+                // นักเรียน ขึ้นตรงต่อ ครูประจำชั้นของตนเองเท่านั้น (Strict)
                 foundTargets = [
-                    ...findUsersByRole('TEACHER', u => u.schoolId === mySchoolId && (!myClassId || u.homeroomClass === myClassId))     // Superior
+                    ...findUsersByRole('TEACHER', u => u.schoolId === mySchoolId && myClassId && u.homeroomClass === myClassId) // Superior
+                ];
+            } else if (currentRole === 'ESA_DIR') {
+                // ผอ.เขต สั่ง ผอ.โรงเรียนทั้งหมดในเขตของตนเอง
+                foundTargets = [
+                    ...findUsersByRole('SCHOOL_DIR', u => u.districtId === myDistrictId) // Subordinates
                 ];
             } else {
-                // Fallback for ESA / MOE etc
+                // Fallback for Admin / MOE etc
                 foundTargets = [
+                    ...findUsersByRole('ESA_DIR', u => true),
                     ...findUsersByRole('SCHOOL_DIR', u => !u.districtId || u.districtId === myDistrictId),
                     ...findUsersByRole('TEACHER', u => u.schoolId === mySchoolId)
                 ];
