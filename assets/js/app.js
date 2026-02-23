@@ -251,6 +251,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (breadcrumbPage) {
                         breadcrumbPage.innerText = pageName.split('(')[0].trim();
                     }
+
+                    // Auto-update delegation panel if open
+                    if (window.DelegationPanel && window.DelegationPanel._isOpen) {
+                        window.DelegationPanel.render();
+                    }
                 }
             });
         });

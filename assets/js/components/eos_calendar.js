@@ -9,7 +9,7 @@
  * - Sunken panel aesthetic (Level -1)
  */
 
-class E-OSCalendar {
+class EOSCalendar {
     constructor(inputElement) {
         this.input = typeof inputElement === 'string' ? document.querySelector(inputElement) : inputElement;
         if (!this.input) return;
@@ -403,4 +403,4 @@ class E-OSCalendar {
 }
 
 // Global Export
-window.E-OSCalendar = E-OSCalendar;
+window.EOSCalendar = EOSCalendar;

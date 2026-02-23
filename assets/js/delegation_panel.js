@@ -873,10 +873,10 @@ const DelegationPanel = {
     _bindEvents(container) {
         // Initialize Calendar for Deadline Input
         const deadlineInput = container.querySelector('#deleg-deadline');
-        if (deadlineInput && typeof E - OSCalendar !== 'undefined') {
+        if (deadlineInput && typeof EOSCalendar !== 'undefined') {
             // Re-initialize to avoid duplicate calendars if already created
             if (!deadlineInput._calendarInstance) {
-                deadlineInput._calendarInstance = new E - OSCalendar(deadlineInput);
+                deadlineInput._calendarInstance = new EOSCalendar(deadlineInput);
             }
         }
 
