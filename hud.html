@@ -45,20 +45,27 @@
     <div class="flex h-screen overflow-hidden border border-[var(--vs-border)]">
         <!-- Activity Bar (Icons Only) -->
         <aside class="vs-activity-bar z-50">
-            <!-- E-OS Minimal Logo (Clickable to Telemetry Boot Screen) -->
+            <!-- E-OS Isometric Symmetrical Box Logo (Clickable) -->
             <a href="index.html" title="View System Telemetry"
                 class="h-[48px] flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
                 style="color: var(--vs-accent);">
                 <svg viewBox="0 0 24 24" fill="none" class="w-7 h-7 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]"
                     stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12.00,13.00 18.93,17.00 12.00,21.00 5.07,17.00" stroke-dasharray="1 2"
+                        stroke-opacity="0.2" />
+                    <polygon points="12.00,5.00 18.93,9.00 12.00,13.00 5.07,9.00" stroke-dasharray="1 2"
+                        stroke-opacity="0.2" />
+                    <path
+                        d="M 12.00,13.00 L 12.00,5.00 M 18.93,17.00 L 18.93,9.00 M 12.00,21.00 L 12.00,13.00 M 5.07,17.00 L 5.07,9.00"
+                        stroke-dasharray="1 2" stroke-opacity="0.2" />
                     <polygon
-                        points="10.70,16.75 18.50,21.25 18.50,18.25 13.30,15.25 13.30,12.25 17.20,14.50 17.20,11.50 13.30,9.25 13.30,6.25 18.50,9.25 18.50,6.25 10.70,1.75"
+                        points="5.07,17.00 12.00,21.00 12.00,19.40 6.46,16.20 6.46,14.60 10.61,17.00 10.61,15.40 6.46,13.00 6.46,11.40 12.00,14.60 12.00,13.00 5.07,9.00"
                         stroke-opacity="0.3" />
                     <polygon
-                        points="13.30,15.25 21.09,19.75 21.09,16.75 15.90,13.75 15.90,10.75 19.79,13.00 19.79,10.00 15.90,7.75 15.90,4.75 21.09,7.75 21.09,4.75 13.30,0.25" />
+                        points="12.00,13.00 18.93,17.00 18.93,15.40 13.39,12.20 13.39,10.60 17.54,13.00 17.54,11.40 13.39,9.00 13.39,7.40 18.93,10.60 18.93,9.00 12.00,5.00" />
                     <path
-                        d="M 13.30,15.25 L 10.70,16.75 M 21.09,19.75 L 18.50,21.25 M 21.09,16.75 L 18.50,18.25 M 15.90,13.75 L 13.30,15.25 M 15.90,10.75 L 13.30,12.25 M 19.79,13.00 L 17.20,14.50 M 19.79,10.00 L 17.20,11.50 M 15.90,7.75 L 13.30,9.25 M 15.90,4.75 L 13.30,6.25 M 21.09,7.75 L 18.50,9.25 M 21.09,4.75 L 18.50,6.25 M 13.30,0.25 L 10.70,1.75"
-                        stroke-opacity="0.5" />
+                        d="M 12.00,13.00 L 5.07,17.00 M 18.93,17.00 L 12.00,21.00 M 18.93,15.40 L 12.00,19.40 M 13.39,12.20 L 6.46,16.20 M 13.39,10.60 L 6.46,14.60 M 17.54,13.00 L 10.61,17.00 M 17.54,11.40 L 10.61,15.40 M 13.39,9.00 L 6.46,13.00 M 13.39,7.40 L 6.46,11.40 M 18.93,10.60 L 12.00,14.60 M 18.93,9.00 L 12.00,13.00 M 12.00,5.00 L 5.07,9.00"
+                        stroke-opacity="0.6" />
                 </svg>
             </a>
             <div class="flex-1 flex flex-col">
